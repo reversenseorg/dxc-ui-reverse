@@ -1,0 +1,33 @@
+.hook-opt {
+  color: #222;
+}
+
+div.category {
+  background-color: rgba(102, 90, 51, 0.94);
+  color:white;
+  border-bottom:1px solid #222;
+  font-size:12px;
+  padding: 2px 0px;
+  user-select:none;
+}
+
+div.hook-row {
+  background-color:#999;
+  border-bottom:1px solid #222;
+  font-size:12px;
+  padding: 2px 0px;
+  user-select:none;
+
+  div.hook-label {
+    color:#222;
+  }
+}
+
+div.hook-row:hover {
+  background-color: royalblue;
+  cursor: pointer;
+
+  div.hook-label {
+    color:white;
+  }
+}

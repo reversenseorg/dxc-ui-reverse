@@ -1,0 +1,354 @@
+@import '../../../themes.scss';
+@import "../../forms.scss";
+
+
+div.screen {
+  width: 100%;
+  height:100%;
+  min-height: 500px;
+  overflow-y:auto;
+  background-color: var(--panel-bg); /*#333; */
+  color: white;
+  padding:0px;
+  font-family: "Montserrat";
+
+
+
+  div.fixed.menu-entry {
+    z-index: 1;
+  }
+
+  div.container-fluid {
+    padding:20px;
+    height: 100%;
+  }
+
+  div.row {
+    margin:0px;
+    padding:0px;
+    z-index: 1;
+
+    &.banner {
+      width:100%;
+      height:20%;
+      background: transparent;
+      /*background-color: var(--panel-bg);*/
+      color: #fff;
+      vertical-align: middle;
+      padding-left:6em;
+
+      img {
+        width:128px;
+      }
+
+
+      h1 {
+        vertical-align: middle;
+        margin: 1em 0;
+      }
+    }
+
+    &.menu {
+
+      height:100%;
+      min-height: 400px;
+      z-index: 1;
+
+      div.menu-view {
+        background-color: #444;
+        height: 100%;
+      }
+
+
+
+      div.menu-entry {
+        width:60px; /*150px;*/
+        margin:0;
+        padding:0;
+        background: var(--panel-bg);
+
+        div.action {
+          background: #333;
+          border-bottom: 1px solid #222;
+          border-right: 1px solid #222;
+          font-size: 12px;
+          padding:15px;
+
+          &.active {
+            background-color: #444;
+            border-right: 1px solid #444;
+
+            &:hover {
+              background-color: #444;
+            }
+          }
+
+          &:hover {
+            background-color: #3a3a3a;
+          }
+
+          .icon {
+            width:100%;
+            font-size: 14px;
+            margin:0 auto;
+          }
+
+          h4 {
+            font-size:14px;
+            font-weight:400;
+          }
+
+        }
+      }
+    }
+  }
+
+
+
+
+  div.license {
+    width:100%;
+    height: 5%;
+    text-align:center;
+    font-size:0.8em;
+    background:#000;
+
+    a {
+      color:white;
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Latest Project Component */
+div.splash-panel {
+  height: 100%;
+  max-height:100%;
+
+  div.header {
+    margin: 15px;
+  }
+
+  div.body {
+    margin: 15px;
+    padding:0px;
+    div.project {
+
+      /*height:20%;*/
+      padding: 6px;
+
+      &:first-child {
+        padding-left:12px;
+      }
+      &:last-child {
+        padding-right:12px;
+      }
+
+      div.card {
+        height:100%;
+        min-height: 100%;
+        background: #333;
+        border-radius: 0px;
+        text-align:center;
+
+        &:hover {
+          border-color:white;
+        }
+
+        img.card-img {
+          border:2px dashed white;
+          background-color: transparent;
+        }
+
+        .new {
+          font-size:18px;
+          vertical-align: middle;
+          text-align:center;
+          margin:1em;
+        }
+      }
+
+    }
+  }
+}
+
+
+.project-menu {
+  border: var(--input-border);
+  margin:0px;
+
+  button {
+    font-size: 12px;
+    padding:0 1em;
+  }
+}
+.project-list {
+  background-color: var(--input-bg);
+  overflow-y: auto;
+  font-size: 12px;
+  margin-top:5px;
+  border: 1px solid #222;
+  font-family: var(--code-font);
+  height:35vh; /*200px;*/
+
+  div.row.project {
+
+    padding: 5px;
+    margin: 0px;
+    color: var(--input-text);
+    border-bottom: var(--input-border);
+
+    &.selected {
+      background-color: var(--menu-bg-hover);
+    }
+
+    &:hover {
+      background-color: #555;
+    }
+
+    div.label,
+    div.opts {
+      h4 {
+        font-size: 12px;
+      }
+      div {
+        line-height: 1.2em;
+      }
+    }
+  }
+}
+.project-details,
+.project-details-short {
+  background-color: var(--input-bg);
+  font-family: var(--code-font);
+  color: var(--input-text);
+  border: 1px solid #222;
+  font-size: 12px;
+  max-height: 30vh;
+  height: 30vh;
+  padding:1em;
+  user-select:none;
+}
+
+
+.project-details-short {
+  width: 100%;
+  margin: 2px 10px 0px 10px;
+}
+
+.frm-label {
+  text-align: right;
+}
+
+.frm-input {
+  text-align: left;
+
+  input  {
+    width:60%;
+  }
+}
+
+.frm-select {
+  @extend .dxc-frm-select;
+  width: 60%;
+}
+
+.project-modal {
+
+  font-family: Montserrat;
+
+  user-select: none;
+
+  h4 {
+    font-weight: 500;
+    font-size:14px;
+    padding: 5px 10px;
+  }
+
+  p {
+    font-weight: 300;
+    padding: 1em;
+  }
+
+  &.active-project {
+
+      .body {
+        border-top: 1px solid var(--input-bg);
+        width:100%;
+        background-color: var(--menu-bg);
+
+        .msg {
+          display: inline-flex;
+          justify-content: space-between;
+          vertical-align: middle;
+
+          fa-icon.ico {
+            margin: auto;
+            font-size:3em;
+            heihgt:100%;
+          }
+        }
+
+
+        div.choice {
+          border-top: 1px solid var(--input-bg);
+          background-color: var(--menu-bg);
+          padding: 0.5em;
+
+          &.dxc-choice-select:hover {
+            background-color: var(--menu-bg-hover);
+            cursor: pointer;
+          }
+          &.dxc-choice-close:hover {
+             background-color: #792727;
+             cursor: pointer;
+          }
+        }
+      }
+  }
+}
+
+div.screen {
+  background: #3E1E68;
+}
+
+
+$particleSize: 20vmin;
+$animationDuration: 6s;
+$amount: 20;
+div.screen span.dxcanim {
+  width: $particleSize;
+  height: $particleSize;
+  border-radius: $particleSize;
+  backface-visibility: hidden;
+  position: absolute;
+  z-index:0;
+  animation-name: move;
+  animation-duration: $animationDuration;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  $colors: (
+    #583C87,
+    #E45A84,
+    #FFACAC
+  );
+  @for $i from 1 through $amount {
+    &:nth-child(#{$i}) {
+      color: nth($colors, random(length($colors)));
+      top: random(100) * 1%;
+      left: random(100) * 1%;
+      animation-duration: (random($animationDuration * 10) / 10) * 1s + 10s;
+      animation-delay: random(($animationDuration + 10s) * 10) / 10 * -1s;
+      transform-origin: (random(50) - 25) * 1vw (random(50) - 25) * 1vh;
+      $blurRadius: (random() + 0.5) * $particleSize * 0.5;
+      $x: if(random() > 0.5, -1, 1);
+      box-shadow: ($particleSize * 2 * $x) 0 $blurRadius currentColor;
+    }
+  }
+}
+
+@keyframes move {
+  100% {
+    transform: translate3d(0, 0, 1px) rotate(360deg);
+  }
+}

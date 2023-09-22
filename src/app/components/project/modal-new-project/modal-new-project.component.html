@@ -1,0 +1,137 @@
+<app-modal-base [name]="'newproj'" [closable]="closable"  [width]="400" [height]="600" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    New local project
+  </div>
+  <div body class="dxc-modal-body">
+      <div class="dxc-form">
+        <div class="dxc-frm-label">
+          Project name :
+        </div>
+        <div>
+          <input type="text" name="pname"  id="pname" [(ngModel)]="projectName"  dxcInputValidation dxcToken="project.uid.new" class="dxc-input" required #pname="ngModel"/>
+          <div *ngIf="pname.invalid && (pname.dirty || pname.touched)"
+               class="text-danger">
+
+
+            <div *ngIf="pname.errors.required">
+              Project name is required.
+            </div>
+            <div *ngIf="pname.errors.dxcType=='context:project.uid.new'">
+              Please choose another name
+            </div>
+            <div *ngIf="pname.errors.dxcType=='context:project.uid'">
+              Invalid project name format
+            </div>
+          </div>
+        </div>
+
+        <div class="dxc-frm-label">
+          How to pick the target application ?
+        </div>
+        <div>
+          <select [(ngModel)]="method" class="dxc-input">
+            <option value="upload">From a local file</option>
+            <option value="url">From a remote location (URL)</option>
+            <option value="device">From a connected device</option>
+          </select>
+        </div>
+        <ng-container *ngIf="method=='upload'">
+
+          <div class="dxc-frm-label">
+            Select application file (.apk, .dex, ...)
+          </div>
+          <div>
+            <label for="app-file" class="dxc-label-file" #appFile><span *ngIf="targetFile!=null">{{ targetFile }}</span><span *ngIf="targetFile==null">Pick a file</span></label>
+            <input id="app-file" type="file" class="dxc-input-file" (change)="updateAppFile($event)"/>
+            <!--<dxc-preview *ngIf="targetFile!=null" [data]="targetFile" [length]="70"></dxc-preview>-->
+          </div>
+        </ng-container>
+        <ng-container *ngIf="method=='url'">
+          <div class="dxc-frm-label">
+            What is the URL ?
+          </div>
+          <div>
+            <input type="text" [(ngModel)]="targetUrl"  class="dxc-input"/>
+          </div>
+
+          <div class="dxc-frm-label">
+            Do you need to configure a proxy ? See <b (click)="controller.openGlobalSettings('proxy')">Proxy settings</b>.
+          </div>
+          <div>
+            <input type="text" [(ngModel)]="proxyIp" placeholder="IP address" class="dxc-input mb-1"/>
+            <input type="text" [(ngModel)]="proxyPort" placeholder="port" class="dxc-input"/>
+          </div>
+
+          <div class="dxc-frm-label">
+            Authentication settings
+          </div>
+          <div>
+            <input type="text" [(ngModel)]="httpHeaders" placeholder="HTTP headers (WWW-Authenticate, ...)"  class="dxc-input"/>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="method=='device'">
+          <div class="dxc-frm-label">
+            From menu bar, select "<b (click)="openDevicePanel()">Device &gt; List devices...</b>" and explore applications installed on target device.<br>
+            When you found the target application, do right-click and select "Open as new project"<br>
+            If the device is not yet enrolled or is connected over TCP you should add it manually by clicking on "+".
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="deviceList && display.dev">
+          <div class="dxc-frm-label">
+            Select the default target device (can be changed later) :
+          </div>
+
+            <dxc-device-list [allowNotEnrolled]="false" (selectDevice)="checkDevice($event)"></dxc-device-list>
+
+            <!--
+          <div>
+            <select [(ngModel)]="devuid" name="devuid" id="devuid" #dev="ngModel" (change)="checkDevice()" class="dxc-input" dxcInputValidation dxcToken="device:uid">
+              <option [value]="null">None</option>
+              <ng-container *ngFor="let d of deviceList">
+                <option [value]="d.uid" [disabled]="!d.enrolled"><i *ngIf="!d.enrolled">[!] NOT ENROLLED :</i>&nbsp;{{ d.product }}&nbsp;|&nbsp;{{ d.id }}</option>
+              </ng-container>
+            </select>
+            <div *ngIf="dev.invalid && (dev.dirty || dev.touched)"
+                 class="text-danger">
+
+              <div *ngIf="dev.errors.dxcType=='device:device.uid'">
+                Invalid Device UID
+              </div>
+              <div *ngIf="dev.errors.dxcType=='device:not_enrolled'">
+                This device is not enrolled.
+              </div>
+            </div>
+          </div>-->
+        </ng-container>
+
+        <ng-container *ngIf="pltList && display.pltf">
+          <div class="dxc-frm-label">
+            Select the platform version (can be changed later)  :
+          </div>
+          <div>
+            <select [(ngModel)]="platform" class="dxc-input">
+              <option value="none">None</option>
+              <option value="min">Minimal version supported</option>
+              <option value="target">Target version from manifest</option>
+              <optgroup label="Installed">
+                <ng-container *ngFor="let plt of pltList">
+                  <option *ngIf="plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
+                </ng-container>
+              </optgroup>
+              <optgroup label="Available  (Internet required)">
+                <ng-container *ngFor="let plt of pltList">
+                  <option *ngIf="!plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
+                </ng-container>
+              </optgroup>
+
+            </select>
+          </div>
+        </ng-container>
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="newProject()">Open</button>
+  </div>
+</app-modal-base>

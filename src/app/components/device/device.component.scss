@@ -1,0 +1,61 @@
+@import '../../../themes';
+
+.explorer-device {
+  max-height: 100%;
+  height: 100%;
+}
+
+.explorer-list-root {
+  max-width: 100%;
+  height:100%;
+  /*overflow-y: scroll;
+  overflow-x: scroll;*/
+
+}
+
+.explorer-list-root li {
+  white-space: nowrap;
+}
+
+.explorer-list-root li:hover {
+  cursor:pointer;
+  background-color: #1a2238;
+}
+
+
+.hidden {
+  display: none;
+}
+
+.device-list-input {
+  background-color: var(--input-bg);
+  overflow-y: auto;
+  font-size: 12px;
+  margin-top:5px;
+  border: 1px solid #222;
+
+  height:200px;
+
+  div.row.device {
+
+    padding: 12px;
+
+    color: var(--input-text);
+    border-bottom: var(--input-border);
+
+    &:hover {
+      background-color: #555;
+    }
+
+    div.label,
+    div.opts {
+      padding: 4px;
+      h4 {
+        font-size: 12px;
+      }
+      div {
+        line-height: 1.2em;
+      }
+    }
+  }
+}

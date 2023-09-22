@@ -1,0 +1,87 @@
+<div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-privacy">
+
+  <app-viewport-splitted [type]="'1:2'" [flex]="false" [controller]="controller" [parent]="this" [leftWidth]="50">
+    <ng-container body-left>
+      <app-viewport-splitted [type]="'2:1'" [flex]="false" [controller]="controller" [heightPct]="90"  [parent]="this" [topHeight]="50">
+        <ng-container nav-top>
+          <app-subnavbar>
+            <ng-container main>
+              <app-subnavbar-btn (click)="startScan()"><dxc-icon [model]="gIcons.PLAY"></dxc-icon></app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeTL==TOPIC.WPTHR"  (click)="showInfo(TOPIC.WPTHR)">Threats</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeTL==TOPIC.WPPII"  (click)="showInfo(TOPIC.WPPII)">PII</app-subnavbar-btn>
+            </ng-container>
+          </app-subnavbar>
+        </ng-container>
+        <ng-container body-top>
+
+          <div class="container-fluid" class="p-1" *ngIf="project" [class.dxc-hidden]="(activeTL==null) || (activeTL!=TOPIC.TRK_DOM)">
+
+            <ul class="explorer-list">
+              <ng-container *ngFor="let th of report.threats">
+                <li class="dxc-text-75 exp-item" >
+                  <span (contextmenu)="displayCtxMenu($event,'inspector',th)">
+                    <span>{{ th.source.name }}</span>
+                    <span class="text-warning">{{ th.node.value }}</span>
+                  </span>
+                </li>
+              </ng-container>
+            </ul>
+         </div>
+
+          <div class="container-fluid" class="p-1" *ngIf="project"  [class.dxc-hidden]="(activeTL==null) || (activeTL!=TOPIC.TRK_LIB)">
+            &nbsp;
+          </div>
+
+
+        </ng-container>
+        <ng-container nav-bottom>
+          <app-subnavbar>
+            <ng-container main>
+              <app-subnavbar-btn [active]="activeBL==TOPIC.PII_DATA"  (click)="showInfo(TOPIC.PII_DATA)">PII Data</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeBL==TOPIC.PII_FLI"  (click)="showInfo(TOPIC.PII_FLI)">PII Flow Inputs</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeBL==TOPIC.PII_FLO"  (click)="showInfo(TOPIC.PII_FLO)">PII Flow Outputs</app-subnavbar-btn>
+            </ng-container>
+          </app-subnavbar>
+        </ng-container>
+        <ng-container body-bottom>
+
+        </ng-container>
+      </app-viewport-splitted>
+    </ng-container>
+    <ng-container body-right>
+      <app-viewport-splitted [type]="'2:1'" [flex]="false" [controller]="controller" [heightPct]="90"  [parent]="this" [topHeight]="50">
+
+        <ng-container nav-top>
+          <app-subnavbar>
+            <ng-container main>
+              <app-subnavbar-btn>Topology</app-subnavbar-btn>
+              <app-subnavbar-btn>Entropy</app-subnavbar-btn>
+            </ng-container>
+          </app-subnavbar>
+        </ng-container>
+
+        <ng-container body-top>
+
+
+
+        </ng-container>
+
+        <ng-container nav-bottom>
+          <app-subnavbar>
+            <ng-container main>
+              <app-subnavbar-btn >Security</app-subnavbar-btn>
+              <app-subnavbar-btn >Strings</app-subnavbar-btn>
+              <app-subnavbar-btn >Network</app-subnavbar-btn>
+            </ng-container>
+          </app-subnavbar>
+        </ng-container>
+        <ng-container body-bottom>
+
+        </ng-container>
+      </app-viewport-splitted>
+    </ng-container>
+  </app-viewport-splitted>
+
+
+
+</div>

@@ -1,0 +1,51 @@
+.explorer-file {
+  margin:0px;
+  padding:0px;
+}
+
+.explorer-file-nav {
+   background: #555;
+   margin:0;
+   padding:0px;
+   border: none;
+   border-bottom: 1px solid #333;
+   font-size:0.9em;
+}
+
+
+.explorer-file-dd button.dropdown-toggle {
+
+}
+
+.explorer-file-dd,
+.explorer-file-dd div.dropdown,
+.explorer-file-dd button.dropdown-toggle,
+.explorer-file-dd div.dropdown-item {
+  background-color: #555;
+  color: white;
+  font-size:1em;
+  margin:0;
+}
+
+
+.explorer-file-dd button.dropdown-toggle {
+
+}
+
+.explorer-file-dd div.dropdown-menu {
+  margin-left:0;
+  background-color: #555;
+  color: white;
+}
+
+.explorer-file-nav div.nav {
+  height: 2em;
+}
+
+
+
+
+
+.hidden {
+  display: none;
+}

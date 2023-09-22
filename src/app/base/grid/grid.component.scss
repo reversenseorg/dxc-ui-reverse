@@ -1,0 +1,31 @@
+@import "../../../themes";
+
+.dxc-grid  {
+  border-radius: 0px;
+  border: 1px solid var(--text-100);
+  background-color: var(--menu-bg);
+}
+
+.dxc-grid-row  {
+  border-bottom: 1px solid var(--text-75);
+
+  &:hover {
+    background-color: var(--menu-bg-hover);
+  }
+  div.dxc-grid-cell {
+    border-left: 1px solid var(--text-75);
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+}
+
+.dxc-grid-cell  {
+  border-left: 1px solid var(--text-75);
+}
+
+.dxc-grid-coll  {
+  border-bottom: 1px solid var(--text-75);
+  background-color: var(--nav-bg);
+}

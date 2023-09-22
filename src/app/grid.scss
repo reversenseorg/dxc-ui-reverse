@@ -1,0 +1,77 @@
+@import "../themes";
+@import './forms';
+
+.dxc-grid  {
+  border-radius: 0px;
+  border: 1px solid var(--text-100);
+  background-color: var(--menu-bg);
+  padding: 0;
+}
+
+.dxc-grid-cell {
+  border-left: 1px solid var(--text-75);
+  padding: 0;
+}
+
+.dxc-grid-row  {
+
+  border-bottom: 1px solid var(--text-75);
+  margin: 0;
+
+  &:hover {
+    background-color:  var(--menu-bg-hover);
+  }
+}
+
+
+.dxc-grid-col  {
+  border-bottom: 1px solid var(--text-75);
+  background-color: var(--nav-bg);
+}
+
+.dxc-cell-input {
+  @extend .dxc-input ;
+  border: none;
+  width: 100%;
+}
+
+
+
+table.table.dxc-grid > {
+  border: 1px solid var(--text-100);
+
+  thead th {
+    color: var(--text-100);
+    font-size: 12px;
+    font-weight:400;
+  }
+
+  tbody tr {
+    border-color: var(--text-75);
+
+    &:hover {
+      background-color: var(--modal-head-bg);
+    }
+  }
+
+  tbody td {
+    color: var(--text-75);
+    background-color: var(--input-bg);
+    border-color: var(--text-75);
+    font-size: 12px;
+    font-weight:400;
+  }
+}
+/*
+table .table .dxc-grid > {
+  color: var(--text-100);
+  font-size: 10px;
+  font-weight:400;
+  border: 1px solid var(--input-border);
+
+  thead td, thead th {
+
+  }
+}
+
+table .table .dxc-grid */

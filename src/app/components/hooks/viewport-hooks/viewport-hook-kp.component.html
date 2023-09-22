@@ -1,0 +1,41 @@
+<div class="container-fluid viewport-hook">
+  <app-subnavbar [type]="'navbar'" [parent]="this">
+    <ng-container main>
+      <app-subnavbar-btn [icon]="gIcons.SAVE" [ngClass]="'text-danger'" (click)="saveChanges()">Save</app-subnavbar-btn>
+    </ng-container>
+  </app-subnavbar>
+
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="false" [leftWidth]="activeWidth" [type]="'1:2'">
+    <ng-container body-left>
+      <div class="row no-gutters pt-2">
+        <div class="col-2 text-right pr-2">Status</div>
+        <div class="col-6">
+          <dxc-icon [model]="enabled? icons.UP : icons.DOWN"></dxc-icon>
+        </div>
+      </div>
+      <div class="row no-gutters pt-2">
+        <div class="col-2 text-right pr-2">Name</div>
+        <div class="col-6"><input type="text" class="dxc-input" disabled [ngModel]="data.name"></div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-2 text-right pr-2">Token</div>
+        <div class="col-6"><input type="text" class="dxc-input" disabled [ngModel]="data.token"></div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-2 text-right pr-2">Description</div>
+        <div class="col-6"><input type="text" class="dxc-input" [ngModel]="data.description"></div>
+      </div>
+      <div class="row no-gutters pb-2">
+        <div class="col-2 text-right pr-2">Priority</div>
+        <div class="col-6"><input type="number" class="dxc-input" [ngModel]="data.weight"></div>
+      </div>
+    </ng-container>
+    <ng-container body-right>
+      <div #editor (contextmenu)="openEditorMenu($event)">
+        <ace-editor #kpEditor theme="monokai" style="overflow: auto;z-index:0;" (textChanged)="onChange($event)"></ace-editor>
+      </div>
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>

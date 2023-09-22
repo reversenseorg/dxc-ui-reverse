@@ -1,0 +1,566 @@
+@import "../../../themes.scss";
+
+.app-subnavbar {
+  position: fixed;
+  bottom:0px;
+  min-height:15vh;
+  background-color:#222;
+  border:0px;
+  border-top: 1px solid #333;
+}
+
+.app-terminal-nav {
+  background:#555;
+  color:white;
+  border-bottom:1px solid #182a32;
+}
+
+.app-terminal-nav:hover {
+  cursor: row-resize;
+}
+
+
+
+.app-terminal-nav.active {
+  background-color: #4a595c;
+}
+
+.app-terminal-nav.active span.tab {
+  /* border-bottom: 5px solid #4a595c;*/
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.app-terminal-nav.active span.tab:hover {
+  background-color: #3e5053;
+}
+
+
+.app-terminal-view {
+  background-color:#222;
+  color:white;
+  font-size:0.8em;
+}
+
+
+.app-terminal-footer {
+  position: fixed;
+  bottom:0px;
+  min-width:100vw;
+  background-color:#333;
+  color:white;
+  font-size:0.8em;
+}
+
+
+
+.dxc-subnavbar {
+  font-family: var(--nav-font);
+  height: var(--nav-height);
+  max-height: var(--nav-height);
+  background-color: var(--subnav-bg);
+  margin:0px;
+  font-size: var(--nav-font-size);
+  padding:0px;
+  user-select: none;
+
+
+  /* navtab */
+  ul.nav-tabs {
+    border:none ;
+    background-color: var(--subnav-bg);
+    white-space: nowrap;
+    height: var(--nav-height);
+
+    li.nav-item {
+      border:none ;
+      border-bottom:3px solid var(--subnav-bg);
+      background-color: var(--nav-tabbg);
+      color: var(--nav-tabtext);
+      height: var(--nav-height);
+
+
+      a.nav-link {
+        border:none ;
+        border-radius: 0px;
+        padding: 0.2em 1em;
+        color:#bbb  ;
+        user-select: none;
+      }
+
+      &:hover {
+        background-color:#333;
+        border-bottom: 3px solid #333;
+        color:white;
+      }
+
+      &.active {
+        border-bottom:3px solid cornflowerblue;
+        &:hover {
+          border-bottom:3px solid cornflowerblue;
+        }
+
+      }
+    }
+
+    li.nav-label {
+      vertical-align: center;
+      background-color: var(--subnav-bg);
+
+      &:hover {
+        border:none;
+        background-color: var(--subnav-bg);
+      }
+    }
+
+    li.nav-item {
+      a.nav-link {
+        border:none ;
+        border-radius: 0px;
+        padding: 0.2em 1em;
+        color:#bbb  ;
+        user-select: none;
+      }
+
+      &.active {
+        a.nav-link {
+          border:none ;
+          background-color:#666;
+        }
+      }
+    }
+  }
+
+
+  a.nav-link {
+    color:#bbb;
+  }
+
+
+
+  .btn-close {
+    color: #828282;
+  }
+
+  .btn-close:hover {
+    background-color: #999;
+    color: #555;
+    border-radius:10px;
+  }
+
+  /* navbar */
+  .dxc-navbar {
+    height: var(--nav-height);
+    background-color: var(--subnav-bg); /*var(--nav-bg);*/
+    margin:0px;
+    font-size: var(--nav-font-size);
+
+
+    div.nav {
+      background-color: var(--subnav-bg);
+      height: var(--nav-height);
+    }
+
+
+
+    div.nav-menu {
+
+      .dropdown-toggle {
+        margin:0px;
+        padding:0px;
+        padding-left:0.8em;
+        color: var(--nav-tabtext);
+        font-size:1em;
+      }
+
+      .btn:focus {
+        border:none;
+        box-shadow: none;
+      }
+
+      .dropdown-menu {
+        border:none;
+        border-radius: 0px;
+        background-color: var(--menu-bg);
+        box-shadow: 2px 2px 5px #333;
+      }
+
+      .dropdown-item {
+        margin:0px;
+        padding:0px;
+        padding-left:0.8em;
+        color: var(--menu-text);
+        font-size:0.9em;
+      }
+
+      .dropdown-item:hover {
+        color: var(--menu-text-hover);
+        background-color: var(--menu-bg-hover);
+      }
+
+      .separator {
+        border-top: 1px solid var(--menu-text);
+      }
+    }
+
+    div.nav-title {
+      margin:0px;
+      padding:0px;
+      /*
+      padding-top:0.1em;*/
+      padding-left: 11px;/* 0.8em */
+      color: #bbb;
+      font-size: var(--nav-font-size); /* 1 em */
+
+      button.btn {
+        background-color: var(--nav-btn-bg);
+        color: var(--nav-btn-color); /* #bbb;*/
+        /* width: 1.2rem; */
+        font-size: 0.8rem;
+        text-align:center;
+        margin:0;
+        padding:0;
+        border: none;
+        border-radius: 0px;
+        margin-right: 10px; /* 0.2rem; */
+        border-bottom: 2px solid var(--nav-btn-bg);
+        height: var(--nav-height);
+
+        &:hover {
+          background-color: var(--nav-btn-hover-bg);
+          color: var(--nav-btn-hover-color);
+          border-bottom: 2px solid var(--nav-btn-hover-color);
+        }
+      }
+
+
+
+    }
+
+
+    div.nav-options {
+      margin:0px;
+      padding:0px;
+      color: #bbb;
+      font-size:1em;
+      text-align: right;
+      height: var(--nav-height);
+
+      button.btn-option {
+        background-color: #555;
+        color: #bbb;
+        width: 1.2rem;
+        font-size: 0.8rem;
+        text-align:center;
+        margin:0;
+        padding:0;
+        border: none;
+        border-radius: 4px;
+        margin-right:0.2rem;
+      }
+
+      button.btn-option:hover {
+        background-color: #777;
+      }
+    }
+
+
+    &.dxc-search-nav {
+      background-color:  var(--panel-bg);
+
+      div.nav, div-nav-options, button.btn, .dxc-dropdown{
+        background-color:  var(--panel-bg);
+      }
+    }
+  }
+
+  div.nav-title {
+    margin:0px;
+    padding:0px;
+    padding-top:0.1em;
+    padding-left:0.8em;
+    color: var(--nav-tabtext); /* #bbb */
+    font-size:1em;
+  }
+
+  div.nav-options {
+    margin:0px;
+    padding:0px;
+    padding-top:0.1em;
+    color: var(--nav-tabtext); /* #bbb */
+    font-size:1em;
+    text-align: right;
+
+    button.btn-option {
+      background-color: var(--subnav-bg);
+      color: #bbb;
+      width: 1.2rem;
+      font-size: 0.8rem;
+      text-align:center;
+      margin:0;
+      padding:0;
+      border: none;
+      border-radius: 4px;
+      margin-right:0.2rem;
+    }
+
+    button.btn-option:hover {
+      background-color: #777;
+    }
+  }
+
+}
+
+
+button.btn.nav-btn {
+
+  &.dxc-grid {
+    padding:0;
+    margin:0;
+    color: var(--text-75);
+    background-color: var(--input-bg);
+    border: none;
+    font-size: 12px;
+    font-weight:400;
+
+    &:hover {
+      color: dodgerblue;
+    }
+  }
+
+  &.vertical {
+    width: 100%;
+    display: block;
+    text-align: left;
+    padding-left: 16px;
+  }
+
+  &.disable {
+    color: var(--nav-disabled-text);
+    background-color: transparent;
+    cursor: not-allowed;
+
+    dxc-icon {
+      color: var(--dxc-);
+      --fa-primary-color: var(--nav-disabled-text);
+      --fa-secondary-color: var(--nav-disabled-text);
+    }
+
+    &:hover {
+      user-select: none;
+      color: var(--nav-disabled-text);
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+}
+
+
+.dxc-navbar {
+  height: var(--nav-height);
+  background-color: var(--nav-bg);
+  margin:0px;
+  font-size: var(--nav-font-size);
+
+  .vertical {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    min-width: 100%;
+  }
+
+  button.nav-btn {
+
+    &.disable {
+      color: var(--nav-tabtext);
+      background-color: var(--nav-bg);
+
+      dxc-icon {
+        color: var(--nav-tabtext);
+        --fa-primary-color: var(--nav-tabtext);
+        --fa-secondary-color: var(--nav-tabtext);
+      }
+
+      &:hover {
+        user-select: none;
+        color: var(--nav-tabtext);
+        background-color: var(--nav-bg);
+        border-color: var(--nav-bg);
+      }
+    }
+  }
+
+  div.nav {
+    background-color: var(--subnav-bg);
+  }
+
+  div.nav-menu {
+
+    .dropdown-toggle {
+      margin:0px;
+      padding:0px;
+      padding-left:0.8em;
+      color: var(--nav-tabtext);
+      font-size:1em;
+    }
+
+    .btn:focus {
+      border:none;
+      box-shadow: none;
+    }
+
+    .dropdown-menu {
+      border:none;
+      border-radius: 0px;
+      background-color: var(--menu-bg);
+      box-shadow: 2px 2px 5px #333;
+    }
+
+    .dropdown-item {
+      margin:0px;
+      padding:0px;
+      padding-left:0.8em;
+      color: var(--menu-text);
+      font-size:0.9em;
+    }
+
+    .dropdown-item:hover {
+      color: var(--menu-text-hover);
+      background-color: var(--menu-bg-hover);
+    }
+  }
+
+  div.nav-title {
+    margin:0px;
+    padding:0px;
+    /*
+    padding-top:0.1em;*/
+    padding-left: 11px;/* 0.8em */
+    color: #bbb;
+    font-size: var(--nav-font-size); /* 1 em */
+
+    button.btn {
+      background-color: var(--nav-btn-bg);
+      color: var(--nav-btn-color); /* #bbb;*/
+      /* width: 1.2rem; */
+      font-size: 0.8rem;
+      text-align:center;
+      margin:0;
+      padding:0;
+      border: none;
+      border-radius: 0px;
+      margin-right: 10px; /* 0.2rem; */
+      border-bottom: 2px solid var(--nav-btn-bg);
+    }
+
+    button.btn:hover {
+      background-color: var(--nav-btn-hover-bg);
+      color: var(--nav-btn-hover-color);
+      border-bottom: 2px solid #fff;
+    }
+  }
+
+
+  div.nav-options {
+    margin:0px;
+    padding:0px;
+    padding-top:0.1em;
+    color: #bbb;
+    font-size:1em;
+    text-align: right;
+
+    button.btn-option {
+      background-color: #555;
+      color: #bbb;
+      width: 1.2rem;
+      font-size: 0.8rem;
+      text-align:center;
+      margin:0;
+      padding:0;
+      border: none;
+      border-radius: 4px;
+      margin-right:0.2rem;
+    }
+
+    button.btn-option:hover {
+      background-color: #777;
+    }
+  }
+
+
+}
+
+.app-terminal {
+
+
+  div.options {
+    text-align: right;
+    color:#fff;
+  }
+
+  div.tabnav {
+    text-align: left;
+    padding-left:10px;
+    color:#fff;
+    user-select: none;
+  }
+
+  .btn-option {
+    padding:2px;
+    margin:2px;
+  }
+
+  .btn-option:hover {
+    background-color: #777;
+    padding:2px;
+    border-radius:2px;
+  }
+
+
+  span.tab {
+    font-size:0.9em;
+    padding: 0px 1em;
+    /*border-bottom: 5px solid #555;*/
+    padding-bottom: 4px;
+    padding-top: 4px;
+  }
+
+  span.tab.active {
+    cursor:pointer;
+    background-color:#777;
+    padding-bottom: 2px;
+    border-bottom: 2px solid #fff;
+  }
+
+  span.tab:hover {
+    cursor:pointer;
+    background-color:#333;
+  }
+}
+
+
+input.dxc-nav-input {
+  border:none;
+  margin:0px 10px;
+  height:100%;
+  padding: 0 10px;
+  background-color: var(--panel-bg);
+}
+
+.dxc-dropdown {
+  background: var(--nav-btn-bg);
+  color: var(--nav-btn-color);
+  border: none;
+  border-radius: 0px;
+
+  button {
+    display:block;
+    border:1px solid red;
+    width:100%;
+
+    &:hover {
+      border-color: transparent;
+    }
+  }
+}
+

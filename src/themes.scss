@@ -1,0 +1,139 @@
+
+
+$dark-topnav-bgColor: #333;
+$dark-topnav-textColor: #fff;
+$dark-nav-bgColor: #555;
+$dark-nav-textColor: #fff;
+$dark-subnav-bgColor: #4a4a42;
+$dark-subnav-textColor: #fff;
+
+$dark-nav-btn-textColor: #bbb;
+$dark-nav-btn-bg: #4a4a42;
+$dark-nav-btn-textColor_hover: #fff;
+$dark-nav-btn-bg_hover: #4a4a42;
+$dark-nav-btn-disabled: #777;
+
+$dark-nav-tabBgColor: #555;
+$dark-nav-tabTextColor: #fff;
+$dark-nav-tabBgColor_hover: #777;
+$dark-nav-tabTextColor_hover: #fff;
+$dark-nav-tabBgColor_active: #444;
+$dark-nav-tabTextColor_active: #fff;
+$dark-nav-tabBorderColor_active: #fff;
+$dark-nav-tabBorderWidth_active: 3px;
+
+$dark-explorer-bgColor: #444;
+$dark-explorer-textColor: #bbb;
+$dark-panel-bgColor: #222;
+
+
+$dark-menu-bgColor: #555;
+$dark-menu-textColor: #bbb;
+$dark-menu-bgColor-hover: royalblue;
+$dark-menu-textColor-hover: #fff;
+$dark-menu-textColor-dis: #999;
+$dark-menu-sep: #999;
+
+$dark-modal-footer-bgColor: #222;
+$dark-modal-footer-textColor: #fff;
+
+$dark-text-clear-100: #fff;
+$dark-text-clear-75: #bbb; /*#b5b5b5;*/
+$dark-text-clear-50: #828282;
+
+$dark-input-border: 1px solid #bbb;
+$dark-input-bg: #333;
+$dark-input-bg-focus: #4b2e25;
+$dark-input-text: #fff; /* #bbb */
+
+
+$dark-scrollbar-color: #888;
+$dark-scrollbar-bg: #555;
+
+[data-theme="dark"] {
+  /* message */
+  --success-main-color: forestgreen;
+  --success-secondary-color: white;
+  --warning-main-color: #fab200;
+  --warning-secondary-color: black;
+  --error-main-color: #fd2c2c;
+  --error-secondary-color: white;
+
+  --topnav-bg: #{$dark-topnav-bgColor};
+  --topnav-color: #{$dark-topnav-textColor};
+  --menu-bg: #{$dark-menu-bgColor};
+  --menu-text: #{$dark-menu-textColor};
+  --menu-sep: #{$dark-menu-sep};
+  --menu-bg-hover: #{$dark-menu-bgColor-hover};
+  --menu-text-dis: #{$dark-menu-textColor-dis};
+  --menu-text-hover: #{$dark-menu-textColor-hover};
+  --nav-bg: #{$dark-nav-bgColor};
+  --nav-text: #{$dark-nav-textColor};
+  --nav-tabbg: #{$dark-subnav-bgColor};
+  --nav-tabtext: #{$dark-nav-tabTextColor};
+  --nav-tabbg-hover: #{$dark-nav-tabBgColor_hover};
+  --nav-tabtext-hover: #{$dark-nav-tabTextColor_hover};
+  --nav-tabbg-active: #{$dark-nav-tabBgColor_active};
+  --nav-tabtext-active: #{$dark-nav-tabTextColor_active};
+  --nav-tabborderW-active: #{$dark-nav-tabBorderWidth_active};
+  --nav-tabborderC-active: #{$dark-nav-tabBorderColor_active};
+
+  --nav-disabled-text: #{$dark-nav-btn-disabled};
+
+  --expl-bg: #{$dark-explorer-bgColor};
+  --expl-text: #{$dark-explorer-textColor};
+  --panel-bg: #{$dark-panel-bgColor};
+  --text-100: #{$dark-text-clear-100};
+  --text-75: #{$dark-text-clear-75};
+  --text-50: #{$dark-text-clear-50};
+
+  --list-border-color: royalblue;
+
+  --subnav-color: #{$dark-subnav-textColor};
+  --subnav-bg: #{$dark-subnav-bgColor};
+
+  --nav-btn-color: #{$dark-nav-btn-textColor};
+  --nav-btn-bg: #{$dark-nav-btn-bg};
+  --nav-btn-hover-color: #{$dark-nav-btn-textColor_hover};
+  --nav-btn-hover-bg: #{$dark-nav-btn-bg_hover};
+
+  --modal-head-bg: #{$dark-nav-bgColor};
+  --modal-head-text: #{$dark-nav-textColor};
+  --modal-body-bg: #{$dark-explorer-bgColor};
+  --modal-body-text: #{$dark-explorer-textColor};
+  --modal-footer-bg: #{$dark-modal-footer-bgColor};
+  --modal-footer-text: #{$dark-modal-footer-textColor};
+
+  --nav-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --nav-height: 28px; /* 2em */
+  --nav-font-size: 12px;
+
+  --input-border: #{$dark-input-border};
+  --input-bg: #{$dark-input-bg};
+  --input-bg-focus: #{$dark-input-bg-focus};
+  --input-text: #{$dark-input-text};
+
+
+  --info-color: #fff;
+  --info-bg: #28428d;
+  --warning-color: #000000;
+  --warning-bg: #eeb53f;
+  --danger-color: #fff;
+  --danger-bg: #a00f0f;
+  --success-color: #000000;
+  --success-bg: #24c600;
+
+  //--frm-btn-border: 1px solid
+  --btn-default-bg: #303950;
+  --btn-default-txt: #fff;
+  --btn-default-border: 1px solid #44547f;
+  --btn-radius: 4px;
+
+  --btn-hover: #{$dark-nav-tabBgColor_hover};
+  --btn-default-hover: #44547f;
+
+  --thumbBG: #{$dark-scrollbar-color};
+  --scrollbarBG: #{$dark-scrollbar-bg};
+
+  --code-font: "JetBrains Mono"
+}

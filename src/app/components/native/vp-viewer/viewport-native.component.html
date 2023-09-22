@@ -1,0 +1,270 @@
+<div class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
+  <div #metadata style="border-bottom:1px solid #777;line-height: 1">
+
+
+    <ng-container *ngFor="let t of sections; let offset=index;">
+      <span *ngIf="data" class="badge badge-info dxc-meta" [style]="{ 'background':'#FF30'+((offset*20).toString(16)), 'border-left':'2px solid #222' }">&nbsp;</span>
+    </ng-container>
+
+  </div>
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="50" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'" [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [icon]="icons.FUNC" [active]="activeTopLeft == 'fl'" (click)="show('fn_list','fl')">&nbsp;Functions</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons.SECTIONS" [active]="activeTopLeft == 'is'" (click)="show('sections','is')">&nbsp;Sections</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons.IMPORTS" [active]="activeTopLeft == 'ii'" (click)="show('imports','ii')">&nbsp;Imports</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons.IMPORTS" [active]="activeTopLeft == 'ex'" (click)="show('exports','ex')">&nbsp;Exports</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons.STRINGS" [active]="activeTopLeft == 'st'" (click)="show('strings','st')">&nbsp;Strings</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons.SYSCALL" [active]="activeTopLeft == 'ss'" (click)="show('syscall','ss')">&nbsp;Syscall</app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-left>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='fl')" style="margin:0px; padding:0px; width:100%;">
+
+        <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">Size</div>
+          <div class="col-lg-8">Symbol</div>
+        </div>
+
+        <div *ngFor="let fn of data.__p.f_list | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'fn',fn.value)" (click)="showDetail('fn', fn.value, 'di')">
+          <div class="col-lg-2" [ngClass]="{ 'active' : (fn.value.hook!=null)}"  style="border-right:1px solid #aaa;">{{ fn.key }}</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.value.sz }}</div>
+          <div class="col-lg-8">
+            {{ fn.value.name }}
+            <span class="text-warning" *ngIf="fn.value.alias">
+            @{{ fn.value.alias }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ex')" style="margin:0px; padding:0px; width:100%;">
+
+        <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">Size</div>
+          <div class="col-lg-8">Symbol</div>
+        </div>
+
+        <div *ngFor="let fn of data.__p.fn | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'fn',fn.value)" (click)="showDetail('fn', fn.value, 'di')">
+          <div class="col-lg-2" [ngClass]="{ 'active' : (fn.value.hook!=null)}"  style="border-right:1px solid #aaa;">{{ fn.key }}</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.value.sz }}</div>
+          <div class="col-lg-8">
+            {{ fn.value.symbol }}
+            <span class="text-warning" *ngIf="fn.value.alias">
+            @{{ fn.value.alias }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ii')" style="margin:0px; padding:0px; width:100%;">
+
+        <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">Size</div>
+          <div class="col-lg-8">Symbol</div>
+        </div>
+
+        <div *ngFor="let fn of data.__p.imp | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'fn',fn.value)" (click)="showDetail('fn', fn.value, 'di')">
+          <div class="col-lg-2" [ngClass]="{ 'active' : (fn.value.hook!=null)}"  style="border-right:1px solid #aaa;">{{ fn.key }}</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.value.sz }}</div>
+          <div class="col-lg-8">
+            {{ fn.value.symbol }}
+            <span class="text-warning" *ngIf="fn.value.alias">
+            @{{ fn.value.alias }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='is')"  style="margin:0px; padding:0px; width:100%;">
+
+        <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
+          <div class="col-lg-6" style="border-right:1px solid #aaa;">Name</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">Perms</div>
+          <div class="col-lg-2">Size</div>
+        </div>
+
+        <div *ngFor="let is of data.__p.sections" [ngClass]="{ 'active' : (selected.sc_paddr==is.paddr)}" class="row no-gutters dxc-grid-body" style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'sc',is)" (click)="showDetail('sc', is, 'di')">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">0x{{ is.paddr.toString(16) }}</div>
+          <div class="col-lg-6" style="border-right:1px solid #aaa;">{{ is.name }}</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ is.perm }}</div>
+          <div class="col-lg-2">{{ is.memsz }}</div>
+        </div>
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='st')"  style="margin:0px; padding:0px; width:100%;">
+
+        <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
+          <div class="col-lg-8" style="border-right:1px solid #aaa;">Value</div>
+          <div class="col-lg-2">Size</div>
+        </div>
+
+        <!--<div *ngFor="let is of data" [ngClass]="{ 'active' : (selected.sc_paddr==is.paddr)}" class="row no-gutters dxc-grid-body" style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'sc',is)" (click)="showDetail('sc', is, 'di')">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">0x{{ is.paddr.toString(16) }}</div>
+          <div class="col-lg-6" style="border-right:1px solid #aaa;">{{ is.name }}</div>
+          <div class="col-lg-2">{{ is.memsz }}</div>
+        </div>-->
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ss')"  style="margin:0px; padding:0px; width:100%;">
+
+        <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
+          <div class="col-lg-4" style="border-right:1px solid #aaa;">Instruction</div>
+          <div class="col-lg-4" style="border-right:1px solid #aaa;">Syscall Name</div>
+          <div class="col-lg-2">Size</div>
+        </div>
+
+        <!--<div *ngFor="let is of data.__p.sections" [ngClass]="{ 'active' : (selected.sc_paddr==is.paddr)}" class="row no-gutters dxc-grid-body" style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'sc',is)" (click)="showDetail('sc', is, 'di')">
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">0x{{ is.paddr.toString(16) }}</div>
+          <div class="col-lg-6" style="border-right:1px solid #aaa;">{{ is.name }}</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ is.perm }}</div>
+          <div class="col-lg-2">{{ is.memsz }}</div>
+        </div>-->
+      </div>
+    </ng-container>
+
+
+
+    <ng-container nav-right>
+      <app-subnavbar [type]="'navbar'"  [parent]="this" [opts]="true">
+        <ng-container main>
+          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="gIcons.ANDROID" [active]="activeTopRight == 'di'" (click)="selectRightTab('di')">Disassembly</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="cIcons.XREF_TO" [active]="activeTopRight == 'xr'" (click)="selectRightTab('xr')">Xref</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="gIcons.HOOKS" [active]="activeTopRight == 'hk'" (click)="selectRightTab('hk')">Hooks</app-subnavbar-btn>
+        </ng-container>
+        <ng-container options>
+          <app-subnavbar-btn [icon]="gIcons.FIND" (click)="findInRight()"></app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-right>
+
+      <ng-container *ngIf="activeRight=='fn'">
+        <div *ngIf="activeObj" class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='di')" style="margin:0px; padding:0px;height:100%;overflow: scroll;background-color: #0c0c0c;">
+          <ng-container *ngFor="let ins of activeObj.instr; let offset=index">
+
+            <div *ngIf="ins.flags!=null && ins.flags.length>0" class="row no-gutters">
+              <div class="col-lg-10" [ngStyle]="{color: opstyle.flags.color}" style="font-family: 'Courier New', Courier, monospace;"><b>{{ ins.flags[0] }}</b></div>
+            </div>
+            <div class="row no-gutters dxc-disass-row"  (contextmenu)="displayCtxMenu($event,id+'inst',ins)" [ngClass]="getStyleForInstr(ins, offset)">
+              <div class="col-lg-2">
+                <span *ngIf="offset==12" class="badge badge-sm dxc-meta badge-success">TRACKED</span>&nbsp;
+              </div>
+              <div class="col-lg-2" style="color:darkgrey;font-family: 'Courier New', Courier, monospace">0x{{ ins.offset.toString(16) }}</div>
+              <div class="col-lg-2" style="color:yellow;font-family: 'Courier New', Courier, monospace">{{ ins.bytes }}</div>
+              <div class="col-lg-6" [ngStyle]="{ 'color': opstyle.color[ins.type] }" style="color:white;font-family: 'Courier New', Courier, monospace">
+                <b>{{ ins.opcode }}</b>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+
+      </ng-container>
+      <!--
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='xr')">
+        <app-expandable-list style="overflow: auto;">
+          <ng-container *ngFor="let cat of data.internals">
+
+            <ng-template #expItem let-itemObj="item" >
+
+              <span *ngIf="itemObj._t=='c'" (contextmenu)="displayExtMenu($event,'clzz',itemObj)">
+                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                {{ itemObj.name  }}
+              </span>
+              <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                {{ itemObj.__callSignature__  }}
+              </span>
+              <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                {{ itemObj.__signature__  }}
+              </span>
+            </ng-template>
+
+            <app-expandable-item
+              [itemTpl]="expItem"
+              [item]="cat"
+              [provider]="this"
+              [itemType]="cat._t"
+              [expandableFn]="isExpandable"
+            >
+
+            </app-expandable-item>
+          </ng-container>
+        </app-expandable-list>
+      </div>
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='cmp')">
+        {{ data.__impl }}
+      </div>
+-->
+
+
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>
+
+
+<app-context-menu [width]="200" [name]="id+'fn'">
+  <app-context-item [label]="'Disassemble'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
+  <app-context-item [label]="'Xref from'" [disabled]="true" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Xref to'"  [disabled]="true"  (click)="showDetail('fn', ctxMenuState.subject, 'xt')"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Track call'" (itemclick)="trackValueOf(ctxMenuState.subject, { type: PRESET_HOOK.TRACK })"></app-context-item>
+  <app-context-item [label]="'Tamper return value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_RET  })"></app-context-item>
+  <app-context-item [label]="'Tamper param value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_PARAM  })"></app-context-item>
+  <app-context-item [label]="'Generate empty hook'" [icon]="gIcons.GEN_HOOK"  (click)="trackValueOf( ctxMenuState.subject, {type: PRESET_HOOK.NONE  } )"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Add bookmark'" [icon]="gIcons.BOOKMARK"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <!--<app-context-item [label]="'Show details'" [icon]="gIcons.FIND"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>-->
+</app-context-menu>
+
+
+<app-context-menu [width]="200" [name]="id+'inst'">
+  <app-context-item [label]="'Track context'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
+  <app-context-item [label]="'Track ...'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
+  <app-context-item [label]="'Hook'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Memory snapshot here'" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Xref to'"   (click)="showDetail('fn', ctxMenuState.subject, 'xt')"></app-context-item>
+  <app-context-item [label]="'Patch'" [icon]="gIcons.HOOKS"  (click)="goHook( 'fn', ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Add bookmark'" [icon]="gIcons.BOOKMARK"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Search syscalls'" [separator]="true"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Search ...'"   [icon]="gIcons.FIND"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Start emulation here'"   [icon]="gIcons.FIND"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <!--<app-context-item [label]="'Show details'" [icon]="gIcons.FIND"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>-->
+</app-context-menu>
+
+<app-context-menu [width]="200" [name]="'syscall'">
+  <app-context-item [label]="'Track context'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
+  <app-context-item [label]="'Track ...'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
+  <app-context-item [label]="'Tamper syscall arguments'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Tamper syscall results'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Custom hook ...'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Do memory snapshot here'" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Dump stack here'" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [width]="200" [name]="id+'sc'">
+  <app-context-item [label]="'Show disassembly'" (click)="showDetail('sc', ctxMenuState.subject, 'di')"></app-context-item>
+  <app-context-item [label]="'Dump from device'" [disabled]="true" (click)="dumpSection(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+
+<!--
+<app-modal-dm [controller]="controller"></app-modal-dm>
+-->

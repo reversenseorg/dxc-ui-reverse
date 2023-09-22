@@ -1,0 +1,10 @@
+
+<div [class.dxc-hidden]="(parent==null) || (parent.activeCtn==null) || (id!=parent.activeCtn.id)" class="container-fluid viewport-splash p-0">
+  <dxc-splash-screen [height]="size.height" [width]="size.width"></dxc-splash-screen>
+</div>
+
+
+<dxc-modal-new-project [controller]="controller"></dxc-modal-new-project>
+<dxc-modal-project-settings [controller]="controller"></dxc-modal-project-settings>
+<dxc-modal-open-project [controller]="controller"></dxc-modal-open-project>
+<dxc-modal-project-anal-config [controller]="controller"></dxc-modal-project-anal-config>

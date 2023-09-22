@@ -1,0 +1,94 @@
+<div [class.dxc-hidden]="offset != parent.active" class="container-fluid explorer-file" #explFileRef>
+  <!-- <app-explorer-navbar [explorer]="this" ></app-explorer-navbar> -->
+  <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
+    <ng-container opts>
+      <span [ngbTooltip]="'Access as root'" class="badge badge-pill badge-success btn-option" style="cursor: pointer" *ngIf="!privileged" (click)="setPrivileged(true)">
+        <dxc-icon [model]="gIcons.LOCK"></dxc-icon>&nbsp;USER
+      </span>
+      <span [ngbTooltip]="'Access as user'" class="badge badge-pill badge-danger btn-option" style="cursor: pointer" *ngIf="privileged" (click)="setPrivileged(false)">
+        <dxc-icon [model]="gIcons.UNLOCK"></dxc-icon>&nbsp;ROOT
+      </span>
+      <!--<button class="btn-option" (click)="refresh()"><fa-icon [icon]="['fas','cog']"></fa-icon></button>-->
+      <button class="ml-2 btn-option" [ngbTooltip]="'Refresh files'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
+    </ng-container>
+  </app-explorer-navbar>
+
+  <ul *ngIf="view.subnav != null" class="nav">
+    <li *ngFor="let navBtn in view.subnav.menu.items">
+      <fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>
+    </li>
+  </ul>
+
+  <div class="explorer-list-root" #explFileCtnRef>
+    <app-expandable-list
+      *ngIf="projectReady">
+
+      <ng-container *ngFor="let file of activePool; trackBy: fileIdentify">
+
+        <ng-template #expFileItem let-itemObj="item" >
+          <span *ngIf="itemObj._t=='d'" (contextmenu)="displayCtxMenu($event,'dir',itemObj)">
+            <dxc-icon [model]="gIcons.FOLDER"></dxc-icon>
+            {{ itemObj.n  }}
+          </span>
+
+          <span *ngIf="itemObj._t=='l'" (contextmenu)="displayCtxMenu($event,'dir',itemObj)">
+            <dxc-icon [model]="gIcons.FOLDER" [color1]="'text-warning'"></dxc-icon>
+            {{ itemObj.n  }}<i class="text-warning">&nbsp;-&gt;&nbsp;{{ itemObj._d }}</i>
+          </span>
+
+          <span *ngIf="itemObj._t=='f'"  (contextmenu)="displayCtxMenu($event,'dfile',itemObj)">
+              <dxc-icon [model]="getIconForType(itemObj)"></dxc-icon>
+            {{ itemObj.n  }}
+          </span>
+        </ng-template>
+
+        <app-expandable-item
+          [itemTpl]="expFileItem"
+          [item]="file"
+          [provider]="this"
+          [itemType]="file._t"
+          [expandableFn]="isExpendable"
+          (itemFocus)="onItemFocus($event)"
+          (collapse)="onCollapse($event)"
+          (expand)="onExpand($event)"
+        >
+
+        </app-expandable-item>
+
+      </ng-container>
+
+    </app-expandable-list>
+
+    <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
+      Open a project first.
+    </div>
+  </div>
+
+
+</div>
+
+<app-context-menu [width]="200" [name]="'dir'">
+  <!--<app-context-item [label]="'Pull file'" [icon]="gIcons.DOWNLOAD"  (click)="pullFile(ctxMenuState.subject)"></app-context-item>-->
+  <app-context-item [label]="'Copy name'" (click)="copyAttr(ctxMenuState.subject, 'n')"></app-context-item>
+  <app-context-item [label]="'Copy path'" (click)="copyAttr(ctxMenuState.subject, 'p')"></app-context-item>
+  <app-context-item [separator]="true"  [label]="'Rename'" [icon]="gIcons.EDIT" (click)="doDeviceDir(ctxMenuState.subject, 'ed')"></app-context-item>
+  <app-context-item [label]="'Delete'" [icon]="gIcons.TRASH" (click)="doDeviceDir(ctxMenuState.subject, 'rm')"></app-context-item>
+</app-context-menu>
+
+
+<app-context-menu [width]="200" [name]="'ddir'">
+  <!--<app-context-item [label]="'Pull file'" [icon]="gIcons.DOWNLOAD"  (click)="pullFile(ctxMenuState.subject)"></app-context-item>-->
+  <app-context-item [label]="'Copy name'" (click)="copyAttr(ctxMenuState.subject, 'n')"></app-context-item>
+  <app-context-item [label]="'Copy path'" (click)="copyAttr(ctxMenuState.subject, 'p')"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Pull from device'" [icon]="gIcons.DOWNLOAD" (click)="doDeviceDir(ctxMenuState.subject, 'dl')"></app-context-item>
+  <app-context-item [label]="'Delete'" [icon]="gIcons.TRASH" (click)="doDeviceDir(ctxMenuState.subject, 'rm')"></app-context-item>
+</app-context-menu>
+
+
+<app-context-menu [width]="200" [name]="'dfile'">
+  <!--<app-context-item [label]="'Pull file'" [icon]="gIcons.DOWNLOAD"  (click)="pullFile(ctxMenuState.subject)"></app-context-item>-->
+  <app-context-item [label]="'Copy name'" (click)="copyAttr(ctxMenuState.subject, 'n')"></app-context-item>
+  <app-context-item [label]="'Copy path'" (click)="copyAttr(ctxMenuState.subject, '_r')"></app-context-item>
+  <app-context-item [label]="'Open'" (click)="open(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+

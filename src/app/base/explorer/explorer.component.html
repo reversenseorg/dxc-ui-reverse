@@ -1,0 +1,21 @@
+<div class="explorer-container" id="explorerContainer" #outterExpl>
+  <div class="row explorer-tab" id="explorerContainer2" #explorerCtn>
+    <div class="explorer-tabnav" id="explorerNav" #explorerNav>
+      <ul ngbNav [(activeId)]="active"  class="nav-tabs">
+        <li *ngFor="let el of elements; let even=even; let odd=odd;" [ngbNavItem]="el.offset" [class.active]="active == el.offset" (click)="selectTab(el.offset, $event)">
+          <div class="wrapper-outer"><div class="wrapper-inner">
+            <a [class.active]="active == el.offset" (click)="selectTab(el.offset,$event)" class="tabpanel" ngbNavLink> {{ el.tab.label }} </a>
+          </div></div>
+          <dxc-icon [model]="el.tab.icon" [class.active]="active == el.offset" (click)="selectTab(el.offset,$event)"></dxc-icon>
+        </li>
+      </ul>
+    </div>
+    <div class="explorer-viewport" id="explorerVP" #explorerView>
+      <!--<router-outlet name="explorer-view"></router-outlet>-->
+      <ng-template explorerHost></ng-template>
+    </div>
+    <div class="explorer-resize" id="explorerResize" (mousedown)="onDragToResize($event)" #explorerBorder>
+      &nbsp;
+    </div>
+  </div>
+</div>

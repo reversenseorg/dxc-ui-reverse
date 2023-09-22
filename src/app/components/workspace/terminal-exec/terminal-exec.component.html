@@ -1,0 +1,22 @@
+<div [class.dxc-hidden]="parent.isTabActive(this)===false"  class="container-fluid" #termJs>
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="50" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'"  [opts]="true" [parent]="this">
+        <ng-container main>
+          <app-subnavbar-tab [icon]="gIcons.PLAY" [closable]="false" (click)="run()"></app-subnavbar-tab>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-left>
+      <!--<div #editor (contextmenu)="openEditorMenu($event)" (focusin)="onEditorFocus()">-->
+        <ace-editor #jsEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+      <!--</div>-->
+      <span>text</span>
+    </ng-container>
+    <ng-container body-right>
+      <div class="">
+        [output]
+      </div>
+    </ng-container>
+  </app-viewport-splitted>
+</div>

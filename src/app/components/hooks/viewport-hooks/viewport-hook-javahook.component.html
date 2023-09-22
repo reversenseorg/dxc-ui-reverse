@@ -1,0 +1,169 @@
+<div class="container-fluid viewport-hook">
+  <app-subnavbar [type]="'navbar'" [parent]="this">
+    <ng-container main>
+      <app-subnavbar-btn (click)="controller.switchOnOff(data)">Status :
+        <span class="badge padge-pill badge-success" *ngIf="data.enable">ON</span>
+        <span class="badge padge-pill badge-danger" *ngIf="!data.enable">OFF</span>
+      </app-subnavbar-btn>
+      <!-- <app-subnavbar-btn [icon]="gIcons.FILE" (click)="saveHook()">Save</app-subnavbar-btn> -->
+      <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="startApp()">Run</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="startApp()">Run ALL</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.REFRESH" (click)="restartApp()">Restart</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.TRASH" [ngClass]="'text-danger'" (click)="deleteHook()">Remove</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.CODE" (click)="openMethod(data)">Show method</app-subnavbar-btn>
+    </ng-container>
+  </app-subnavbar>
+
+  <div #metadata>
+    <div class="title pl-1"><dxc-icon [model]="gIcons.TARGET"></dxc-icon>
+      <ng-container *ngIf="data.__==HOOK_JAVA; else nuid">
+        <span class="dxc-ilink pl-1" (contextmenu)="displayExtMenu($event, 'meth', data.method)">{{ data.method.__signature__ }}</span>
+      </ng-container>
+      <ng-template #nuid>
+        <dxc-meta [css]="'dxc-salmon dxc-code dxc-sz-6 mr-2'" (click)="controller.openLib(data.func.src)"  [label]="data.file">{{ data.file }}</dxc-meta>
+        <span class="dxc-code mr-3">{{ addr }}</span>
+        <span class="dxc-ilink dxc-code mr-1">{{ data.func.ret.type }}</span>
+        <span class="dxc-ilink dxc-text-blue dxc-code pl-1" (contextmenu)="displayExtMenu($event, 'fun', data.func)">{{ data.func.name }}</span>
+        (
+        <ng-container *ngFor="let a of data.func.args">
+          <span class="dxc-ilink dxc-code mr-1">{{ a.type }}</span>&nbsp;,
+        </ng-container>
+        )
+      </ng-template>
+
+    </div>
+  </div>
+
+
+
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="activeWidth" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'"  [opts]="true" [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn>Insert ...</app-subnavbar-btn>
+          <app-subnavbar-btn (click)="addNewFragment()">Add fragment</app-subnavbar-btn>
+          <!--<app-subnavbar-btn [disable]="true" (click)="showJavaHeap(30)">Show heap</app-subnavbar-btn>-->
+          <app-subnavbar-btn [disable]="true" (click)="showJavaContext(30)">Show context</app-subnavbar-btn>
+          <app-subnavbar-btn [disable]="true" (click)="showHookOutput(50)">Logs</app-subnavbar-btn>
+          <app-subnavbar-btn [disable]="true" (click)="showHookOutput(50)">Add condition</app-subnavbar-btn>
+          <app-subnavbar-btn (click)="saveChanges()">Save changes</app-subnavbar-btn>
+        </ng-container>
+
+        <ng-container options>
+          <app-subnavbar-btn [active]="activeLeft=='sc'" (click)="showScript()">Script</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='fr'" *ngIf="editingFrag" (click)="showFragmentTpl()">
+            <dxc-meta [gutters]="false" [css]="activeFragCss" [label]="'Fragment '+activeFrag._t+'#'+(activeFrag.f.name!=''?activeFrag.f.name:activeFrag.o)"></dxc-meta>
+          </app-subnavbar-btn>
+        </ng-container>
+        <!--
+        <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
+          <ng-container *ngFor="let act of data.frontController.actions">
+            <app-subnavbar-btn [icon]="act.nav.icon" (click)="performExtra(act.name)">{{ act.nav.label }}</app-subnavbar-btn>
+          </ng-container>
+        </ng-container>-->
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-left>
+      <div #editor (contextmenu)="openEditorMenu($event)" (focusin)="onEditorFocus()">
+        <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+      </div>
+    </ng-container>
+
+    <ng-container nav-right>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+          <ng-container main>
+          <app-subnavbar-btn [active]="activeRight=='fr'" [icon]="icons.FRAGMENTS" (click)="showFragments()">Fragments</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeRight=='ct'" [icon]="gIcons.MSG" (click)="showLatestCatch()">Latest messages</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='ss'" [icon]="gIcons.HISTORY" (click)="showHistory()">Sessions</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='ds'" [icon]="gIcons.INFO" (click)="showMeta()">Meta</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='ex'" [icon]="gIcons.FILE" (click)="showExport()">Export</app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+
+    <ng-container body-right>
+      &nbsp; <div class="container-fluid" [class.dxc-hidden]="(activeRight==null) || (activeRight!='ds')">
+            <div class="dxc-editable-block">
+              <div class="row">
+                <div class="col-10">
+                  <strong>Description</strong>
+                </div>
+                <div class="col-2 text-right">
+                  <dxc-icon [model]="gIcons.EDIT" [color1]="'dxc-text-75'"></dxc-icon>
+                  <!--<dxc-icon [model]="gIcons." [color1]="'dxc-text-75'"></dxc-icon>-->
+                </div>
+              </div>
+              <p class="pt-1" *ngIf="data.description; else noDesc">{{ data.description }}</p>
+              <ng-template  #noDesc>This hook has not description</ng-template>
+            </div>
+        </div>
+
+
+      &nbsp; <div class="container-fluid" [class.dxc-hidden]="(activeRight==null) || (activeRight!='fr')">
+          <div *ngFor="let frag of data._before; let i=index" class="dxc-editable-block" style="overflow-y: auto" (click)="editFragment('b', i, frag)"  (contextmenu)="controller.displayCtxMenu($event, 'hkfrag', { hook:data, frag:frag, pos:'before' })">
+            <div class="row no-gutters">
+              <div class="col-10">
+                <dxc-meta [css]="'dxc-salmon'" [label]="'BEFORE'">BEFORE</dxc-meta>
+                <strong *ngIf="frag.name; else noNameF" class="pl-1">{{ frag.name }}</strong>
+                <ng-template  #noNameF><strong class="pl-1">Fragment#{{i}}</strong></ng-template>
+              </div>
+              <div class="col-2 text-right">
+                <!--<dxc-icon [model]="gIcons.SAVE" [color1]="'dxc-text-75'"></dxc-icon>-->
+                <span>Priority: {{ frag.weight }}</span>
+              </div>
+            </div>
+
+            <p class="pt-1" *ngIf="frag.descr; else noDescF">{{ frag.descr }}</p>
+            <ng-template  #noDescF>This hook has not description</ng-template>
+          </div>
+          <div *ngFor="let frag of data._replace; let i=index" class="dxc-editable-block" (click)="editFragment('r',i,frag)" (contextmenu)="controller.displayCtxMenu($event, 'hkfrag', { hook:data, frag:frag, pos:'replace' })">
+            <div class="row no-gutters">
+              <div class="col-10">
+                <dxc-meta [css]="'dxc-azur'" [label]="'REPLACE'">REPLACE</dxc-meta>
+                <strong *ngIf="frag.name; else noNameF" class="pl-1">{{ frag.name }}</strong>
+                <ng-template  #noNameF><strong class="pl-1">Fragment#{{i}}</strong></ng-template>
+              </div>
+              <div class="col-2 text-right">
+
+                <span>Priority: {{ frag.weight }}</span>
+              </div>
+            </div>
+
+            <p class="pt-1" *ngIf="frag.descr; else noDescF">{{ frag.descr }}</p>
+            <ng-template  #noDescF>This hook has not description</ng-template>
+          </div>
+          <div *ngFor="let frag of data._after; let i=index" class="dxc-editable-block" (click)="editFragment('a',i,frag)" (contextmenu)="controller.displayCtxMenu($event, 'hkfrag', { hook:data, frag:frag, pos:'after' })">
+            <div class="row no-gutters">
+              <div class="col-10">
+                <dxc-meta [css]="'dxc-herb'" [label]="'AFTER'">AFTER</dxc-meta>
+                <strong *ngIf="frag.name; else noNameF" class="pl-1">{{ frag.name }}</strong>
+                <ng-template  #noNameF><strong class="pl-1">Fragment#{{i}}</strong></ng-template>
+              </div>
+              <div class="col-2 text-right">
+                <span>Priority: {{ frag.weight }}</span>
+              </div>
+            </div>
+
+            <p *ngIf="frag.descr; else noDescF">{{ frag.descr }}</p>
+            <ng-template  #noDescF>This hook has not description</ng-template>
+          </div>
+        </div>
+
+      <!--
+      <div class="container-fluid" [class.dxc-hidden]="(activeRight==null) || (activeRight=='hk')">
+        <ng-container *ngFor="let l of data.listener">
+          <div class="row hook-row">
+            <div class="col-lg-10">
+              {{ l.n }}
+            </div>
+            <div class="col-lg-2">
+              <dxc-icon [model]="gIcons.HELPER" [color1]="'dxc-text-darker'"></dxc-icon>
+            </div>
+          </div>
+        </ng-container>
+      </div>-->
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>

@@ -1,0 +1,62 @@
+<style>
+  body {
+    background-color:#333;
+  }
+</style>
+<div class="overall" id="bodyCtn" #mainContainer>
+  <app-navbar *ngIf="webNav" [parent]="this" ></app-navbar>
+  <div class="container-fluid row app-superviewport" id="appMiddleCtn" #middleCtn>
+    <div class="app-explorer-z" id="appSuperExpl" #explContainer>
+      <app-explorer [parent]="this" [explorers]="explorers"></app-explorer>
+    </div>
+    <div class="app-viewp-z" id="appSuperViewport" #viewportContainer>
+      <app-viewport [parent]="this" [controller]="viewport"></app-viewport>
+      <!--<router-outlet name="main-viewport"></router-outlet>-->
+    </div>
+    <!--<router-outlet name="rightside-panel"></router-outlet>-->
+  </div>
+  <app-terminal [parent]="this" [statebarHeight]="statebarHeight" [terminals]="terminals" id="appBottomCtn"></app-terminal>
+  <dxc-statebar [height]="statebarHeight" #statebar>
+    <app-subnavbar [type]="'navbar'" [height]="statebarHeight">
+      <ng-container main>
+        <app-subnavbar-btn *ngIf="project && project.device" [icon]="icons.DEFAULT_DEVICE" [height]="statebarHeight" (click)="showDevice(project.device)">{{ project.device.id }}&nbsp;[{{ project.device.model }}]</app-subnavbar-btn>
+        <app-subnavbar-btn *ngIf="project" [icon]="gIcons.PACKAGE" [height]="statebarHeight">{{ project.package }}</app-subnavbar-btn>
+        <app-subnavbar-btn *ngIf="conn" [icon]="gIcons.NETWORK_OK" [height]="statebarHeight"><ng-container *ngIf="conn.user">{{ conn.user.username }}</ng-container>:{{ conn.name }}</app-subnavbar-btn>
+        <app-subnavbar-btn [height]="statebarHeight" [icon]="gIcons.BELL">&nbsp;Info&nbsp;&nbsp;<span *ngIf="alertCtr > 0" class="badge badge-pill badge-danger">{{ alertCtr }}</span></app-subnavbar-btn>
+      </ng-container>
+    </app-subnavbar>
+  </dxc-statebar>
+</div>
+
+<router-outlet></router-outlet>
+
+<app-modal-base [name]="'new-project'" [width]="800" [height]="600" [mainController]="this" (document:keydown.control.n)="showModal('new-project')">
+  <div class="row" title>
+    New project
+  </div>
+  <div body>
+    <dxc-splash-screen></dxc-splash-screen>
+  </div>
+</app-modal-base>
+
+<dxc-modal-project-active [mainController]="this"></dxc-modal-project-active>
+<!--
+<app-modal-base [name]="'main-search'" [closeOnFocusout]="true" [closable]="true" [width]="400" [height]="250" [mainController]="this" (document:keydown.control.f)="showModal('main-search')">
+  <div class="row" title>
+    <div class="col-lg-8">Find an element :</div>
+    <div class="col-lg-4">&nbsp;</div>
+  </div>
+  <div body>
+    <div class="container-fluid">
+      <input type="text" class="modal-fluid-input" name="searchQuery" style="width:100%" />
+    </div>
+  </div>
+</app-modal-base>-->
+
+<app-modal-progress [cancelable]="true" [progress$]="progress$" [title]="progressTitle" [progress]="progressValue" [width]="450" [cancel]="onModalProgressCancel" [closable]="true" [controller]="this" [mainController]="this"></app-modal-progress>
+<dxc-modal-search [mainController]="this"></dxc-modal-search>
+<dxc-modal-alert [mainController]="this"></dxc-modal-alert>
+<dxc-modal-passwd-auth [mainController]="this"></dxc-modal-passwd-auth>
+<dxc-modal-global-settings [mainController]="this"></dxc-modal-global-settings>
+<dxc-modal-new-setting [mainController]="this"></dxc-modal-new-setting>
+

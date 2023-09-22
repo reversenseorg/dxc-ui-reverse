@@ -1,0 +1,146 @@
+export enum NodeInternalType {
+  BASIC_BLOCK,
+  CLASS,
+  METHOD,
+  FIELD,
+  FILE,
+  INSTRUCTION,
+  METADATA,
+  PACKAGE,
+  SWITCH_STMT,
+  SYSCALL,
+  TAG_CATEGORY,
+  CATCH_STMT,
+  SWITCH_CASE,
+  FUNC,
+  EXEC_SECTION,
+  VAR,
+  INSTR_CPU,
+  FILE_SECTION,
+  PLATFORM_PPT,
+  INTERNAL_DB,
+  USER_ACCOUNT,
+  USER_SESSION,
+  USER_SESSION_DATA,
+  DATA_SCOPE,
+  KEY_POINT,
+  HOOK_BUILDER_RULE,
+  BOOKMARK_TYPE,
+  BOOKMARK,
+  HOOK_JAVA,
+  HOOK_NATIVE,
+  HOOK_FRAGMENT,
+  HOOK_STRATEGY,
+  HOOK_GROUP,
+  HOOK_SET,
+  SCRIPT,
+  ANAL_STATE,
+  TAG,
+  DATA_BLOCK,
+  STRING,
+  ANDROID_ACTIVITY,
+  ANDROID_PROVIDER,
+  ANDROID_RECEIVER,
+  ANDROID_SERVICE,
+  ANDROID_PERM,
+  INSPECTOR,
+  HOOK_SESSION,
+  RUNTIME_EVENT,
+
+  HOOK_SYSCALL,
+  TEST_CREDS,
+  LIB_FP,
+  DASHBOARD
+}
+
+export const NodeInternalTypeName = {
+  [NodeInternalType.BASIC_BLOCK]: "BASIC_BLOCK",
+  [NodeInternalType.CLASS]: "CLASS",
+  [NodeInternalType.METHOD]: "METHOD",
+  [NodeInternalType.FIELD]: "FIELD",
+  [NodeInternalType.FILE]: "FILE",
+  [NodeInternalType.INSTRUCTION]: "INSTRUCTION",
+  [NodeInternalType.METADATA]: "METADATA",
+  [NodeInternalType.PACKAGE]: "PACKAGE",
+  [NodeInternalType.SWITCH_STMT]: "SWITCH_STMT",
+  [NodeInternalType.SYSCALL]: "SYSCALL",
+  [NodeInternalType.TAG_CATEGORY]: "TAG_CATEGORY",
+  [NodeInternalType.CATCH_STMT]: "CATCH_STMT",
+  [NodeInternalType.SWITCH_CASE]: "SWITCH_CASE",
+  [NodeInternalType.FUNC]: "FUNC",
+  [NodeInternalType.EXEC_SECTION]: "EXEC_SECTION",
+  [NodeInternalType.VAR]: "VAR",
+  [NodeInternalType.INSTR_CPU]: "INSTR_CPU",
+  [NodeInternalType.FILE_SECTION]: "FILE_SECTION",
+  [NodeInternalType.PLATFORM_PPT]: "PLATFORM_PPT",
+  [NodeInternalType.INTERNAL_DB]: "INTERNAL_DB",
+  [NodeInternalType.USER_ACCOUNT]: "USER_ACCOUNT",
+  [NodeInternalType.USER_SESSION]: "USER_SESSION",
+  [NodeInternalType.USER_SESSION_DATA]: "USER_SESSION_DATA",
+  [NodeInternalType.DATA_SCOPE]: "DATA_SCOPE",
+  [NodeInternalType.KEY_POINT]: "KEY_POINT",
+  [NodeInternalType.HOOK_BUILDER_RULE]: "HOOK_BUILDER_RULE",
+  [NodeInternalType.BOOKMARK_TYPE]: "BOOKMARK_TYPE",
+  [NodeInternalType.BOOKMARK]: "BOOKMARK",
+  [NodeInternalType.HOOK_JAVA]: "HOOK_JAVA",
+  [NodeInternalType.HOOK_NATIVE]: "HOOK_NATIVE",
+  [NodeInternalType.HOOK_FRAGMENT]: "HOOK_FRAGMENT",
+  [NodeInternalType.HOOK_STRATEGY]: "HOOK_STRATEGY",
+  [NodeInternalType.HOOK_GROUP]: "HOOK_GROUP",
+  [NodeInternalType.HOOK_SET]: "HOOK_SET",
+  [NodeInternalType.SCRIPT]: "SCRIPT",
+  [NodeInternalType.ANAL_STATE]: "ANAL_STATE",
+  [NodeInternalType.TAG]: "TAG",
+  [NodeInternalType.DATA_BLOCK]: "DATA_BLOCK",
+  [NodeInternalType.STRING]: "STRING",
+  [NodeInternalType.ANDROID_ACTIVITY]: "ANDROID_ACTIVITY",
+  [NodeInternalType.ANDROID_RECEIVER]: "ANDROID_RECEIVER",
+  [NodeInternalType.ANDROID_PROVIDER]: "ANDROID_PROVIDER",
+  [NodeInternalType.ANDROID_SERVICE]: "ANDROID_SERVICE",
+  [NodeInternalType.ANDROID_PERM]: "ANDROID_PERM",
+  [NodeInternalType.INSPECTOR]: "INSPECTOR",
+  [NodeInternalType.HOOK_SESSION]: "HOOK_SESSION",
+  [NodeInternalType.RUNTIME_EVENT]: "RUNTIME_EVENT",
+  [NodeInternalType.HOOK_SYSCALL]: "HOOK_SYSCALL",
+  [NodeInternalType.TEST_CREDS]: "TEST_CREDS",
+  [NodeInternalType.LIB_FP]: "LIB_FP",
+  [NodeInternalType.DASHBOARD]: "DASHBOARD"
+}
+
+/**
+ * Helper to handle "not typed" object representing node
+ * @class
+ */
+export class NodeTypeHelper {
+
+  static UID_MAPPING = {
+    [NodeInternalType.BASIC_BLOCK]: "name",
+    [NodeInternalType.CLASS]: "name",
+    [NodeInternalType.METHOD]: "__signature__",
+    [NodeInternalType.FIELD]: "__signature__",
+    [NodeInternalType.FILE]: "_uid",
+    [NodeInternalType.INSTRUCTION]: "_raw",
+    [NodeInternalType.METADATA]: "alias",
+    [NodeInternalType.PACKAGE]: "name",
+    [NodeInternalType.KEY_POINT]: "name",
+    [NodeInternalType.RUNTIME_EVENT]: "id"
+  }
+
+  /**
+   * To get UID of a node when object instance is not representative
+   *
+   * @param pNode
+   * @param pNodeType
+   */
+  static getUIDof( pNode:any, pNodeType:string = null):string{
+    const type = (pNodeType == null ? pNode.__ : pNodeType);
+
+    const pptUID = NodeTypeHelper.UID_MAPPING[type];
+    console.log(pNode, type, pptUID);
+    if(pptUID != null){
+      return pNode[pptUID];
+    }else{
+      return pNode._uid;
+    }
+  }
+}

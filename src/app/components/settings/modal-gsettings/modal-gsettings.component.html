@@ -1,0 +1,329 @@
+<app-modal-base [name]="'gsettings'" [closable]="true" [width]="800" [height]="600" [mainController]="mainController" (click)="kbSvc.focus(this)">
+  <div head class="dxc-modal-header">
+    Global settings
+  </div>
+  <div body class="dxc-modal-body" style="height:540px;">
+    <div class="row no-gutters" style="height:100%;">
+      <div class="col-3" style="background-color: #333">
+        <app-subnavbar [direction]="'col'">
+          <ng-container vmain>
+            <app-subnavbar-btn [active]="active=='srv'" [vert]="true" [icon]="gIcons.LIST" [fwicon]="true" (click)="showTab('srv')">Server</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='etools'" [vert]="true" [icon]="gIcons.TOOLS" [fwicon]="true" (click)="showTab('etools')">External tools</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='plt'" [vert]="true" [icon]="gIcons.DEVICE" [fwicon]="true" (click)="showTab('plt')">Platform images</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='sec'" [vert]="true" [icon]="gIcons.LOCK" [fwicon]="true" (click)="showTab('sec')">Security</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='eng'" [vert]="true" [icon]="gIcons.ANALYZE" [fwicon]="true" (click)="showTab('eng')">Engine</app-subnavbar-btn>
+          </ng-container>
+        </app-subnavbar>
+      </div>
+      <div class="col-9 container-fluid">
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='srv')">
+          <h2>Master server</h2>
+          <div class="dxc-text">
+            Configuration of your master server. If you use Dexcalibur online then your master server is a dedicated remote VM, else
+            it can be a server running locally (on your computer or network).
+          </div>
+          <div class="container-fluid p-2">
+            <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
+              <ng-container main>
+                <app-subnavbar-btn [icon]="gIcons.ADD" (click)="openNewSetting('ext')"></app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" (click)="export('ext')"></app-subnavbar-btn>
+              </ng-container>
+            </app-subnavbar>
+
+            <div class="container-fluid p-2">
+
+              <h3>Server</h3>
+
+              <div class="row no-gutters" style="background-color: #777; border-radius:5px;">
+
+              </div>
+
+              <h3>Authentication</h3>
+
+              <div class="row no-gutters" style="background-color: #777; border-radius:5px;">
+                <select name="server" [(ngModel)]="authType" placeholder="Authentication type" class="dxc-input" style="width:200px">
+                    <option value="none" selected="true">None</option>
+                    <option value="passwd">Password</option>
+                    <option value="token">Token</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='etools')">
+          <h2>External tools</h2>
+          <div class="dxc-text">
+            Path and options related to external tool can be edited here.
+          </div>
+          <div class="container-fluid p-2">
+            <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
+              <ng-container main>
+                <app-subnavbar-btn [icon]="gIcons.ADD" (click)="openNewSetting('ext')"></app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" (click)="export('ext')"></app-subnavbar-btn>
+              </ng-container>
+            </app-subnavbar>
+            <table class="table table-bordered table-sm dxc-grid">
+              <thead>
+              <tr>
+                <th scope="col">Tool name</th>
+                <th scope="col">Path</th>
+                <th scope="col">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let ext of tools; trackBy: exttoolsIdentify">
+                <td>{{ ext._uid }}</td>
+                <td style="width:305px" >
+                  <span *ngIf="!ext._editing">{{ ext.path }}</span>
+                  <input *ngIf="ext._editing" type="text" class="form-input dxc-cell-input" style="width:300px" [name]="ext._uid+'_path'" [(ngModel)]="ext.path" (keydown.control.v)="onPaste('ext',ext)"  (keydown.escape)="quitEditMode($event,ext)" (keyup.enter)="saveExtPath($event,ext)"/>
+                </td>
+                <td>
+                  <app-subnavbar-btn *ngIf="!ext._editing" [icon]="gIcons.EDIT" [color]="'dxc-grid'" (click)="extEdit(ext)"></app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="ext._editing" [icon]="gIcons.SAVE" [color]="'dxc-grid'" (click)="saveExtPath(null,ext)"></app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="!ext._editing && ext._edited" [icon]="gIcons.CHECK"  [color]="'dxc-grid'">Saved !</app-subnavbar-btn>
+                  <app-subnavbar-btn [icon]="gIcons.TRASH" [color]="'dxc-grid'"  (click)="remove('ext', ext)"></app-subnavbar-btn>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='plt')">
+          <h2>Platforms</h2>
+          <div class="dxc-text">
+            Additional platform images can be installed from the table below.
+          </div>
+          <div class="container-fluid p-2">
+            <table class="table table-bordered table-sm dxc-grid">
+              <thead>
+                <tr>
+                  <th scope="col">Platform</th>
+                  <th scope="col">Version</th>
+                  <th scope="col">Source</th>
+                  <th scope="col">Installed</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let plt of pltList; trackBy: platformIdentify">
+                    <td>{{ plt.uid }}</td>
+                    <td>{{ plt.version }}</td>
+                    <td>{{ plt.source }}</td>
+                    <td>
+                      <span *ngIf="plt.installed && !plt._installing" class="text-success">
+                        <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Installed
+                      </span>
+                      <span *ngIf="!plt.installed && !plt._installing">
+                        <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                      </span>
+                      <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='net')">
+          <h2>Security</h2>
+          <div class="dxc-text">
+            Authentication settings and users account management.
+          </div>
+          <div class="container-fluid p-2">
+
+            <h3>Your account</h3>
+
+            <div class="row no-gutters" style="background-color: #777; border-radius:5px;" *ngIf="account">
+              <div class="col-4">
+
+              </div>
+              <div class="col-8">
+                <h4>{{ account.username }}</h4>
+                <i>{{ account.role }}</i>
+              </div>
+            </div>
+
+            <h3>Change your password <span *ngIf="pwdChanged" class="text-success">Password changed succesfully !</span></h3>
+            <div class="row">
+              <div class="col-4">Current password :</div>
+              <div class="col-8">
+                <input type="password" id="old_pwd" name="old_pwd" [ngModel]="oldUserPwd"  class="dxc-frm-input dxc-input-sm"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">New password :</div>
+              <div class="col-8">
+                <input type="password" id="new_pwd" name="new_pwd" [ngClass]="{ 'dxc-input-err':mismatch, 'dxc-input-success':!mismatch }" [ngModel]="newUserPwd"  class="dxc-frm-input dxc-input-sm" #newPwd1/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">Retype new password :</div>
+              <div class="col-8">
+                <input type="password" id="new_pwd2" name="new_pwd2" [ngClass]="{ 'dxc-input-err':mismatch, 'dxc-input-success':!mismatch }" class="dxc-frm-input dxc-input-sm" (change)="checkUserPasswd()" #newPwd2/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <button class="dxc-frm-btn default" (click)="changePasswd()"><dxc-icon [model]=""></dxc-icon>Change !</button>
+              </div>
+              <div class="col-6">&nbsp;</div>
+            </div>
+            <table class="table table-bordered table-sm dxc-grid">
+              <!--<thead>
+              <tr>
+                <th scope="col">Platform</th>
+                <th scope="col">Version</th>
+                <th scope="col">Source</th>
+                <th scope="col">Installed</th>
+              </tr>
+              </thead>-->
+              <tbody>
+              <tr >
+                <!--<td>
+                     <span *ngIf="plt.installed && !plt._installing" class="text-success">
+                        <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Installed
+                      </span>
+                  <span *ngIf="!plt.installed && !plt._installing">
+                        <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                      </span>
+                  <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
+                </td>-->
+              </tr>
+              <!--<tr *ngFor="let plt of pltList; trackBy: platformIdentify">
+                <td>{{ plt.uid }}</td>
+                <td>{{ plt.version }}</td>
+                <td>{{ plt.source }}</td>
+                <td>
+                      <span *ngIf="plt.installed && !plt._installing" class="text-success">
+                        <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Installed
+                      </span>
+                  <span *ngIf="!plt.installed && !plt._installing">
+                        <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                      </span>
+                  <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
+                </td>
+              </tr>-->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='eng')">
+          <h2>Engine</h2>
+          <div class="dxc-text">
+            Global configuration of engine
+          </div>
+          <div class="container-fluid p-2 dxc-frm dxc-sm">
+            <div class="row">
+              <div class="col-3">
+                <label for="srv_heapsize">Max heap size (Mb)</label>
+              </div>
+              <div class="col-9">
+                <input type="number" id="srv_heapsize" name="srv_heapsize" class="dxc-frm-input dxc-input-sm" min="2048" [(ngModel)]="srv.heapSize.value" (keyup.enter)="doSave('srv', srv.heapSize)">
+                <span *ngIf="srv.heapSize.saved===true">
+                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                </span>
+                <span *ngIf="srv.heapSize.saved===false">
+                  &nbsp;Error !
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <label for="net_http">HTTP port</label>
+              </div>
+              <div class="col-9">
+                <input type="number" id="net_http" name="net_http" class="dxc-frm-input dxc-input-sm" min="1" max="65535" [(ngModel)]="net.http.value" (keyup.enter)="doSave('srv', net.http)">
+                <span *ngIf="net.http.saved===true">
+                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                </span>
+                <span *ngIf="net.http.saved===false">
+                  &nbsp;Error !
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <label for="net_ws">WebSocket port</label>
+              </div>
+              <div class="col-9">
+                <input type="number" id="net_ws" name="net_ws" class="dxc-frm-input dxc-input-sm" min="1" max="65535" [(ngModel)]="net.ws.value" (keyup.enter)="doSave('srv', net.ws)">
+                <span *ngIf="net.ws.saved===true">
+                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                </span>
+                <span *ngIf="net.ws.saved===false">
+                  &nbsp;Error !
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <label for="srv_reg">Registry URL</label>
+              </div>
+              <div class="col-9">
+                <input type="text" id="srv_reg" name="srv_reg" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registry.value" (keyup.enter)="doSave('srv', srv.registry)">
+                <span *ngIf="srv.registry.saved===true">
+                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                </span>
+                <span *ngIf="srv.registry.saved===false">
+                  &nbsp;Error !
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <label for="srv_regapi">Registry API URL</label>
+              </div>
+              <div class="col-9">
+                <input type="text" name="srv_regapi" id="srv_regapi" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registryAPI.value" (change)="doSave('srv', srv.registryAPI)">
+                <span *ngIf="srv.registryAPI.saved===true">
+                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                </span>
+                <span *ngIf="srv.registryAPI.saved===false">
+                  &nbsp;Error !
+                </span>
+              </div>
+            </div>
+
+
+            <h3>Workspace</h3>
+
+            <div class="row">
+              <div class="col-3">
+                <label>Location</label>
+              </div>
+              <div class="col-9">
+                <span id="srv_ws_path" class="dxc-text-100 font-italic">{{ srv.workspace.value }}</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='sec')">
+          <h2>Engine</h2>
+          <div class="dxc-text">
+            That is the place where multi-user mode and admin accounts can be configured.
+          </div>
+          <div class="container-fluid p-2">
+            <h3>Account</h3>
+            <div class="row">
+              <div class="col-3"></div>
+              <div class="col-9">
+                <h4></h4>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="view-outer" [class.dxc-hidden]="(active==null)||(active!='plug')">
+          <h2>Plugins</h2>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="restart()"><dxc-icon [model]="gIcons.REFRESH"></dxc-icon>&nbsp;Restart</button>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="save()"><dxc-icon [model]=""></dxc-icon>Close</button>
+  </div>
+</app-modal-base>

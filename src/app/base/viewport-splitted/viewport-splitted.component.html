@@ -1,0 +1,32 @@
+<ng-container *ngIf="type=='1:2'">
+  <div class="container-fluid row viewport-splitted" [ngStyle]="{ height: heightPct+'%' }" #2colLayout>
+    <div class="ctn-code-left" #leftCtn>
+      <ng-content select="[nav-left]"></ng-content>
+      <div class="host-left" #leftVH leftViewHost>
+        <ng-content select="[body-left]"></ng-content>
+      </div>
+    </div>
+    <div class="ctn-code-right" #rightCtn>
+      <ng-content select="[nav-right]"></ng-content>
+      <div class="host-right" #rightVH rightViewHost>
+        <ng-content select="[body-right]"></ng-content>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="type=='2:1'">
+  <div class="container-fluid viewport-splitted" [ngStyle]="{ height: heightPct+'%' }" #2rowLayout>
+    <div class="ctn-code-top" #topCtn>
+      <ng-content select="[nav-top]"></ng-content>
+      <div class="host-top" topViewHost>
+        <ng-content select="[body-top]"></ng-content>
+      </div>
+    </div>
+    <div class="ctn-code-bottom" #bottomCtn>
+      <ng-content select="[nav-bottom]"></ng-content>
+      <div class="host-bottom" bottomViewHost>
+        <ng-content select="[body-bottom]"></ng-content>
+      </div>
+    </div>
+  </div>
+</ng-container>

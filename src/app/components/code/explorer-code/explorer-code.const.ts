@@ -1,0 +1,8 @@
+
+export enum CODE_SUBVIEW {
+  APP,
+  ANDROID_API,
+  ANDROID_FWK,
+  VENDOR,
+  ALL
+}

@@ -1,0 +1,36 @@
+<div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-ws" #console>
+
+  <div class="term-ws-ctn" style="background-color:#000000" #output>
+    <ng-container *ngFor="let m of msg; let index=index">
+      <div class="row output" (click)="outputMsgFocus(m, index)" [ngClass]="(m._s==true ? 'selected' : '')">
+
+        <ng-container *ngIf="m.isNotInfo(); else infoTpl">
+          <div class="col-lg-10 col-msg text-danger" *ngIf="m.isError()">
+            <dxc-icon [model]="gIcons.ERROR"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
+          </div>
+          <div class="col-lg-10 col-msg text-warning" *ngIf="m.isWarning()">
+            <dxc-icon [model]="gIcons.WARNING"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
+          </div>
+          <div class="col-lg-10 col-msg text-success" *ngIf="m.isSuccess()">
+            <dxc-icon [model]="gIcons.SUCCESS"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
+          </div>
+        </ng-container>
+
+        <ng-template #infoTpl>
+          <div class="col-lg-10 col-msg">
+            <span>{{ m.msg }}</span>
+          </div>
+        </ng-template>
+
+
+        <div class="col-lg-2 col-src">
+          <u *ngIf="m.src!=null">{{ m.src }}</u>
+        </div>
+      </div>
+    </ng-container>
+
+
+  </div>
+</div>
+
+

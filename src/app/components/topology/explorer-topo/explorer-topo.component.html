@@ -1,0 +1,182 @@
+<div [class.dxc-hidden]="offset != parent.active" class="explorer-topo" #explRef>
+    <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
+      <ng-container opts>
+        <button class="btn-option" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
+        <button class="btn-option" (click)="search()"><fa-icon [icon]="['fas','magnifying-glass']"></fa-icon></button>
+        <button class="btn-option" (click)="filter()"><fa-icon [icon]="['fas','filter']"></fa-icon></button>
+      </ng-container>
+    </app-explorer-navbar>
+
+    <ul *ngIf="view.subnav != null" class="nav">
+      <li *ngFor="let navBtn in view.subnav.menu.items">
+        <!--<fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>-->
+        <dxc-icon [model]="navBtn.icon"></dxc-icon>
+      </li>
+    </ul>
+
+    <div class="explorer-list-root" #explCtnRef>
+
+      <ng-container *ngIf="projectReady">
+        <app-expandable-list>
+
+
+          <ng-container *ngFor="let cat of filtered | keyvalue">
+
+            <ng-template #expItem let-itemObj="item" >
+
+              <span *ngIf="itemObj._t=='f'" (contextmenu)="displayCtxMenu($event,'f',itemObj)">
+                <span class="badge badge-info" *ngIf="itemObj._s>0">{{ itemObj._s }}</span>
+                <span class="badge badge-secondary" *ngIf="itemObj._s==0">-</span>&nbsp;
+                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                {{ itemObj.name  }}
+              </span>
+
+              <span *ngIf="itemObj.__==NODE_TYPES.ANDROID_PERM" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+
+                <ng-container *ngIf="itemObj.name.indexOf('android.permission')==0; then sdkPerm else otherPerm"></ng-container>
+                <ng-template #sdkPerm>
+                  {{ itemObj.name  }}
+                </ng-template>
+                <ng-template #otherPerm>
+                  <span class="badge badge-info dxc-meta">vendor</span>&nbsp;
+                  <i class="text-info">{{ itemObj.name  }}</i>
+                </ng-template>
+              </span>
+
+              <span *ngIf="NODE_TYPES.ANDROID_ACTIVITY == itemObj.__" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                {{ itemObj.name  }}
+                <ng-container *ngIf="itemObj.attr">
+                  <br>
+                  <ng-container *ngIf="itemObj.attr.process">
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                  </ng-container>
+                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
+                </ng-container>
+              </span>
+
+              <span *ngIf="NODE_TYPES.ANDROID_SERVICE == itemObj.__" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                {{ itemObj.name  }}
+                <ng-container *ngIf="itemObj.attr">
+                  <br>
+                  <ng-container *ngIf="itemObj.attr.process">
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                  </ng-container>
+                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
+                </ng-container>
+              </span>
+
+              <span *ngIf="NODE_TYPES.ANDROID_PROVIDER == itemObj.__" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                {{ itemObj.name  }}
+                <ng-container *ngIf="itemObj.attr">
+                  <br>
+                  <ng-container *ngIf="itemObj.attr.process">
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                  </ng-container>
+                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
+                </ng-container>
+              </span>
+
+              <span *ngIf="NODE_TYPES.ANDROID_RECEIVER == itemObj.__" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                {{ itemObj.name  }}
+                <ng-container *ngIf="itemObj.attr">
+                  <br>
+                  <ng-container *ngIf="itemObj.attr.process">
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                  </ng-container>
+                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
+                </ng-container>
+              </span>
+
+              <span *ngIf="itemObj.__==NODE_TYPES.FILE" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                {{ itemObj.name  }}
+              </span>
+
+            </ng-template>
+
+            <app-expandable-item
+              [itemTpl]="expItem"
+              [item]="cat.value"
+              [provider]="this"
+              [itemType]="cat.value._t"
+              [expandableFn]="isExpandable"
+              (itemFocus)="onItemFocus($event)"
+              (collapse)="onCollapse($event)"
+              (expand)="onExpand($event)"
+            >
+
+            </app-expandable-item>
+          </ng-container>
+        </app-expandable-list>
+      </ng-container>
+      <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
+        Open a project first.
+      </div>
+    </div>
+</div>
+
+
+<app-context-menu [name]="NODE_TYPES.ANDROID_ACTIVITY">
+  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+
+
+<app-context-menu [name]="NODE_TYPES.ANDROID_SERVICE">
+  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+
+
+<app-context-menu [name]="NODE_TYPES.ANDROID_PROVIDER">
+  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+
+
+<app-context-menu [name]="NODE_TYPES.ANDROID_RECEIVER">
+  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<!--
+<app-modal-rename [controller]="controller"></app-modal-rename>
+
+<app-modal-base [name]="'rename-item'" [closable]="true" [width]="200" [height]="50" [mainController]="controller.app" (open)="controller.onRenameOpen($event)">
+  <div head [ngStyle]="{ 'background-color':'#555', 'color':'#bbb', 'font-weight':200, 'text-align':'left', 'padding-left':'10px', 'width':'100%' }">
+    <span class="text-warning">@rename (alias)</span>
+  </div>
+  <ng-container options>
+    <span class="btn-close" (click)="controller.app.helper.open('rename')"><fa-icon [icon]="['fas','question-circle']"></fa-icon></span>
+  </ng-container>
+  <div body class="input-group mr-0 ml-0">
+      <div class="input-group-prepend">
+          <fa-icon [icon]="['fas','caret-down']" class="input-group-text dxc-text-clear75"></fa-icon>
+      </div>
+      <input type="text" class="form-control" name="alias" #renameInput>
+      <div class="input-group-append">
+        <dxc-icon *ngIf="controller.error!=null" class="input-group-text" [model]="controller.gIcons.WARNING"></dxc-icon>
+      </div>
+  </div>
+  <ng-container footer>
+    <span *ngIf="controller.error!=null" class="badge dxc-warning-msg" #conflictMsg>A conflict has been detected. Please choose another alias.</span>
+  </ng-container>
+</app-modal-base>-->
+
+

@@ -1,0 +1,42 @@
+<div class="container-fluid dxc-subnavbar" #mainNav>
+    <ng-container *ngIf="type=='navbar'">
+      <!-- dxc-explorer-vpnav -->
+      <div *ngIf="direction=='row'" class="row dxc-navbar" [ngClass]="style" #snavRef>
+        <div class="text-left nav" [ngClass]="{ 'col-lg-8': hasOptions(), 'col-lg-12': !hasOptions() }">
+          <ng-content select="[main]"></ng-content>
+          <ng-content select="[extra]"></ng-content>
+        </div>
+        <div *ngIf="hasOptions()" class="col-lg-4 text-right nav-options">
+          <ng-content select="[options]"></ng-content>
+        </div>
+      </div>
+      <div *ngIf="direction=='col'" class="dxc-navbar vertical" [ngClass]="style" #svnavRef>
+          <ng-content select="[vmain]"></ng-content>
+          <ng-content select="[vextra]"></ng-content>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="type=='navtab'">
+      <ul ngbNav class="nav-tabs flex-nowrap" #subTabnav>
+        <li ngbNavItem="" *ngIf="label != null" class="nav-label">
+          <ng-content select="[navLabel]"></ng-content>
+        </li>
+        <ng-content select="[leftTab]"></ng-content>
+        <ng-container *ngFor="let item of items; let offset=index">
+          <app-subnavbar-tab
+            ngbNavItem
+            [offset]="offset"
+            [color]="navtab.tab.color"
+            [icon]="item.icon"
+            [label]="item.label"
+            [active]="item.active"
+            [ngClass]="(navtab.tab.iconColor!='')? navtab.tab.iconColor : navtab.tab.icon.color1 "
+            [closable]="navtab.tab.closable"
+            (focusTab)="onSelectTab(item)"
+            (closeTab)="onCloseTab(item)">
+          </app-subnavbar-tab>
+        </ng-container>
+        <ng-content select="[rightTab]"></ng-content>
+        <li>&nbsp;</li>
+      </ul>
+    </ng-container>
+</div>

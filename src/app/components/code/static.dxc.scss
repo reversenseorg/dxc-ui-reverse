@@ -1,0 +1,49 @@
+@import "../../../themes";
+
+
+.dxc-icon-field {
+  font-weight: 800;
+  color: var(--warning);
+  width:15px;
+  text-align:right;
+}
+
+.dxc-icon-meth {
+  font-weight: 800;
+  color: #F00;
+  width:15px;
+  text-align:right;
+}
+
+.dxc-icon-static {
+  font-weight: 800;
+  color: #32babb;
+  width:15px;
+  text-align:right;
+}
+
+.dxc-icon-staticb {
+  font-weight: 800;
+  color: #fff;
+  width:15px;
+  text-align:right;
+}
+
+.dxc-icon-native {
+  color: var(--pink);
+  width:15px;
+  text-align:right;
+}
+
+.dxc-icon-const {
+  font-weight: 800;
+  color: dodgerblue;
+  width:15px;
+  text-align:right;
+}
+
+.dxc-icon-class {
+  color: #17a2b8;
+  width:15px;
+  text-align:right;
+}

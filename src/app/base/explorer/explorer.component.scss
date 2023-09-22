@@ -1,0 +1,117 @@
+#explorerContainer {
+  background-color: #555;
+  max-width: 90vw;
+  min-width:15vw;
+  resize: horizontal;
+  padding-right:0px;
+}
+
+#explorerContainer > div.row {
+  min-height:100%;
+}
+
+#explorerContainer2 {
+  margin-right:0px;
+  margin-left:0px;
+}
+
+
+.explorer-viewport {
+  background: #444;
+  border-left:1px solid #333;
+  flex: 1 0 auto;
+  min-width: 4em;
+}
+
+.explorer-tabnav {
+  /* flex: 1 0 auto;*/
+  /* width: 2.6 em */
+  max-width: 20px;
+  min-width: 20px;
+}
+
+.explorer-resize {
+  background-color: #333;
+  user-select: none;
+  width:2px;
+  max-width: 2px; /* 1.2em*/
+  min-width: 2px;
+}
+
+#explorerResize:hover {
+  /*background-color: #575757;*/
+  cursor: col-resize;
+}
+
+
+.explorer-tabnav ul.nav-tabs {
+  border:none;
+  display:block;
+  font-family: var(--nav-font);
+}
+
+
+.explorer-tabnav a.tabpanel {
+  color: #bbb;
+}
+
+
+.explorer-tabnav > ul > li.nav-item {
+  text-align: center;
+  padding:0px;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  //padding-left:0px;
+  color:#bbb;
+}
+
+
+.wrapper-inner {
+  padding: 50% 0;
+  height: 0;
+  margin-left:0px;
+  vertical-align:center;
+}
+
+.wrapper-outer {
+  display: table;
+}
+
+.explorer-tabnav > ul > li > div.wrapper-outer > div.wrapper-inner > a {
+  border:none;
+  margin:0;
+  padding:0;
+  display: flex;
+
+  user-select: none;
+  font-size: 14px;
+  /* font-size:0.8rem; */
+
+  display: block;
+  transform-origin: top left;
+  transform: rotate(-90deg) translate(-100%);
+  margin-top: -50%;
+
+  /* Not vital, but possibly a good idea if the element you're rotating contains
+     text and you want a single long vertical line of text and the pre-rotation
+     width of your element is small enough that the text wraps: */
+  white-space: nowrap;
+}
+
+.explorer-tabnav > ul > li:hover {
+  background: #777;
+  cursor:pointer;
+  color:white;
+}
+
+.explorer-tabnav a.active,
+.explorer-tabnav li.active,
+.explorer-tabnav > ul > li.active:hover {
+  color:#fff;
+  background-color: #333;
+}
+
+.explorer-tabnav *.icon.active {
+  color:#fff;
+}
+

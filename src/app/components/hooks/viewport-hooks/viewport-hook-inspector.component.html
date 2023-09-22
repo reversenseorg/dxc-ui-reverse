@@ -1,0 +1,19 @@
+<div class="container-fluid viewport-inspector">
+
+
+<span [ngStyle]="{'background-color':'blue', 'color':'white'}">Inspector &nbsp; &nbsp;</span><fa-icon [icon]="['fas','caret-left']" [ngStyle]="{'color':'blue'}"></fa-icon>
+    {{ data.label }}
+
+  <div class="title">
+    <span>Description :</span><br>
+    {{ data.description }}
+  </div>
+
+  <app-subnavbar [type]="'navbar'" [parent]="this">
+    <ng-container main>
+      <app-subnavbar-btn [icon]="gIcons.HOOKS">Hooks</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.LIST">Emitted events</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.LIST">Captured events</app-subnavbar-btn>
+    </ng-container>
+  </app-subnavbar>
+</div>

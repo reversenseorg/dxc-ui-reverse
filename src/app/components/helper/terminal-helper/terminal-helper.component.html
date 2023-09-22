@@ -1,0 +1,15 @@
+<div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-ws" #termHelp>
+
+
+  <app-subnavbar [type]="'navtab'" [navtab]="this.view.nav" [items]="views"
+                 (closeTab)="onClose()" (selectTab)="showTab($event)" [parent]="this" #termHelperNav>
+
+  </app-subnavbar>
+
+  <div #termHelperCtn  style="overflow: auto">
+    <!--<ng-template terminalHelperHost></ng-template> -->
+    <div *ngIf="_current.doc.doc" class="p-2" [innerHTML]="_current.doc.doc"></div>
+  </div>
+</div>
+
+

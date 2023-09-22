@@ -1,0 +1,402 @@
+<div class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
+  <div #metadata style="border-bottom:1px solid #777">
+    <div class="row no-gutters" style="margin:0px; padding:0px; background-color: #000000">
+      <div class="col-lg-12">
+
+        <ng-container *ngFor="let t of tags">
+          <dxc-meta [label]="t._uid" [css]="'badge-warning dxc-meta'"></dxc-meta>
+        </ng-container>
+
+      </div>
+    </div>
+    <div class="row no-gutters" style="margin:0px; padding:0px">
+      <div class="col-lg-12 pl-2 pt-1 pb-1">
+
+        <span *ngIf="data.modifiers.static" class="badge dxc-meta ">static</span>
+        <span *ngIf="data.modifiers.public" class="badge badge-sm dxc-meta">public</span>
+        <span *ngIf="data.modifiers.private" class="meta-access text-danger">private</span>
+        <span *ngIf="data.modifiers.protected" class="meta-access text-primary">protected</span>
+
+        <ng-container *ngIf="data.enclosingClass">
+          <!--<ng-container *ngFor="let pkg of data.enclosingClass.package">
+          <span class="meta-access">
+            <i *ngIf="pkg.alias" class="text-warning">@{{ pkg.alias}}</i>
+            {{ pkg.name }}
+          </span>&gt;
+          </ng-container>-->
+
+          <ng-container *ngIf="data.enclosingClass.package">
+            <span (click)="openPackage(data.enclosingClass.package)">
+              <!--<dxc-icon [model]="icons.PKG"></dxc-icon>&nbsp;-->
+              <span class="dxc-icon-folders dxc-obj" *ngIf="data.enclosingClass.package.name!=''" (contextmenu)="controller.displayCtxMenu($event,'pkg',data.enclosingClass.package)">
+                  <i *ngIf="data.enclosingClass.package.alias" class="text-warning dxc-obj">@{{ data.enclosingClass.package.alias}} : </i>
+                {{ data.enclosingClass.package.name }}
+                </span>
+              <span class="dxc-icon-folders dxc-obj" *ngIf="data.enclosingClass.package.name==''">[root]</span>
+              <!--<span class="badge badge-pill" style="background-color: #b69e53">{{ data.enclosingClass.package.absolute_size }}</span>-->
+              <!-- &gt; -->
+            </span>
+          </ng-container>
+        </ng-container>
+
+
+
+
+
+
+        <span (contextmenu)="controller.displayCtxMenu($event,'clazz',data.enclosingClass)">
+          <!--<dxc-icon [model]="icons.CLASS"></dxc-icon>&nbsp;-->
+          <i *ngIf="data.enclosingClass.alias" class="text-warning dxc-obj">.@{{ data.enclosingClass.alias}}</i>
+          <i *ngIf="data.enclosingClass.alias == null" class="dxc-obj">.{{ data.enclosingClass.simpleName }}</i>
+        </span>
+
+        <span class="text-info dxc-obj" (contextmenu)="controller.displayCtxMenu($event,'meth',data)">
+          <i *ngIf="data.alias">.@{{ data.alias}}</i>
+          <i *ngIf="data.alias == null">.{{ data.name}}</i>
+        </span>
+
+        (
+        <ng-container *ngFor="let arg of data.args; let offset=index;">
+          {{ offset>0? ',' : '' }}
+
+          <span class="code-type dxc-obj" (click)="controller.showClass(arg.name)"  (contextmenu)="controller.displayCtxMenu($event,'par',arg)">
+              {{ arg.name }}{{ arg.arr ? '[]' : '' }}
+             </span>
+        </ng-container>
+        )
+        <i class="text-warning dxc-obj" (contextmenu)="controller.displayCtxMenu($event,'par',data.ret)">: {{ data.ret.name }}</i>
+
+
+
+        <!--<ng-container *ngFor="let mod of data.modifiers">
+          <span class="badge badge-pill"></span>
+        </ng-container>-->
+
+      </div>
+<!--
+      <div class="col-lg-4">
+          <span class="badge badge-warning badge-sm dxc-meta">Hook</span><br>
+          <div ngbDropdown *ngIf="data.modifiers.asbtract" class="d-inline-block">
+            <button class="btn dxc-ctx-menu-btn code-abstract" id="ddAbstract" ngbDropdownToggle>abstract</button>
+            <div ngbDropdownMenu class="dxc-ctx-menu" aria-labelledby="ddAbstract">
+              <button ngbDropdownItem>Search implementation</button>
+              <button ngbDropdownItem>Create hook</button>
+              <button ngbDropdownItem>Link to ...</button>
+            </div>
+          </div>
+      </div>-->
+    </div>
+  </div>
+
+
+
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [topHeight]="50" [type]="'2:1'">
+    <ng-container nav-top>
+      <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
+
+          <ng-container main>
+            <app-subnavbar-btn [active]="activeTop=='bc'" [icon]="gIcons.LIST" (click)="showBytecode()">&nbsp;Bytecode</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons.PLAY" (click)="showDxcVM()">&nbsp;Dexcalibur VM</app-subnavbar-btn>
+            <app-subnavbar-menu [label]="'Deobfuscation'" [icon]="gIcons.ANALYZE">
+              <ng-container entries>
+                <app-subnavbar-btn [icon]="gIcons.PLUS" (click)="doDeobfuscationTask('count_nop')">Count NOP</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons.PLUS" (click)="doDeobfuscationTask('rm_nop')">Remove NOP</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons.EDIT" (click)="doDeobfuscationTask('rename')">Auto-rename</app-subnavbar-btn>
+                <app-subnavbar-btn [disable]="true">Simplify CFG</app-subnavbar-btn>
+              </ng-container>
+            </app-subnavbar-menu>
+
+            <app-subnavbar-btn [disable]="true" [active]="activeTop=='ed'" [icon]="gIcons.EDIT">&nbsp;Patch</app-subnavbar-btn>
+            <app-subnavbar-btn [disable]="true" [active]="activeTop=='pv'" [icon]="icons.LIST">&nbsp;Param values</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="!data.probing" [active]="activeTop=='hk'" [icon]="gIcons.GEN_HOOK" (click)="addProbe()">&nbsp;Generate hook</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="data.probing && data.hooked" [active]="activeTop=='hk'" [icon]="gIcons.STOP" (click)="stopHooking()">&nbsp;Stop hooking</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="data.probing && (!data.hooked)" [active]="activeTop=='hk'" [icon]="gIcons.STOP" (click)="stopHooking()">&nbsp;Start hooking</app-subnavbar-btn>
+            <!-- <app-subnavbar-btn [icon]="gIcons.LAUNCH" (click)="startApp()">&nbsp;Start Application</app-subnavbar-btn> -->
+          </ng-container>
+          <!--<ng-container options>
+            <app-subnavbar-btn [icon]="gIcons.FILE" [position]="'right'">&nbsp;Save</app-subnavbar-btn>
+          </ng-container>-->
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-top>
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='bc')">
+        <div #editor (contextmenu)="openEditorMenu($event)">
+          <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+        </div>
+      </div>
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
+        <div #vm class="row view-outer no-gutters"(contextmenu)="openVmMenu($event)">
+          <div class="col-lg-8">
+            <ace-editor #vmEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+          </div>
+          <div class="col-lg-4" style="overflow-y: scroll">
+            <app-subnavbar [type]="'navbar'" [style]="{ 'background-color': '#333'}" [parent]="this">
+              <ng-container main>
+                <app-subnavbar-btn [active]="true" [icon]="gIcons.INTERNAL">&nbsp;Configuration</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="ddvmExec()">&nbsp;Run</app-subnavbar-btn>
+              </ng-container>
+            </app-subnavbar>
+
+            <app-expandable-list
+              *ngIf="ddvmOpts">
+
+              <ng-template #expCodeItem let-itemObj="item" >
+
+                <span *ngIf="itemObj._t=='c'" class="border-bottom-1 border-white">
+                  <dxc-icon [model]="itemObj._i"></dxc-icon>
+                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
+                  <span *ngIf="itemObj._c=='p'" class="badge badge-pill badge-sm ml-2" [ngClass]="{ 'badge-secondary':data.args.length==0, 'badge-success':data.args.length>0 }">{{ data.args.length }}</span>
+                </span>
+
+                <span *ngIf="itemObj._t=='p'">
+                  <b class="dxc-text-clear100">{{ itemObj.label }}</b>
+                  <input [(ngModel)]="itemObj.sym" type="checkbox" class="dxc-fr dxc-frm-input ml-2 mr-1" />symbolic&nbsp;
+                  <input [(ngModel)]="itemObj.val" [class.dxc-hidden]="itemObj.sym" [disabled]="itemObj.sym" name="input" type="text" class="dxc-frm-input pl-1 ml-2"/>
+                </span>
+
+                <span *ngIf="itemObj._t=='o'">
+                  <dxc-icon [model]="itemObj._i"></dxc-icon>
+                  <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
+                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
+                  <ng-container *ngIf="itemObj.ft!='c'">
+                    <br>
+                    <span class="pl-2">
+                    <input *ngIf="itemObj.ft=='n'" [(ngModel)]="itemObj.v" type="number" class="dxc-frm-input"/>
+                    <input *ngIf="itemObj.ft=='i'" [(ngModel)]="itemObj.v" type="text" class="dxc-frm-input"/>
+                  </span>
+                  </ng-container>
+
+                </span>
+
+                <span *ngIf="itemObj._t=='e'">
+                  <dxc-icon [model]="itemObj._i"></dxc-icon>
+                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
+                </span>
+
+              </ng-template>
+
+              <ng-container *ngFor="let dev of ddvmOpts">
+
+
+                <app-expandable-item
+                  [itemTpl]="expCodeItem"
+                  [item]="dev"
+                  [provider]="this"
+                  [itemType]="dev._t"
+                  [expandableFn]="ddvmItemHasChildren"
+                  (itemFocus)="ddvmOnItemFocus($event)"
+                >
+
+                </app-expandable-item>
+              </ng-container>
+            </app-expandable-list>
+
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+
+
+
+    <ng-container nav-bottom>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [active]="activeBottom=='hk'" [icon]="gIcons.HOOKS" (click)="showHooks()">Hooks</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='hm'" [icon]="gIcons.LIST" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='xt'" [icon]="icons.XREF"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='xf'" [icon]="icons.XREF"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='vml'" (click)="showVmLogs()">Dxc VM Logs</app-subnavbar-btn>
+        </ng-container>
+        <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
+          <ng-container *ngFor="let act of data.frontController.actions">
+            <app-subnavbar-btn [icon]="act.nav.icon" (click)="performExtra(act.name)">{{ act.nav.label }}</app-subnavbar-btn>
+          </ng-container>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-bottom>
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xt')">
+          <div class="row dxc-grid-header">
+            <div class="col-lg-1">Hooked</div>
+            <div class="col-lg-1">Location</div>
+            <div class="col-lg-1">Tags</div>
+            <div class="col-lg-9">Function / method</div>
+          </div>
+          <ng-container *ngFor="let c of data._callers">
+            <div class="row dxc-grid-body" style="border-color:#777;" (dblclick)="openMethod(c.s)">
+              <div class="col-lg-1">
+                -
+              </div>
+              <div class="col-lg-1">
+                Dex
+              </div>
+              <div class="col-lg-1">
+                <ng-container *ngFor="let t of c.tags">
+                  <span class="badge badge-sm badge-pill" [ngClass]="getStyleForTag(t)">{{ t }}</span>
+                </ng-container>
+              </div>
+              <div class="col-lg-9" (contextmenu)="controller.displayCtxMenu($event,'meth',c)">
+                <span>{{ c.s }}</span>
+              </div>
+            </div>
+          </ng-container>
+      </div>
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='vm')">
+
+      </div>
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xf')">
+        <div class="row dxc-grid-header">
+          <div class="col-lg-1">Hooked</div>
+          <div class="col-lg-1">Location</div>
+          <div class="col-lg-1">Tags</div>
+          <div class="col-lg-9">Function / method</div>
+        </div>
+        <ng-container *ngFor="let c of data._useMethod ">
+          <div class="row dxc-grid-body" (dblclick)="openMethod(c.s)">
+            <div class="col-lg-1">
+              -
+            </div>
+            <div class="col-lg-1">
+              Dex
+            </div>
+            <div class="col-lg-1">
+              <ng-container *ngFor="let t of c.tags">
+                <span class="badge badge-sm badge-pill dxc-meta" [ngClass]="getStyleForTag(t)">{{ t }}</span>
+              </ng-container>
+            </div>
+            <div class="col-lg-9" (contextmenu)="controller.displayCtxMenu($event,'meth',c)">
+              <span>{{ c.s }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='hk')">
+
+        <ng-container *ngIf="hooksLen>0; else noHooks">
+          <div class="row dxc-grid-header">
+            <div class="col-lg-1">Status</div>
+            <div class="col-lg-1">-</div>
+            <div class="col-lg-10">Hook name</div>
+          </div>
+          <ng-container *ngFor="let hks of hooks">
+            <div class="row dxc-grid-body" style="border-bottom: 1px solid #aaa">
+              <ng-container *ngIf="hks.label; else noLabel" >
+                <div class="col-lg-12">
+                  {{ hks.label }}
+                </div>
+              </ng-container>
+              <ng-template #noLabel>
+                <div class="col-lg-12">
+                  Custom hooks
+                </div>
+              </ng-template>
+            </div>
+            <ng-container *ngFor="let hk of hks.children">
+              <div class="row dxc-grid-body" style="border-bottom: none">
+                <div class="col-lg-2" (click)="switchHook(hk)">
+                  <ng-container *ngIf="hk.enabled; else hkOff">
+                    <span  class="badge badge-pill badge-success dxc-btn-hook">ON</span>
+                  </ng-container>
+                  <ng-template #hkOff>
+                    <span class="badge badge-pill badge-danger dxc-btn-hook">OFF</span>
+                  </ng-template>
+                </div>
+                <div class="col-lg-10" (dblclick)="openHook(hk)">
+                  <span>{{ hk.name }}</span>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-template #noHooks>
+          <div class="row"><div class="col-lg-12 text-center">
+            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>This method is not hooked.
+            <br>
+            <button class="btn btn-success btn-sm mt-2" (click)="addProbe()">Generate hook</button>
+          </div></div>
+        </ng-template>
+
+      </div>
+
+
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='hm')">
+
+        <ng-container *ngIf="hooks.length>0; else noHooks">
+          <div class="row dxc-grid-header">
+            <div class="col-lg-1">Inspector</div>
+            <div class="col-lg-1">Options</div>
+            <div class="col-lg-10">Hook name</div>
+          </div>
+          <ng-container *ngFor="let hk of hooks">
+            <div class="row dxc-grid-body">
+              <div class="col-lg-1">
+                -
+              </div>
+              <div class="col-lg-1">
+                -
+              </div>
+              <div class="col-lg-10">
+                <span>{{ hk.name }}</span>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #noHooks>
+          <div class="row"><div class="col-lg-12 text-center">
+            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>This method has been never hooked.</div></div>
+        </ng-template>
+
+      </div>
+
+
+
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='vml')">
+
+        <ng-container *ngIf="vm!=null; else noVM">
+          <div class="row dxc-grid-header">
+            <div class="col-lg-12">Event</div>
+          </div>
+          <ng-container *ngFor="let hk of vmLog">
+            <div class="row dxc-grid-body dxc-no-hover">
+              <div class="col-lg-10 m-2">
+                <ng-container *ngIf="hk.t=='e'">
+                  <b class="text-danger">VM Exception</b>
+                </ng-container>
+                <pre class="dxc-text-clear75">{{ hk.v }}</pre>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #noVM>
+          <div class="row"><div class="col-lg-12 text-center">
+            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+            This method has not been emulated into Dexcalibur VM.
+          </div></div>
+        </ng-template>
+
+      </div>
+
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>
+
+<!--
+<app-context-menu [width]="200" [name]="'meth'">
+  <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+-->
+<!--
+<app-modal-dm [controller]="controller"></app-modal-dm>
+-->

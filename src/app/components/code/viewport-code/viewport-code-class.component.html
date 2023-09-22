@@ -1,0 +1,162 @@
+<div class="container-fluid viewport-class">
+  <div #metadata style="border-bottom:1px solid #777">
+
+    <span><b>Java Class : </b> {{ data.name }} </span><br>
+    <span *ngIf="data.source" class="text-warning">
+      &nbsp;<fa-icon [icon]="['fas','play']" class="text-warning icon-sm"></fa-icon>
+      &nbsp;<b>Source file : </b> <span class="browsable" (click)="controller.locateAppFile(data.source)">{{ data.source }}</span>
+    </span><br>
+    <!--<span>
+      &nbsp;<fa-icon [icon]="['fas','play']" class="text-warning icon-sm"></fa-icon>
+      &nbsp;<b>Scope : </b>
+      <span class="browsable" (click)="controller.locateAppFile(data.source)">{{ data.source }}</span>
+      <span *ngIf="data.tags.di" class="browsable" (click)="controller.filterCodeExplorer('android_api')">{{ data.source }}</span>
+      <span *ngIf="" class="browsable" (click)="controller.locateAppFile(data.source)">{{ data.source }}</span>
+    </span>-->
+
+
+  </div>
+
+
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="activeWidth" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [active]="activeLeft=='md'"  (click)="showModel()">Details</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons.LIST" (click)="showContents()">Contents</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons.ANALYZE" (click)="showInstance()">Instances</app-subnavbar-btn>
+          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='pm'"  [icon]="gIcons.LOCK" (click)="showAndroidAPI()">Android API</app-subnavbar-btn>
+          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='io'"  [icon]="gIcons.FILE" (click)="showIO()">I/O</app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-left>
+      <div class="container-fluid view-outer dxc-list" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='md')">
+        <!-- all children classes / all classes with same interface / heritage tree / android API xref / strings / byte arrays -->
+        <!-- elements modified by reflection api -->
+
+        <!-- Extends -->
+        <div class="row no-gutters">
+          <div class="col-lg-12">
+            Extended class
+          </div>
+        </div>
+        <ng-container *ngIf="data.supers; else noExtends">
+          <ng-container *ngFor="let e of data.supers; let i=index;">
+            <div class="row no-gutters dxc-text-clear75" (dblclick)="controller.showClass(e.name)" (contextmenu)="controller.displayCtxMenu($event,'cls', e.name)">
+              <div class="col-lg-12 pl-2 dxc-nowrap" >
+                <span [ngClass]="'ml-'+i">&nbsp;</span>
+                <dxc-icon [model]="icons.CLASS" ></dxc-icon>&nbsp;
+                <span *ngIf="e.alias" class="text-warning">@:{{e.alias}}&nbsp;</span>
+                {{ e.name }}
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #noExtends>
+          <div class="row no-gutters text-danger">
+            <div class="col-lg-12 pl-2">
+              This class not extends another class.
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Interfaces -->
+
+        <div class="row no-gutters">
+          <div class="col-lg-12">
+            Interfaces
+          </div>
+        </div>
+        <ng-container *ngIf="(data.implements!=null && data.implements.length>0); else noInterf">
+          <div *ngFor="let i of data.implements" class="row no-gutters dxc-text-clear75" (dblclick)="controller.showClass(i)" (contextmenu)="controller.displayCtxMenu($event,'cls', i)">
+            <div class="col-lg-12 pl-2 dxc-nowrap">
+              <dxc-icon [model]="icons.CLASS"></dxc-icon>&nbsp;
+              <!-- <span *ngIf="fd.alias" class="text-warning">@:{{data.extends.alias}}&nbsp;</span> -->
+              {{ i }}
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noInterf>
+          <div class="row no-gutters text-danger">
+            <div class="col-lg-12 pl-2">
+              This class not implements interfaces.
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+
+      <div class="container-fluid view-outer dxc-list"  [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='ct')">
+
+        <ng-container *ngFor="let fd of data.fields">
+          <div class="row no-gutters" (dblclick)="controller.showItem(fd)" (contextmenu)="controller.displayCtxMenu($event,'fld', fd)">
+            <div class="col-lg-1">
+              <span class="badge badge-pill badge-sm badge-info">patch</span>
+            </div>
+            <div class="col-lg-11 pl-2 dxc-nowrap">
+              <span *ngIf="fd.alias" class="text-warning">@:{{fd.alias}}&nbsp;</span>
+              {{ fd.name }}
+              <ng-container *ngIf="fd.type">
+                <span *ngIf="fd.type.name" class="text-warning">:{{fd.type.name}}&nbsp;</span>
+                <span *ngIf="fd.type.arr" class="text-warning">[]</span>
+              </ng-container>
+
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngFor="let mt of data.methods">
+          <div class="row no-gutters" (dblclick)="controller.showItem(mt)"  (contextmenu)="controller.displayCtxMenu($event,'meth', mt)">
+            <div class="col-lg-1">
+              <ng-container *ngIf="((mt.name!='<clinit>') && mt.probing); else noProbing">
+                <span class="badge badge-pill badge-success dxc-btn-hook" (click)="disableProbe(mt)"><dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon> -&nbsp;Hooked</span>
+              </ng-container>
+              <ng-template #noProbing>
+                <span class="badge badge-pill badge-primary dxc-btn-hook" (click)="setProbe(mt)">New hook</span>
+              </ng-template>
+            </div>
+            <div class="col-lg-2 pl-2">
+              <ng-container *ngFor="let mod of mt.modifiers | keyvalue">
+                <span *ngIf="(mod.key != 'public') && (mod.value==true)" class="dxc-text-clear100" style="font-size:0.9em" [ngClass]="{ 'text-primary':(mod.key=='native'), 'text-warning':(mod.key=='static')  }">{{ mod.key }}&nbsp;</span>
+              </ng-container>
+              <!--
+              <ng-container *ngIf="mt.probing; else noProbing">
+                <span class="badge badge-pill badge-success dxc-btn-hook" (click)="disableProbe(mt)"><dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon> -&nbsp;Hooked</span>
+              </ng-container>-->
+            </div>
+            <div class="col-lg-9 hook-label dxc-nowrap">
+
+              <i *ngIf="mt.alias" class="text-warning">@:{{ mt.alias }}&nbsp;</i>
+              <span class="text-info">{{ mt.name }}</span>
+              (
+              <ng-container *ngFor="let arg of mt.args; let offset=index;">
+                {{ offset>0? ',' : '' }}
+
+                <span class="code-type dxc-obj" (click)="controller.showClass(arg.name)"  (contextmenu)="controller.displayCtxMenu($event,'clazz',arg)">
+              {{ arg.name }}{{ arg.arr ? '[]' : '' }}
+             </span>
+              </ng-container>
+              )
+              <!--<i class="text-warning">: {{ mt.ret.name }}</i>-->
+              <br>
+
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
+
+      </div>
+
+    </ng-container>
+    <ng-container nav-right>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main></ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-right></ng-container>
+  </app-viewport-splitted>
+
+</div>

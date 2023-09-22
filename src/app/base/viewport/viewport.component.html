@@ -1,0 +1,20 @@
+<div class="container-fluid app-viewport" id="appViewport" #outterVp [class.active]="parent.topFocus.viewport == true" (click)="onClick()">
+  <ul ngbNav   class="nav-tabs flex-nowrap " #viewportTabnav>
+    <ng-container *ngFor="let vp of cmps; let offset=index">
+      <li  [ngbNavItem]="offset" [class.active]="vp.instance.id == activeCtn.id" (click)="selectTabByID2(vp.instance.id, $event)" [ngbTooltip]="vp.instance.view.tab.tip" >
+        <a ngbNavLink [class.active]="vp.instance.id == activeCtn.id">
+          <dxc-icon [model]="vp.instance.view.tab.icon" [ngClass]="['pl-1','pr-1']"></dxc-icon>
+          <span [ngClass]="vp.instance.view.tab.color">{{ vp.instance.view.tab.label }}</span>
+          &nbsp;<fa-icon [icon]="['fas','xmark']" (click)="close($event, vp.instance)" class="ml-2 pl-1 pr-1 btn-close"></fa-icon>
+        </a>
+      </li>
+    </ng-container>
+
+    <li>&nbsp;</li>
+  </ul>
+
+  <!--<ng-template viewportHost></ng-template>-->
+  <div class="viewport-ctn" #viewportCtn>
+    <ng-template viewportHost></ng-template>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+.viewport-hook {
+  background-color: #2f2f2f;
+  color:white;
+  height:100%;
+  user-select: none;
+  margin:0px;
+  padding:0px;
+
+  button.code-abstract {
+    font-weight:800;
+  }
+
+  button.code-abstract:hover {
+    cursor: pointer;
+  }
+
+  b.meta-access {
+    margin-right:3em;
+  }
+
+  span.code-type:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+
+.dxc-editable-block {
+  border-radius: 0px;
+  border: 1px solid var(--text-75);
+  padding:10px;
+  margin-bottom: 15px;
+
+  &:hover {
+    background-color: var(--text-50);
+  }
+}

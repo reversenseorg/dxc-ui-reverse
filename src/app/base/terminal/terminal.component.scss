@@ -1,0 +1,110 @@
+
+
+#appTerminal {
+  position: absolute;
+  bottom:0px;
+  min-height:100%;
+  height:100%;
+  min-width: 100vw;
+  background-color:#222;
+  border:0px;
+  padding:0px;
+
+}
+
+.app-terminal-nav {
+  font-family: var(--nav-font);
+  background:#555;
+  color:white;
+  border-bottom:1px solid #182a32;
+  border-top:1px solid #333;
+  margin:0px;
+  width:100%;
+}
+
+.app-terminal-nav:hover {
+  cursor: row-resize;
+}
+
+.app-terminal div.options {
+  text-align: right;
+  color:#fff;
+}
+
+.app-terminal div.tabnav {
+  text-align: left;
+  padding-left:10px;
+  color:#fff;
+  user-select: none;
+}
+
+.app-terminal-nav.active {
+  background-color: #4a595c;
+}
+
+.app-terminal-nav.active span.tab {
+  /* border-bottom: 5px solid #4a595c;*/
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.app-terminal-nav.active span.tab.active {
+  background-color: #2d3b3d;
+}
+
+.app-terminal-nav.active span.tab:hover {
+  background-color: #3e5053;
+}
+
+
+.app-terminal-view {
+  background-color:#222;
+  color:white;
+  font-size:0.8em;
+  width:100%;
+  min-width:100%;
+  max-width:100%;
+}
+
+
+.app-terminal-footer {
+  position: fixed;
+  bottom:0px;
+  min-width:100vw;
+  background-color:#333;
+  color:white;
+  font-size:0.8em;
+}
+
+
+.app-terminal .btn-option {
+  padding:2px;
+  margin:2px;
+}
+
+.app-terminal .btn-option:hover {
+  background-color: #777;
+  padding:2px;
+  border-radius:2px;
+  cursor: pointer;
+}
+
+.app-terminal span.tab {
+  font-size:0.9em;
+  padding: 0px 1em;
+  /*border-bottom: 5px solid #555;*/
+  padding-bottom: 4px;
+  padding-top: 4px;
+}
+
+.app-terminal span.tab.active {
+  cursor:pointer;
+  background-color:#444;
+  padding-bottom: 2px;
+  border-bottom: 2px solid #fff;
+}
+
+.app-terminal span.tab:hover {
+  cursor:pointer;
+  background-color:#333;
+}

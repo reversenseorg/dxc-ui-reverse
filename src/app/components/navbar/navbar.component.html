@@ -1,0 +1,122 @@
+<nav  class="nav navbar-expand-lg navbar-light px-0 home-navbar" id="appHeaderCtn" #navbarMain>
+  <div class="d-flex flex-grow-1">
+    <ul class="navbar-nav">
+      <li class="nav-item" ngbDropdown>
+        <!-- Step 4: Close the menu when a link is clicked. -->
+        <a class="nav-link" [class.active]="extended == 'navbarDDGeneral'" id="navbarDDGeneral" ngbDropdownToggle (click)="onExtendMenu($event)">
+          Dashboard
+        </a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDGeneral">
+          <a ngbDropdownItem (click)="newProject()"><fa-icon [icon]="['fad','plus']"></fa-icon> New project</a>
+          <a ngbDropdownItem [routerLink]="['/save' ]"><fa-icon [icon]="['fad','upload']"></fa-icon>&nbsp;Open ...</a>
+          <a ngbDropdownItem [routerLink]="['/save' ]"><fa-icon [icon]="['fad','save']"></fa-icon>&nbsp;Save</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem><fa-icon [icon]="['fad','sign-out']"></fa-icon>&nbsp;Quit</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDCode'" id="navbarDDCode" ngbDropdownToggle (click)="onExtendMenu($event)">Code</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDCode">
+          <a ngbDropdownItem><fa-icon [icon]="['fad','magnifying-glass']"></fa-icon>&nbsp;Search ...</a>
+          <a ngbDropdownItem><fa-icon [icon]="['fad','chart-network']"></fa-icon>&nbsp;Graph explorer</a>
+          <a ngbDropdownItem><fa-icon [icon]="['fad','map']"></fa-icon>&nbsp;Code map</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem>classes, packages, methods, fields, ...</a>
+          <a ngbDropdownItem>syscalls & functions</a>
+          <a ngbDropdownItem>instructions</a>
+          <a ngbDropdownItem>data</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDInstr'" id="navbarDDInstr" ngbDropdownToggle (click)="onExtendMenu($event)">Instrumentation</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDInstr">
+          <a ngbDropdownItem>Application-wide</a>
+          <a ngbDropdownItem>Device-wide</a>
+          <a ngbDropdownItem>Multi-device</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem>Java bytecode</a>
+          <a ngbDropdownItem>Native &amp; instruction level</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDDevice'" id="navbarDDDevice" ngbDropdownToggle (click)="onExtendMenu($event)">Devices</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDDevice">
+          <a ngbDropdownItem><fa-icon [icon]="['fas','phone-laptop']"></fa-icon>&nbsp;Device manager</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem><fa-icon [icon]="['fas','link']" class="text-success"></fa-icon>&nbsp;Nexus 5x ...</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDMem'" id="navbarDDMem" ngbDropdownToggle (click)="onExtendMenu($event)">Memory</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDMem">
+          <a ngbDropdownItem><fa-icon [icon]="['fas','microchip']"></fa-icon>&nbsp;Explore</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem><fa-icon [icon]="['fas','history']"></fa-icon>&nbsp;Snapshots</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDEmu'" id="navbarDDEmu" ngbDropdownToggle (click)="onExtendMenu($event)">Emulator</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDEmu">
+          <a ngbDropdownItem>Smali VM</a>
+          <a ngbDropdownItem>QEMU</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDComm'" id="navbarDDComm" ngbDropdownToggle (click)="onExtendMenu($event)">Communications</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDComm">
+          <a ngbDropdownItem><fa-icon [icon]="['fad','binoculars']"></fa-icon>&nbsp;Monitor</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem>HTTP(S)</a>
+          <a ngbDropdownItem>NFC</a>
+          <a ngbDropdownItem>Bluetooth</a>
+          <a ngbDropdownItem>IPC / Binder</a>
+          <a ngbDropdownItem>TEE</a>
+          <a ngbDropdownItem>Android Intents</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDPlugins'" id="navbarDDPlugins" ngbDropdownToggle (click)="onExtendMenu($event)">Plugins</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDPlugins">
+          <a ngbDropdownItem>Yara</a>
+          <a ngbDropdownItem>Crypto constants</a>
+          <a ngbDropdownItem>TEE client</a>
+          <a ngbDropdownItem>Fuzzer</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDSettings'" id="navbarDDSettings" ngbDropdownToggle (click)="onExtendMenu($event)">Settings</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDSettings">
+          <a ngbDropdownItem>General settings</a>
+          <a ngbDropdownItem>Project settings</a>
+          <a ngbDropdownItem>External tools settings</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem><fa-icon [icon]="['fad','eye']"></fa-icon>&nbsp;Show device screen</a>
+        </div>
+      </li>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" [class.active]="extended == 'navbarDDHelp'" id="navbarDDHelp" ngbDropdownToggle (click)="onExtendMenu($event)">Help</a>
+        <div ngbDropdownMenu aria-labelledby="navbarDDHelp">
+          <a ngbDropdownItem>About Dexcalibur</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem><fa-icon [icon]="['fas','circle-question']"></fa-icon>&nbsp;Online documentation</a>
+        </div>
+      </li>
+    </ul>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+
+
+  <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse flex-grow-0 text-right" id="navbarMenu">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="" (click)="isMenuCollapsed = true"><fa-icon [icon]="['fas','bookmark']"></fa-icon></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="" (click)="isMenuCollapsed = true"><fa-icon [icon]="['fas','user']"></fa-icon></a>
+      </li>
+    </ul>
+  </div>
+
+</nav>

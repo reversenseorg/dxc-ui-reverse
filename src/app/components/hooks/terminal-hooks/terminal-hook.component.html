@@ -1,0 +1,82 @@
+<div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-hook" #termHook>
+  <!--<app-subnavbar [type]="'navtab'" [navtab]="this.view.nav" [items]="views" [parent]="this" #termHookNav>
+    <ng-container leftTab>
+      <app-subnavbar-tab [active]="true" [label]="'Index'" [icon]="gIcons.LIST" [closable]="false">Output</app-subnavbar-tab>
+    </ng-container>
+    <ng-container rightTab>
+      <app-subnavbar-tab [active]="true" [icon]="gIcons.PLUS" [closable]="false"></app-subnavbar-tab>
+    </ng-container>
+  </app-subnavbar>-->
+
+  <app-subnavbar [type]="'navtab'" [navtab]="this.view.nav" [items]="_sessions" [parent]="this"
+                 (closeTab)="onClose($event)" (selectTab)="switchSession($event)" #termHookNav>
+    <span class="nav-label pt-2" navLabel>Sessions :</span>
+    <ng-container rightTab>
+      <app-subnavbar-tab [icon]="gIcons.PLAY" [closable]="false" (click)="newSession()"></app-subnavbar-tab>
+      <app-subnavbar-tab [icon]="gIcons.DOWNLOAD" [closable]="false" (click)="save()"></app-subnavbar-tab>
+    </ng-container>
+  </app-subnavbar>
+
+  <div #termHookCtn style="overflow-y:auto;">
+    <ng-container *ngIf="_current">
+      <div *ngFor="let msg of _current.messages; let index = index;" class="row no-gutters hmsg" (click)="hookMsgFocus(index)" [ngClass]="(_current_selected==index ? 'selected' : '')">
+        <div *ngIf="msg.hasTag(tags.HOOK)" class="col-lg-1 col-msg">
+          <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+          <!--<ng-container *ngFor="let t of msg.tags">
+            <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
+          </ng-container>-->
+          <!--<span *ngFor="let t of msg.tags" class="badge badge-pill" [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
+        </div>
+        <div class="col-lg-1 col-msg">
+          <dxc-meta *ngIf="msg.data.when==-1" [label]="'before'" [ngClass]="'text-info'"></dxc-meta>
+          <dxc-meta *ngIf="msg.data.when==1" [label]="'after'" [ngClass]="'dxc-azur'"></dxc-meta>
+          <dxc-meta *ngIf="msg.data.when==0" [label]="'replace'" [ngClass]="'dxc-pink'"></dxc-meta>
+          <!--<ng-container *ngFor="let t of msg.tags">
+            <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
+          </ng-container>-->
+          <!--<span *ngFor="let t of msg.tags" class="badge badge-pill" [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
+        </div>
+        <div class="col-lg-3 col-msg">
+          <ng-container *ngFor="let n of msg.node">
+            <ng-container *ngIf="n.__==NODE_TYPE.METHOD">
+
+              <dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;<span (click)="open(n.enclosingClass,NODE_TYPE.CLASS)" class="actionable">{{ n.enclosingClass }}</span>
+              .
+              <dxc-icon [model]="cIcons.METH"></dxc-icon>&nbsp;<span (click)="open(n,NODE_TYPE.METHOD)" class="actionable">{{ n.name }}</span>(...)
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="col-lg-7 ppt">
+          <ng-container *ngFor="let d of msg.data.data | keyvalue">
+
+            <ng-container [ngSwitch]="d.value.__">
+              <ng-container *ngSwitchCase="NODE_TYPE.CLASS">
+                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;<span (click)="open(d.value,NODE_TYPE.CLASS)" class="actionable">{{ d.value.fqcn }}</span>
+              </ng-container>
+              <ng-container *ngSwitchCase="NODE_TYPE.METHOD">
+                <dxc-icon [model]="cIcons.METH"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+              </ng-container>
+              <ng-container *ngSwitchCase="NODE_TYPE.FILE">
+                <dxc-icon [model]="cIcons.FILE"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <div *ngIf="d.key[0]!='_'">
+                  <span>{{ d.key }}</span>&nbsp;:&nbsp;<span>{{ d.value }}</span>
+                </div>
+                <div *ngIf="d.key=='__class__'">
+                  <dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.CLASS)" class="actionable">{{ d.value }}</span>
+                </div>
+                <div *ngIf="d.key=='__meth__'">
+                  <dxc-icon [model]="cIcons.METH"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+                </div>
+              </ng-container>
+            </ng-container>
+
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+

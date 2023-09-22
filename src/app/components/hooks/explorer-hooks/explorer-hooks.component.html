@@ -1,0 +1,169 @@
+<div [class.dxc-hidden]="offset != parent.active" class="explorer-hook" #explHookRef>
+
+  <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onNavbarItemClick($event)">
+    <ng-container opts>
+      <button class="btn-option" [ngbTooltip]="'Start/stop hooking'" (click)="turnHooking(!running)">
+        <dxc-icon *ngIf="!running" [model]="gIcons.PLAY"></dxc-icon>
+        <dxc-icon *ngIf="running" [model]="gIcons.STOP"></dxc-icon>
+      </button>
+      <button class="btn-option" [ngbTooltip]="'Download final script'" (click)="editScript('dl')">
+        <dxc-icon  [model]="gIcons.DOWNLOAD"></dxc-icon>
+      </button>
+      <button class="btn-option" [ngbTooltip]="'Edit final script'" (click)="editScript('ed')">
+        <dxc-icon  [model]="gIcons.EDIT"></dxc-icon>
+      </button>
+      <button class="btn-option" [ngbTooltip]="'Refresh view'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
+    </ng-container>
+  </app-explorer-navbar>
+
+  <ul *ngIf="view.subnav != null" class="nav">
+    <li *ngFor="let navBtn in view.subnav.menu.items">
+      <!--<fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>-->
+      <dxc-icon [model]="navBtn.icon"></dxc-icon>
+    </li>
+  </ul>
+
+  <div class="explorer-list-root" #explHookCtnRef>
+    <app-expandable-list
+      *ngIf="projectReady">
+
+      <!--<ng-container *ngFor="let t of activePool | keyvalue">-->
+
+        <!--<li *ngIf="t.key=='builtin'" class="dxc-text-75 exp-separator yellow">
+          Built-In
+        </li>
+        <li *ngIf="t.key=='native'" class="dxc-text-75 exp-separator blue">
+          Native
+        </li>
+        <li *ngIf="t.key=='dynamic'" class="dxc-text-75 exp-separator yellow">
+          Dynamic
+        </li>
+        <li *ngIf="t.key=='onDemand'" class="dxc-text-75 exp-separator blue">
+          On-Demand
+        </li>-->
+
+        <ng-container *ngFor="let hook of activePool.app">
+
+          <ng-template #expHookItem let-itemObj="item" >
+
+            <span *ngIf="NODE_TYPES.KEY_POINT==itemObj.__" (contextmenu)="displayCtxMenu($event,'kp',itemObj)">
+              <dxc-icon [model]="itemObj.enabled ? icons.KEYPOINT : icons.KEYPOINT_DOWN"></dxc-icon>
+              <ng-container  *ngIf="itemObj._decor=='JAVA'; else otherDec">
+                <dxc-meta [css]="'dxc-herb dxc-sz-6 mr-1'" [label]="'java'">java</dxc-meta>
+              </ng-container>
+              <ng-template #otherDec>
+                <dxc-meta [css]="'dxc-purple'" [label]="itemObj._decor">{{ itemObj._decor }}</dxc-meta>
+              </ng-template>
+
+              <span class="pl-1">{{ itemObj.name }}</span>
+            </span>
+
+            <span *ngIf="itemObj._t=='kt'">
+              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <span class="pl-1">{{ itemObj.name }}</span>
+            </span>
+
+            <span *ngIf="NODE_TYPES.INSPECTOR==itemObj.__" (contextmenu)="displayCtxMenu($event,'inspector',itemObj)">
+              <dxc-icon [model]="itemObj.running ? icons.UP : icons.DOWN"></dxc-icon>
+              <span>{{ itemObj.name }}</span>
+              <span *ngIf="itemObj.hookset && itemObj.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
+              <span *ngIf="itemObj.listener.length>0" class="text-info">&nbsp;[rules]</span>
+            </span>
+
+            <span *ngIf="NODE_TYPES.HOOK_NATIVE==itemObj.__" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
+              <dxc-icon [model]="itemObj._enabled? icons.UP : icons.DOWN"></dxc-icon>
+              <dxc-meta [css]="'dxc-salmon dxc-sz-6 mr-1'" [label]="itemObj.file">NATIVE : {{ itemObj.file }}</dxc-meta>&nbsp;{{ itemObj.symbol }}
+            </span>
+
+            <span *ngIf="NODE_TYPES.HOOK_SESSION==itemObj.__" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'hksess',itemObj)">
+              <dxc-meta [css]="'dxc-green-fluo dxc-sz-6 mr-1'" *ngIf="itemObj.active" [label]="'LATEST'"></dxc-meta>&nbsp;
+              {{ itemObj.date.toISOString() }}
+              <span class="badge badge-pill badge-danger ml-1">{{ itemObj.offset }}</span>
+            </span>
+
+            <span *ngIf="NODE_TYPES.HOOK_JAVA==itemObj.__" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
+              <dxc-icon [model]="itemObj._enabled? icons.UP : icons.DOWN"></dxc-icon>
+              <dxc-meta [css]="'dxc-herb dxc-sz-6 mr-1'" [label]="'java'">java</dxc-meta>&nbsp;{{ itemObj.symbol }}
+              <ng-container *ngIf="itemObj.method.__signature__!=null || itemObj.method.__s!=null; else mn">
+                <ng-container *ngIf="itemObj.method.__signature__!=null">{{ itemObj.method.__signature__  }}</ng-container>
+                <ng-container *ngIf="itemObj.method.__s!=null">{{ itemObj.method.name  }}</ng-container>
+              </ng-container>
+              <ng-template #mn>{{itemObj.method}}</ng-template>
+            </span>
+
+            <!--
+            <span *ngIf="itemObj.__==HOOK_NATIVE" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
+              <dxc-icon [model]="itemObj._enabled? icons.UP : icons.DOWN"></dxc-icon>
+              <dxc-meta [css]="'dxc-salmon dxc-sz-6 mr-1'" [label]="itemObj.file">NATIVE : {{ itemObj.file }}</dxc-meta>&nbsp;{{ itemObj.symbol }}
+            </span>
+
+            <span *ngIf="itemObj.__==HOOK_JAVA" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
+              <dxc-icon [model]="itemObj._enabled? icons.UP : icons.DOWN"></dxc-icon>
+              <dxc-meta [css]="'dxc-herb dxc-sz-6 mr-1'" [label]="'java'">java</dxc-meta>&nbsp;{{ itemObj.symbol }}
+              <ng-container *ngIf="itemObj.method.__signature__!=null || itemObj.method.__s!=null; else mn">
+                <ng-container *ngIf="itemObj.method.__signature__!=null">{{ itemObj.method.__signature__  }}</ng-container>
+                <ng-container *ngIf="itemObj.method.__s!=null">{{ itemObj.method.name  }}</ng-container>
+              </ng-container>
+              <ng-template #mn>{{itemObj.method}}</ng-template>
+            </span>
+            -->
+
+          </ng-template>
+
+          <app-expandable-item
+            [itemTpl]="expHookItem"
+            [item]="hook"
+            [provider]="this"
+            [itemType] = "hook.__"
+            [expandableFn]="isExpendable"
+            (itemFocus)="onItemFocus($event)"
+            (collapse)="onCollapse($event)"
+            (expand)="onExpand($event)"
+          >
+
+          </app-expandable-item>
+        </ng-container>
+
+    </app-expandable-list>
+
+    <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
+      Open a project first.
+    </div>
+  </div>
+</div>
+
+
+
+<app-context-menu [name]="'hook'" [width]="250">
+  <app-context-item [label]="'Switch ON/OFF'" [icon]="icons.UP" (itemclick)="controller.switchOnOff(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show'" (itemclick)="controller.showHook(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Attach to key point ...'" [icon]="gIcons.ATTACH_HOOK" (itemclick)="controller.showAttachToKP(ctxMenuState.subject )"></app-context-item>
+  <app-context-item [label]="'Remove'" [separator]="true" [icon]="gIcons.TRASH" (itemclick)="controller.deleteHook(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [name]="'hkfrag'" [width]="250">
+  <app-context-item [label]="'Edit Info'" [icon]="gIcons.EDIT" (itemclick)="controller.editFrag(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Delete'" [icon]="gIcons.TRASH"  (itemclick)="controller.deleteFrag(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [name]="'inspector'">
+  <app-context-item [label]="'Details'" (itemclick)="controller.showInspectorDetail(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show logs'" (itemclick)="controller.showLogsOf(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Detections'" (itemclick)="controller.showDetectionsOf(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Help'" [icon]="gIcons.HELP" (itemclick)="controller.app.helper.openInspector(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+
+<app-context-menu [name]="'kp'">
+  <app-context-item [label]="'Show target'" [icon]="gIcons.TARGET" (itemclick)="controller.showTargetKP(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Edit'"  [icon]="gIcons.EDIT"  (itemclick)="editKP(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Delete'" [icon]="gIcons.TRASH"  (itemclick)="deleteKP(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Enable/Disable'" (itemclick)="enableKP(ctxMenuState.subject)"></app-context-item>
+  <!--<app-context-item [label]="'Duplicate'" (itemclick)="controller.showDetectionsOf(ctxMenuState.subject)"></app-context-item>-->
+</app-context-menu>
+
+<dxc-modal-hook-java-new [controller]="controller"></dxc-modal-hook-java-new>
+<dxc-modal-hook-keypoint-new [controller]="controller"></dxc-modal-hook-keypoint-new>
+<dxc-modal-select-kp [controller]="controller"></dxc-modal-select-kp>
+<dxc-modal-new-fragment [controller]="controller"></dxc-modal-new-fragment>
+

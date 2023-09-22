@@ -1,0 +1,117 @@
+<app-modal-base [name]="'projanalcfg'" [closable]="closable"   [width]="500" [height]="600" [mainController]="controller.app">
+  <div head class="dxc-modal-header dxc-text-std">
+    Analysis Configuration
+  </div>
+  <div body class="dxc-modal-body ">
+      <div class="dxc-form dxc-text-std">
+
+          <div class="dxc-frm-label dxc-text-100">
+            <b class="dxc-text-100">File analysis mode :</b>
+          </div>
+          <div class="dxc-text-75 pl-1 pt-2">
+            <select [(ngModel)]="fa_mode" class="dxc-input">
+              <option value="magic">Simple</option>
+              <option value="deep">Deep</option>
+              <option value="smart">Smart</option>
+            </select>
+            <div class="mb-2 dxc-legend">
+              <p *ngIf="fa_mode=='deep'" style="font-size:11px">
+                With Deep mode, file analysis is based on binwalk only. It provides best results than Simple mode, especially with
+                polyglot and huge files, but is if 3x slower than Simple mode.
+              </p>
+              <p *ngIf="fa_mode=='smart'" style="font-size:11px">
+                With Smart mode, a first pass is done with Simple Mode. Next, unknow files are scanned with binwalk.
+                Finally, files containing textual data are parsed speculatively.
+              </p>
+              <p *ngIf="fa_mode=='magic'" style="font-size:11px">
+                With Simple mode, file analysis is based on file headers only. On UNIX-like systems, the command <i>file</i> is called.
+                Polyglot files cannot be detected, but is if 3x faster than Deep mode.
+              </p>
+            </div>
+          </div>
+
+        <!--
+        <div class="row no-gutters  dxc-text-100">
+          <div class="col-4 dxc-text-75">
+            File analysis mode :
+          </div>
+          <div class="col-1">
+            <input type="radio" name="fa_mode" id="fa_mode_simple" value="magic"><br>
+            <input type="radio" name="fa_mode" id="fa_mode_deep" value="deep"><br>
+            <input type="radio" name="fa_mode" id="fa_mode_smart" checked="checked" value="smart">
+          </div>
+
+          <div class="col-6 pl-0">
+            <span class="dxc-text-75">Simple : scan file headers only</span><br>
+            <span class="dxc-text-75">Deep : scan every files with binwalk</span><br>
+            <span  class="dxc-text-75">Smart : scan file headers, and use binwalk when format cannot be detected.</span>
+          </div>
+        </div>
+        -->
+
+        <ng-container *ngIf="isAndroid()">
+          <div class="dxc-frm-label dxc-text-100">
+            <b class="dxc-text-100">Splitted APK :</b>
+          </div>
+          <div class="row no-gutters dxc-text-100 pt-2">
+            <div class="col-4 dxc-text-75 pl-2">
+              <input type="checkbox" value="yes" [(ngModel)]="ssa_auto" name="ssa_auto" id="ssa_auto_yes" class="mr-1" [checked]="(ssa_auto)"><label>Search</label>
+            </div>
+
+            <!--<div class="col-3">
+              <input type="checkbox" value="yes" name="ssa_auto" id="ssa_auto_yes" checked="checked"><span class=" pl-1 pr-3">Yes</span>
+            </div>
+            <div class="col-3">
+              <input type="radio" value="no" name="ssa_auto" id="ssa_auto_no" ><span class=" pl-1">No</span>
+            </div>-->
+          </div>
+          <div class="row no-gutters dxc-text-100">
+            <div class="col-4  dxc-text-75 pl-2">
+              <input type="checkbox" value="yes" [(ngModel)]="msa_auto" name="msa_auto" id="msa_auto_yes" class="mr-1" [checked]="(msa_auto)"><label>Merge</label>
+            </div>
+            <!--<div class="col-3">
+              <input type="radio" value="yes" name="msa_auto" id="msa_auto_yes" checked="checked"><span class=" pl-1 pr-3">Yes</span>
+            </div>
+            <div class="col-3">
+              <input type="radio" value="no" name="msa_auto" id="msa_auto_no" ><span class=" pl-1">No</span>
+            </div>-->
+          </div>
+        </ng-container>
+
+
+        <div class="dxc-frm-label dxc-text-100">
+          <b class="dxc-text-100">Native libraries :</b>
+        </div>
+        <div class="dxc-frm-label dxc-text-100 pl-2">
+          <input type="checkbox" value="yes" [(ngModel)]="na_force" name="na_auto" id="na_auto" class="mr-1" [checked]="(na_force?'checked':'')">
+          <label>Analyze all native libraries detected (not recommended for huge app)</label>
+        </div>
+        <!--<div  class="dxc-text-75 pl-1 pt-2" *ngIf="!na_force">
+            <input type="radio" value="auto" name="na_auto" id="na_auto_yes" checked="checked"><span class=" pl-1 pr-3">Yes</span>
+            <input type="radio" value="manual" name="na_auto" id="na_auto_no" ><span class=" pl-1">No</span>
+        </div>-->
+
+
+        <div class="dxc-frm-label dxc-text-100">
+          <b  class="dxc-text-100">Target ABI :</b>
+        </div>
+        <div  class="dxc-text-75 pl-1 pt-2">
+          <select [(ngModel)]="abi" class="dxc-input">
+            <option value="_devabi" selected>Use ABI of configured device</option>
+            <option value="_any">any (not recommended)</option>
+            <optgroup label="Available">
+              <ng-container *ngFor="let sabi of supportedAbi">
+                <option [value]="sabi.name">{{ sabi.name  }}</option>
+              </ng-container>
+            </optgroup>
+
+          </select>
+        </div>
+
+      </div>
+  </div>
+  <div footer class="dxc-text-std">
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="startAnalysis()">Start Analysis</button>
+  </div>
+</app-modal-base>

@@ -1,0 +1,76 @@
+<div [class.dxc-hidden]="offset != parent.active" class="container-fluid explorer-audit" #explAuditRef>
+  <!-- <app-explorer-navbar [explorer]="this" ></app-explorer-navbar> -->
+  <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
+    <ng-container opts>
+      <!--<button class="btn-option" (click)="refresh()"><fa-icon [icon]="['fas','cog']"></fa-icon></button>-->
+      <button class="ml-2 btn-option" [ngbTooltip]="'Refresh'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
+      <button class="ml-2 btn-option" [ngbTooltip]="'Scan'"><dxc-icon [model]="gIcons.PLAY"></dxc-icon> </button>
+    </ng-container>
+  </app-explorer-navbar>
+
+  <ul *ngIf="view.subnav != null" class="nav">
+    <li *ngFor="let navBtn in view.subnav.menu.items">
+      <fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>
+    </li>
+  </ul>
+
+  <div class="explorer-list-root" #explAuditCtnRef>
+    <app-expandable-list>
+
+
+      <ng-container *ngFor="let file of dataPool[selected]">
+
+        <ng-template #expFileItem let-itemObj="item">
+          <span class="dxc-text-std" *ngIf="itemObj.scannerID!=null" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
+            <dxc-icon [model]="gIcons.LIBS"></dxc-icon>
+            {{ itemObj.id  }}
+          </span>
+
+          <span class="dxc-text-std" *ngIf="(itemObj.assessments!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
+            <dxc-icon [model]="gIcons.LIBS" [color1]="'text-warning'"></dxc-icon>
+            {{ itemObj.name }} [ {{ itemObj.assessments.length }} ]
+          </span>
+
+          <span class="dxc-text-std" *ngIf="(itemObj.rules!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
+            <dxc-icon [model]="gIcons.TARGET" [color1]="'text-warning'"></dxc-icon>
+            {{ itemObj.name }}
+          </span>
+
+        </ng-template>
+
+        <app-expandable-item
+          [itemTpl]="expFileItem"
+          [item]="file"
+          [provider]="this"
+          [itemType]="file._t"
+          [expandableFn]="isExpendable"
+          (itemFocus)="onItemFocus($event)"
+          (collapse)="onCollapse($event)"
+          (expand)="onExpand($event)"
+        >
+
+        </app-expandable-item>
+
+      </ng-container>
+
+    </app-expandable-list>
+
+    <div *ngIf="!dataPool[selected]" class="text-center dxc-text-clear100 pt-4">
+      There is not entry.
+    </div>
+  </div>
+
+
+</div>
+
+
+<app-context-menu [name]="'audit_rul'" [width]="300">
+  <app-context-item [label]="'Open'" (click)="controller.open(ctxMenuState.subject,'xt')"></app-context-item>
+  <app-context-item [label]="'Scan'" (click)="scanModel(ctxMenuState.subject)" ></app-context-item>
+  <app-context-item [label]="'ReScan'" ></app-context-item>
+</app-context-menu>
+
+<app-context-menu [name]="'audit_model'" [width]="300">
+  <app-context-item [label]="'Open'" (click)="controller.open(ctxMenuState.subject,'xt')"></app-context-item>
+  <app-context-item [label]="'Scan'" [icon]="gIcons.PLAY" (click)="scanModel(ctxMenuState.subject)" ></app-context-item>
+</app-context-menu>

@@ -1,0 +1,229 @@
+<div [class.dxc-hidden]="offset != parent.active" class="explorer-device" #explDevRef>
+    <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
+      <ng-container opts>
+        <dxc-helper-btn [docid]="'dev.list'"></dxc-helper-btn>
+        <button class="ml-1 btn-option" [ngbTooltip]="'Add new device'" (click)="addDeviceModal()"><fa-icon [icon]="['fas','plus']"></fa-icon></button>
+        <button class="btn-option" [ngbTooltip]="'Refresh list'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
+      </ng-container>
+    </app-explorer-navbar>
+
+    <ul *ngIf="view.subnav != null" class="nav">
+      <li *ngFor="let navBtn in view.subnav.menu.items">
+        <dxc-icon [model]="navBtn.icon"></dxc-icon>
+      </li>
+    </ul>
+
+    <div class="explorer-list-root" #explDevCtnRef>
+      <app-expandable-list
+        *ngIf="dmReady">
+
+        <ng-template #expCodeItem let-itemObj="item" >
+
+          <!--<div *ngIf="itemObj.type=='c'; then classTpl else pkgTpl"></div>-->
+
+          <ng-template #devEnrolled>
+            <dxc-icon [model]="itemObj._icon" [color1]="itemObj.connected==false ? 'text-danger' : 'text-success'"></dxc-icon>
+            <span class="dxc-text-clear100">{{ itemObj.model }}</span>&nbsp;{{ itemObj.id }}&nbsp;&nbsp;&nbsp;
+            <span class="text-warning">[ENROLLED]</span>
+            <!--<span class="badge badge-pill badge-danger ml-1" *ngIf="itemObj.rootMode">ROOT</span>
+            <span class="badge badge-pill badge-info ml-1" *ngIf="!itemObj.rootMode">USER</span>-->
+            <span class="badge badge-pill badge-success ml-1" *ngIf="itemObj.connected">connected</span>
+          </ng-template>
+          <ng-template #devNotEnrolled>
+            <dxc-icon [model]="gIcons.UNKNOWN"></dxc-icon>
+            <span class="dxc-text-clear100">???</span>
+            <span class="dxc-text-clear75">{{ itemObj.id }}</span>
+            <span class="dxc-text-blue">[{{ itemObj.bridge }}]</span>
+            <span class="dxc-text-blue">[{{ itemObj.type }}]</span>
+            <span class="badge badge-pill badge-success ml-1" *ngIf="itemObj.connected">connected</span>
+          </ng-template>
+          <span *ngIf="itemObj._t=='dev'" #devTpl (contextmenu)="displayCtxMenu($event,'dev',itemObj)">
+              <ng-container *ngIf="itemObj.enrolled; then devEnrolled else devNotEnrolled"></ng-container>
+          </span>
+
+
+          <span *ngIf="itemObj._t=='b'" #bridgeTpl (contextmenu)="displayCtxMenu($event,'bridge',itemObj)">
+              <dxc-icon [model]="itemObj._icon" [color1]="'text-warning'"></dxc-icon>
+              <span class="text-warning">{{ itemObj.shortname }}</span>&nbsp;&nbsp;
+              <span class="dxc-text-clear100">{{ itemObj.uid }}</span>
+            </span>
+
+
+          <span *ngIf="itemObj._t=='app'" (contextmenu)="displayCtxMenu($event,'dev_app',itemObj)">
+              <dxc-icon [model]="gIcons.LIST"></dxc-icon>&nbsp;
+              <span class="dxc-text-clear75">Applications</span>
+            </span>
+
+          <span *ngIf="itemObj._t=='ps'">
+              <dxc-icon [model]="gIcons.LIST"></dxc-icon>&nbsp;
+              <span class="dxc-text-clear75">Processes</span>
+            </span>
+
+
+          <span *ngIf="itemObj._t=='fs'">
+              <dxc-icon [model]="gIcons.LIST"></dxc-icon>&nbsp;
+              <span class="dxc-text-clear75">File system</span>
+            </span>
+
+          <span *ngIf="itemObj._t=='d'" (contextmenu)="displayCtxMenu($event,'dir',itemObj)">
+            <dxc-icon [model]="gIcons.FOLDER"></dxc-icon>
+            {{ itemObj.n  }}
+          </span>
+
+          <span *ngIf="itemObj._t=='l'" (contextmenu)="displayCtxMenu($event,'dir',itemObj)">
+            <dxc-icon [model]="gIcons.FOLDER" [color1]="'text-warning'"></dxc-icon>
+            {{ itemObj.n  }}<i class="text-warning">&nbsp;-&gt;&nbsp;{{ itemObj._d }}</i>
+          </span>
+
+          <span *ngIf="itemObj._t=='f'"  (contextmenu)="displayExtMenu($event,'dfile',itemObj)">
+              <dxc-icon [model]="getIconForType(itemObj)"></dxc-icon>
+            {{ itemObj.n  }}
+          </span>
+
+
+          <span *ngIf="itemObj._t=='p'" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'ps',itemObj)">
+            <div class="row" [ngClass]="{ 'dxc-text-50':((itemObj.NAME!=null)&&(itemObj.NAME[0]=='[')), 'text-warning':((itemObj.USER!=null)&&(itemObj.USER[0]=='u')) }">
+              <div class="col-2">{{ itemObj.PID }}</div>
+              <div class="col-3">{{ itemObj.USER }}</div>
+              <div class="col-6">{{ itemObj.NAME }}</div>
+            </div>
+          </span>
+
+
+          <span *ngIf="itemObj._t=='enrollnow'" (dblclick)="enroll(itemObj)" >
+              <dxc-icon [model]="enrolling ? gIcons.SPINNER : gIcons.ERROR" ></dxc-icon>&nbsp;
+              <span class="text-danger" style="font-weight: 800">This device is not enrolled. Double-click to start ...</span>
+            </span>
+
+
+
+
+          <span *ngIf="itemObj._t=='wait'">
+              <dxc-icon [model]="gIcons.SPINNER"></dxc-icon>&nbsp;
+              <span class="dxc-text-clear75">Loading ...</span>
+            </span>
+
+
+          <span *ngIf="itemObj._t=='apkg'" (contextmenu)="displayCtxMenu($event,'apkg',itemObj)">
+              <dxc-icon [model]="gIcons.PACKAGE"></dxc-icon>&nbsp;
+              <span *ngIf="itemObj.tag" class="dxc-text-clear100">({{ itemObj.tag }})&nbsp;&nbsp;</span>
+              <span class="dxc-text-clear75">{{ itemObj.packageIdentifier }}</span>
+            </span>
+
+
+          <span *ngIf="itemObj._t=='info'" (contextmenu)="displayCtxMenu($event,'fs',itemObj)">
+              <dxc-icon [model]="gIcons.INFO"></dxc-icon>&nbsp;
+              <span class="dxc-text-clear75">Info</span>
+            </span>
+
+          <span *ngIf="itemObj._t=='ta'" (contextmenu)="displayCtxMenu($event,'fs',itemObj)">
+              <dxc-icon [model]="gIcons.INFO"></dxc-icon>&nbsp;
+              <span class="dxc-text-clear100">Trusted Applications</span>
+            </span>
+        </ng-template>
+
+        <ng-container *ngFor="let dev of devices[selected]; trackBy: deviceIdentify">
+
+
+          <app-expandable-item
+            [itemTpl]="expCodeItem"
+            [item]="dev"
+            [provider]="this"
+            [itemType]="dev._t"
+            [expandableFn]="itemHasChildren"
+            (itemFocus)="onItemFocus($event)"
+            (collapse)="onCollapse($event)"
+            (expand)="onExpand($event)"
+            >
+
+          </app-expandable-item>
+        </ng-container>
+      </app-expandable-list>
+      <div *ngIf="!dmReady" class="text-center dxc-text-clear100 pt-4">
+        Device list is loading.&nbsp;<fa-icon [icon]="['fas','circle-notch']" [spin]="true" class="dxc-text-clear100"></fa-icon>
+      </div>
+    </div>
+</div>
+
+<app-context-menu [name]="'dev'" [width]="250">
+  <app-context-item [label]="'Show info'"  (itemclick)="openInfo(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Open shell'"  [icon]="gIcons.TERMINAL" (itemclick)="openShell(ctxMenuState.subject, false)"></app-context-item>
+  <app-context-item [label]="'Show processes'" (itemclick)="showProcess(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Browse filesystem'"  (itemclick)="showDevFs(ctxMenuState)"></app-context-item>
+  <app-context-item [label]="'Root access'"  [icon]="gIcons.UNLOCK" (itemclick)="usePrivilegedMode(ctxMenuState.subject, true)"></app-context-item>
+  <app-context-item [label]="'User access'"  [icon]="gIcons.LOCK" (itemclick)="usePrivilegedMode(ctxMenuState.subject, false)"></app-context-item>
+  <app-context-item [label]="'Remove'"  [icon]="gIcons.TRASH" (itemclick)="removeDevice(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Install project app'" [separator]="true"  [icon]="gIcons.DOWNLOAD" (itemclick)="installApp(ctxMenuState.subject,'proj')"></app-context-item>
+  <app-context-item [label]="'Uninstall project app'"  [icon]="gIcons.TRASH" (itemclick)="uninstallProjectApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Select as default'" [separator]="true"  [icon]="gIcons.STAR" (itemclick)="setAsDefaultDev(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Enroll'"  (itemclick)="enroll(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Analyze'"  (itemclick)="analyze(ctxMenuState.subject)"></app-context-item>
+
+  <!--<app-context-item [label]="'Frida server'" (itemclick)="controller.startFridaSer(ctxMenuState.subject)"></app-context-item>-->
+</app-context-menu>
+
+
+<app-context-menu [name]="'bridge'">
+  <app-context-item [label]="'Select as default'" (click)="controller.setAsDefaultBridge(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Configure'"  [iconName]="'EDIT'" (click)="controller.configureBridge(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+
+<app-context-menu [name]="'app'">
+  <!--<app-context-item [label]="'Refresh'"[icon]="gIcons.REFRESH" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>-->
+</app-context-menu>
+
+<app-context-menu [name]="'fs'">
+  <app-context-item [label]="'Open'" [icon]="gIcons.REFRESH" (click)="showFile(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Monitor'" [separator]="true" (click)="monitorFD(ctxMenuState.subject)"></app-context-item>s
+</app-context-menu>
+
+<app-context-menu [name]="'ps'">
+  <app-context-item [label]="'Copy PID'"  (click)="copyAttr(ctxMenuState.subject, 'PID')"></app-context-item>
+  <app-context-item [label]="'Copy name'"  (click)="copyAttr(ctxMenuState.subject, 'NAME')"></app-context-item>
+  <app-context-item [separator]="true" [disabled]="true" [label]="'Show details'" [icon]="gIcons.REFRESH" (click)="showMemoryMap(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [disabled]="true" [label]="'Memory map'"  (click)="showMemoryMap(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [disabled]="true"  [label]="'File descriptors'"  (click)="showFD(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [disabled]="true" [label]="'Attach to project'" [separator]="true"  (click)="monitorPs(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [disabled]="true" [label]="'Analyze ...'"  (click)="monitorPs(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [disabled]="true" [label]="'Trace'"  (click)="monitorPs(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [disabled]="true" [label]="'Kill'"  (click)="controller.processKill(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [width]="200" [name]="'apkg'">
+  <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Uninstall'" [icon]="gIcons.TRASH"  (click)="uninstallApp(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [width]="200" [name]="'mntfs'">
+  <app-context-item [label]="'Open in shell'" (click)="controller.doDeviceAction(ctxMenuState.subject,'shell')"></app-context-item>
+  <app-context-item [separator]="true" [icon]="gIcons.GEN_HOOK"  [label]="'Hide with hook'" (click)="controller.doDeviceAction(ctxMenuState.subject,'hide')"></app-context-item>
+  <app-context-item [label]="'New keypoint on read'" (click)="controller.doDeviceAction(ctxMenuState.subject,'kpread')"></app-context-item>
+  <app-context-item [label]="'New keypoint on write'" (click)="controller.doDeviceAction(ctxMenuState.subject,'kpwrite')"></app-context-item>
+  <app-context-item [separator]="true" [icon]="gIcons.EDIT"  [label]="'Remount RW'" (click)="controller.doDeviceAction(ctxMenuState.subject,'mountrw')"></app-context-item>
+  <app-context-item [label]="'Remount RO'" [icon]="gIcons.UPLOAD"  (click)="controller.doDeviceAction(ctxMenuState.subject,'mountro')"></app-context-item>
+  <app-context-item [label]="'Unmount'" [icon]="gIcons.DOWNLOAD"  (click)="controller.doDeviceAction(ctxMenuState.subject,'unmount')"></app-context-item>
+</app-context-menu>
+
+
+<app-context-menu [width]="200" [name]="'dvprop'">
+  <app-context-item [icon]="gIcons.GEN_HOOK" [label]="'Spoof with hook'" (click)="controller.doDeviceAction(ctxMenuState.subject,'spoof')"></app-context-item>
+  <app-context-item [separator]="true" [label]="'New keypoint on read'" (click)="controller.doDeviceAction(ctxMenuState.subject,'propr')"></app-context-item>
+  <app-context-item [label]="'New keypoint on write'" (click)="controller.doDeviceAction(ctxMenuState.subject,'propw')"></app-context-item>
+</app-context-menu>
+
+<app-modal-dm [controller]="controller"></app-modal-dm>
+<!-- <app-modal-dev-app [controller]="controller"></app-modal-dev-app> -->
+<app-modal-progress [progress$]="progress$" [controller]="controller" [title]="progressTitle"></app-modal-progress>
+
+
+<app-context-menu [name]="'dev_app'"  [width]="250">
+  <app-context-item [label]="'Search ...'" [iconName]="'FIND'" (click)="filterApp(ctxMenuState.subject, {type:'c'})"></app-context-item>
+  <app-context-item [label]="'Refresh'" [iconName]="'REFRESH'" (click)="refreshApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'User apps'" (itemclick)="filterApp(ctxMenuState.subject, {tag:'data'})"></app-context-item>
+  <app-context-item [label]="'Vendor apps'" (itemclick)="filterApp(ctxMenuState.subject, {tag:['vendor','oem']})"></app-context-item>
+  <app-context-item [label]="'System apps'" (itemclick)="filterApp(ctxMenuState.subject, {tag:'system'})"></app-context-item>
+  <app-context-item [label]="'All apps'" (itemclick)="filterApp(ctxMenuState.subject, null)"></app-context-item>
+</app-context-menu>

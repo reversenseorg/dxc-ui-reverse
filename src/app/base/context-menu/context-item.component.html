@@ -1,0 +1,22 @@
+<li *ngIf="separator" class="disabled mt-1 mb-1" style="line-height: 1px;">
+  <div class="row no-gutters" style="max-height:1px;">
+    <div class="col-lg-1">&nbsp;</div>
+    <div class="col-lg-10" style="background-color:#777777">&nbsp;</div>
+    <div class="col-lg-1">&nbsp;</div>
+  </div>
+</li>
+<li (click)="onClick($event)" class="menu-item" [ngClass]="disabled==true?'disabled':''">
+  <div class="row no-gutters">
+    <div class="col-lg-2 ico">
+      <ng-container *ngIf="icon; then customIcon else noIcon"></ng-container>
+      <ng-template #customIcon>
+        <dxc-icon [model]="icon"></dxc-icon>
+      </ng-template>
+      <ng-template #noIcon>
+        <fa-icon [icon]="['fas','magnifying-glass']" class="dxc-empty"></fa-icon>
+      </ng-template>
+    </div>
+    <div class="col-lg-8 label">{{ label }}</div>
+    <div class="col-lg-2">&nbsp;</div>
+  </div>
+</li>

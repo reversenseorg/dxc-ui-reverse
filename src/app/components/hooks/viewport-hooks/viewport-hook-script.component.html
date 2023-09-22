@@ -1,0 +1,26 @@
+<div class="container-fluid viewport-hook">
+  <app-subnavbar [type]="'navbar'" [parent]="this">
+    <ng-container main>
+      <!-- <app-subnavbar-btn [icon]="gIcons.FILE" (click)="saveHook()">Save</app-subnavbar-btn> -->
+      <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="startHooking()">Start hooking</app-subnavbar-btn>
+      <!--<app-subnavbar-btn [icon]="gIcons.PLAY" (click)="startApp()">Run</app-subnavbar-btn>-->
+      <app-subnavbar-btn [icon]="gIcons.REFRESH" (click)="restartApp()">Restart</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.SAVE" [ngClass]="'text-danger'" (click)="saveChanges()">Save</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons.TRASH" [ngClass]="'text-danger'" (click)="remove()">Remove</app-subnavbar-btn>
+    </ng-container>
+  </app-subnavbar>
+
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="activeWidth" [type]="'1:2'">
+    <ng-container body-left>
+      <div #editor (contextmenu)="openEditorMenu($event)">
+        <ace-editor #scriptEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+      </div>
+    </ng-container>
+
+    <ng-container body-right>
+      &nbsp; &nbsp;
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>

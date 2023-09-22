@@ -1,0 +1,88 @@
+<app-modal-base [name]="'send-intent'" [closable]="closable" [width]="400" [height]="450" [mainController]="controller.app" *ngIf="filter!=null">
+  <div head class="dxc-modal-header">
+    Send intent <ng-container *ngIf="comp!=null">to {{ comp.name }}</ng-container>
+  </div>
+  <div body class="dxc-modal-body">
+
+            <p>This intent filter has multiple categories and/or actions. So, please select intent parameters.</p>
+
+            <ng-container *ngIf="filter.hasMultipleCategories()">
+              <div class="input-group mb-3" id="confCatListSection">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="confCatIntentLabel">Categories</span>
+                </div>
+                <select id="confCatList" class="form-control dxc-frm-select" aria-label="Small" aria-describedby="confCatIntentLabel">
+
+                </select>
+              </div>
+            </ng-container>
+
+
+            <ng-container *ngIf="filter.hasMultipleActions()">
+              <div class="input-group mb-3" id="confActListSection">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="confActIntentLabel">Actions</span>
+                </div>
+                <select id="confActList" class="form-control dxc-frm-select" aria-label="Small" aria-describedby="confActIntentLabel">
+
+                </select>
+              </div>
+            </ng-container>
+
+
+            <p>
+              You can specify extra options passed "as is" to 'am' command, such as start activity options or intent arguments.
+            </p>
+
+            <div class="input-group input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="confEOIntentLabel">Extra Options</span>
+              </div>
+              <input type="text" value="" id="confExtraOpts" class="form-control dxc-frm-input" aria-label="Small" aria-describedby="confEOIntentLabel">
+            </div>
+
+<!--
+            <input type="hidden" id="confIntentId" value="">
+            <input type="hidden" id="confDataUri" value="">
+            <input type="hidden" id="confMime" value="">
+
+      <div class="fullwidth-list" style="height:200px;">
+        <ng-container *ngFor="let proj of projects; let index = index">
+          <div class="row no-gutters" [ngClass]="focusEl==index?'focus':''" (click)="selectProject(proj, index)">
+            <div class="col-lg-10 offset-1">{{ proj.uid }}</div>
+            <div class="col-lg-1"><dxc-icon *ngIf="focusEl==index" [model]="gIcons.TRASH" (click)="removeProject(proj)"></dxc-icon></div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="row" *ngIf="selected==null">
+        <div class="col-lg-12 text-center dxc-text-clear100 pt-5"><i>Select a project to show details</i></div>
+      </div>
+      <div *ngIf="selected" style="width:100%;overflow-x:auto;color:#bbb;border-top:4px solid #fff;padding:1em;">
+           <ng-container *ngIf="selected.uid">
+             <div class=" pl-1dxc-text-clear75 text-capitalize"><i>Project :</i></div>
+            <div class=" pl-3 dxc-text-clear100">{{ selected.uid }}</div>
+          </ng-container>
+
+          <ng-container *ngIf="selected.package">
+            <div class=" pl-1 dxc-text-clear75 text-capitalize"><i>Package </i></div>
+            <div class=" pl-3 dxc-text-clear100">{{ selected.package }}</div>
+          </ng-container>
+
+          <ng-container *ngIf="selected.platform">
+            <div class=" pl-1 dxc-text-clear75 text-capitalize"><i>Platform </i></div>
+            <div class=" pl-3 dxc-text-clear100">{{ selected.platform }}</div>
+          </ng-container>
+
+          <ng-container *ngIf="selected.apk.path">
+            <div class=" pl-1 dxc-text-clear75 text-capitalize"><i>Sample :</i></div>
+            <div class=" pl-3 dxc-text-clear100">{{ selected.apk.path }}</div>
+          </ng-container>
+      </div>
+  </div>
+  <div footer class="dxc-modal-footer">
+      <button class="dxc-frm-btn">Cancel</button>
+      <button class="dxc-frm-btn default" (click)="openProject()">Open</button>
+  </div>-->
+        </div>
+</app-modal-base>
+

@@ -1,0 +1,263 @@
+<div class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
+  <div #metadata style="border-bottom:1px solid #777;line-height: 1">
+
+
+
+    <ng-container *ngFor="let t of data.__tag">
+      <span *ngIf="data" class="badge badge-info dxc-meta">{{ t }}</span>
+    </ng-container>
+
+    <ng-container *ngIf="data.attr.process">
+      <span *ngIf="data.attr.process[0]!='.' && data.attr.process[0]<97" class="badge badge-danger dxc-meta">external process : {{ data.attr.process }}</span>
+    </ng-container>
+
+    <span *ngIf="data" class="badge badge-success dxc-meta">exported</span>
+    <span *ngIf="data" class="badge badge-warning dxc-meta">intentable</span>
+    <!--
+    <span *ngIf="data.modifiers.private" class="meta-access text-danger">private</span>
+    <span *ngIf="data.modifiers.protected" class="meta-access text-primary">protected</span>
+    -->
+
+
+    <!--<i *ngIf="data.alias" class="text-warning">@alias: {{ data.alias }}</i>-->
+    <!--<ng-container *ngFor="let mod of data.modifiers">
+      <span class="badge badge-pill"></span>
+    </ng-container>-->
+  </div>
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="50" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'" [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [icon]="gIcons.LIST" [active]="true" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
+          <!--<app-subnavbar-btn [disable]="true" [icon]="gIcons.LIST">&nbsp;Behavior analysis</app-subnavbar-btn>-->
+          <!--<app-subnavbar-btn [disable]="true" [icon]="gIcons.LIST">&nbsp;Security analysis</app-subnavbar-btn>-->
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-left>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='if')">
+
+        <app-expandable-list style="overflow: auto;">
+          <ng-container *ngFor="let filt of data.intentFilters; let offset=index">
+
+
+              <span (contextmenu)="displayExtMenu($event,'if',filt)">
+                <dxc-icon [model]="icons.INTENT_FILTER"></dxc-icon>
+                intent-filter&nbsp;#{{ offset }}
+
+                <ng-container  *ngIf="filt.data!=null && filt.data.length>0">
+
+                  <!--<span class="badge badge-danger dxc-meta ml-1">waiting data</span>-->
+                  <br>
+
+                      <ng-container *ngFor="let dat of filt.data">
+
+                       <div *ngIf="dat.host!=null" class="row no-gutters ml-5">
+                          <div class="col-lg-10 text-left">
+                            <dxc-intent-criteria-data [_f]="dat" [inputMode]="true" (enter)="sendIntent(data, filt, dat, $event)"></dxc-intent-criteria-data>
+                          </div>
+
+                          <div class="col-lg-2 text-right">
+                            <span class="badge badge-pill badge-success" (click)="sendIntent(data, filt, dat)"><dxc-icon [model]="gIcons.PLAY" [color1]="'dxc-text-clear100'"></dxc-icon>&nbsp;Send</span>
+                          </div>
+                        </div>
+                      </ng-container>
+                </ng-container>
+
+
+                <div class="row no-gutters ml-5 border-1 border-white">
+                  <div class="col-lg-6 text-left">
+                   <b>Actions</b><br>
+                    <ng-container *ngFor="let act of filt.action">
+                      <span class="badge dxc-meta">{{ act.name }}</span><br/>
+                    </ng-container>
+                  </div>
+                  <div class="col-lg-6 text-left">
+                    <b>Categories</b><br>
+                    <ng-container *ngFor="let cat of filt.category">
+                      <span class="badge dxc-meta">{{ cat.name }}</span><br>
+                    </ng-container>
+                  </div>
+                </div>
+                <br>
+              </span>
+          </ng-container>
+        </app-expandable-list>
+
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='sa')">
+
+      </div>
+    </ng-container>
+
+
+
+    <ng-container nav-right>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [icon]="cIcons.CLASS" [active]="activeTopRight == 'cmp'" (click)="showImplementation('cmp')">Implementation</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons.ANDROID" [active]="activeTopRight == 'xr'" (click)="showAndroidAPI('xr')">Android API xref</app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-right>
+
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='xr')">
+        <ng-container *ngIf="data.internals!=null; else noInternal">
+            <app-expandable-list style="overflow: auto;">
+              <ng-container *ngFor="let cat of data.internals">
+
+                <ng-template #expItem let-itemObj="item" >
+
+                  <ng-container [ngSwitch]="itemObj.__">
+                    <ng-container *ngSwitchCase="NODE_TYPES.CLASS">
+                      <span (contextmenu)="displayExtMenu($event,'clazz',itemObj)">
+                        <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                              {{ itemObj.uid  }}
+                      </span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="NODE_TYPES.METHOD">
+                      <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                                        <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                        <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                        {{ itemObj.short  }}
+                      </span>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                        <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                          <i *ngIf="itemObj.loc">[&nbsp;{{ itemObj.loc[0].bb  }}&nbsp;:&nbsp;{{ itemObj.loc[0].instr  }}&nbsp;]&nbsp;</i>{{ itemObj.parent  }}
+                      </span>
+                    </ng-container>
+                  </ng-container>
+                <!--<span *ngIf="NODE_TYPES.CLASS==itemObj.__" (contextmenu)="displayExtMenu($event,'clazz',itemObj)">
+                  <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                  {{ itemObj.uid  }}
+                </span>
+                <span *ngIf="NODE_TYPES.METHOD==itemObj.__" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                  <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                    {{ itemObj.short  }}
+                </span>
+                <span *ngIf="itemObj.__==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                  <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                    <span *ngIf="itemObj.loc">[&nbsp;{{ itemObj.loc[0].bb  }}&nbsp;:&nbsp;{{ itemObj.loc[0].instr  }}&nbsp;]&nbsp;</span>{{ itemObj.parent  }}
+                </span>-->
+                </ng-template>
+
+                <app-expandable-item
+                  [itemTpl]="expItem"
+                  [item]="cat"
+                  [provider]="this"
+                  [itemType]="cat.__"
+                  [expandableFn]="isExpandable"
+                  (itemFocus)="onItemFocus($event)"
+                >
+
+                </app-expandable-item>
+              </ng-container>
+            </app-expandable-list>
+        </ng-container>
+        <ng-template #noInternal>
+          <div class="dxc-text-clear100 pt-4 row">
+            <div class="text-right col-2 pt-2">
+              <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+            </div>
+            <div class="col-8 text-left">
+              Deep Cross-references to Android API not found<br>The class implementing this activity is probably missing
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='cmp')">
+        <ng-container *ngIf="cmp_impl!=null; else noImpl">
+          <span *ngIf="cmp_impl" (contextmenu)="displayExtMenu($event,'clazz',cmp_impl)">
+            <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+            {{ cmp_impl.name  }}
+          </span>
+          <app-expandable-list  style="overflow: auto;">
+
+            <ng-container *ngFor="let cat of cmp_impl.fields">
+
+              <ng-template #impFieldItem let-itemObj="item" >
+              <span (contextmenu)="displayExtMenu($event,'field',itemObj)">
+                <dxc-icon [model]="cIcons.FIELD"></dxc-icon>
+                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                {{ itemObj.name  }}
+                <span *ngIf="itemObj.type" class="text-warning">
+                  <i *ngIf="!itemObj.type.primitive" >:&nbsp;{{ itemObj.type.name }}</i>
+                  <i *ngIf="itemObj.type.arr">[]</i>
+                </span>
+              </span>
+              </ng-template>
+
+              <app-expandable-item
+                [itemTpl]="impFieldItem"
+                [item]="cat"
+                [provider]="this"
+                [itemType]="cat._t"
+                [expandableFn]="isExpandable"
+                (itemFocus)="onItemFocus($event)"
+              >
+
+              </app-expandable-item>
+            </ng-container>
+
+            <ng-container *ngFor="let cat of cmp_impl.methods">
+
+              <ng-template #impMethItem let-itemObj="item" >
+              <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                {{ itemObj.__callSignature__  }}
+              </span>
+              </ng-template>
+
+              <app-expandable-item
+                [itemTpl]="impMethItem"
+                [item]="cat"
+                [provider]="this"
+                [itemType]="cat.__"
+                [expandableFn]="isExpandable"
+                (itemFocus)="onItemFocus($event)"
+              >
+
+              </app-expandable-item>
+            </ng-container>
+          </app-expandable-list>
+        </ng-container>
+        <ng-template #noImpl>
+          <div class="dxc-text-clear100 pt-4 row">
+            <div class="text-right col-2">
+              <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+            </div>
+            <div class="col-8 text-left">
+              The class implementing this component is probably missing
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+
+
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>
+
+<!--
+<app-context-menu [width]="200" [name]="'meth'">
+  <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+-->
+<!--
+<app-modal-dm [controller]="controller"></app-modal-dm>
+-->

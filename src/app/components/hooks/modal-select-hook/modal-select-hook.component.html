@@ -1,0 +1,22 @@
+<app-modal-base [name]="'selectHK'" [closable]="closable"  [width]="500" [height]="100" [beforeShow]="show" [mainController]="controller.app">
+  <div head class="dxc-modal-header">Select a hook</div>
+  <div body class="dxc-modal-body p-1">
+      <div class="dxc-form dxc-text-100">
+        <div class="row no-gutters">
+          <div class="col-12">
+                <select [(ngModel)]="selectedHK" class="dxc-input">
+                  <ng-container *ngFor="let hk in hkList">
+                    <option [value]="hk.uid">{{ hk.name }}</option>
+                  </ng-container>
+                </select>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="validateHK()">
+      <dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon>&nbsp;Validate
+    </button>
+  </div>
+</app-modal-base>

@@ -1,0 +1,33 @@
+<app-modal-base [name]="'alert'" [ztop]="true" [delegateConfigure]="configure" [closable]="closable" [width]="width" [height]="250" [mainController]="mainController">
+  <div head *ngIf="title!=null" class="dxc-modal-header" [ngClass]="applyContextStyle()" >
+    {{ title }}
+  </div>
+  <div body class="dxc-modal-body dxc-text-clear100">
+    <div class="row view-outer">
+      <div class="col-lg-2">
+        <dxc-icon [model]="gIcons.WARNING" [style]="{'font-size':'16px'}"></dxc-icon>
+      </div>
+      <div class="col-lg-10">
+        {{ msg.msg }}
+      </div>
+    </div>
+  </div>
+
+  <div footer class="row">
+    <div class="col-lg-2">&nbsp;</div>
+    <div class="col-lg-9 text-right pr-1 ml-0 mr-0">
+      <ng-container *ngFor="let ctrl of controls">
+        <button class="dxc-frm-btn" [ngClass]="ctrl.class" (click)="callControlHandler(ctrl, $event)">{{ ctrl.label }}</button>
+      </ng-container>
+      <button *ngIf="helpDocID" class="btn btn-sm btn-secondary pt-0 pb-0 mr-1" (click)="showHelp()"><dxc-icon [model]="gIcons.HELPER"></dxc-icon>&nbsp;Help</button>
+      <ng-container *ngIf="confirmMode; then confirm else alert"></ng-container>
+      <ng-template #confirm>
+        <button class="btn btn-sm btn-secondary pt-0 pb-0" (click)="cancel()">Cancel</button>
+        <button class="btn btn-sm btn-secondary btn-outline-warning pt-0 pb-0 ml-1" (click)="next()">Continue</button>
+      </ng-template>
+      <ng-template #alert>
+        <button class="dxc-frm-btn default" (click)="close()">Close</button>
+      </ng-template>
+    </div>
+  </div>
+</app-modal-base>

@@ -1,0 +1,82 @@
+<app-modal-base [headless]="true" [name]="'search'" [closable]="true" [width]="800" [height]="300" [mainController]="mainController" (open)="onOpen($event)">
+  <div body class="input-group mr-0 ml-0">
+
+    <app-subnavbar [type]="'navbar'" [parent]="this" [ngStyle]="{width:'100%'}">
+      <ng-container main>
+
+        <app-subnavbar-btn>Search :</app-subnavbar-btn>
+
+        <!-- Additionnal filters -->
+        <ng-container *ngFor="let pf of pickedFilters; let pos = index;">
+
+          <app-subnavbar-menu [label]="pf.opts[pf.selected].label" [icon]="pf.opts[pf.selected].icon" [trail]="_trail" [closeWhen$]="closeMenu">
+            <ng-container entries>
+              <ng-container *ngFor="let opts of pf.opts; let i = index">
+                <app-subnavbar-btn [icon]="opts.icon" (click)="changePickedFilter(opts, pos, i)">&nbsp;{{ opts.label }}</app-subnavbar-btn>
+              </ng-container>
+            </ng-container>
+          </app-subnavbar-menu>
+          <!--<dxc-icon [model]="gIcons.TRAIL"></dxc-icon>-->
+        </ng-container>
+
+        <!-- Root filter -->
+        <app-subnavbar-menu [label]="activeNode.opts[activeNode.selected].label" [icon]="activeNode.opts[activeNode.selected].icon" [trail]="_trail" [closeWhen$]="closeMenu">
+          <ng-container entries>
+            <ng-container *ngFor="let itm of activeNode.opts; let i = index">
+              <app-subnavbar-btn [icon]="itm.icon" (click)="selectNode(itm,i,$event)" >&nbsp;{{ itm.label }}</app-subnavbar-btn>
+            </ng-container>
+          </ng-container>
+        </app-subnavbar-menu>
+
+
+
+      </ng-container>
+    </app-subnavbar>
+    <app-subnavbar [type]="'navbar'" [parent]="this" [ngStyle]="{width:'100%'}" [style]="'dxc-search-nav'">
+      <ng-container main>
+
+        <!-- Scope filter -->
+        <app-subnavbar-menu [label]="selectedScope.label" [icon]="selectedScope.icon">
+          <ng-container entries>
+            <ng-container *ngFor="let s of FILTER_SCOPES | keyvalue" >
+              <app-subnavbar-btn [icon]="s.value.icon" (click)="applyScope(s.key, $event)">&nbsp;
+                {{ s.value.label }}
+              </app-subnavbar-btn>
+            </ng-container>
+          </ng-container>
+        </app-subnavbar-menu>
+
+        <!-- search -->
+        <app-subnavbar-input [placeholder]="'Pattern...'" [width]="'400px'" (enter)="doSearch($event,'in')"></app-subnavbar-input>
+        <app-subnavbar-btn [icon]="gIcons.FIND" (click)="doSearch($event,'btn')">&nbsp;</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons.BOOKMARK" (click)="markRequest()">&nbsp;</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons.MOVE_TO_TERM" (click)="openInTab()">&nbsp;</app-subnavbar-btn>
+
+      </ng-container>
+    </app-subnavbar>
+
+
+    <div class="row results" style="height:20px; background-color: #555; color: #ddd;">
+      <div class="col-lg-10">{{ msg }}</div>
+    </div>
+    <div class="results" style="height:220px; background-color: #2b2b2b; color:white; overflow:auto;">
+      <dxc-search-result-list  [results]="results" [controller]="controller" [mainController]="mainController"></dxc-search-result-list>
+    </div>
+  </div>
+</app-modal-base>
+
+
+<!--
+<app-subnavbar-btn [icon]="FILTERS.FIND" (click)="searchIn('*')">&nbsp;Any</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.METHOD" (click)="searchIn('method')">&nbsp;Method</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.CLASS" (click)="searchIn('class')">&nbsp;Class</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.FIELD">&nbsp;Field</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Xref to</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Xref from</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Read</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Write</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons.BINARY">&nbsp;Memory address</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons.HOOKS">&nbsp;Hooks</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons.LIBS">&nbsp;Libraries</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons.FILE"> File</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons.PACKAGE">Package</app-subnavbar-btn>-->

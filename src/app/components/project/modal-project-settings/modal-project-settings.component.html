@@ -1,0 +1,96 @@
+<app-modal-base [name]="'prj-sett'" [closable]="true" [width]="500" [height]="400" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    Project settings
+  </div>
+  <div body class="dxc-modal-body">
+    <ng-container *ngIf="project!=null; else warn">
+      <div class="dxc-form">
+        <div class="dxc-frm-label">
+          Project name :
+        </div>
+        <div>
+          <input type="text" name="pname"  id="pname" [(ngModel)]="project.uid"  dxcInputValidation dxcToken="project.uid.new" class="dxc-input" required #pname="ngModel"/>
+          <div *ngIf="pname.invalid && (pname.dirty || pname.touched)"
+               class="text-danger">
+
+
+            <div *ngIf="pname.errors.required">
+              Project name is required.
+            </div>
+            <div *ngIf="pname.errors.dxcType=='context:project.uid.new'">
+              Please choose another name
+            </div>
+            <div *ngIf="pname.errors.dxcType=='context:project.uid'">
+              Invalid project name format
+            </div>
+          </div>
+        </div>
+
+
+        <ng-container *ngIf="deviceList && display.dev">
+          <div class="dxc-frm-label">
+            Target device (default) :
+          </div>
+          <div>
+            <select [(ngModel)]="device" name="devuid" id="devuid" #dev="ngModel" (change)="changeDevice()" class="dxc-input" dxcInputValidation dxcToken="device:uid">
+              <ng-container *ngFor="let d of deviceList">
+                <option [value]="d.uid" [disabled]="!d.enrolled"><i *ngIf="!d.enrolled">[!] NOT ENROLLED :</i>&nbsp;{{ d.product }}&nbsp;|&nbsp;{{ d.id }}</option>
+              </ng-container>
+            </select>
+            <div *ngIf="success.dev"
+                 class="text-success">
+                Default device has been successfully updated.
+            </div>
+            <div *ngIf="dev.invalid && (dev.dirty || dev.touched)"
+                 class="text-danger">
+
+              <div *ngIf="dev.errors.dxcType=='device:device.uid'">
+                Invalid Device UID
+              </div>
+              <div *ngIf="dev.errors.dxcType=='device:not_enrolled'">
+                This device is not enrolled.
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="pltList && display.pltf">
+          <div class="dxc-frm-label">
+            Target platform :
+          </div>
+          <div>
+            <select [(ngModel)]="project.platform" class="dxc-input" (change)="changePlatform()">
+              <option value="none">None</option>
+              <option value="min">Minimal version supported</option>
+              <option value="target">Target version from manifest</option>
+              <optgroup label="Installed">
+                <ng-container *ngFor="let plt of pltList">
+                  <option *ngIf="plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
+                </ng-container>
+              </optgroup>
+              <optgroup label="Available  (Internet required)">
+                <ng-container *ngFor="let plt of pltList">
+                  <option *ngIf="!plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
+                </ng-container>
+              </optgroup>
+
+            </select>
+            <div *ngIf="success.plt"
+                 class="text-success">
+              Target platform has been successfully updated.
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #warn>
+      <div class="row">
+        <div class="col-lg-12 text-center">{{ msg }}</div>
+      </div>
+    </ng-template>
+
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Close</button>
+  </div>
+</app-modal-base>

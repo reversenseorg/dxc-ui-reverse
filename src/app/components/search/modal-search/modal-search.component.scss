@@ -1,0 +1,23 @@
+
+div.results {
+   width:100%;
+    margin:0px;
+
+    div.row.results {
+      margin:0px;
+      width:100%;
+      color: #bbbbbb;
+
+      &:hover {
+        background-color: #4e555b;
+      }
+
+      &.active {
+        background-color: #0d6aad;
+        div {
+          color: white;
+        }
+      }
+    }
+
+}

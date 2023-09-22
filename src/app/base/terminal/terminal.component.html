@@ -1,0 +1,26 @@
+<div class="container-fluid app-terminal" id="appTerminal" (click)="onClick()" #termEl>
+  <div class="row app-terminal-nav" (mousedown)="onDragToResize($event)" [class.active]="parent.topFocus.terminal == true" #termNav>
+    <div class="col-lg-11 text-left tabnav nav">
+      <ng-container *ngFor="let vp of views">
+        <span class="tab" [class.active]="vp.id == activeCtn.id" (click)="selectTab(vp)">
+          <dxc-icon [model]="vp.tab.icon"></dxc-icon>
+          {{ vp.tab.label}}</span>
+      </ng-container>
+    </div>
+    <div class="col-lg-1 text-right options">
+      <fa-icon *ngIf="opts.length>0" [icon]="['fas','gear']" class="btn-option"></fa-icon>&nbsp;
+      <fa-icon *ngIf="collapsible" [icon]="['fas',(collapsed? 'plus' : 'minus')]" class="btn-option" (click)="collapse()"></fa-icon>
+    </div>
+  </div>
+
+  <div class="app-terminal-view" #termCtn>
+    <!--<router-outlet name="terminal-outlet"></router-outlet>-->
+    <ng-template terminalHost></ng-template>
+  </div>
+
+  <!--<div class="row app-terminal-footer">
+    <div class="col-lg-12 text-left">
+      Copyright 2020 - Reversense - Author: Georges-B. MICHEL
+    </div>
+  </div>-->
+</div>

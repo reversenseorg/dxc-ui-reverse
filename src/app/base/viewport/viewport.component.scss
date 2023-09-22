@@ -1,0 +1,82 @@
+#appViewport{
+
+}
+
+
+.app-viewport {
+  background-color: #222;
+  /*width:75vw;*/
+  /*border-left:1px solid #333;*/
+  padding:0px;
+
+  ul.nav-tabs {
+
+    font-family: var(--nav-font);
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar{
+      display: none;
+    }
+
+    border:none ;
+    background-color:#555;
+    white-space: nowrap;
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    overflow-x: auto;
+  }
+
+
+  ul.nav-tabs > li {
+    border:none ;
+    border-bottom:3px solid #555;
+    background-color:#555;
+    color:white;
+  }
+
+
+  ul.nav-tabs > li > a,
+  ul.nav-tabs > li.nav-item > a.nav-link{
+    border:none ;
+    border-radius: 0px;
+    padding: 0.2em 1em;
+    color:#bbb  ;
+    user-select: none;
+  }
+
+  ul.nav-tabs > li:hover {
+    background-color:#333;
+    border-bottom: 3px solid #333;
+    color:white;
+  }
+
+
+  ul.nav-tabs > li.active,
+  ul.nav-tabs > li.active:hover {
+    border-bottom:3px solid cornflowerblue;
+  }
+
+  a.nav-link {
+    color:#bbb;
+  }
+
+  ul.nav-tabs > li.nav-item.active > a.nav-link,
+  {
+    border:none ;
+    background-color:#666;
+    border-bottom: 3px solid cornflowerblue;
+  }
+
+  .btn-close:hover {
+    background-color: #999;
+    color: #555;
+    border-radius:10px;
+  }
+}
+
+
+.app-viewport .viewport-outlet {
+  background-color: #222;
+  color:white;
+}

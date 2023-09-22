@@ -1,0 +1,301 @@
+<app-modal-base [name]="'hookjavanew'" [closable]="closable"  [width]="500" [height]="400" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    Key Point configuration on  <span class="text-warning">{{ targetName }}</span>
+  </div>
+  <div body class="dxc-modal-body" style="overflow:none"  *ngIf="type != null">
+      <div class="dxc-form dxc-text-100">
+        <div class="dxc-frm-desc mb-1 text-center" *ngIf="createKp">
+          A new key point will be created.
+        </div>
+        <h4 class="dxc-sub">Target</h4>
+
+
+          <div class="row pl-2 pb-2">
+            <div class="col-1 text-right">
+              <dxc-icon [model]="targetIcon"></dxc-icon>
+            </div>
+            <div class="col-11 pl-1">
+              <span>{{ targetName }}</span>
+              <ng-container *ngIf="target.alias != null">
+                <br><span  class="text-warning" >@{{ target.alias }}</span>
+              </ng-container>
+            </div>
+          </div>
+
+
+
+          <h4 class="dxc-sub mt-1">Condition</h4>
+
+
+          <ng-container *ngIf="type == NODE_TYPE.HOOK_JAVA">
+            <div class="pl-2 pb-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="jhkp_in" name="condition" [(ngModel)]="condition"  [value]="'jhkp_in'"/>
+                <label class="form-check-label" for="jhkp_in">Inside hook</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="jhkp_bef" name="condition" [(ngModel)]="condition" [value]="'jhkp_bef'" />
+                <label class="form-check-label" or="jhkp_bef">After hook</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="jhkp_aft" name="condition" [(ngModel)]="condition" [value]="'jhkp_aft'" />
+                <label class="form-check-label" or="jhkp_aft">After hook</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="jhkp_load" name="condition" [(ngModel)]="condition" [value]="'jhkp_load'"  />
+                <label class="form-check-label" for="jhkp_load">On hook load</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="jhkp_unload" name="condition" [(ngModel)]="condition" [value]="'jhkp_unload'"  />
+                <label class="form-check-label" for="jhkp_unload">On hook unload</label>
+              </div>
+            </div>
+          </ng-container>
+
+        <ng-container *ngIf="type == NODE_TYPE.FUNC">
+          <div class="pl-2 pb-2">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fnkp_bef" name="condition" [(ngModel)]="condition"  [value]="'fnkp_bef'"/>
+              <label class="form-check-label" for="fnkp_bef">before call</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fnkp_aft" name="condition" [(ngModel)]="condition"  [value]="'fnkp_aft'"/>
+              <label class="form-check-label" for="fnkp_aft">after call</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fnkp_dlsym" name="condition" [(ngModel)]="condition"  [value]="'fnkp_dlsym'"/>
+              <label class="form-check-label" for="fnkp_dlsym">On dlsym</label>
+            </div>
+          </div>
+        </ng-container>
+
+          <ng-container *ngIf="type == NODE_TYPE.PACKAGE">
+            <div class="pl-2 pb-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="pkgkp_load" name="condition" [(ngModel)]="condition"  [value]="'pkgkp_load'"/>
+                <label class="form-check-label" for="pkgkp_load">On class loaded from</label>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="type == NODE_TYPE.CLASS">
+            <div class="pl-2 pb-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="clskp_load" name="condition" [(ngModel)]="condition"  [value]="'clskp_load'"/>
+                  <label class="form-check-label" for="clskp_load">On class loading</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="clskp_new_1st" name="condition" [(ngModel)]="condition" [value]="'clskp_new_1st'" />
+                  <label class="form-check-label" or="clskp_new_1st">On first new instance</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="clskp_new_any" name="condition" [(ngModel)]="condition" [value]="'clskp_new_any'"  />
+                  <label class="form-check-label" for="clskp_new_any">On any new instance</label>
+                </div>
+            </div>
+          </ng-container>
+
+        <ng-container *ngIf="type == NODE_TYPE.FILE">
+          <div class="pl-2 pb-2">
+            <select [(ngModel)]="condition" class="dxc-input">
+              <option  [value]="'flkp_onload'">After JNI Onload</option>
+              <option  [value]="'flkp_link'">Before entrypoint (linker)</option>
+              <option  [value]="'flkp_dlo'">On dl_open</option>
+              <option  [value]="'flkp_mmap'">On mmap</option>
+              <option  [value]="'flkp_open'">On open</option>
+              <option  [value]="'flkp_write'">On FS write access</option>
+              <option  [value]="'flkp_read'">On FS read access</option>
+              <option  [value]="'flkp_del'">On FS delete</option>
+            </select>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="type == NODE_TYPE.METHOD">
+          <div class="pl-2 pb-2">
+
+            <select [(ngModel)]="condition" class="dxc-input">
+              <option  [value]="'mthkp_def'">On define</option>
+              <option  [value]="'mthkp_bef'">Before each call</option>
+              <option  [value]="'mthkp_aft'">After each call</option>
+              <option  [value]="'mthkp_hdl'">On invoke handler changes</option>
+            </select>
+
+          </div>
+        </ng-container>
+
+
+        <ng-container *ngIf="type == NODE_TYPE.FIELD">
+          <div class="pl-2 pb-2">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fldkp_def" name="condition" [(ngModel)]="condition"  [value]="'fldkp_def'"/>
+              <label class="form-check-label" for="fldkp_def">On define</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fldkp_r" name="condition" [(ngModel)]="condition" [value]="'fldkp_r'" />
+              <label class="form-check-label" or="fldkp_r">On read</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fldkp_w" name="condition" [(ngModel)]="condition" [value]="'fldkp_w'"  />
+              <label class="form-check-label" for="fldkp_w">On write</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" id="fldkp_vis" name="condition" [(ngModel)]="condition" [value]="'fldkp_vis'"  />
+              <label class="form-check-label" for="fldkp_vis">On visibility change</label>
+            </div>
+          </div>
+        </ng-container>
+
+          <h4 class="dxc-sub mt-1">Information</h4>
+
+
+          <div class="row no-gutters">
+            <div class="col-4">
+              Name :
+            </div>
+            <div class="col-8">
+              <input type="text" name="kp_name" id="kp_name" [(ngModel)]="name"  value="0" (change)="refreshToken()">
+            </div>
+          </div>
+          <div class="row no-gutters mt-1">
+            <div class="col-4">
+              Description :
+            </div>
+            <div class="col-8">
+              <!--<textarea [(ngModel)]="descr" rows="4" col="50"></textarea>-->
+              <input type="text" name="kp_descr" id="kp_descr" [(ngModel)]="descr"  value="0">
+            </div>
+          </div>
+          <div class="row no-gutters mt-1">
+            <div class="col-4">
+              Token :
+            </div>
+            <div class="col-8">
+              <input type="text" name="hk_weight" id="kp_token" [(ngModel)]="token" placeholder="@@__KP:NAME_@@"  [value]="token">
+            </div>
+          </div>
+          <div class="row no-gutters mt-1">
+            <div class="col-4">
+              <dxc-icon [model]="icons.PRIORITY"></dxc-icon>&nbsp;Priority :
+            </div>
+            <div class="col-8">
+              <input type="number" name="hk_weight" id="hk_weight" [(ngModel)]="weight"  value="0">
+            </div>
+          </div>
+
+
+
+          <!--
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            Name :
+          </div>
+          <div class="col-8">
+            <div
+            <div class="row no-gutters">
+              <div class="col-9">
+                <select [(ngModel)]="observed" class="dxc-input">
+                  <ng-container *ngIf="ktype=='java_meth'">
+                    <option value="_cpBoot">Dynamic defining</option>
+                    <option value="_cpBoot">Load</option>
+                    <option value="_cpJava">Call</option>
+                    <option value="_cpBoot">Call through reflection only</option>
+                  </ng-container>
+                  <ng-container *ngIf="ktype=='java_field'">
+                    <option value="_cpBoot">First read</option>
+                    <option value="_cpBoot">Each read</option>
+                    <option value="_cpBoot">First write</option>
+                    <option value="_cpBoot">Each write</option>
+                    <option value="_cpBoot">Class load</option>
+                  </ng-container>
+                  <ng-container *ngIf="ktype=='java_class'">
+
+                    <option value="_cpBoot">Class load</option>
+                    <option value="_cpBoot">Class instance</option>
+                  </ng-container>
+                  <option value="_cpJava" selected>Java method</option>
+                  <option value="_cpBoot">Java field</option>
+                  <option value="_cpBoot">Java class</option>
+                  <option value="_cpDalvik">on dalvik class loader ready, (deoptimize partially)</option>
+                  <optgroup label="User defined">
+                    <ng-container *ngFor="let cp of keypoints">
+                      <option [value]="cp.name">{{ cp.name  }}</option>
+                    </ng-container>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="col-3">
+                <button class="btn btn-sm text-warning" style="font-size:11px"><dxc-icon [model]="gIcons.PLUS" [color1]="'text-warning'"></dxc-icon>&nbsp;New</button>
+              </div>
+            </div>
+
+            <div class="container-fluid dxc-frm-desc">
+              N/A
+            </div>
+          </div>
+        </div>
+
+
+          <div class="col-4">
+            <dxc-icon [model]="gIcons.TARGET"></dxc-icon>&nbsp;What is observed :
+          </div>
+          <div class="col-2">
+            <input type="radio" name="hk_loc" id="hk_loc_before" [(ngModel)]="location" [value]="'before'"><label for="hk_loc_before" class="dxc-text-75 pl-1">Before</label>
+          </div>
+          <div class="col-3">
+            <input type="radio" name="hk_loc" id="hk_loc_replace" [(ngModel)]="location" checked="checked" [value]="'replace'"><label for="hk_loc_replace" class="dxc-text-75 pl-1">In place of</label>
+          </div>
+          <div class="col-2">
+            <input type="radio" name="hk_loc" id="hk_loc_after" [(ngModel)]="location" [value]="'after'"><label for="hk_loc_after" class="dxc-text-75 pl-1">After</label>
+          </div>
+        </div>
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="icons.HK_UNLOAD"></dxc-icon>&nbsp;Unload on Cut-Point :
+          </div>
+          <div class="col-8">
+            <div class="row no-gutters">
+              <div class="col-9">
+                <select [(ngModel)]="unloadCP" class="dxc-input">
+                  <option value="_cpJava">on app ready</option>
+                  <option value="_cpBoot">on boot class loader ready (deoptimize everything)</option>
+                  <option value="_cpDalvik">on dalvik class loader ready, (deoptimize partially)</option>
+                  <option value="_cpNever">never unloaded</option>
+                  <optgroup label="User defined">
+                    <ng-container *ngFor="let cp of cutpoints">
+                      <option [value]="cp.name">{{ cp.name  }}</option>
+                    </ng-container>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="col-3">
+                <button class="btn btn-sm text-warning" style="font-size:11px"><dxc-icon [model]="gIcons.PLUS" [color1]="'text-warning'"></dxc-icon>&nbsp;New</button>
+              </div>
+            </div>
+            <div class="container-fluid dxc-frm-desc">
+              N/A
+            </div>
+          </div>
+        </div>
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="icons.PRIORITY"></dxc-icon>&nbsp;Priority :
+          </div>
+          <div class="col-8">
+            <input type="number" name="hk_weight" id="hk_weight" [(ngModel)]="weight"  value="0">
+          </div>
+        </div>-->
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn" (click)="create()">
+      <dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon>&nbsp;Create Key Point
+    </button>
+    <button class="dxc-frm-btn default" (click)="create('hk')">
+      <dxc-icon [model]="gIcons.ATTACH_HOOK"></dxc-icon>&nbsp;Next, attach a hook
+    </button>
+  </div>
+</app-modal-base>

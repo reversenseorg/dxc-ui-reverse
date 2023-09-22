@@ -1,0 +1,36 @@
+.viewport-dbd {
+  background-color: #2f2f2f;
+  color:white;
+  height:100%;
+  user-select: none;
+  margin:0px;
+  padding:0px;
+
+  button.code-abstract {
+    font-weight:800;
+  }
+
+  button.code-abstract:hover {
+    cursor: pointer;
+  }
+
+  b.meta-access {
+    margin-right:3em;
+  }
+
+  span.code-type:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .datapair-key {
+    font-family: var(--nav-font);
+    padding-left:10px;
+  }
+
+  .datapair-val {
+    color: var(--text-75);
+  }
+}
+
+

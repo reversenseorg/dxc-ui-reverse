@@ -1,0 +1,112 @@
+<app-modal-base [name]="'hookjavanew'" [closable]="closable"  [width]="500" [height]="400" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    Hook configuration
+  </div>
+  <div body class="dxc-modal-body">
+      <div class="dxc-form dxc-text-100">
+        <div class="dxc-frm-desc mb-1 text-center">
+          A <b class="text-warning">{{ htype }}</b> hook will be generated.
+        </div>
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="gIcons.TARGET"></dxc-icon>&nbsp;Where hook seats :
+          </div>
+          <div class="col-2">
+            <input type="checkbox" name="hk_loc" id="hk_loc_before" [(ngModel)]="location.before" [value]="1"><label for="hk_loc_before" class="dxc-text-75 pl-1">Before</label>
+          </div>
+          <div class="col-3">
+            <input type="checkbox" name="hk_loc" id="hk_loc_replace" [(ngModel)]="location.replace" checked="checked" [value]="1"><label for="hk_loc_replace" class="dxc-text-75 pl-1">In place of</label>
+          </div>
+          <div class="col-2">
+            <input type="checkbox" name="hk_loc" id="hk_loc_after" [(ngModel)]="location.after" [value]="1"><label for="hk_loc_after" class="dxc-text-75 pl-1">After</label>
+          </div>
+        </div>
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="icons.HK_LOAD"></dxc-icon>&nbsp;Load on KeyPoint :
+          </div>
+          <div class="col-8">
+            <div class="row no-gutters">
+              <div class="col-10">
+                <select *ngIf="keypoints" [(ngModel)]="loadKP" class="dxc-input" (change)="refreshKPDescr($event,'loadKP')">
+                  <option *ngFor="let kp of keypoints" [value]="kp.name">{{ kp.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="container-fluid p-1">
+              <span *ngIf="loadKP">
+                {{ loadKP_descr }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="icons.HK_UNLOAD"></dxc-icon>&nbsp;Unload on KeyPoint :
+          </div>
+          <div class="col-8">
+            <div class="row no-gutters">
+              <div class="col-10">
+
+                <select *ngIf="keypoints" [(ngModel)]="unloadKP" class="dxc-input" (change)="refreshKPDescr($event,'unloadKP')">
+                  <option value="_kpNever">never unloaded</option>
+                  <option *ngFor="let kp of keypoints" [value]="kp.name">{{ kp.name }}</option>
+                </select>
+
+
+              </div>
+            </div>
+            <div class="container-fluid p-1">
+             <span *ngIf="unloadKP">
+               {{ unloadKP_descr }}
+             </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="icons.PRIORITY"></dxc-icon>&nbsp;Priority :
+          </div>
+          <div class="col-8">
+            <input type="number" name="hk_weight" id="hk_weight" [(ngModel)]="weight"  [value]="0">
+          </div>
+        </div>
+
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="gIcons.BOOKMARK"></dxc-icon>&nbsp;Name :
+          </div>
+          <div class="col-8">
+            <input type="text" name="hk_name" id="hk_name" [(ngModel)]="name">
+          </div>
+        </div>
+
+        <div class="row no-gutters">
+          <div class="col-4">
+            <dxc-icon [model]="gIcons.USER"></dxc-icon>&nbsp;Visibility :
+          </div>
+          <div class="col-4">
+            <input type="radio" name="hk_vis" id="hk_vis_priv" [(ngModel)]="visibility" [value]="'private'"><label for="hk_vis_priv" class="dxc-text-75 pl-1">Private</label>
+          </div>
+          <div class="col-4">
+            <input type="radio" name="hk_vis" id="hk_vis_sha" [(ngModel)]="visibility" checked="checked" [value]="'shared'"><label for="hk_vis_sha" class="dxc-text-75 pl-1">Shared</label>
+          </div>
+        </div>
+
+
+
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="generateHook()">
+      <dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon>&nbsp;Generate
+    </button>
+  </div>
+</app-modal-base>

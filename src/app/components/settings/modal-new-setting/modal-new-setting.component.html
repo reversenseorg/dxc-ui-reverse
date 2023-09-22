@@ -1,0 +1,29 @@
+<app-modal-base [name]="'new-setting'" [closable]="closable"  [width]="500" [height]="100" [beforeShow]="show" [mainController]="mainController" >
+  <div head class="dxc-modal-header">Select a key point</div>
+  <div body class="dxc-modal-body p-1">
+      <div class="dxc-form dxc-text-100">
+        <div class="row no-gutters">
+          <div class="col-2 pr-1">
+            <select [(ngModel)]="category" class="dxc-input">
+              <option value="ext">External Tool</option>
+              <option value="web">Web Server</option>
+              <option value="conn">Authentication</option>
+              <option value="srv">Engine</option>
+            </select>
+          </div>
+          <div class="col-4 pr-1">
+            <input type="text" class="dxc-input" autofocus="autofocus" [(ngModel)]="name" placeholder="setting-name..."/>
+          </div>
+          <div class="col-5 pr-1">
+            <input type="text" class="dxc-input" autofocus="autofocus" [(ngModel)]="value" placeholder="val..."/>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="save()">
+      <dxc-icon [model]="gIcons.SAVE"></dxc-icon>&nbsp;Save
+    </button>
+  </div>
+</app-modal-base>

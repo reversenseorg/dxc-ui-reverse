@@ -1,0 +1,211 @@
+import {ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {Message} from "../../../cmp/Error";
+import {FormControl} from "@angular/forms";
+import {SearchController} from "../ctrl/SearchController";
+import {SearchService} from "../ctrl/search.service";
+import {SEARCH_ICONS} from "../icons";
+import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
+import {CodeControllerService} from "../../code/ctrl/code-controller.service";
+import {ModalBaseComponent} from "../../../base/modal-base/modal-base.component";
+import {StageComponent} from "../../stage/stage.component";
+import {IconModel} from "../../../base/icon/IconModel";
+import {CODE_ICONS} from "../../code/icons";
+import {
+  RequestHelper, RequestHelperTYPES,
+  RequestNode,
+  SearchNode,
+  SearchNodeList,
+  SearchScope,
+  SearchScopeList
+} from "../ctrl/RequestGenerator";
+import {SubnavbarInputComponent} from "../../../base/subnavbar/subnavbar.component";
+import {Subject} from "rxjs";
+import {TOPO_ICONS} from "../../topology/icons";
+import {map} from "rxjs/operators";
+import {TagService} from "../../tag/ctrl/tag.service";
+import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Tag} from "../../../models/tags/Tag";
+import {ProjectService} from "../../project/ctrl/project.service";
+
+
+const INITIAL_MSG = "Type something to search ... Visit documentation to see more.";
+
+const BINDING = {
+  'c':{type:'class',id:'name'},
+  'm':{type:'method',id:'__signature__'},
+  'f':{type:'field',id:'__signature__'},
+  'p':{type:'package',id:'name'}
+};
+
+/**
+ * Represents the search modal
+ *
+ * @class
+ */
+// @ts-ignore
+@Component({
+  selector: 'dxc-search-result-list',
+  templateUrl: './search-result-list.component.html',
+  styleUrls: ['./search-result-list.component.scss','../../../modal.scss']
+})
+export class SearchResultListComponent implements OnInit {
+
+  @Input() mainController:StageComponent;
+  @Input() controller:SearchController;
+  @Input() results:any[] = [];
+
+  error:Message = null;
+
+  @ViewChild('msgBox', {read:ElementRef, static:false}) msgEl:ElementRef;
+  @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
+  @ViewChild(SubnavbarInputComponent) searchInput:SubnavbarInputComponent;
+
+  NODE_TYPES:any = NodeInternalType;
+
+  TAGS:any = {};
+
+  message:Message = null;
+  item: any = null;
+  msg:string = INITIAL_MSG;
+
+  icons:any = SEARCH_ICONS;
+  gIcons:any = GLOBAL_ICONS;
+  cIcons:any = CODE_ICONS;
+  tIcons:any = TOPO_ICONS;
+
+  /**
+   * Offwet of the selected result into the result set
+   * @type {number}
+   * @field
+   * @since 1.0.0
+   */
+  selectedResult = -1;
+  searching = false;
+
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+              private searchSvc:SearchService,
+              private tagSvc:TagService,
+              private projectSvc:ProjectService,
+              private codeService: CodeControllerService) {
+
+  }
+
+  ngOnInit(): void {
+
+    this.projectSvc.onProjectReady.subscribe(()=>{
+      this.TAGS = {
+        INTERNAL: this.tagSvc.getTagByName("discover.internal"),
+        STATIC: this.tagSvc.getTagByName("discover.static"),
+        DYNAMIC: this.tagSvc.getTagByName("discover.dynamic"),
+        VENDOR: this.tagSvc.getTagByName("discover.vendor"),
+      }
+    });
+
+    if(this.mainController==null){
+      this.mainController = this.controller.app;
+    }
+  }
+
+
+  reset(){
+    this.results = [];
+  }
+
+  selectResult(pResItem: any, pOffset:number) {
+    this.selectedResult = pOffset;
+  }
+
+  /**
+   *
+   * @param pEvent
+   * @param pResultItem
+   */
+  displayCtxMenu(pEvent:any, pResultItem:any):void{
+    let type:string;
+
+    switch(pResultItem.__){
+      case NodeInternalType.CLASS:
+        type = 'clazz';
+        break;
+      case NodeInternalType.PACKAGE:
+        type = 'pkg';
+        break;
+      case NodeInternalType.METHOD:
+        type = 'meth';
+        break;
+      case NodeInternalType.FIELD:
+        type = 'fld';
+        break;
+      default:
+        return;
+        break;
+    }
+
+    this.codeService.displayContextMenu(pEvent, type, pResultItem);
+  }
+
+  openView(e: any, opts:number = 0) {
+    switch (e.__) {
+      case NodeInternalType.PACKAGE:
+      case NodeInternalType.CLASS:
+      case NodeInternalType.METHOD:
+      case NodeInternalType.FIELD:
+        this.mainController.getController('ctrl:code-main').open(e, 'mdl');
+        break;
+
+      case NodeInternalType.ANDROID_SERVICE:
+      case NodeInternalType.ANDROID_ACTIVITY:
+      case NodeInternalType.ANDROID_PROVIDER:
+      case NodeInternalType.ANDROID_RECEIVER:
+        this.mainController.getController('ctrl:topo').open(e, 'mdl');
+        break;
+
+      case NodeInternalType.FILE:
+        this.mainController.getController('ctrl:file').open(e, 'mdl');
+        break;
+
+      case NodeInternalType.STRING:
+        if(e.instr != null){
+          this.mainController.getController('ctrl:code-main').open({ __:NodeInternalType.METHOD, __signature__:e.instr.method}, 'mdl', e.instr);
+        }
+        break;
+
+      case NodeInternalType.FUNC:
+        this.mainController.getController('ctrl:native-main').open(e, 'mdl');
+        break;
+      default:
+        break;
+    }
+    /*
+    if(e._t!== 'x'){
+      this.mainController.getController('ctrl:code-main').open(e, 'mdl');
+    }else if(opts == 0){
+      this.mainController.getController('ctrl:code-main').open(e.caller, 'mdl');
+    }else{
+      this.mainController.getController('ctrl:code-main').open(e.callee, 'mdl');
+    }*/
+
+  }
+
+  open($event: MouseEvent, e: any) {
+    switch(e._t){
+      case 'c':
+      case 'f':
+      case 'm':
+        this.mainController.getController('ctrl:code-main').open(e, 'mdl');
+        break;
+      case 's':
+        this.codeService.getMethod(e.instr.method, true).subscribe( pData => {
+          pData._t = 'm';
+          this.mainController.getController('ctrl:code-main').open(pData, 'mdl');
+        });
+        break;
+      case 'taa':
+      case 'tas':
+      case 'tar':
+      case 'tap':
+        this.mainController.getController('ctrl:topo').open(e, 'mdl');
+        break;
+    }
+  }
+}

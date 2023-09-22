@@ -1,0 +1,27 @@
+<app-modal-base [name]="'selectKP'" [closable]="closable"  [width]="500" [height]="100" [beforeShow]="show" [mainController]="controller.app">
+  <div head class="dxc-modal-header">Select a key point</div>
+  <div body class="dxc-modal-body p-1">
+      <div class="dxc-form dxc-text-100">
+        <div class="row no-gutters">
+          <div class="col-2">
+            <select [(ngModel)]="moment" class="dxc-input">
+              <option value="load" [selected]="moment ==='load'">load</option>
+              <option value="unload" [selected]="moment ==='unload'">unload</option>
+            </select>
+          </div>
+          <div class="col-9 pl-1">
+            <select *ngIf="kpList" [(ngModel)]="selectedKP" class="dxc-input">
+              <option value="" disabled selected>Pick a new key point</option>
+              <option *ngFor="let kp of kpList" [value]="kp.name">{{ kp.name }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="validateKP()">
+      <dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon>&nbsp;Validate
+    </button>
+  </div>
+</app-modal-base>

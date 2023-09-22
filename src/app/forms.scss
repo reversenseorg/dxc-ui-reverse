@@ -1,0 +1,152 @@
+@import '../themes.scss';
+
+
+div.dxc-frm {
+
+  label {
+    color: var(--text-75);
+    padding-left: 10px;
+  }
+
+  input {
+    background: var(--input-bg);
+    color: var(--input-text);
+    padding: 0 0 0 10px;
+    margin-bottom: 5px;
+  }
+
+  h3, h4 {
+    color: var(--text-100);
+    font-weight: 400;
+    font-size: 16px;
+    padding-left: 6px;
+  }
+
+  &.dxc-sm {
+    label, input {
+      font-size: 12px;
+    }
+  }
+
+}
+
+.dxc-frm-input {
+  border-radius: 0px;
+  background: var(--input-bg);
+  color: var(--input-text);
+  padding:0px;
+
+  &.wide {
+    width:80%;
+  }
+}
+
+
+input, .dxc-frm-select {
+  @extend .dxc-frm-input;
+  border: var(--input-border);
+}
+
+.dxc-frm-nav-b {
+  @extend .dxc-frm-input;
+  border-top: var(--input-border);
+}
+
+.dxc-frm-nav-t {
+  @extend .dxc-frm-input;
+  border-bottom: var(--input-border);
+}
+
+.dxc-input-success {
+  @extend .dxc-frm-input;
+  border:green;
+}
+
+.dxc-input-err {
+  @extend .dxc-frm-input;
+  border:red;
+}
+
+.dxc-label-file {
+  @extend .dxc-frm-input;
+  cursor: pointer;
+  border: var(--input-border);
+  border-radius:5px;
+  width:100%;
+  text-align:left;
+  padding-left:10px;
+
+  &:hover {
+    background-color: royalblue;
+    color: #fff;
+  }
+}
+
+.dxc-input-file {
+  display:none;
+}
+
+.dxc-input-invalid {
+  border-color: #FF0000;
+}
+
+.dxc-input {
+  @extend .dxc-frm-input;
+  background-color:#555;
+  border: var(--input-border);
+  color: var(--input-text);
+  font-weight:200;
+  text-align: left;
+  padding: 0px 0px 0px 10px;
+  width:100%;
+  margin: 1px 0;
+}
+
+.dxc-legend {
+  border: 1px solid var(--input-border);
+  background-color:#555;
+  color: var(--input-text);
+  border-radius: 2px;
+  margin: 10px 0px;
+  padding: 10px;
+  word-break: break-word;
+}
+
+
+.dxc-frm-label {
+  padding-top:1em;
+  color: var(--text-75);
+  font-family: var(--nav-font);
+}
+
+.dxc-frm-btn {
+  border: 1px solid var(--text-50);
+  border-radius: var(--btn-radius);
+  padding:0 1.2em;
+  margin-left: 1em;
+  background: transparent;
+  color: var(--text-75);
+
+  &:hover {
+    background: var(--btn-hover);
+    color: var(--text-100);
+    border: 1px solid var(--text-100);
+  }
+
+  &.default {
+    background: var(--btn-default-bg);
+    color: var(--btn-default-txt);
+    border: var(--btn-default-border);
+
+    &:hover {
+      background-color: var(--btn-default-hover);
+    }
+  }
+}
+
+.dxc-frm-desc {
+  border: 1px solid var(--text-50);
+  border-radius: 0;
+  padding: 10px;
+  margin: 5px 0;
+}

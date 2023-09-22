@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dexcalibur - Install</title>
+  <base href="./">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <style>
+
+    @font-face {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 300;
+      font-display: swap;
+      src: url( assets/fonts/Montserrat-Light.ttf) format('TrueType');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+
+    @font-face {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url( assets/fonts/Montserrat-Bold.ttf) format('TrueType');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    body {
+      font-family: Montserrat;
+      background-color: #000;
+      padding:0px;
+    }
+
+    a {
+      color: #aaf030;
+      text-decoration: none;
+    }
+
+    .dxci-menu {
+      background-color: #000;
+      padding:0px;
+    }
+    .dxci-menu img {
+      margin-left:20px;
+    }
+
+    .dxci-body {
+      background-color: #444444;
+      padding:20px;
+      color:white;
+      font-size:12px
+    }
+
+    div.dxci-body > div.dxci-nav {
+      position: absolute;
+      bottom: 10px;
+      width: 410px;
+    }
+
+    div.dxci-body > div.dxci-nav i {
+      font-size: 8px;
+    }
+
+    .dxci-body p {
+      padding-top: 10px;
+    }
+
+    .dxci-body h2 {
+      font-size:14px;
+      font-weight: 700;
+    }
+
+    .dxci-body button {
+      font-size:12px;
+    }
+
+    h1 {
+      color:white;
+      margin-left:10px;
+      font-size: 16px;
+    }
+
+    .dxci-entry {
+      padding: 15px;
+      color: white;
+      background-color: #333;
+      font-size: 12px;
+    }
+
+    .dxci-entry.active {
+      background-color: #444444;
+      box-shadow: 0px 20px 20px black;
+    }
+
+    #stage {
+      height: 600px;
+      height: 600px;
+      margin:0;
+      padding:0;
+      background-color: #000;
+    }
+
+    #stage > div.row {
+      margin:0;
+      padding:0;
+      height:100%;
+    }
+
+    span.dxci-flag {
+      visibility: hidden;
+    }
+
+    div.dxc-warning, div.dxc-missing {
+      display: none;
+    }
+
+    div.req-tool {
+      border-radius: 5px;
+      border: 1px solid white;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    div.req-tool h4 {
+      margin:0px;
+    }
+
+
+    div.req-tool.bg-success {
+      color: darkgreen;
+      background-color: #88b49c !important;
+      border: 1px solid greenyellow;
+    }
+
+    div.req-tool.bg-success h4 {
+      border-bottom: 1px solid darkgreen;
+    }
+
+    div.req-tool.bg-warning {
+      color: #936200;
+      background-color: #ffe9b2 !important;
+      border: 1px solid #ff6900;
+    }
+
+    div.req-tool.bg-warning h4 {
+      border-bottom: 1px solid #936200;
+    }
+
+    div.req-tool.bg-warning div.dxc-warning {
+      display: block;
+    }
+
+    div.req-tool.bg-danger {
+      color: darkred;
+      background-color: #ffc6ad !important;
+      border: 1px solid red;
+    }
+
+    div.req-tool.bg-danger h4 {
+      border-bottom: 1px solid darkred;
+    }
+
+    div.req-tool.bg-danger div.dxc-missing {
+      display: block;
+    }
+
+    div.build {
+      font-size: 8px;
+      color: white;
+      width: 140px;
+      position: absolute;
+      bottom: 0px;
+      padding: 0 0 10px 10px;
+    }
+
+    button.btn {
+      padding: 0px 15px;
+    }
+
+    button.btn.prev {
+      left:0px;
+      border: 1px solid #999;
+      background-color: #2b2b2b;
+    }
+
+    button.btn.prev:hover {
+      background-color: #4b4b4b;
+    }
+
+    button.btn.next {
+      position:relative;
+      right:0px;
+      border: 1px solid cornflowerblue;
+      background-color: #3a3863;
+    }
+
+    button.btn.next:hover {
+      background-color: #504b99;
+    }
+
+    button.btn.next:disabled {
+      background-color: #302844;
+      border-color: #374b7d;
+    }
+
+    div.nok-msg, div.ok-msg {
+      display: none;
+    }
+
+    input[type=text].form-control,
+    input[type=password].form-control,
+    input[type=number].form-control,
+    select.form-select {
+      border: 1px solid #999;
+      background-color: #2b2b2b;
+      color:white;
+      border-radius: 0px;
+      font-size: 10px;
+      padding: 0 0 0 10px;
+    }
+
+    input[type=file]{
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+
+    button:valid, input:valid {
+      box-shadow: 0 0 2px 1px green;
+    }
+    input:invalid {
+      box-shadow: 0 0 2px 1px red;
+    }
+
+    #action_success,
+    #action_err {
+      display: none;
+    }
+
+    #action_success {
+      display: none;
+      color: #98ea73;
+
+    }
+
+    #action_err {
+      display: none;
+      color: #ff5050;
+    }
+
+    #wsloc {
+      overflow-wrap: break-word;
+      width: 100%;
+      color: #98ea73;
+    }
+
+    #licenseViewer {
+      height: 300px;
+      width: 410px;
+      overflow-y: scroll;
+      border: 1px outset #aaa;
+      border-radius: 0px;
+      word-break: break-word;
+      white-space: pre-wrap;
+      justify-content: space-between;
+      background-color: white;
+      color: black;
+      font-family: "Times New Roman";
+      padding: 10px;
+      font-size: 12px;
+    }
+
+
+    .loader,
+    .loader:after {
+      border-radius: 50%;
+      width: 1em;
+      height: 1em;
+      display: none;
+    }
+    .loader {
+      margin: 10px auto;
+      font-size: 10px;
+      position: relative;
+      text-indent: -9999em;
+      border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+      border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+      border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+      border-left: 1.1em solid #ffffff;
+      -webkit-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-animation: load8 1.1s infinite linear;
+      animation: load8 1.1s infinite linear;
+    }
+    @-webkit-keyframes load8 {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes load8 {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+  </style>
+</head>
+<body style="overflow-y: hidden" >
+  <section class="container-fluid" id="stage">
+    <div class="row no-gutters">
+      <div class="col col-3 dxci-menu">
+        <img src="assets/dexcalibur_64.png" width="64"/>
+        <h1>Dexcalibur</h1>
+        <div class="dxci-entry" id="menu-welcome">
+          Server Location
+        </div>
+        <div class="build">
+          <span id="productName">$$_productName_$$</span><br>&nbsp;v<span id="productVersion">$$_productVersion_$$</span>&nbsp;(Build&nbsp;<span id="productBuild">$$_productBuild_$$</span>)&nbsp;<br>$$_copyright_$$
+        </div>
+      </div>
+      <div class="col col-9 dxci-body">
+        <div class="content-wrapper dxci-panel" id="welcome">
+          <h1>Server authentication</h1>
+          <p>
+            Prior to start to use Dexcalibur, or to start to work with a new server, please provide authentication credentials.
+          </p>
+          <div>
+            <form name="fprofiles">
+              <label for="prof_sel">Select a profile : </label>
+              <select class="form-control form-control-sm" name="prof_sel" id="prof_sel" placeholder="Pick a profile" onchange="settings('prof_sel')" required>
+              </select>
+            </form>
+          </div>
+          <p>
+            Click on Login, to start to work with selected server.
+          </p><p>
+            Click on Settings, to start the  process.
+          </p>
+        </div>
+
+        <div class="content-wrapper dxci-panel" id="editProfile">
+          <h1>Profile</h1>
+          <p>
+            Here you can define global settings for Dexcalibur such as mode, default server ports for HTTP and Websocket, and workspace location.
+          </p>
+          <div>
+            <form name="fsettings">
+              <fieldset>
+                <div class="mb-1 row">
+                  <label for="pname" class="col-sm-6 col-form-label">Profile name</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-sm" id="pname"  onchange="settings('pname')" required>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label for="host" class="col-sm-6 col-form-label">Host (ipv4 / ipv6 / hostname)</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-sm" id="host"  onchange="settings('host')" required>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label for="port" class="col-sm-6 col-form-label">HTTP(s) Port</label>
+                  <div class="col-sm-6">
+                    <input type="number" class="form-control form-control-sm" id="port" min="1" max="65535" value="8000" onchange="settings('port')" required>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <div class="col-sm-12">
+                    <label for="ssl" class="col-sm-6 col-form-label">Force SSL</label>
+                    <input type="checkbox" id="ssl" name="ssl" onchange="settings('ssl')" />
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <div class="col-sm-12">
+                    <label for="pdefault" class="col-sm-6 col-form-label">Default Profile</label>
+                    <input type="checkbox" id="pdefault" name="pdefault" onchange="settings('pdefault')"  />
+                  </div>
+                </div>
+              </fieldset>
+
+
+            </form>
+          </div>
+        </div>
+
+        <div class="content-wrapper dxci-panel" id="editCredentials">
+          <h1>Credentials</h1>
+          <p>
+            Here you can define global settings for Dexcalibur such as mode, default server ports for HTTP and Websocket, and workspace location.
+          </p>
+          <div>
+            <form name="fsettings">
+              <fieldset>
+                <div class="mb-1 row">
+                  <label for="auth_type" class="col-sm-6 col-form-label">Auth type</label>
+                  <div class="col-sm-6">
+                    <select class="form-control form-control-sm" name="auth_type" id="auth_type" onchange="settings('auth_type')" required>
+                      <option value="none">Guest</option>
+                      <option value="pwd">Password</option>
+                      <option value="token">Token</option>
+                      <option value="api_key">API Key</option>
+                      <option value="cert">Certificate</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label for="auth_user" class="col-sm-6 col-form-label">Username</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-sm"  name="auth_user" id="auth_user" placeholder="my_username" onchange="settings('auth_user')" required>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label for="auth_pwd" class="col-sm-6 col-form-label">Password</label>
+                  <div class="col-sm-6">
+                    <input type="password" class="form-control form-control-sm" name="auth_pwd" id="auth_pwd" onchange="settings('auth_pwd')" required>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+
+        <div class="content-wrapper dxci-panel" id="authStart">
+          <h1>Authentication</h1>
+
+          <div class="req-tool" id="authResultStatus">
+            <div id="authResultSuccess">
+              <h2 class="text-success">Authentication successful</h2>
+            </div>
+            <div id="authResultFailure">
+              <h2 class="text-danger">Authentication failure</h2>
+              <p id="authResultErrMsg">&nbsp;</p>
+              <button class="btn btn-sm btn-primary next" id="authRetryBtn">Retry</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-wrapper dxci-panel" id="finish">
+          <h1>Congratulation !!</h1>
+            <p>Dexcalibur is now installed. Click on 'Finish' button below to launch Dexcalibur.</p>
+
+          <div class="req-tool" id="finish-status">
+            <h2>First use ?</h2>
+            <p>Visit our <a href="https://docs.reversense.com/" target="_blank">Dexcalibur tutorials and documentation</a> to get started. </p>
+          </div>
+        </div>
+
+
+        <div class="content-wrapper dxci-nav">
+          <div class="row no-gutters">
+            <div class="col col-3">
+              <button class="btn btn-sm btn-secondary mr-2 prev" id="cancelbtn">Cancel</button>
+            </div>
+            <div class="col col-6">&nbsp;</div>
+            <div class="col col-3">
+              <button class="btn btn-sm btn-primary next" id="nextbtn">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    //const { ipcRenderer } = require('electron');
+    const ipcRenderer = require('electron').ipcRenderer;
+    const STEP_ACTIONS = ['force','pick','online','offline'];
+    let profilesList = {};
+
+    class Step {
+      name = null;
+      next = null;
+      cancel = null;
+      actionable = false;
+      actions = STEP_ACTIONS;
+      onActivate = null;
+      completed = false;
+      beforeNext = null;
+      asyncNext = null;
+      data = {};
+
+      constructor( pConfig) {
+        for(let i in pConfig) this[i] = pConfig[i];
+      }
+    }
+
+    class HelperAction {
+
+      mode = null;
+      mgr = null;
+
+      rendered = [];
+
+      constructor( pMgr) {
+        this.mgr = pMgr;
+      }
+
+
+      render( pElID){
+        this.rendered.map( el => el.display = "none" );
+        this.rendered = [pElID];
+        pElID.display = "block";
+      }
+
+
+      process(){
+
+        this.mode = document.getElementById('action_mode').value;
+
+        if(this.mgr.current == null) return;
+
+        const s = this.mgr.current;
+        switch(this.mode){
+          case "online":
+
+            this.mgr.showSpinner(true);
+            window.ipcRenderer.send('tool-install', (s._name? s._name : s.name)+':online');
+            break;
+          case "force":
+            window.ipcRenderer.send('tool-force', (s._name? s._name : s.name));
+            break;
+          case "offline":
+            this.mgr.showSpinner(true);
+            window.ipcRenderer.send('tool-install', (s._name? s._name : s.name)+':offline');
+            break;
+          case "pick":
+            window.ipcRenderer.send('tool-select', (s._name? s._name : s.name));
+            break;
+        }
+      }
+    }
+
+    class Helper {
+      steps = [];
+      actionEl = document.getElementById("actions");
+      _act = {
+        action: document.getElementById("actions"),
+        succ: document.getElementById("action_success"),
+        smsg: document.getElementById("action_success_msg"),
+        err: document.getElementById("action_err"),
+        emsg: document.getElementById("action_err_msg")
+      };
+      _f = {
+        port: document.getElementById("port"),
+        prof_sel: document.getElementById("prof_sel"),
+        pname: document.getElementById("pname"),
+        host: document.getElementById("host"),
+        ssl: document.getElementById("ssl"),
+        pdefault: document.getElementById("pdefault"),
+        auth_type: document.getElementById("auth_type"),
+        auth_user: document.getElementById("auth_user"),
+        auth_pwd: document.getElementById("auth_pwd"),
+        auth_msg: document.getElementById("authResultErrMsg"),
+        auth_success: document.getElementById("authResultSuccess"),
+        auth_failed: document.getElementById("authResultFailure")
+      };
+      settings = {
+        pname: null,
+        uid: null,
+        host: null,
+        port: -1,
+        auth_type: "none",
+        auth_user: null,
+        auth_pwd: null,
+        ssl: false,
+        pdefault: null
+      };
+      actions = new HelperAction(this);
+      current = null;
+
+      license  = {lang:"fr", text:""};
+
+      constructor( pConfig) {
+        for(let i in pConfig) this[i] = pConfig[i];
+
+        this.initSteps();
+        this.initIpcHandler();
+
+        STEP_ACTIONS.map( pOpt => {
+          const s = "opt_"+pOpt;
+          this._act[s] = document.getElementById(s);
+        });
+      }
+
+      initSteps(){
+        let self = this;
+        this.steps.map( pStep => {
+
+          if(pStep.asyncNext!=null){
+
+            window.ipcRenderer.on( pStep.asyncNext, (event, arg) => {
+              let data = JSON.parse(arg[0]);
+              if(data.success){
+                document.getElementById("menu-"+pStep.name).className = "dxci-entry";
+                self.activateStep(pStep.next);
+              }
+            });
+          }
+
+
+          let panel = document.getElementById(pStep.name);
+          if(panel!=null)
+            panel.style.display = "none";
+        });
+      }
+
+      showActions(pStep){
+        this.actionEl.style.display = "block";
+        STEP_ACTIONS.map( pActId => {
+          const s = 'opt_'+pActId;
+          if(pStep.actions.indexOf(pActId)>-1){
+            this._act[s].style.display = "block";
+          }else{
+            this._act[s].style.display = "none";
+          }
+        });
+      }
+
+      hideActions(){
+        this.showSpinner(false);
+        document.getElementById('actions').style.display = "none";
+      }
+
+
+      showSpinner(pDisplayed){
+        document.getElementById('actBtn').style.display = (pDisplayed? "none" :"block");
+        document.getElementById('spinner').style.display = (pDisplayed? "block" : "none");
+      }
+
+      selectDirectory( pPpt){
+        window.ipcRenderer.send('select-directory', JSON.stringify({
+            multiple:false,
+            params: {
+              step:this.current.name,
+              name:pPpt
+            }
+          }));
+      }
+
+      processSettings(pName, pValue=null){
+
+        let val = null;
+        switch (pName){
+          case 'prof_sel':
+            val = (pValue==null)? this._f.prof_sel.value : null;
+            if(val != null && val.length>0){
+              this.settings.prof_sel = val;
+
+
+
+              document.getElementById("nextbtn").disabled = false;
+              this.current.completed = true;
+              this.next(this.current);
+            }
+            break;
+          case 'host':
+          case 'pname':
+          case 'uid':
+          case 'port':
+          case 'auth_user':
+          case 'auth_pwd':
+            val = this._f[pName].value;
+            if(val != null && val.length>0){
+              this.settings[pName] = val;
+            }
+            document.getElementById("nextbtn").disabled = false;
+            break;
+          case 'auth_type':
+            console.log(this._f[pName]);
+            val = this._f[pName].value;
+            if(val != null && val.length>0){
+              this.settings[pName] = val;
+            }
+            document.getElementById("nextbtn").disabled = false;
+            break;
+          case 'ssl':
+          case 'pdefault':
+            val = this._f[pName].checked;
+            this.settings[pName] = (val===true);
+            document.getElementById("nextbtn").disabled = false;
+            break;
+        }
+
+        console.log(this.settings);
+      }
+
+      static getBindingEl(pName){
+        return {
+          status: document.getElementById(pName+"-status"),
+          msg: document.getElementById(pName+"-status-msg"),
+          ok: document.getElementById(pName+"-ok"),
+          nok: document.getElementById(pName+"-nok")
+        }
+      }
+
+      showStatusMessage( pStep, pMessage, pSuccess){
+
+        let e = document.getElementById((pStep instanceof Step ? pStep.name : pStep)+'-status');
+        e.className = "req-tool "+(pSuccess? "bg-success":"bg-warning");
+        e.innerText = pMessage;
+        e.style.display = "block";
+      }
+
+
+      showActionMessage( pStep, pMessage, pSuccess){
+
+        if(pSuccess){
+          this._act.smsg.innerText = pMessage;
+          this._act.succ.style.dispaly = "block";
+          this._act.err.style.dispaly = "none";
+        }else{
+          this._act.succ.style.dispaly = "none";
+          this._act.emsg.innerText = pMessage;
+          this._act.err.style.dispaly = "block";
+
+        }
+      }
+
+      initIpcHandler(){
+
+        const cancelBtn = document.getElementById("cancelbtn");
+        const nextBtn = document.getElementById("nextbtn");
+
+
+        window.ipcRenderer.on('conn-resp-profile-list', (event, arg) => {
+          let data = JSON.parse(arg[0]);
+
+          profilesList = data;
+
+          console.log('conn-resp-profile-list',arg);
+          console.log('conn-resp-profile-list',data);
+
+          if(data.default){
+            this.settings.pdefault = data.default;
+          }
+
+          Object.values(data.profiles).map((p)=>{
+            let optEl = document.createElement("OPTION");
+            optEl.value = p.name;
+            optEl.innerText = p.uid;
+            profilesList.profiles[p.name] = p;
+            if(p.pdefault) optEl.selected = true;
+            this._f.prof_sel.appendChild(optEl);
+          })
+
+          let optEl = document.createElement("OPTION");
+          optEl.value = "-";
+          optEl.innerText = "-";
+          this._f.prof_sel.appendChild(optEl);
+
+          optEl = document.createElement("OPTION");
+          optEl.value = "none";
+          optEl.innerText = "Add new profile";
+          this._f.prof_sel.appendChild(optEl);
+        });
+
+        window.ipcRenderer.on('conn-resp-profile-save', (event, arg) => {
+          let data = JSON.parse(arg[0]);
+          console.log('conn-resp-profile-save',data);
+        });
+
+        window.ipcRenderer.on('conn-resp-auth-do', (event, arg) => {
+          let data = JSON.parse(arg[0]);
+          console.log('conn-resp-auth-do',data);
+          if(data.success===true){
+            this._f.auth_success.style.display = 'block';
+            this._f.auth_failed.style.display = 'none';
+            document.getElementById("nextbtn").disabled = false;
+          }else{
+            this._f.auth_success.style.display = 'none';
+            this._f.auth_failed.style.display = 'block';
+          }
+        });
+      }
+
+
+      next(pStep){
+
+        const step = (pStep instanceof Step ? pStep : this.steps[pStep]);;
+
+        console.log(this.current)
+        if(this.current.beforeNext !=null){
+
+          if(this.current.asyncNext != null){
+
+
+            this.current.beforeNext(this)
+
+          }else if(this.current.beforeNext(this)){
+            //entry.className = "dxci-entry";
+            this.activateStep(pStep.next);
+          }
+        }
+        else{
+          //entry.className = "dxci-entry";
+          this.activateStep(pStep.next);
+        }
+      }
+      updateMeta( pVersionInfo ){
+        document.getElementById('productName').innerText = pVersionInfo.name;
+        document.getElementById('productVersion').innerText = pVersionInfo.version;
+        document.getElementById('productBuild').innerText = pVersionInfo.build;
+      }
+
+      activateStep(pStep) {
+
+        const step = (pStep instanceof Step ? pStep : this.steps[pStep]);
+        let self = this;
+
+        let cancelBtn = document.getElementById("cancelbtn");
+        let nextBtn = document.getElementById("nextbtn");
+        let els = document.getElementsByClassName("dxci-panel");
+        //let entry = document.getElementById("menu-"+step.name);
+
+        this.current = step;
+
+        //entry.className = "dxci-entry active";
+
+        nextBtn.disabled = !step.completed;
+
+        for(let i=0; i<els.length ; i++){
+          els[i].style.display = "none";
+        }
+
+
+        const el = document.getElementById(step.name);
+
+        if(el!=null){
+          el.style.display = "block";
+        }
+
+
+        if(step.cancel==null){
+          cancelBtn.innerText = "Quit";
+          cancelBtn.onClick = ()=>{
+
+            //entry.className = "dxci-entry";
+            window.ipcRenderer.send('quit-btn');
+          };
+        }else{
+          cancelBtn.innerText = "Previous";
+          cancelBtn.onClick = ()=>{
+
+            //entry.className = "dxci-entry";
+            self.activateStep(step.cancel);
+          };
+        }
+
+        if(step.next==null){
+          nextBtn.innerText = "Finish";
+          nextBtn.onclick = ()=>{
+            //entry.className = "dxci-entry";
+            window.ipcRenderer.send('finish-btn',JSON.stringify(profileInfo ));
+          };
+        }else{
+          nextBtn.innerText = "Next";
+          nextBtn.onclick = ()=>{
+            // validate step
+
+            if(this.current.beforeNext !=null){
+
+              if(this.current.asyncNext != null){
+
+
+                this.current.beforeNext(this,ipcRenderer)
+
+              }else if(this.current.beforeNext(this,ipcRenderer)){
+                //entry.className = "dxci-entry";
+                self.activateStep(step.next);
+              }
+            }
+            else{
+              //entry.className = "dxci-entry";
+              self.activateStep(step.next);
+            }
+          };
+        }
+
+        if(!step.completed)
+          (step.onActivate)(ipcRenderer);
+      }
+    }
+
+
+
+    var profileInfo = {};
+
+
+    // ----
+
+    var dxc_steps = [new Step({
+      name:"welcome",
+      onActivate: function(pIpcRenderer){
+        //installer.hideActions();
+        console.log("send : conn-profile-list");
+        pIpcRenderer.send('conn-profile-list');
+        document.getElementById("nextbtn").disabled = false;
+      },
+      beforeNext: function(pData,pIpc){
+        if(helper._f.prof_sel.value!="none"){
+          profileInfo = profilesList.profiles[helper._f.prof_sel.value];
+        }else{
+          profileInfo = {};
+        }
+
+        console.log(profileInfo);
+        return true;
+      },
+      completed: false,
+      next: 1,
+      cancel: null
+    }),new Step({
+      name:"editProfile",
+      onActivate: function(pIpcRenderer){
+        if(profileInfo!=null && profileInfo.name!=null){
+          console.log(profileInfo);
+          helper._f.pname.value = profileInfo.name;
+          helper._f.host.value = profileInfo.ip;
+          helper._f.port.value = parseInt(profileInfo.port,10);
+          helper._f.ssl.checked = profileInfo.ssl;
+          helper._f.pdefault.checked = profileInfo.pdefault;
+        }
+      },
+      beforeNext: function(pData,pIpc){
+        profileInfo.pname = helper._f.pname.value;
+        profileInfo.port = helper._f.port.value;
+        profileInfo.host = helper._f.host.value;
+        profileInfo.pdefault = helper._f.pdefault.checked;
+        profileInfo.ssl = helper._f.ssl.checked;
+        console.log("ProfileInfo(1) = ",profileInfo);
+        return true;
+      },
+      completed: false,
+      next: 2,
+      cancel: 1
+    }),new Step({
+      name:"editCredentials",
+      onActivate: function(pIpcRenderer){
+      },
+      beforeNext: function(pData,pIpc){
+        profileInfo.authType = pData.settings.auth_type;
+        profileInfo.auth_pwd = pData.settings.auth_pwd;
+        profileInfo.auth_user = pData.settings.auth_user;
+        console.log("ProfileInfo(2) = ",profileInfo);
+        pIpc.send('conn-profile-save', JSON.stringify(profileInfo));
+        return true;
+      },
+      completed: false,
+      next: 3,
+      cancel: 2
+    }),new Step({
+      name:"authStart",
+      onActivate: function(pIpcRenderer){
+        document.getElementById("authResultFailure").style.display = 'none';
+        document.getElementById("authResultSuccess").style.display = 'none';
+        pIpcRenderer.send('conn-auth-do',JSON.stringify({ pname:profileInfo.pname }));
+      },
+      next: null,
+      cancel: 3
+    })];
+
+    dxc_steps.map( (pStep, pOffset) => {
+      if(dxc_steps[pOffset].next !== null)
+        dxc_steps[pOffset].next = dxc_steps[dxc_steps[pOffset].next];
+
+      if(dxc_steps[pOffset].cancel !== null)
+        dxc_steps[pOffset].cancel = dxc_steps[dxc_steps[pOffset].cancel];
+    });
+
+    helper = new Helper({
+      steps: dxc_steps
+    });
+
+
+    // wrappers
+
+    function settings( pType){
+      helper.processSettings(pType);
+    }
+
+
+    function processAction(){
+      helper.actions.process();
+    }
+
+
+
+    document.getElementById("authRetryBtn").onclick = ()=>{
+      document.getElementById("authResultFailure").style.display = 'none';
+      document.getElementById("authResultSuccess").style.display = 'none';
+      window.ipcRenderer.send('conn-auth-do');
+    };
+
+    window.ipcRenderer.send('list-profiles');
+    helper.activateStep(0);
+
+  </script>
+  <!--<div class="dxc-cursor">
+    <div class="dxc-cursor-revert">
+      <div class="dxc-cursor-text">Read more</div>
+    </div>
+  </div>-->
+</body>
+</html>

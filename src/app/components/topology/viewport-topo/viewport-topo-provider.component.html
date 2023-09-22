@@ -1,0 +1,162 @@
+<div class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
+  <div #metadata style="border-bottom:1px solid #777;line-height: 1">
+
+
+    <!--<div ngbDropdown *ngIf="data.modifiers.asbtract" class="d-inline-block">
+      <button class="btn dxc-ctx-menu-btn code-abstract" id="ddAbstract" ngbDropdownToggle>abstract</button>
+      <div ngbDropdownMenu class="dxc-ctx-menu" aria-labelledby="ddAbstract">
+        <button ngbDropdownItem>Search implementation</button>
+        <button ngbDropdownItem>Create hook</button>
+        <button ngbDropdownItem>Link to ...</button>
+      </div>
+    </div>-->
+
+
+
+    <ng-container *ngFor="let t of data.__tag">
+      <span *ngIf="data" class="badge badge-info dxc-meta">{{ t }}</span>
+    </ng-container>
+    <span *ngIf="data" class="badge badge-success dxc-meta">exported</span>
+    <span *ngIf="data" class="badge badge-warning dxc-meta">intentable</span>
+    <!--
+    <span *ngIf="data.modifiers.private" class="meta-access text-danger">private</span>
+    <span *ngIf="data.modifiers.protected" class="meta-access text-primary">protected</span>
+    -->
+
+
+    <!--<i *ngIf="data.alias" class="text-warning">@alias: {{ data.alias }}</i>-->
+    <!--<ng-container *ngFor="let mod of data.modifiers">
+      <span class="badge badge-pill"></span>
+    </ng-container>-->
+  </div>
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="50" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'" [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [icon]="gIcons.LIST" [active]="true" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
+          <!--<app-subnavbar-btn [icon]="gIcons.LIST">&nbsp;Behavior analysis</app-subnavbar-btn>-->
+          <!--<app-subnavbar-btn [icon]="gIcons.LIST">&nbsp;Security analusis</app-subnavbar-btn>-->
+        </ng-container>
+      </app-subnavbar>
+      <!--
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [active]="activeTop=='hk'"  (click)="showHooks(80)">Hooks</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeTop=='er'"  (click)="showEventsRegistered(30)">Pipes</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeTop=='ec'"  (click)="showEventsCaptured(50)">Events</app-subnavbar-btn>
+        </ng-container>
+        <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
+          <ng-container *ngFor="let act of data.frontController.actions">
+            <app-subnavbar-btn [icon]="act.nav.icon" (click)="performExtra(act.name)">{{ act.nav.label }}</app-subnavbar-btn>
+          </ng-container>
+        </ng-container>
+      </app-subnavbar>-->
+    </ng-container>
+    <ng-container body-left>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='if')">
+        <div class="row" *ngFor="let f of data.intentFilters" style="margin: 10px 0;border:1px solid #6d6d3d;">
+          <div class="col-lg-12">
+            <div>
+              <span class="badge badge-warning">8/10</span>&nbsp;
+              <span class="badge badge-success">2/10</span>
+            </div>
+            <div>
+              <i>Action</i>
+              <ul>
+                <li *ngFor="let a of f.action">
+                  {{ a.name }}
+                </li>
+              </ul>
+            </div>
+            <div>
+              <i>Category</i>
+              <ul>
+                <li *ngFor="let c of f.category">
+                  {{ c.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='sa')">
+
+      </div>
+    </ng-container>
+
+
+
+    <ng-container nav-right>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [icon]="gIcons.ANDROID" [active]="true">Android API xref</app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-right>
+
+
+
+
+      <ng-container *ngIf="data.internal!=null && data.internal.length>0; else noInternal">
+      <app-expandable-list style="overflow: auto;">
+        <ng-container *ngFor="let cat of data.internals">
+
+          <ng-template #expItem let-itemObj="item" >
+
+              <span *ngIf="itemObj._t=='c'" (contextmenu)="displayExtMenu($event,'clzz',itemObj)">
+                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                {{ itemObj.name  }}
+              </span>
+              <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+              <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+              {{ itemObj.__callSignature__  }}
+              </span>
+              <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                {{ itemObj.__signature__  }}
+              </span>
+          </ng-template>
+
+          <app-expandable-item
+            [itemTpl]="expItem"
+            [item]="cat"
+            [provider]="this"
+            [itemType]="cat._t"
+            [expandableFn]="isExpandable"
+          >
+
+          </app-expandable-item>
+        </ng-container>
+      </app-expandable-list>
+      </ng-container>
+      <ng-template #noInternal>
+        <div class="dxc-text-clear100 pt-4 row">
+          <div class="text-right col-2 pt-2">
+            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+          </div>
+          <div class="col-8 text-left">
+            Deep Cross-references to Android API not found<br>The class implementing this provider is probably missing
+          </div>
+        </div>
+      </ng-template>
+
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>
+
+<!--
+<app-context-menu [width]="200" [name]="'meth'">
+  <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+-->
+<!--
+<app-modal-dm [controller]="controller"></app-modal-dm>
+-->

@@ -1,0 +1,28 @@
+<!--<div class="row dxc-explorer-vpnav" #snavRef>
+  <div class="col-lg-8 text-left nav">
+    <div *ngIf="view.nav !==null && explorer.view.nav.hasDropDown()" ngbDropdown class="d-inline-block nav-menu">
+      <button [ngClass]="explorer.view.nav.color" class="btn dxc-text-clear100" [id]="'dropdownBasic'+explorer.offset" ngbDropdownToggle>
+        <fa-icon class="dxc-icon" [icon]="[explorer.view.nav.icon.type, explorer.view.nav.icon.name]" [ngClass]="explorer.view.nav.icon.color1"></fa-icon>
+        {{ explorer.view.nav.label  }}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
+        <button *ngFor="let item of explorer.view.nav.menu.items" [ngClass]="item.color" (click)="onItemSelect(item,$event)"  ngbDropdownItem>
+          <fa-icon class="dxc-icon" [icon]="[item.icon.type,item.icon.name]" [ngClass]="item.icon.color1"></fa-icon>
+          {{ item.label }}
+        </button>
+      </div>
+    </div>
+    <div class="nav-title" *ngIf="explorer.view !==null && explorer.view.nav.hasDropDown()==false">
+      <fa-icon class="dxc-icon" [icon]="[explorer.view.nav.icon.type, explorer.view.nav.icon.name]" [ngClass]="explorer.view.nav.icon.color1"></fa-icon>
+      {{ explorer.view.nav.label }}
+    </div>
+  </div>
+  <div class="col-lg-4 text-right nav-options">
+    <ng-container *ngIf="explorer.view.nav.hasOptions()">
+
+    </ng-container>
+    <button class="btn-option"><fa-icon [icon]="['fas','search']"></fa-icon></button>
+    <button class="btn-option"><fa-icon [icon]="['fas','filter']"></fa-icon></button>
+  </div>
+</div>
+-->

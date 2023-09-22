@@ -1,0 +1,79 @@
+<app-modal-base [name]="'dm'" [closable]="true" [width]="400" [height]="400" [mainController]="controller.app" (open)="onOpen($event)">
+  <div head [ngStyle]="{ 'background-color':'#555', 'color':'#bbb', 'font-weight':200, 'text-align':'left', 'padding-left':'10px', 'width':'100%' }">
+    <span class="dxc-text-clear100 dxc-text-std">Add manually a new device</span>
+  </div>
+  <ng-container options>
+    <span class="btn-close" (click)="controller.app.helper.open('rename')"><fa-icon [icon]="['fas','circle-question']"></fa-icon></span>
+  </ng-container>
+  <div body class="p-2">
+    <div>
+      <div class="dxc-frm-label ">Choose a target OS</div>
+      <dxc-target-os-list [targetOs]="targetOs" (selectTarget)="updateBridgeList($event)"></dxc-target-os-list>
+
+      <div *ngIf="targetOs!=''">
+        <div class="dxc-frm-label" >Choose a bridge</div>
+        <select [(ngModel)]="targetBridge" (ngModelChange)="onTargetBridgeChange($event)" class="dxc-input">
+          <ng-container *ngFor="let bridge of bridges">
+            <option [value]="bridge.value" [disabled]="bridge.disabled">{{bridge.label}}</option>
+          </ng-container>
+        </select>
+      </div>
+
+      <div *ngIf="virtualDev==true">
+        <dxc-virtual-device-form [targetOs]="targetOs" ></dxc-virtual-device-form>
+      </div>
+      <div *ngIf="virtualDev==false">
+        <ng-container *ngIf="(mode=='usb')&&(isBridgeReady())">
+            <div class="dxc-frm-label">Select the device</div>
+            <dxc-device-list [allowNotEnrolled]="true" (selectDevice)="selectDevice($event)"></dxc-device-list>
+            <!--
+            <div class="row">
+              <div class="col-10 device-list">
+                <ng-container *ngFor="let dev of devices; let i = index;">
+                  <div class="row device" (click)="selectDevice(dev)">
+                    <div class="col-2">
+                      <dxc-icon *ngIf="dev.bridge.shortname.indexOf('usb')>-1" [model]="icons.USB"></dxc-icon>
+                      <dxc-icon *ngIf="dev.bridge.shortname.indexOf('usb')==-1" [model]="icons.WIFI"></dxc-icon>
+                    </div>
+                    <div class="col-10 label">
+                      <h4>{{ dev.uid }}</h4>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-2">
+                <dxc-refresh-btn (newClick)="restartADB()"></dxc-refresh-btn>
+              </div>-->
+        </ng-container>
+
+        <ng-container *ngIf="mode=='net'">
+          <div *ngIf="hasOptions()">
+            <div class="dxc-frm-label">
+              Port number :
+            </div>
+            <div>
+              <input type="number" max="65535" min="1" [(ngModel)]="portNb"  class="dxc-input"/>
+            </div>
+            <div class="dxc-frm-label">
+              Remote IP address :
+            </div>
+            <div>
+              <input type="text" [(ngModel)]="ip" placeholder="192.168.1.1" class="dxc-input"/>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!--<div class="input-group-append">
+      <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="gIcons.CHECK" (click)="submit()"></dxc-icon>
+      <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="gIcons.WARNING"></dxc-icon>
+    </div>-->
+
+
+  </div>
+  <div footer>
+    <span *ngIf="error!=null" class="badge dxc-warning-msg" #msgBox>{{ error.msg }}</span>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="submit()">Open</button>
+  </div>
+</app-modal-base>

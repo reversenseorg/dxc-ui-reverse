@@ -1,0 +1,92 @@
+.viewport-code {
+  background-color: #2f2f2f;
+  color:white;
+  height:100%;
+  user-select: none;
+  margin:0px;
+  padding:0px;
+
+  button.code-abstract {
+    font-weight:800;
+  }
+
+  button.code-abstract:hover {
+    cursor: pointer;
+  }
+
+  b.meta-access {
+    margin-right:3em;
+  }
+
+  span.code-type:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+/*
+.vp-navbar {
+  background-color: #222;
+
+  div.nav {
+    background-color: #222;
+  }
+}*/
+
+div.splitted {
+  margin:0px;
+  padding:0px;
+
+  .ctn-code-right {
+    display: inline-block;
+    background-color: #222;
+    width: 50%;
+    height: 80%;
+
+    .host-right {
+      background-color: #222;
+      height: 100%;
+    }
+  }
+
+  .ctn-code-left {
+    display: inline-block;
+    background-color: #222;
+    height: 80%;
+    width: 50%;
+
+    .host-left {
+      background-color: #222;
+      height: 100%;
+    }
+  }
+}
+
+
+.dxc-obj {
+  &:hover, &.dxc-ctxm-active {
+    background-color: yellow;
+    color: black;
+  }
+}
+
+.meta-access {
+  margin-right:1em;
+}
+
+.viewport-class {
+  margin:0px;
+  padding:0px;
+  display: block;
+  height:100%;
+}
+
+.ctn-code-left {
+  width:50%;
+  minWidth:50%;
+  border-right:1px solid #222;
+}
+.ctn-code-right {
+  width:50%;
+  minWidth:50%;
+}

@@ -1,0 +1,335 @@
+<div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-code">
+
+  <div class="container-fluid viewport-class">
+    <div #metadata style="border-bottom:1px solid #777">
+      <table class="table table-dark mb-0">
+        <thead>
+          <th scope="col">Type</th>
+          <th scope="col">Internal ID</th>
+          <th scope="col">Serial number</th>
+          <th scope="col">Name</th>
+          <th scope="col">API</th>
+          <th scope="col">OS</th>
+          <th scope="col">CPU/ABI</th>
+          <th scope="col">Actions</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <dxc-icon [model]="icons.MOBILE"></dxc-icon>&nbsp;
+            </td>
+            <td>{{ data.id }}</td>
+            <td>{{ data.uid }}</td>
+            <td>{{ data.device }}</td>
+            <td>{{ data.platform }}</td>
+            <td>{{ data.type }}</td>
+            <td>{{ data.model }}</td>
+            <td>
+              &nbsp;
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="activeWidth" [type]="'1:2'">
+      <ng-container nav-left>
+        <app-subnavbar [type]="'navbar'"  [parent]="this">
+          <ng-container main>
+            <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="tIcons.PERM" (click)="showDetail('pm')">Permisions</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='ss'"  [icon]="gIcons.LIST" (click)="showDetail('ss')">System</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='sc'"  [icon]="gIcons.LIST" (click)="showDetail('sc')">Syscalls</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='nt'"  [icon]="gIcons.LIST" (click)="showDetail('nt')">Network</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='usb'"  [icon]="gIcons.LIST" (click)="showDetail('usb')">USB</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons.LIST" (click)="showDetail('ct')">Certificates</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='mnt'"  [icon]="gIcons.LIST" (click)="showDetail('mnt')">Partitions</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='fr'"  [icon]="gIcons.HOOKS" (click)="showDetail('fr')">Frida</app-subnavbar-btn>
+          </ng-container>
+        </app-subnavbar>
+      </ng-container>
+      <ng-container body-left>
+        <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='fr')">
+            <div class="row no-gutters m-1 pt-1">
+              <div class="col-lg-2">Server path</div>
+              <div class="col-lg-7"><input type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}" [(ngModel)]="data.frida.server"></div>
+              <div class="col-lg-3 text-right">
+                <button class="dxc-frm-btn" (click)="testFridaConnection()"><dxc-icon [model]="gIcons.REFRESH"></dxc-icon>&nbsp;Test</button>
+                <button class="dxc-frm-btn default" (click)="saveFrida($event)">Save</button>
+              </div>
+            </div>
+            <div class="row no-gutters m-1">
+              <div class="col-lg-2">Port number</div>
+              <div class="col-lg-9"><input type="number" class="dxc-frm-input" [(ngModel)]="data.frida.port" id="dev-frida-srv-path"></div>
+            </div>
+            <div class="row no-gutters m-1">
+              <div class="col-lg-2">Transport</div>
+              <div class="col-lg-9">
+                <input type="radio" class="dxc-frm-input mr-2" [checked]="data.frida.transport=='U'" [(ngModel)]="data.frida.transport" value="U" name="dev-frida-trn" id="dev-frida-usb" />
+                <label for="dev-frida-usb">USB</label>
+                <br>
+                <input type="radio" class="dxc-frm-input mr-2" [checked]="data.frida.transport=='H'" [(ngModel)]="data.frida.transport" value="H" name="dev-frida-trn" id="dev-frida-net" />
+                <label for="dev-frida-net">Network</label>
+              </div>
+            </div>
+            <div class="row no-gutters m-1">
+              <div class="col-lg-2">Execute server as</div>
+              <div class="col-lg-9">
+                <input type="checkbox" class="dxc-frm-input mr-2" [(ngModel)]="data.frida.privileged" id="dev-frida-su">
+                <label for="dev-frida-su">root/privileged user</label>
+              </div>
+            </div>
+            <div class="row no-gutters m-1 pt-1">
+              <div class="col-lg-2">Command to execute before</div>
+              <div class="col-lg-9"><input type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}" [(ngModel)]="data.frida.before"></div>
+            </div>
+            <div class="row no-gutters m-1">
+              <div class="col-lg-2">Timeout</div>
+              <div class="col-lg-9"><input type="number" class="dxc-frm-input" [(ngModel)]="data.frida.timeout"></div>
+            </div>
+        </div>
+        <div class="container-fluid view-outer dxc-list" style="background-color: #343a40" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='usb')">
+
+
+
+          <div class="row no-gutters">
+            <div class="col-2">User</div>
+            <div class="col-2">Host</div>
+            <div class="col-8">ADB Public Key</div>
+          </div>
+          <ng-container *ngIf="data.profile && data.profile.profiles.usb">
+            <ng-container  *ngFor="let i of data.profile.profiles.usb.adbPKs">
+              <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="onItemFocus($event,i,'usb')">
+                <div class="col-2">{{ i.username }}</div>
+                <div class="col-2">{{ i.host }}</div>
+                <div class="col-8" style="word-wrap: anywhere">{{ i.publicKey }}</div>
+              </div>
+            </ng-container>
+          </ng-container>
+
+        </div>
+
+        <div class="container-fluid view-outer dxc-list" style="background-color: #343a40" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='mnt')">
+          <div class="row no-gutters">
+            <div class="col-2">Partition</div>
+            <div class="col-2">Mount point</div>
+            <div class="col-1">FS Type</div>
+            <div class="col-7">Options</div>
+          </div>
+          <ng-container *ngIf="data.profile && data.profile.profiles.mounts ">
+            <ng-container  *ngFor="let i of data.profile.profiles.mounts.mounts">
+              <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="onItemFocus($event,i,'mnt')"  (contextmenu)="controller.displayCtxMenu($event,'mntfs', {dev:data, o:i})">
+
+                <div class="col-2" style="word-wrap: anywhere">{{ i.partition }}</div>
+                <div class="col-2" style="word-wrap: anywhere">{{ i.mountPoint }}</div>
+                <div class="col-1">{{ i.fsType }}</div>
+                <div class="col-7" style="word-wrap: anywhere">{{ i.opts._raw }}</div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div class="container-fluid view-outer dxc-list" style="background-color: #343a40" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='ss')">
+            <div class="row no-gutters">
+              <div class="col-3">Name</div>
+              <div class="col-8">Value</div>
+              <div class="col-1">Options</div>
+            </div>
+          <ng-container *ngIf="data.profile">
+            <ng-container  *ngFor="let i of data.profile.sys_prop | keyvalue">
+              <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="onItemFocus($event,i,'ss')" (contextmenu)="controller.displayCtxMenu($event,'dvprop', {dev:data, o:i})">
+                <div class="col-3">{{ i.key }}</div>
+                <div class="col-8">{{ i.value }}</div>
+                <div class="col-1">-</div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div class="container-fluid view-outer dxc-list" style="background-color: #343a40" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='sc')">
+
+          <div class="row no-gutters">
+            <div class="col-1">#</div>
+            <div class="col-2">Name</div>
+            <div class="col-8">Args</div>
+            <div class="col-1">Return</div>
+          </div>
+          <ng-container *ngIf="data.syscalls">
+            <ng-container  *ngFor="let svc of data.syscalls">
+              <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="showSyscallInfo($event, svc)" (contextmenu)="controller.displayCtxMenu($event,'syscall', {dev:data, o:svc})">
+
+                <div class="col-1">{{ svc.sysnum }}</div>
+                <div class="col-2">{{ svc.name }}</div>
+                <div class="col-8">
+                  <ng-container *ngFor="let e of svc.args">
+                    <span *ngIf="e.n">{{ e.n }}, </span>
+                    <span *ngIf="!e.n">{{ e }}, </span>
+                  </ng-container>
+                </div>
+                <div class="col-1">
+                  <span *ngIf="svc.ret">{{ svc.ret.t }}</span>
+                </div>
+
+                <!--
+                <td><span *ngIf="svc.ret">{{ svc.ret.t }}</span></td>
+                <td>
+                  <ng-container *ngFor="let e of svc.errCode">
+                    <span *ngbTooltip="e[1]">{{ e[2] }}</span> ,
+                  </ng-container>
+                </td>
+                <td>
+                  <ng-container *ngFor="let e of svc.args">
+                    <span>{{ e.n }}</span> ,
+                  </ng-container>
+                </td>
+                <td>
+                  <span *ngIf="svc.ret">{{ svc.ret.t }}</span>
+                </td>
+                <td>
+                  <ng-container *ngFor="let e of svc.errCode">
+                    <span *ngbTooltip="e[1]">{{ e[2] }}</span> ,
+                  </ng-container>
+                </td>-->
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div class="container-fluid view-outer dxc-list" style="background-color: #343a40"  [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='ct')">
+
+            <div class="row no-gutters">
+              <div class="col-1">Type</div>
+              <div class="col-4">Issuer</div>
+              <div class="col-5">Subject</div>
+              <div class="col-2">Validity</div>
+            </div>
+            <ng-container *ngIf="data.profile && data.profile.profiles.trust">
+              <ng-container  *ngFor="let ac of data.profile.profiles.trust.customCAs">
+                <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="onItemFocus($event,ac,'ct')">
+                  <div class="col-1 text-warning">Custom CA</div>
+                  <div class="col-4">
+                    <ng-container *ngFor="let attr of ac.issuer.attributes">
+                      <div style="padding:0px;"><span class="dxc-text-std">{{ attr.name }}&nbsp;=&nbsp;</span><span>{{ attr.value }}</span></div>
+                    </ng-container>
+                  </div>
+                  <div class="col-5">
+                    <ng-container *ngFor="let attr of ac.subject.attributes">
+                      <div style="padding:0px;"><span class="dxc-text-std">{{ attr.name }}&nbsp;=&nbsp;</span><span>{{ attr.value }}</span></div>
+                    </ng-container>
+                  </div>
+                  <div class="col-2">
+
+                    <div>
+                      <dxc-icon [model]="gIcons.EDIT"></dxc-icon>&nbsp;
+                      <dxc-icon [model]="gIcons.COPY"></dxc-icon>
+                    </div>
+                    <div>{{ ac.validity.notBefore }}</div>
+                    <div class="text-success">{{ ac.validity.notAfter }}</div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container  *ngFor="let ac of data.profile.profiles.trust.systemCAs">
+                <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="onItemFocus($event,ac,'ct')">
+                  <div class="col-1 text-danger">System CA</div>
+                  <div class="col-4">
+                    <ng-container *ngFor="let attr of ac.issuer.attributes">
+                      <div style="padding:0px;"><span class="dxc-text-std">{{ attr.name }}&nbsp;=&nbsp;</span><span>{{ attr.value }}</span></div>
+                    </ng-container>
+                  </div>
+                  <div class="col-5">
+                    <ng-container *ngFor="let attr of ac.subject.attributes">
+                      <div style="padding:0px;"><span class="dxc-text-std">{{ attr.name }}&nbsp;=&nbsp;</span><span>{{ attr.value }}</span></div>
+                    </ng-container>
+                  </div>
+                  <div class="col-2">
+
+                    <div>
+                      <dxc-icon [model]="gIcons.EDIT"></dxc-icon>&nbsp;
+                      <dxc-icon [model]="gIcons.COPY"></dxc-icon>
+                    </div>
+                    <div>{{ ac.validity.notBefore }}</div>
+                    <div class="text-success" [ngClass]="{ 'text-danger':ac.validity.exp }">{{ ac.validity.notAfter }}</div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+        </div>
+
+        <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
+
+        </div>
+
+      </ng-container>
+      <ng-container nav-right>
+        <app-subnavbar [type]="'navbar'"  [parent]="this">
+          <ng-container main></ng-container>
+        </app-subnavbar>
+      </ng-container>
+      <ng-container body-right>
+
+
+        <div class="container-fluid" [class.dxc-hidden]="(activeRight==null) || (activeRight!='sc')">
+          <ng-container *ngIf="selectedSyscall">
+            <h4 class="text-warning">{{ selectedSyscall.name }}</h4>
+
+            <h6 class="m-1 mt-3 dxc-text-100">Arguments</h6><br>
+            <div class="box m-1 mt-1 p-2">
+              <div *ngFor="let arg of selectedSyscall.args">
+
+
+                <ng-container *ngIf="arg.n; then fullArg else rawArg"></ng-container>
+                <ng-template #rawArg>
+                  <div  class="row">
+                    <div class="col-12" >
+                      {{ arg }}
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template #fullArg>
+                  <div  class="row">
+                    <div class="col-2" >
+                      {{ arg.t }}
+                    </div>
+                    <div class="col-10" >
+                      {{ arg.n }}
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+            <h6 class="m-1 mt-3 dxc-text-100" *ngIf="selectedSyscall.ret">Return value</h6><br>
+            <div class="box m-1 mt-1 p-2">
+              <span>{{ selectedSyscall.ret.t }}</span>
+            </div>
+
+            <h6 class="m-1 mt-3 dxc-text-100">Error Codes</h6><br>
+            <div *ngIf="selectedSyscall.ret.e"  class="box m-1 mt-1 p-2">
+              <!--<div class="row dxc-text-yellow">
+                <div class="col-12">
+                  <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons.FIND" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
+                </div>
+              </div>-->
+              <div *ngFor="let err of selectedSyscall.ret.e">
+                <div class="row">
+                  <div class="col-2" >
+                    {{ err[2] }}
+                  </div>
+                  <div class="col-10" >
+                    {{ err[1] }}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </ng-container>
+        </div>
+
+      </ng-container>
+    </app-viewport-splitted>
+
+  </div>
+
+</div>

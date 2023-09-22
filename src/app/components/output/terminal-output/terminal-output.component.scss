@@ -1,0 +1,45 @@
+.term-ws {
+  width:100%;
+  font-size:12px;
+
+  .nav-label {
+    margin: 0px 15px;
+    line-height: 21px;
+  }
+
+  .term-ws-ctn {
+    margin: 0px;
+    overflow-y: auto;
+  }
+
+  div.row.output {
+
+    margin:0px;
+    padding: 4px 0;
+    border-bottom: 1px solid #999;
+    color: var(--text-75);
+    background-color: #333333;
+
+    &:hover {
+      background-color: #444;
+      color: #bbb;
+    }
+
+    &.selected {
+      background-color: rgba(65, 105, 225, 0.4);
+      border-bottom: 1px solid rgba(65, 105, 225, 0.48);
+
+      /*div {
+        color:royalblue;
+      }*/
+    }
+
+    div.col-msg {
+      padding-left: 2em;
+    }
+    div.col-src {
+      padding-right: 2em;
+      text-align: right;
+    }
+  }
+}
