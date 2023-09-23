@@ -1,31 +1,27 @@
-# dxc/dxc-ui-reverse
+# DxcUiReverse
 
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.3.
 
+## Development server
 
-## Getting Started
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-Download links:
+## Code scaffolding
 
-SSH clone URL: ssh://git@git.jetbrains.space/reversense/dxc/dxc-ui-reverse.git
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-HTTPS clone URL: https://git.jetbrains.space/reversense/dxc/dxc-ui-reverse.git
+## Build
 
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+## Running unit tests
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Prerequisites
+## Running end-to-end tests
 
-What things you need to install the software and how to install them.
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-```
-Examples
-```
+## Further help
 
-## Deployment
-
-Add additional notes about how to deploy this on a production system.
-
-## Resources
-
-Add links to external resources for this project, such as CI server, bug tracker, etc.
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

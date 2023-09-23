@@ -1,3 +1,5 @@
+import {IStringIndex} from "../IStringIndex";
+import {Nullable} from "../Nullable";
 
 
 export interface IconModelCollection {
@@ -6,26 +8,32 @@ export interface IconModelCollection {
 
 export enum ICON_TYPE {
   ICON = 'img',
-  TEXT = 'txt'
+  TEXT = 'txt',
+  NONE = 'none'
 }
 
 export class IconModel {
+
+  static EMPTY = new IconModel({
+    type: ICON_TYPE.NONE
+  });
+
   iconType: ICON_TYPE = ICON_TYPE.ICON;
-  type: string = null;
-  name: string = null;
-  label: string = null;
-  color1: string = null;
-  color2: string = null;
-  style: string = null;
+  type: Nullable<string> = null;
+  name: Nullable<string> = null;
+  label: Nullable<string> = null;
+  color1: Nullable<string> = null;
+  color2: Nullable<string> = null;
+  style: Nullable<string> = null;
   spin: boolean = false;
 
-  src?:string = null;
+  src?:Nullable<string> = null;
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
       for(let i in pConfig) {
         if(this.hasOwnProperty(i))
-          this[i] = pConfig[i];
+          (this as IStringIndex<any>)[i] = pConfig[i];
       }
     }
   }

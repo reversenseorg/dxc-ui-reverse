@@ -1,4 +1,6 @@
 import {MerlinPrimitive, MerlinType} from "../../search/Merlin";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 export enum TestType {
     VT, // check if implemented
@@ -11,7 +13,7 @@ export enum AnalysisType {
 }
 
 
-export interface ControlAssessmentOpts {
+export interface ControlAssessmentOpts extends IStringIndex<any>{
     id?:string;
 
     name?:string;
@@ -49,8 +51,8 @@ export default class ControlAssessment {
 
     matches:any[] = [];
 
-    constructor( pConfig:ControlAssessmentOpts = null) {
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+    constructor( pConfig:Nullable<ControlAssessmentOpts> = null) {
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     getRules():MerlinPrimitive[] {

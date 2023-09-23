@@ -1,3 +1,4 @@
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 export enum ATTR_TYPE {
@@ -11,7 +12,7 @@ export enum ATTR_TYPE {
 export class AndroidAttribute {
 
     value:string;
-    type:ATTR_TYPE = null;
+    type:ATTR_TYPE = ATTR_TYPE.NONE;
 
     constructor(pValue:string, pType:ATTR_TYPE = ATTR_TYPE.NONE) {
         if(pType != ATTR_TYPE.NONE){
@@ -33,6 +34,4 @@ export class AndroidAttribute {
 
 
 // TODO : add resolving of @xxxx/yyyy references
-export interface AndroidAttributeSet {
-    [ppt :string] :string
-}
+export type AndroidAttributeSet = IStringIndex<string>;

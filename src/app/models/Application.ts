@@ -37,8 +37,8 @@ export default class Application
 {
     app:ApplicationBinary;
 
-    constructor(pApp:any=null) {
-        this.app = null;
+    constructor(pApp:ApplicationBinary) {
+        this.app = pApp;
     }
 
     start(pDevice:Device){

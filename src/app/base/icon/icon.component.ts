@@ -97,7 +97,7 @@ export class IconComponent implements OnInit, OnChanges {
   configure(pConfig:any=null) :void {
     if(pConfig != null){
       for(let i in pConfig)
-        if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+        if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
 

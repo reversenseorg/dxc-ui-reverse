@@ -174,14 +174,14 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
   configure( pOptions: any = null) {
     if(pOptions!=null){
       console.log("[modal-alert] Configure with ",pOptions);
-      for(let i in pOptions) this[i] = pOptions[i];
+      for(let i in pOptions) (this as IStringIndex<any>)[i] = pOptions[i];
     }
   }
 /*
   show( pOptions:any = null){
     console.log("Pass into ModalAlert show ",pOptions);
     if(pOptions!=null){
-      for(let i in pOptions) this[i] = pOptions[i];
+      for(let i in pOptions) (this as IStringIndex<any>)[i] = pOptions[i];
     }
     console.log(pOptions);
     this.modal.show();

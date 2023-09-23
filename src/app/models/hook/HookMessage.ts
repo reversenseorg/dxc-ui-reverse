@@ -1,6 +1,8 @@
 import {AbstractHook} from "../AbstractHook";
 import HookTemplateFragment from "./HookTemplateFragment";
 import HookSession from "./HookSession";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 export default class HookMessageV2
@@ -8,7 +10,7 @@ export default class HookMessageV2
   /**
    *
    */
-  uid:number = null;
+  uid:Nullable<number> = null;
 
   /**
    * Hook ID
@@ -19,7 +21,7 @@ export default class HookMessageV2
    *
    * @field
    */
-  hid:string = null;
+  hid:Nullable<string> = null;
 
   /**
    * Fragment ID
@@ -30,14 +32,14 @@ export default class HookMessageV2
    *
    * @field
    */
-  fid:string = null;
+  fid:Nullable<string>  = null;
 
   data:any = null;
 
   /**
    * Allow to override event name from associated strategy
    */
-  event?:string = null;
+  event?:Nullable<string>  = null;
 
   hook?:AbstractHook;
 
@@ -53,16 +55,16 @@ export default class HookMessageV2
   constructor(pConfig:any=null){
     if(pConfig!=null){
       for(const i in pConfig)
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
     }
     return this;
   }
 
-  getFragment():HookTemplateFragment  {
+  getFragment():Nullable<HookTemplateFragment>  {
     return this.frag;
   }
 
-  getHook():AbstractHook  {
+  getHook():Nullable<AbstractHook>  {
     return this.hook;
   }
 
@@ -78,7 +80,7 @@ export default class HookMessageV2
    * @returns {Object} Returns an Object instance representing the type
    */
   toJsonObject():any{
-    const o:any = new Object();
+    const o:any = {};
     o.uid = this.uid;
     o.data = this.data;
     o.hid = this.hid;

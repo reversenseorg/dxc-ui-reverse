@@ -1,30 +1,31 @@
-import {CONST} from "./CoreConst";
 import {Modifier, ModifierFormat} from "./AccessFlags";
 import ModelClass from "./ModelClass";
 import ModelMethod from "./ModelMethod";
 import NodeCompare from "./NodeCompare";
 import {Savable, STUB_TYPE} from "./ModelSavable";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export default  class ModelField extends Savable
 {
-    __:NodeInternalType = NodeInternalType.FIELD;
+    override __:NodeInternalType = NodeInternalType.FIELD;
     // corresponding stub type to use during export
     //this.__stub_type__ = STUB_TYPE.FIELD;
     //$ = STUB_TYPE.FIELD;
 
-    alias:string = null;
-    fqcn:string = null;
-    name:string = null;
-    modifiers:Modifier = null;
+    alias:Nullable<string> = null;
+    fqcn:Nullable<string> = null;
+    name:Nullable<string> = null;
+    modifiers:Modifier = Modifier.NONE;
     type:any = null;
     instr:any = null;
-    enclosingClass:ModelClass = null;
-    declaringClass:ModelClass|string = null; // new
-    __signature__:string = null;
-    __aliasedSignature__:string = null;
-    _hashcode:string = null;
+    enclosingClass:Nullable<ModelClass> = null;
+    declaringClass:Nullable<ModelClass|string> = null; // new
+    __signature__:Nullable<string> = null;
+    __aliasedSignature__:Nullable<string> = null;
+    _hashcode:Nullable<string> = null;
     _isBinding:boolean = false;
     _callers:ModelMethod[] = [];
     _getters:ModelMethod[] = [];
@@ -43,7 +44,7 @@ export default  class ModelField extends Savable
 
         if(pConfig!==undefined)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     setValue(val:any){
@@ -72,7 +73,7 @@ export default  class ModelField extends Savable
     }
 
 
-    getAlias():string{
+    getAlias():Nullable<string>{
         return this.alias;
     }
 
@@ -128,7 +129,7 @@ export default  class ModelField extends Savable
     }
 
 
-    import(obj:any){
+    override import(obj:any){
         // raw impport
         super.import(obj);
 
@@ -178,8 +179,8 @@ export default  class ModelField extends Savable
                 case "_callers":
                     obj[i] = [];
                     for(let j=0; j<(this[i] as any).length; j++){
-                        if(this[i][j] != undefined)
-                            obj[i].push(this[i][j].__signature__); // getSignature()
+                        if((this as IStringIndex<any>)[i][j] != undefined)
+                            obj[i].push((this as IStringIndex<any>)[i][j].__signature__); // getSignature()
                     }
                     break;
                 case "__signature__":
@@ -254,15 +255,15 @@ export default  class ModelField extends Savable
      * @deprecated
      */
     hashCode():string{
-        if(this.enclosingClass === undefined) console.log(this);
+        if(this.enclosingClass == null){ console.log(this); return "|"+this.name; }
         return this.enclosingClass.name+"|"+this.name;//+"|"+this.type._hashcode;
     };
 
 
     signature():string{
-        if(this.__signature__ !== null) return this.__signature__;
+        if(this.__signature__ != null) return this.__signature__;
 
-        if(this.enclosingClass !== null)
+        if(this.enclosingClass != null)
             this.__signature__ = this.enclosingClass.name+";->"+this.name;
         else
             this.__signature__ = this.fqcn+";->"+this.name;

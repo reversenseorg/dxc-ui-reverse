@@ -1,3 +1,5 @@
+import {IStringIndex} from "../base/IStringIndex";
+
 export default class KeyPointOptions {
   parent:string;
   token:string;
@@ -8,7 +10,7 @@ export default class KeyPointOptions {
 
   constructor(pConfig:any = null) {
     if(pConfig != null){
-      for(const i in pConfig) this[i] = pConfig[i];
+      for(const i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 }

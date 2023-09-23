@@ -1,4 +1,5 @@
-
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export enum KeyPointType {
@@ -34,7 +35,7 @@ export default class KeyPoint {
    * @field
    * @type {KeyPoint}
    */
-  parent:KeyPoint = null;
+  parent:Nullable<KeyPoint> = null;
 
   /**
    * Should be unique
@@ -52,7 +53,7 @@ export default class KeyPoint {
 
   constructor(pConfig:any={}) {
     for(let i in pConfig){
-      this[i] = pConfig[i];
+      (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

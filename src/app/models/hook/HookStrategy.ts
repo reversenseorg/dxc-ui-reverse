@@ -3,6 +3,8 @@ import KeyPoint from "../KeyPoint";
 import { NodeInternalType } from "../NodeInternalType";
 import HookStrategySelector from "./HookStrategySelector";
 import HookTemplateFragment from "./HookTemplateFragment";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 export const DEFAULT_PRIORITY = -1;
 
@@ -26,9 +28,9 @@ export default class HookStrategy {
 
     __:NodeInternalType = NodeInternalType.HOOK_STRATEGY;
 
-    _uid:string = null;
-    name:string = null;
-    descr:string = null;
+    _uid:Nullable<string>  = null;
+    name:Nullable<string>  = null;
+    descr:Nullable<string>  = null;
 
     /**
      * A boolean to turn ON/OFF auto-emit of event for each hook trigged
@@ -44,14 +46,14 @@ export default class HookStrategy {
      * @type {string}
      * @field
      */
-    emitEvent:string = null;
+    emitEvent:Nullable<string>  = null;
 
-    preprocessor: string = null;
+    preprocessor: Nullable<string>  = null;
     /**
      * Search Engine request
      * @private
      */
-    search:HookStrategySelector = null;
+    search:Nullable<HookStrategySelector> = null;
 
     /**
      * @deprecated
@@ -60,21 +62,21 @@ export default class HookStrategy {
 
     weight = DEFAULT_PRIORITY;
 
-    before:HookTemplateFragment = null;
-    after:HookTemplateFragment = null;
-    replace:HookTemplateFragment = null;
+    before:Nullable<HookTemplateFragment> = null;
+    after:Nullable<HookTemplateFragment> = null;
+    replace:Nullable<HookTemplateFragment> = null;
 
-    on:string = null;
+    on:Nullable<string>  = null;
 
     onMatch:any = null;
 
-    loadOn:string = null;
-    unloadOn:string = null;
+    loadOn:Nullable<string>  = null;
+    unloadOn:Nullable<string>  = null;
 
-    load_kp:KeyPoint = null;
-    unload_kp:KeyPoint = null;
+    load_kp:Nullable<KeyPoint> = null;
+    unload_kp:Nullable<KeyPoint> = null;
 
-    key_point:KeyPoint = null;
+    key_point:Nullable<KeyPoint> = null;
 
     passed = 0;
 
@@ -93,7 +95,7 @@ export default class HookStrategy {
         // this.requiresNode = [];
         if(pConfig!=null)
             for(const i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
 
 
     }
@@ -144,13 +146,13 @@ export default class HookStrategy {
      * @return {string} Object UID
      * @method
      */
-    getUID():string {
+    getUID():Nullable<string>  {
         return this._uid;
     }
 
 
 
-    getName():string {
+    getName():Nullable<string>  {
         return this.name;
     }
 
@@ -175,11 +177,19 @@ export default class HookStrategy {
     }
 
     setSearchEngineRequest(pRequest:string) {
-        this.search.setRequest(pRequest);
+        if(this.search != null){
+            this.search.setRequest(pRequest);
+        }
+
     }
 
-    getSearchEngineRequest():string {
-        return this.search.getRequest();
+    getSearchEngineRequest():Nullable<string>  {
+        if(this.search != null){
+            return this.search.getRequest();
+        }else{
+            return null;
+        }
+
     }
 
     triggerOn(pEventName:string):void {
@@ -226,7 +236,7 @@ export default class HookStrategy {
                     o[i] = (this[i] !== null ? (this[i] as any).getUID() : null);
                     break;
                 case 'search':
-                    o.search = (this.search !== null ? this.search.toJsonObject() : null);
+                    o.search = (this.search != null ? this.search.toJsonObject() : null);
                     break;
                 default:
                     o[i] = this[i];

@@ -1,8 +1,9 @@
+import {Nullable} from "../base/Nullable";
 
 export default class TagCategory
 {
 
-    name:string = null;
+    name:Nullable<string> = null;
     taglist:string[] = [];
 
     constructor(name:string, taglist:string[]){

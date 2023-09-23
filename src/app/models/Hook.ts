@@ -2,12 +2,14 @@
 import ModelMethod from "./ModelMethod";
 import {CONST} from "./CoreConst";
 import {IconModel} from "../base/icon/IconModel";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 
-function getLetterFromType(typename:string):string{
+function getLetterFromType(typename:string):Nullable<string>{
     for(let i in CONST.WORDS){
-        if(CONST.WORDS[i]==typename) return i;
+        if((CONST.WORDS as IStringIndex<any>)[i]==typename) return i;
     }
     return null;
 }
@@ -27,25 +29,25 @@ interface HookCode {
 export default class Hook
 {
     _t:string = 'h';
-    _icon:IconModel = null;
+    _icon:Nullable<IconModel> = null;
 
-    id:string = null;
+    id:Nullable<string> = null;
 
     // ! important
     // It is used in order to link in-hook method call with method declared outside of the hook
-    parentID:string = null;
+    parentID:Nullable<string> = null;
     customName:boolean = false;
-    name:string = null; //name;
-    description:string = null;
-    script:string = null;//src;
+    name:Nullable<string> = null; //name;
+    description:Nullable<string> = null;
+    script:Nullable<string> = null;//src;
     enabled:boolean = true;
     native:boolean = false;
     isIntercept:boolean = false;
-    onMatch = null;
+    onMatch:Function = (()=>{});
 
     edited:boolean = false;
 
-    method:ModelMethod = null;
+    method:Nullable<ModelMethod> = null;
 
     when:number = 0;
 
@@ -54,7 +56,7 @@ export default class Hook
 
     color:any = null;
     code:any = null;
-    variables:any = null;
+    variables:IStringIndex<any> = {};
 
 
 
@@ -77,7 +79,7 @@ export default class Hook
         if(pConfig!==null) {
           for (let i in pConfig)
             if (this.hasOwnProperty(i))
-              this[i] = pConfig[i];
+              (this as IStringIndex<any>)[i] = pConfig[i];
 
           if(pConfig.enable!==undefined)
             this.enabled = pConfig.enable;
@@ -111,8 +113,8 @@ export default class Hook
             };`;
     }
 
-    getVariable(name){
-        return this.variables[name];
+    getVariable(pName:string){
+        return this.variables[pName];
     }
 
     isModified():boolean{
@@ -177,7 +179,7 @@ export default class Hook
      * @returns {string} id The Unique ID of this hook
      * @function
      */
-    getID():string{
+    getID():Nullable<string>{
         return this.id;
     }
 
@@ -197,7 +199,7 @@ export default class Hook
      * @returns {String} The parent ID
      * @function
      */
-    getParentID():string{
+    getParentID():Nullable<string>{
         return this.parentID;
     }
 
@@ -260,8 +262,8 @@ export default class Hook
         o.customName = this.customName;
         o.name = this.name;
         o.enable = this.enabled;
-        o.method = this.method.signature();
-        o.script = btoa(encodeURIComponent(this.script));
+        o.method = (this.method!=null ? this.method.signature() : null);
+        o.script = (this.script!=null ? btoa(encodeURIComponent(this.script)) : null);
         o.edited = this.edited;
         o.isIntercept = this.isIntercept;
         if(this.variables != null){

@@ -1,3 +1,4 @@
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 export enum AddressSize {
@@ -10,7 +11,7 @@ export enum AddressSize {
 
 export enum AbiType {
     arm_v5='armv5',
-    armeabi='armeabi-v7a',
+    armeabi='armeabi',
     armeabi_v7a='armeabi-v7a',
     arm64_v8a='arm64-v8a',
     x86='x86',
@@ -44,7 +45,7 @@ export class ABI {
 
     constructor( pConfig:any) {
         for(const i in pConfig){
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         }
     }
 

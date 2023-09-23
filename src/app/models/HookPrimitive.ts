@@ -1,4 +1,6 @@
 import ModelMethod from "./ModelMethod";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /**
@@ -6,8 +8,8 @@ import ModelMethod from "./ModelMethod";
  */
 export class HookPrimitive
 {
-    when:number = null;
-    method_signature:string = null;
+    when:number = 0;
+    method_signature:Nullable<string> = null;
     isIntercept:boolean = false;
     isCustom:boolean = false;
     interceptBefore:any = null;
@@ -18,7 +20,7 @@ export class HookPrimitive
     variables:any = null;
     raw:any = null;
     color:any;
-    customCode:string = null;
+    customCode:Nullable<string> = null;
 
 
     /**
@@ -32,7 +34,7 @@ export class HookPrimitive
         if(pConfig!=null) {
             for (let i in pConfig) {
                 if (i != "multiple_method" && i != "method")
-                    this[i] = pConfig[i];
+                    (this as IStringIndex<any>)[i] = pConfig[i];
             }
         }
         if(pConfig.method!=null)

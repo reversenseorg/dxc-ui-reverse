@@ -8,6 +8,8 @@ import {Savable, STUB_TYPE} from "./ModelSavable";
 import {ModelClassReference, ModelFieldReference, ModelMethodReference} from "./ModelReference";
 import {NodeType} from "../components/search/ctrl/ModelNode";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 const EOL = '\n';
 
@@ -34,43 +36,43 @@ interface IFieldSet {
  */
 export default class ModelClass extends Savable
 {
-    __:NodeInternalType = NodeInternalType.CLASS;
+    override __:NodeInternalType = NodeInternalType.CLASS;
     _t:NodeType = NodeType.CLASS;
 
     //fqcn = null;
     // the FQCN of the class
-    name:string = null;
+    name:Nullable<string> = null;
 
     // An alias
-    alias:string = null;
+    alias:Nullable<string> = null;
 
 
     // the Simple name of the class (the last part of the FQCN)
-    simpleName:string = null;
+    simpleName:Nullable<string> = null;
 
     // the FQDN of the package
     // the package
-    package:ModelPackage|string = null;
+    package:Nullable<ModelPackage|string> = null;
 
     // the name of the source file contained into the .source instruction
-    source:string = null;
+    source:Nullable<string> = null;
 
     // a list of modifiers of the class (public/private/protected/static/final/...)
-    modifiers:Modifier = null;
+    modifiers:Modifier = Modifier.NONE;
 
     // a list of references to the implemented interfaces
     implements:(ModelClass|string)[] = [];
 
     // a list of references to the extended classes
-    extends:ModelClass|ModelClassReference = null; //ModelClassReference
-    supers:(ModelClass|ModelClassReference)[] = null;
+    extends:Nullable<ModelClass|ModelClassReference> = null; //ModelClassReference
+    supers:(ModelClass|ModelClassReference)[] = [];
 
     // a list of references to the appied annotations
     annotations = [];
 
     // a list of the declared method
     methods:IMethodSet = {};
-    inherit = {};
+    inherit:IStringIndex<any> = {};
 
     // the count of methods inside the class
     _methCount:number = 0;
@@ -89,36 +91,36 @@ export default class ModelClass extends Savable
      if the current object is enclosed into another class, a reference to
      the enclosing class is stored here
     */
-    enclosingClass:ModelClass|ModelClassReference = null;
+    enclosingClass:Nullable<ModelClass|ModelClassReference> = null;
 
     // private : a list of the methods containing instructions which use this class
     _callers:string[]|ModelMethod[] = [];
 
     // private : the unique identifier of this object in the graph
-    _hashcode:string = null;
+    _hashcode:Nullable<string> = null;
 
     // private : TRUE if this class is binded by the OS or the VM.
-    _isBinding:boolean = null;
+    _isBinding:boolean = false;
 
-    __pretty_signature__:string = null;
-    __aliasedCallSignature__:string = null;
+    __pretty_signature__:Nullable<string> = null;
+    __aliasedCallSignature__:Nullable<string> = null;
 
     constructor(pConfig:any=null){
         super(STUB_TYPE.CLASS);
 
         if(pConfig!==undefined)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
-    getUID(): string {
+    override getUID(): Nullable<string> {
       return this.name;
     }
 
   /**
      * @deprecated
      */
-    hashcode():string {
+    hashcode():Nullable<string> {
         return this.name;
     }
 
@@ -191,7 +193,7 @@ export default class ModelClass extends Savable
         return (this.extends != null);
     }
 
-    getSuperClass():ModelClass|ModelClassReference{
+    getSuperClass():Nullable<ModelClass|ModelClassReference>{
         return this.extends;
     }
 
@@ -203,15 +205,15 @@ export default class ModelClass extends Savable
         this.supers = superList;
     }
 
-    getName():string{
+    getName():Nullable<string>{
         return this.name;
     }
 
-    signature():string{
+    signature():Nullable<string>{
         return this.name;
     }
 
-    aliasedSignature():string{
+    aliasedSignature():Nullable<string>{
         return this.alias;
     }
 
@@ -239,14 +241,14 @@ export default class ModelClass extends Savable
      * @deprecated
      */
     signatureFactory(ppt:string, seed:string):string{
-        if(this[ppt] !== null) return this[ppt];
+        if((this as IStringIndex<any>)[ppt] !== null) return (this as IStringIndex<any>)[ppt];
 
-        this[ppt] = this[seed];
+        (this as IStringIndex<any>)[ppt] = (this as IStringIndex<any>)[seed];
 
-        return this[seed];
+        return (this as IStringIndex<any>)[seed];
     }
 
-    getAlias():string{
+    getAlias():Nullable<string>{
         return this.alias;
     }
 
@@ -279,10 +281,10 @@ export default class ModelClass extends Savable
     }
 
     raw_import(data:any) {
-        for(let i in data) this[i] = data[i];
+        for(let i in data) (this as IStringIndex<any>)[i] = data[i];
     }
 
-    import(obj:any){
+    override import(obj:any){
         // raw impport
         this.raw_import(obj);
 
@@ -291,7 +293,7 @@ export default class ModelClass extends Savable
     }
 
 
-    hasOverrideOf(meth:ModelMethod):ModelMethod{
+    hasOverrideOf(meth:ModelMethod):Nullable<ModelMethod>{
         if(meth == null) return null;
 
         let cs = meth.callSignature();
@@ -417,7 +419,7 @@ export default class ModelClass extends Savable
     /**
      * To get the class package
      */
-    getPackage():ModelPackage|string{
+    getPackage():Nullable<ModelPackage|string>{
         return this.package;
     }
 
@@ -498,7 +500,7 @@ export default class ModelClass extends Savable
      * TODO : do it during analysis
      * @returns {Method}
      */
-    getClInit():ModelMethod{
+    getClInit():Nullable<ModelMethod>{
         for(let i in this.methods){
             if(this.methods[i].name == "<clinit>"){
                 return this.methods[i];
@@ -524,7 +526,9 @@ export default class ModelClass extends Savable
     }
 
     updateSuper(cls:ModelClass){
-        if(cls.getSuperClass().getName() != this.getSuperClass().getName()){
+        if(cls.getSuperClass()==null) return;
+
+        if(cls.getSuperClass()?.getName() != this.getSuperClass()?.getName()){
             // TODO : create NodeChange
             this.extends = cls;
         }

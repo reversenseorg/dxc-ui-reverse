@@ -4,6 +4,8 @@ import ModelField from "./ModelField";
 import ModelMethod from "./ModelMethod";
 import {Savable, STUB_TYPE} from "./ModelSavable";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 /**
  * Represents a reference to a field in the Application bytecode
@@ -12,15 +14,15 @@ import {NodeInternalType} from "./NodeInternalType";
 export class ModelFieldReference
 {
 
-    fullname:string=null;
-    fqcn:string = null;
+    fullname:Nullable<string>=null;
+    fqcn:Nullable<string> = null;
     field:any = null;
-    name:string = null;
+    name:Nullable<string> = null;
     isArray:boolean = false;
     _hashcode:string = "";
     tags:any = [];
-    enclosingClass:ModelClass|string = null;
-    declaringClass:ModelClass|string = null; // new
+    enclosingClass:Nullable<ModelClass|string> = null;
+    declaringClass:Nullable<ModelClass|string> = null; // new
 
     /**
      *
@@ -30,11 +32,11 @@ export class ModelFieldReference
     constructor(pConfig:any=null) {
         if(pConfig!==undefined)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
 
     }
 
-    getName():string{
+    getName():Nullable<string>{
         return this.name;
     }
 
@@ -73,13 +75,13 @@ export class ModelFieldReference
  */
 export class ModelClassReference
 {
-    fqcn:string = null;
+    fqcn:Nullable<string> = null;
 
-    constructor(pFQCN:string=null) {
+    constructor(pFQCN:Nullable<string>=null) {
         this.fqcn = pFQCN;
     }
 
-    getName(){
+    getName():Nullable<string>{
         return this.fqcn;
     }
 
@@ -96,20 +98,20 @@ export class ModelClassReference
  */
 export class ModelMethodReference
 {
-    fqcn:string = null;
-    name:string = null;
+    fqcn:Nullable<string> = null;
+    name:Nullable<string> = null;
     args:any = null;
     ret:any = null;
-    enclosingClass:ModelClass = null;
+    enclosingClass:Nullable<ModelClass> = null;
     _hashcode:string = "";
-    __callSignature__:string = null;
+    __callSignature__:Nullable<string> = null;
     tags:any = [];
 
 
     constructor(pConfig:any=null) {
 
         if(pConfig !== null){
-            for(let i in pConfig) this[i] = pConfig[i];
+            for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
             /* if(this.fqcn !== null && this.name !== null
                 && this.args !== null && this.ret !== null){
 
@@ -185,8 +187,10 @@ export class ModelMethodReference
         //if(this.enclosingClass === undefined) console.log(this._hashcode);
         if(this.fqcn !== undefined)
             return this.fqcn+"."+this.name+"("+xargs+")"+ret;//this.ret._hashcode;
-        else
+        else if(this.enclosingClass != null)
             return this.enclosingClass.name+"."+this.name+"("+xargs+")"+ret;//this.ret._hashcode;
+        else
+            throw new Error("ModelReference : signature cannot be retrieved");
 
     };
 
@@ -238,14 +242,14 @@ export class ModelRegisterReference
     t:any;
     i:any;
 
-    constructor(pTypeConfig:any=null, pIdentifier:string=null) {
+    constructor(pTypeConfig:any=null, pIdentifier:Nullable<string>=null) {
         if(pTypeConfig!==null && pIdentifier!==null){
             this.t = pTypeConfig;
             this.i = pIdentifier;
         }
         else if(pTypeConfig !== null) {
             for (let i in pTypeConfig)
-                this[i] = pTypeConfig[i];
+                (this as IStringIndex<any>)[i] = pTypeConfig[i];
         }
     }
 
@@ -253,7 +257,7 @@ export class ModelRegisterReference
         return this.t+this.i;
     }
 
-    isRX(pName):boolean{
+    isRX(pName:string):boolean{
         return (this.t+this.i)===pName[0];
     }
 
@@ -317,7 +321,7 @@ export class Tag extends Savable
      * @type {String}
      * @field
      */
-    name:string = null;
+    name:Nullable<string> = null;
 
     constructor(pLabel:string) {
         super(STUB_TYPE.TAG);

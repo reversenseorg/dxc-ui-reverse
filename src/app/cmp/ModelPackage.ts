@@ -1,3 +1,4 @@
+import {Nullable} from "../base/Nullable";
 
 export class ModelPackage {
 
@@ -8,10 +9,10 @@ export class ModelPackage {
    * @type {String}
    * @field
    */
-  name:string = null;
+  name:Nullable<string> = null;
 
 
-  sname:string = null;
+  sname:Nullable<string> = null;
 
   /**
    * Package metadata

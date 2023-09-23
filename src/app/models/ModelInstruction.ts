@@ -4,6 +4,8 @@ import ModelMethod from "./ModelMethod";
 import {Savable, STUB_TYPE} from "./ModelSavable";
 import {ModelRegisterReference} from "./ModelReference";
 import {NodeInternalType} from "./NodeInternalType";
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 /**
  * Represents an instruction from the Application bytecode
@@ -12,8 +14,8 @@ import {NodeInternalType} from "./NodeInternalType";
  */
 export default class ModelInstruction extends Savable
 {
-    __:NodeInternalType = NodeInternalType.INSTRUCTION;
-    _raw:string = null;
+    override __:NodeInternalType = NodeInternalType.INSTRUCTION;
+    _raw:Nullable<string> = null;
     _call:any = null;
     _parent:any = null;
 
@@ -21,7 +23,7 @@ export default class ModelInstruction extends Savable
     // oline:number;
 
     // line number into source (.jav, .kotlin, ...) file. Its a metadata
-    iline:number = null;
+    iline:number = -1;
 
     // operands
     opcode:any = null;
@@ -42,7 +44,7 @@ export default class ModelInstruction extends Savable
 
         if(pConfig!==undefined)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     getLine():number{
@@ -54,7 +56,7 @@ export default class ModelInstruction extends Savable
         //vm.restore(this.operands);
         //this.opcode.eval(vm,this.operands);
     }
-Ò
+
     setCalledObj(obj:any){
         this._call = obj;
     }
@@ -152,7 +154,7 @@ export default class ModelInstruction extends Savable
         return o;
     };
 
-    toString():string{
+    override  toString():Nullable<string>{
         return this._raw;
     }
 }

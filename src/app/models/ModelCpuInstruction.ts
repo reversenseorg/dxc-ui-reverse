@@ -6,6 +6,8 @@ import {ModelRegisterReference} from "./ModelReference";
 import {NodeType} from "./NodeType";
 import {ModelFunction} from "./ModelFunction";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export enum ModelInstructionType {
@@ -36,9 +38,9 @@ export default class ModelCpuInstruction
     __:NodeInternalType = NodeInternalType.INSTR_CPU;
     _t:NodeType = NodeType.INSTR_CPU;
     offset:number
-    ptr:number = null;
+    ptr:Nullable<number> = null;
     refptr:boolean = false;
-    func:ModelFunction = null;
+    func:Nullable<ModelFunction> = null;
     fcn_addr?:number;
     fcn_last?:number;
     sz:number;
@@ -57,14 +59,14 @@ export default class ModelCpuInstruction
 
         if(pConfig!==undefined)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
 
     toJsonObject():any{
         let o:any = {};
         for(let i in this){
-            if((typeof this[i]=='object') && (this[i].hasOwnProperty('toJsonObject'))){
+            if((this[i] != null) && (typeof this[i]=='object') && ((this as IStringIndex<any>)[i].hasOwnProperty('toJsonObject'))){
                 o[i] = (this[i] as any).toJsonObject();
             }else{
                 o[i] = this[i];

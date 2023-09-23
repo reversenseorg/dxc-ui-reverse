@@ -1,20 +1,21 @@
 import ModelClass from "./ModelClass";
 import ModelBasicBlock from "./ModelBasicBlock";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
 
 interface ITryCatchBoundary
 {
-    0: ModelClass,
-    1: string|ModelBasicBlock,
-    2: string|ModelBasicBlock,
-    3: string|ModelBasicBlock,
+    0: Nullable<ModelClass>,
+    1: Nullable<string|ModelBasicBlock>,
+    2: Nullable<string|ModelBasicBlock>,
+    3: Nullable<string|ModelBasicBlock>
 };
 
 
 export default class ModelCatchStatement
 {
     __:NodeInternalType = NodeInternalType.CATCH_STMT;
-    d:ITryCatchBoundary = null;
+    d:ITryCatchBoundary = { 0:null, 1:null, 2:null, 3:null };
 
     constructor(){
         this.d = {} as ITryCatchBoundary;
@@ -24,7 +25,7 @@ export default class ModelCatchStatement
         this.d[0] = pClass;
     }
 
-    getException():ModelClass{
+    getException():Nullable<ModelClass>{
         return this.d[0];
     }
 
@@ -32,7 +33,7 @@ export default class ModelCatchStatement
         this.d[1] = pLabel;
     }
 
-    getTryStart():string|ModelBasicBlock{
+    getTryStart():Nullable<string|ModelBasicBlock>{
         return this.d[1];
     }
 
@@ -40,7 +41,7 @@ export default class ModelCatchStatement
         this.d[2] = pLabel;
     }
 
-    getTryEnd():string|ModelBasicBlock{
+    getTryEnd():Nullable<string|ModelBasicBlock>{
         return this.d[2];
     }
 
@@ -48,7 +49,7 @@ export default class ModelCatchStatement
         this.d[3] = pLabel;
     }
 
-    getTarget():string|ModelBasicBlock{
+    getTarget():Nullable<string|ModelBasicBlock>{
         return this.d[3];
     }
 }

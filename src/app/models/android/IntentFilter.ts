@@ -1,15 +1,17 @@
 import {IntentActionCriteria, IntentCategoryCriteria, IntentDataCriteria} from "./Intent";
 import AndroidActivity from "./AndroidActivity";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 const UID_SEPARATOR = "-";
 
 export class IntentFilter
 {
-    __id:string = null;
-    action:any = [];
-    category:any = [];
-    data:any = [];
+    __id:Nullable<string> = null;
+    action:IntentActionCriteria[] = [];
+    category:IntentCategoryCriteria[] = [];
+    data:IntentDataCriteria[] = [];
 
     constructor(config:any=null){
 
@@ -20,7 +22,7 @@ export class IntentFilter
         // auto config
         if(config != null) {
           for (let i in config)
-            this[i] = config[i];
+            (this as IStringIndex<any>)[i] = config[i];
 
           this.configure(config);
         }
@@ -54,11 +56,11 @@ export class IntentFilter
       }
     }
 
-    generateUID(parent):void{
+    generateUID(parent:any):void{
        // this.__id = parent.getUID()+UID_SEPARATOR+parent.countIntentFilter();
     }
 
-    getUid():string{
+    getUid():Nullable<string>{
         return this.__id;
     }
 

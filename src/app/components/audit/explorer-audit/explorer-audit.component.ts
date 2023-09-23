@@ -38,46 +38,46 @@ export enum AUDIT_SUBVIEW {
 export class ExplorerAuditComponent extends SubExplorerComponent<AuditController> implements OnInit, AfterViewInit, ExpandableProvider {
 
 
-  @Input() controller:AuditController;
-  @Input() parent:any;
+  @Input() override controller!:AuditController;
+  @Input() override parent!:any;
 
-  @ViewChild("explAuditRef", {read: ElementRef, static:true}) explRef: ElementRef;
-  @ViewChild("explAuditCtnRef", {read: ElementRef, static:true}) explCtnRef: ElementRef;
+  @ViewChild("explAuditRef", {read: ElementRef, static:true}) explRef!: ElementRef;
+  @ViewChild("explAuditCtnRef", {read: ElementRef, static:true}) explCtnRef!: ElementRef;
 
-  @ViewChildren(ContextMenuComponent) ctxMenuChildren: QueryList<ContextMenuComponent>;
+  @ViewChildren(ContextMenuComponent) ctxMenuChildren!: QueryList<ContextMenuComponent>;
 
-  id = "explorerAudit";
-  app:any = null;
+  override id = "explorerAudit";
+  override app:any = null;
 
-  gIcons: any = GLOBAL_ICONS;
+  override gIcons: any = GLOBAL_ICONS;
 
-  offset = 6;
+  override offset = 6;
 
-  tab:ExplorerTab = new ExplorerTab({
+  override tab:ExplorerTab = new ExplorerTab({
     offset: 0,
     label: 'Audit',
-    icon: GLOBAL_ICONS.FILE,
+    icon: GLOBAL_ICONS['FILE'],
     color: 'dxc-text-clear100'
   });
 
 
-  view:ExplorerView = new ExplorerView({
+  override view:ExplorerView = new ExplorerView({
     nav: new NavbarSimpleView({
       selected: AUDIT_SUBVIEW.MODEL,
-      icon: GLOBAL_ICONS.PACKAGE,
+      icon: GLOBAL_ICONS['PACKAGE'],
       menu: new MenuView({
         items: [
           new MenuItem({
             id: AUDIT_SUBVIEW.MODEL,
             label:'Model',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.PACKAGE
+            icon: GLOBAL_ICONS['PACKAGE']
           }),
           new MenuItem({
             id: AUDIT_SUBVIEW.REPORT,
             label:'Report',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.FIND
+            icon: GLOBAL_ICONS['FIND']
           })
         ]
       })
@@ -87,7 +87,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:ContextMenuState|null = null;
 
   activeItem: any = null;
 
@@ -233,6 +233,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     }
     else if(pItem instanceof Control){
       console.log("audit > control");
+      // @ts-ignore
       data =  [].concat(pItem.children).concat(pItem.assessments);
     }
     else if(pItem instanceof ControlAssessment){
@@ -295,6 +296,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
       return pItem.controls;
     }
     else if(pItem instanceof Control){
+      // @ts-ignore
       return  [].concat(pItem.children).concat(pItem.assessments);
     }
     else if(pItem instanceof ControlAssessment){
@@ -342,14 +344,18 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
         subject: pObject
       };
       this.ctxMenu[pType].show(pEvent, pObject);
-    }catch(e){
+    }catch(e:any){
       console.error(e.message())
     }
 
   }
 
   hideCtxMenu():void{
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    if(this.ctxMenuState!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }else{
+      throw new Error('UIException : Contextual menu is not ready in explorer-audit');
+    }
   }
 
 

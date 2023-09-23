@@ -130,7 +130,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
 
     let c:any = null;
     if(changes.hasOwnProperty('data')){
-      this.data = changes.data.currentValue;
+      this.data = (changes as any).data.currentValue;
 
       console.log()
 

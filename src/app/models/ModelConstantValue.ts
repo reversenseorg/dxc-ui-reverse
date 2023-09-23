@@ -10,7 +10,7 @@ import {Savable, STUB_TYPE} from "./ModelSavable";
 export default class ModelConstantValue extends Savable{
 
     _value:any = null;
-    tags:any = null;
+    override tags:number[] = [];
 
     constructor(pValue:any=null, pTags:any=null){
         super(STUB_TYPE.VALUE_CONST);

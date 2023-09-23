@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {NgbModule, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ExplorerComponent } from './base/explorer/explorer.component';
 import { ViewportComponent } from './base/viewport/viewport.component';
@@ -18,11 +18,7 @@ import { fal, faPlus } from '@fortawesome/pro-light-svg-icons';
 import { fad } from '@fortawesome/pro-duotone-svg-icons';
 import { faPython, faJsSquare, faJava, faAndroid, faApple, faUsb } from '@fortawesome/free-brands-svg-icons';
 
-
-import { AceEditorModule } from 'ng2-ace-editor';
-
 import { TerminalComponent } from './base/terminal/terminal.component';
-// import { ProjectNewComponent } from './project-new/project-new.component';
 import { ExplorerFileComponent } from './components/file/explorer-file/explorer-file.component';
 import { ExplorerCodeComponent } from './components/code/explorer-code/explorer-code.component';
 import {ExplorerDirective} from "./base/explorer/explorer.directive";
@@ -60,12 +56,6 @@ import {NgTerminalModule} from "ng-terminal";
 import { XtermComponent } from './base/xterm/xterm.component';
 import { StatebarComponent } from './base/statebar/statebar.component';
 import {CoreModule} from "./core/core.module";
-//import {GridComponent, GridRowComponent, GridCellComponent, GridColComponent} from './base/grid/grid.component';
-// import {SharedModule} from "./shared/shared.module";
-// import {HomeModule} from "./home/home.module";
-// import {DetailModule} from "./detail/detail.module";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {DxcClientModule} from "./dxc-client/dxc-client.module";
 import {SplashComponent} from "./components/project/splash.component";
 import {StageComponent} from "./components/stage/stage.component";
@@ -128,6 +118,8 @@ import {ButtonRefreshComponent} from "./base/button/btn-refresh.component";
 import {DeviceListComponent} from "./components/device/device-list.component";
 import {ViewportAuditComponent} from "./components/audit/viewport-audit/viewport-audit.component";
 import {SearchResultListComponent} from "./components/search/search-result-list/search-result-list.component";
+import {CodeEditorModule} from "./components/code-editor/code-editor.module";
+import {MenuComponent} from "./base/menu/menu.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -152,6 +144,7 @@ import {SearchResultListComponent} from "./components/search/search-result-list/
     ExpandableListComponent,
     ExpandableItemComponent,
 
+    MenuComponent,
     ContextMenuComponent,
     ContextItemComponent,
     ViewportSplittedComponent,
@@ -284,7 +277,7 @@ import {SearchResultListComponent} from "./components/search/search-result-list/
     AppRoutingModule,
     FontAwesomeModule,
     NgbModule,
-    AceEditorModule,
+    CodeEditorModule,
     ReactiveFormsModule,
     NgTerminalModule,
     DxcBaseModule,

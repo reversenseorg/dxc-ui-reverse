@@ -13,7 +13,7 @@ export interface DashBoardOption {
 }
 export class DashBoard extends Node {
 
-    __:NodeInternalType = NodeInternalType.DASHBOARD;
+    override __:NodeInternalType = NodeInternalType.DASHBOARD;
 
     /**
      * Dashboard name

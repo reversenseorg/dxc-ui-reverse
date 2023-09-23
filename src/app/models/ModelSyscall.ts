@@ -2,6 +2,8 @@ import {NodeInternalType} from "./NodeInternalType";
 import {INode} from "./INode";
 import {OperatingSystem} from "./OperatingSystem";
 import {Architecture} from "./Architecture";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /**
@@ -21,9 +23,9 @@ export default class ModelSyscall implements INode
 
   name:string;
 
-  func_name:string = null;
+  func_name:Nullable<string> = null;
 
-  sys_name:string = null;
+  sys_name:Nullable<string> = null;
 
   args:any = [];
 
@@ -39,7 +41,7 @@ export default class ModelSyscall implements INode
   constructor(pConfig:any=null){
     if(pConfig!=null){
       for(const i in pConfig)
-        this[i]=pConfig[i];
+        (this as IStringIndex<any>)[i]=pConfig[i];
     }
   }
 

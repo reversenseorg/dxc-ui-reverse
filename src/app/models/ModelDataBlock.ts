@@ -1,5 +1,6 @@
 import ModelMethod from "./ModelMethod";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
 
 
 export default class ModelDataBlock
@@ -10,15 +11,15 @@ export default class ModelDataBlock
     stack = [];
     tag = null;
     tags:string[] = [];
-    name:string = null;
+    name:Nullable<string> = null;
     values:any = [];
     width:number = 0;
     length:number = 0;
-    uid:string = null;
+    uid:Nullable<string> = null;
     virtual64:boolean = false;
-    parent:ModelMethod = null;
+    parent:Nullable<ModelMethod> = null;
 
-    constructor(dataWidth:number=null){
+    constructor(dataWidth:number=1){
 
         this.width = dataWidth;
         this.virtual64 = false;
@@ -29,7 +30,7 @@ export default class ModelDataBlock
         }
     }
 
-    getUID():string{
+    getUID():Nullable<string>{
         return this.uid;
     }
 
@@ -118,7 +119,7 @@ export default class ModelDataBlock
                     o[i] = this[i];
                     break;
                 case "parent":
-                    o.parent = this.parent.signature();
+                    o.parent = (this.parent != null ? this.parent.signature() : null);
                     break;
                 case "values":
                     o.values = this.values;

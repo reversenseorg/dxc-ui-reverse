@@ -1,3 +1,4 @@
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export enum INFO_TYPE {
@@ -14,6 +15,6 @@ export class InfoMessage {
   constructor( pConfig:any={}) {
     for(let i in pConfig)
       if(this.hasOwnProperty(i))
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
   }
 }

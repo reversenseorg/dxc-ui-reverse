@@ -1,30 +1,32 @@
 import { NodeInternalType } from "../NodeInternalType";
 import HookStrategy from "./HookStrategy";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 export default class HookTemplateFragment {
 
     __:NodeInternalType = NodeInternalType.HOOK_FRAGMENT;
 
-     _uid:string = null;
+     _uid:Nullable<string> = null;
 
-     name:string = null;
+     name:Nullable<string> = null;
 
-     descr:string = null;
+     descr:Nullable<string> = null;
 
      _strategy: any = null;
 
-     _descr:string = null;
+     _descr:Nullable<string> = null;
 
-     _tpl: string = null;
+     _tpl: Nullable<string> = null;
 
      _w = -1;
 
-     _cache:string = null;
+     _cache:Nullable<string> = null;
 
      _preproc = true;
 
-     _keypoint:string = null;
+     _keypoint:Nullable<string> = null;
     /**
      * Group of hook
      *
@@ -35,7 +37,7 @@ export default class HookTemplateFragment {
         // this.requiresNode = [];
         if(pConfig!=null)
             for(let i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
 
 
     }
@@ -45,7 +47,7 @@ export default class HookTemplateFragment {
       this._uid = pUID;
     }
 
-    getUID():string {
+    getUID():Nullable<string> {
       return this._uid;
     }
 
@@ -53,7 +55,7 @@ export default class HookTemplateFragment {
         this._descr = pDescr;
     }
 
-    get description():string {
+    get description():Nullable<string> {
         return this._descr
     }
 
@@ -74,7 +76,7 @@ export default class HookTemplateFragment {
         this._tpl = pTpl;
     }
 
-    get template():string {
+    get template():Nullable<string> {
         return this._tpl
     }
 
@@ -103,12 +105,12 @@ export default class HookTemplateFragment {
         this._tpl = pTpl;
     }
 
-    getCodeTemplate():string {
+    getCodeTemplate():Nullable<string> {
         return this._tpl;
     }
 
 
-    getGeneratedCode():string {
+    getGeneratedCode():Nullable<string> {
       return this._cache;
     }
 

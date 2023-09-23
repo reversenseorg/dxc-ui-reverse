@@ -1,5 +1,6 @@
 import {NodeType} from "./NodeType";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
 
 
 export enum ModelVariableType {
@@ -25,7 +26,7 @@ export class ModelVariable {
   __t:ModelVariableType = ModelVariableType.VAR;
   n:string = "";
   type:string = "";
-  refs:ModelVariableReference = null;
+  refs:Nullable<ModelVariableReference> = null;
 
   getName():string{
     return this.n;
@@ -35,7 +36,7 @@ export class ModelVariable {
     return this.type;
   }
 
-  getRef():ModelVariableReference{
+  getRef():Nullable<ModelVariableReference>{
     return this.refs;
   }
 }

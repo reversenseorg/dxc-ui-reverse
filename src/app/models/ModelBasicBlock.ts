@@ -3,6 +3,8 @@ import ModelCatchStatement from "./ModelCatchStatement";
 import { ModelSwitchCase, ModelPackedSwitchStatement, ModelSparseSwitchStatement } from "./ModelSwitch";
 import ModelInstruction from "./ModelInstruction";
 import ModelMethod from "./ModelMethod";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 /**
  * Represents a basic block of dalvik instruction
@@ -17,26 +19,26 @@ export default class ModelBasicBlock
     stack:any = []; // TODO  add Instruction[] type
 
     offset:number = -1;
-    _parent:ModelMethod = null;
+    _parent:Nullable<ModelMethod> = null;
 
-    tag:string = null; // TODO add Tag ?
+    tag:Nullable<string> = null; // TODO add Tag ?
     tags:any = []; // TODO add tag
 
     // TODO reduce memory required by replacing it by bitmap+string array or associative array
     //  special block name
-    cond_name:string = null;
-    goto_name:string = null;
-    catch_name:string = null;
-    try_name:string = null;
-    try_end_name:string = null;
+    cond_name:Nullable<string> = null;
+    goto_name:Nullable<string> = null;
+    catch_name:Nullable<string> = null;
+    try_name:Nullable<string> = null;
+    try_end_name:Nullable<string> = null;
 
     //catch_cond = null;
     switch_case:any = null; // TODO
-    switch_statement:string = null; // TODO
+    switch_statement:Nullable<string> = null; // TODO
 
     // special child
-    linked_try_block:ModelBasicBlock = null;
-    linked_catch_block:ModelBasicBlock = null;
+    linked_try_block:Nullable<ModelBasicBlock> = null;
+    linked_catch_block:Nullable<ModelBasicBlock> = null;
     duplicate:any = null; // TODO remove ?
     switch:any = null; // TODO
     array_data:any = null; // TODO
@@ -66,7 +68,7 @@ export default class ModelBasicBlock
 
         if(pConfig!=null)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     /**
@@ -191,7 +193,7 @@ export default class ModelBasicBlock
     isConditionalBlock():boolean{
         return this.cond_name != null;
     }
-    getCondLabel():string{
+    getCondLabel():Nullable<string>{
         return this.cond_name;
     }
     setAsGotoBlock(name:string){
@@ -200,22 +202,22 @@ export default class ModelBasicBlock
     isGotoBlock():boolean{
         return this.goto_name != null;
     }
-    getGotoLabel():string{
+    getGotoLabel():Nullable<string>{
         return this.goto_name;
     }
     setAsTryBlock(name:string){
         this.try_name = name;
     }
-    getTryStartLabel():string{
+    getTryStartLabel():Nullable<string>{
         return this.try_name;
     }
-    getTryEndLabel():string{
+    getTryEndLabel():Nullable<string>{
         return this.try_end_name;
     }
     setTryEndName(name:string){
         this.try_end_name = name;
     }
-    getTryEndName():string{
+    getTryEndName():Nullable<string>{
         return this.try_end_name;
     }
     isTryBlock():boolean{
@@ -234,7 +236,7 @@ export default class ModelBasicBlock
     isCatchBlock():boolean{
         return this.catch_name != null;
     }
-    getCatchLabel():string{
+    getCatchLabel():Nullable<string>{
         return this.catch_name;
     }
 
@@ -265,7 +267,7 @@ export default class ModelBasicBlock
     getSwitchCaseName():string{
         return this.switch_case;
     }
-    getSwitchStatementName():string{
+    getSwitchStatementName():Nullable<string>{
         return this.switch_statement;
     }
 

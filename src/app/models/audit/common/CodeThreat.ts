@@ -3,6 +3,8 @@ import Threat, {ThreatOptions} from "./Threat";
 import CodeConstraint from "./CodeConstraint";
 import Constraint from "./Constraint";
 import {NodeInternalType} from "../../NodeInternalType";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {Nullable} from "../../../base/Nullable";
 
 
 export interface CodeConstraintMap {
@@ -16,17 +18,17 @@ export interface CodeThreatOptions extends ThreatOptions {
 
 export default class CodeThreat extends Threat {
 
-    signature:CodeConstraint[] = [];
+    override signature:CodeConstraint[] = [];
 
     private _cmap:CodeConstraintMap = {};
 
-    constructor( pConfig:CodeThreatOptions = null) {
+    constructor( pConfig:Nullable<CodeThreatOptions> = null) {
         super(pConfig);
 
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
-    appendSignature(pConstraint:CodeConstraint):void {
+    override appendSignature(pConstraint:CodeConstraint):void {
         super.appendSignature(pConstraint);
 
         // update mapping

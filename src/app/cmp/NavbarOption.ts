@@ -1,10 +1,11 @@
 import {IconView} from "./IconView";
+import {Nullable} from "../base/Nullable";
 
 
 export class NavbarOption {
-  id:string = null;
-  tip:string = null;
-  label:string = null;
-  icon: IconView = null;
+  id:Nullable<string> = null;
+  tip:Nullable<string> = null;
+  label:Nullable<string> = null;
+  icon: Nullable<IconView> = null;
   observer: any = null;
 }

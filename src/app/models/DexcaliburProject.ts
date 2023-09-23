@@ -5,6 +5,7 @@
 import {Inspector} from "./Inspector";
 import DexcaliburEngine from "./DexcaliburEngine";
 import {AppIcon} from "./AppIcon";
+import {Nullable} from "../base/Nullable";
 
 interface DigestSet {
   [type:string] :string
@@ -31,8 +32,8 @@ export default class DexcaliburProject
      * @type {String}
      * @field Package name of the target
      */
-    pkg:string = null;
-    package:string = null;
+    pkg:Nullable<string> = null;
+    package:Nullable<string> = null;
 
     /**
      * @field Instance of project's configuration
@@ -47,7 +48,7 @@ export default class DexcaliburProject
     /**
      * @field the default android API version to use.
      */
-    apiVersion:string = null;
+    apiVersion:Nullable<string> = null;
 
     // set the Search API which allow the user to perform search
     /**
@@ -103,7 +104,7 @@ export default class DexcaliburProject
      * @type {Inspector[]}
      * @field All inspectors
      */
-    inspectors:Inspector[] = null;
+    inspectors:Inspector[] = [];
 
     // FridaBuilder make Frida script chunk from cls
     fridaBuilder:any = null;
@@ -154,7 +155,7 @@ export default class DexcaliburProject
      * @type {AppIcon}
      * @field
      */
-    icon:AppIcon = null;
+    icon:Nullable<AppIcon> = null;
 
     /**
      * A set of package checksum
@@ -269,12 +270,20 @@ export default class DexcaliburProject
     /**
      * To get the inspector with specified name
      *
-     * @param {String} Inspector name
-     * @returns {Inspector} Inspector instance
+     * @param {string} pName name
+     * @returns {Nullable<Inspector>} Inspector instance
      * @method
      */
-    getInspector( pName):Inspector{
-        return this.inspectors[pName];
+    getInspector( pName:string):Nullable<Inspector>{
+        const res = this.inspectors.filter((vInspector:Inspector)=>{
+            return (vInspector.name===pName);
+        });
+
+        if(res.length > 0){
+            return res[0];
+        }else{
+            return null;
+        }
     }
 
     /**
@@ -346,7 +355,8 @@ export default class DexcaliburProject
      * @param {*} pProjectUID
      * @param {*} pConfigPath
      */
-    static load( pEngine:DexcaliburEngine, pProjectUID:string, pConfigPath:string = null):DexcaliburProject{
+    static load( pEngine:DexcaliburEngine, pProjectUID:string, pConfigPath:Nullable<string> = null):Nullable<DexcaliburProject>
+    {
         // remote binding
       return null;
     }
@@ -354,9 +364,8 @@ export default class DexcaliburProject
     /**
      * To save project metadata into 'project.json'
      *
-     * @param {*} pExportPath
      */
-    save( pExportPath:string = null):void{
+    save():void{
         // remote binding
     }
 
@@ -417,7 +426,6 @@ export default class DexcaliburProject
      */
     scan( pPath:string):void{
         // app scan
-      return null;
     }
 
     /**
@@ -429,7 +437,7 @@ export default class DexcaliburProject
      * @returns {Project} Returns the instance of this project
      * @method
      */
-    fullscan( pPath:string=null):DexcaliburProject{
+    fullscan( pPath:Nullable<string>=null):Nullable<DexcaliburProject>{
         // bind fullscan
       return null;
     };
@@ -451,7 +459,7 @@ export default class DexcaliburProject
      * @returns {String} Applciation package name
      * @function
      */
-    getPackageName():string{
+    getPackageName():Nullable<string>{
         return this.pkg;
     }
 

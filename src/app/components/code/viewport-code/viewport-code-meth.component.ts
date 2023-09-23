@@ -150,7 +150,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
     }*/
 
     if(changes.hasOwnProperty('data')){
-      this.controller.service.getClass(changes.data.currentValue.enclosingClass).subscribe( (vClass:any) => {
+      this.controller.service.getClass((changes as any).data.currentValue.enclosingClass).subscribe( (vClass:any) => {
         this.data.enclosingClass = vClass.data;
         // mark arguments as class
 

@@ -5,6 +5,8 @@ import AndroidReceiver from "./AndroidReceiver";
 import {AndroidAttributeSet} from "./AndroidAttribute";
 import {AndroidManifest} from "./AndroidManifest";
 import DexcaliburProject from "../DexcaliburProject";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 
@@ -66,18 +68,18 @@ export default class AndroidApplication
 
     usesLibraries = [];
     metaData = [];
-    manifest:AndroidManifest = null;
+    manifest: Nullable<AndroidManifest> = null;
 
     dataDir:string = "";
 
-    __context:DexcaliburProject = null;
+    __context:Nullable<DexcaliburProject> = null;
 
     constructor(pContext:DexcaliburProject, config:any=null){
 
         if(config!=null)
             for(let i in config)
-                if(this[i] !== undefined)
-                    this[i] = config[i];
+                if((this as IStringIndex<any>)[i] !== undefined)
+                    (this as IStringIndex<any>)[i] = config[i];
     }
 
     setManifest(pManifest:AndroidManifest):void{
@@ -85,7 +87,7 @@ export default class AndroidApplication
     }
 
 
-    getMinApiVersion():string{
+    getMinApiVersion():Nullable<string>{
         if(this.manifest != null){
             return this.manifest.getMinSdkVersion();
         }else{
@@ -94,7 +96,7 @@ export default class AndroidApplication
     }
 
 
-    getTargetApiVersion():string{
+    getTargetApiVersion():Nullable<string>{
         if(this.manifest != null){
             return this.manifest.getTargetSdkVersion();
         }else{

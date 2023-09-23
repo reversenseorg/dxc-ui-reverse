@@ -62,7 +62,7 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
   ngOnChanges(changes: SimpleChanges) {
 
     if(changes.hasOwnProperty('data')){
-      if(!changes.data.currentValue.__ppts.hasOwnProperty('internals')){
+      if(!(changes as any).data.currentValue.__ppts.hasOwnProperty('internals')){
         this.showAndroidAPI('xr');
       }
     }

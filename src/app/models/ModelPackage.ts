@@ -2,6 +2,7 @@
 import ModelMetadata from "./ModelMetadata";
 import ModelClass from './ModelClass';
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
 
 /**
  * The class represents a Java|* Package
@@ -29,7 +30,7 @@ export default class ModelPackage
      * @type {String}
      * @field
      */
-    meta:ModelMetadata = null;
+    meta:Nullable<ModelMetadata> = null;
 
     /**
      * Package children
@@ -58,7 +59,7 @@ export default class ModelPackage
      */
     constructor(pName:string){
         this.name = pName;
-        this.sname = pName.split('.').pop();
+        this.sname = pName.split('.').pop() as string;
         this.children = [];
         this.tags = [];
     }
@@ -165,7 +166,7 @@ export default class ModelPackage
      * @function
      */
     toJsonObject( pFields:any):any{
-        let o:any= {}, k:number, m:any, field:string=null;
+        let o:any= {}, k:number, m:any;
         o.children = [];
         o.type = 'p'; // TODO : Stub
 

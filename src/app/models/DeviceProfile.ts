@@ -1,6 +1,8 @@
 import {ABI, AbiManager, InstructionSet} from "./binary/ABI";
 import {Architecture} from "./Architecture";
 import {OperatingSystem} from "./OperatingSystem";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 enum TYPE {
@@ -20,7 +22,7 @@ export interface Profile {
   prop:any;
 
   is(pData:any):boolean;
-  setProperty(pName:string, pValue:any);
+  setProperty(pName:string, pValue:any):any;
   toJsonObject():any;
 }
 
@@ -39,9 +41,9 @@ export class SystemProfile implements  Profile
    */
   emulated = false;
 
-  arch:Architecture = null;
+  arch:Nullable<Architecture> = null;
 
-  os:OperatingSystem = null;
+  os:Nullable<OperatingSystem> = null;
 
   constructor(){
     this.prop = {};
@@ -83,8 +85,8 @@ export class SystemProfile implements  Profile
       }product
   }*/
 
-  getISAs():InstructionSet[] {
-    const devabi:ABI = this.getABI();
+  getISAs():Nullable<InstructionSet[]>{
+    const devabi:Nullable<ABI> = this.getABI();
     if(devabi!=null){
       return devabi.instrSet;
     }else{
@@ -92,7 +94,7 @@ export class SystemProfile implements  Profile
     }
   }
 
-  getOperatingSystem(pUpdate=false):OperatingSystem {
+  getOperatingSystem(pUpdate=false):Nullable<OperatingSystem> {
     if(this.os != null && !pUpdate) return this.os;
 
     const uname:string = this.prop['uname'];
@@ -122,7 +124,7 @@ export class SystemProfile implements  Profile
    *
    * @method
    */
-  getABI():ABI {
+  getABI():Nullable<ABI> {
     const abis = AbiManager.from(this.prop['ro.product.cpu.abi']);
 
     if(abis.length>0){
@@ -146,7 +148,7 @@ export class SystemProfile implements  Profile
    * @method
    */
   getABIlist(pAddrSize=-1):ABI[]{
-    let list:string = null;
+    let list:Nullable<string> = null;
     if(pAddrSize===32){
       list = this.prop['ro.product.cpu.abi'];
     }else if(pAddrSize===64){
@@ -158,7 +160,7 @@ export class SystemProfile implements  Profile
     if(list != null){
       return AbiManager.from(list.split(','));
     }else{
-      return null;
+      return [];
     }
   }
 
@@ -175,7 +177,7 @@ export class SystemProfile implements  Profile
    * To get device architecture
    * @method
    */
-  getArchitecture(pUpdate=false):Architecture{
+  getArchitecture(pUpdate=false):Nullable<Architecture>{
 
     if(this.arch != null && !pUpdate) return this.arch;
 
@@ -199,7 +201,7 @@ export class SystemProfile implements  Profile
   static fromJsonObject( pJson:any):SystemProfile{
     const o:SystemProfile = new SystemProfile();
     for(const i in pJson)
-      o[i] = pJson[i];
+      (o as IStringIndex<any>)[i] = pJson[i];
     return o;
   }
 
@@ -256,10 +258,10 @@ export class BuildProfile implements Profile
    * @param {*} pJson
    * @static
    */
-  static fromJsonObject( pJson):BuildProfile{
+  static fromJsonObject( pJson:any):BuildProfile{
     const o:BuildProfile = new BuildProfile();
     for(const i in pJson)
-      o[i] = pJson[i];
+      (o as IStringIndex<any>)[i] = pJson[i];
     return o;
   }
 
@@ -318,10 +320,10 @@ export class NetworkProfile implements Profile
    * @param {*} pJson
    * @static
    */
-  static fromJsonObject( pJson):NetworkProfile{
+  static fromJsonObject( pJson:any):NetworkProfile{
     const o:NetworkProfile = new NetworkProfile();
     for(const i in pJson)
-      o[i] = pJson[i];
+      (o as IStringIndex<any>)[i] = pJson[i];
     return o;
   }
 
@@ -384,10 +386,10 @@ export class PermissionProfile implements Profile
    * @param {*} pJson
    * @static
    */
-  static fromJsonObject( pJson):NetworkProfile{
+  static fromJsonObject( pJson:any):NetworkProfile{
     const o:NetworkProfile = new NetworkProfile();
     for(const i in pJson)
-      o[i] = pJson[i];
+      (o as IStringIndex<any>)[i] = pJson[i];
     return o;
   }
 
@@ -481,10 +483,10 @@ export class TrustProfile implements Profile
    * @param {*} pJson
    * @static
    */
-  static fromJsonObject( pJson):TrustProfile{
+  static fromJsonObject( pJson:any):TrustProfile{
     const o:TrustProfile = new TrustProfile();
     for(const i in pJson)
-      o[i] = pJson[i];
+      (o as IStringIndex<any>)[i] = pJson[i];
     return o;
   }
 
@@ -550,7 +552,7 @@ export default class DeviceProfile
     }
 
     for(const i in pOptions){
-      this[i] = pOptions[i];
+      (this as IStringIndex<any>)[i] = pOptions[i];
     }
   }
 
@@ -654,7 +656,7 @@ export default class DeviceProfile
    * @method
    * @static
    */
-  static fromJsonObject( pJson):DeviceProfile{
+  static fromJsonObject( pJson:any):DeviceProfile{
     const o:DeviceProfile = new DeviceProfile();
 
     for(const i in pJson){
@@ -683,7 +685,7 @@ export default class DeviceProfile
           }
         }
       }else
-        o[i] = pJson[i];
+        (o as IStringIndex<any>)[i] = pJson[i];
     }
     return o;
   }

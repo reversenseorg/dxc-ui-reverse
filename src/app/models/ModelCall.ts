@@ -4,6 +4,8 @@ import ModelInstruction from "./ModelInstruction";
 import ModelMethod from "./ModelMethod";
 import ModelClass from "./ModelClass";
 import {NodeInternalType} from "./NodeInternalType";
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 const EOL = '\n';
 /**
@@ -14,11 +16,11 @@ const EOL = '\n';
 export default class ModelCall
 {
 
-    instr:ModelInstruction = null;
-    caller:ModelMethod = null;
-    calleed:ModelMethod = null;
+    instr:Nullable<ModelInstruction> = null;
+    caller:Nullable<ModelMethod> = null;
+    calleed:Nullable<ModelMethod> = null;
 
-    line:number = null;
+    line:number = -1;
     type:any = null;
     object:any = null;
     subject:any = null;
@@ -30,13 +32,26 @@ export default class ModelCall
 
         if(pConfig !== undefined)
             for(let i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
     print(){
-        console.log("\t"+this.caller.hashCode()+" [:line"+this.instr.getLine()+"] > \n\t\t"
-            +this.instr.opcode.instr+" "
-            +this.calleed.hashCode());
+        let s = "\t";
+        if(this.caller!=null){
+            s += this.caller.hashCode();
+        }
+        if(this.instr!=null){
+            s += " [:line "+this.instr.getLine()+"] > \n\t\t"+this.instr.opcode.instr+" ";
+        }else{
+            s += " [:line ?] > \n\t\t"
+        }
+        if(this.calleed!=null){
+            s += " "+this.calleed.hashCode();
+        }else{
+            s+= " ???";
+        }
+
+        console.log(s);
     }
 
     help(){
@@ -67,16 +82,16 @@ export default class ModelCall
                 obj.tags = this.tags;
             }
             else if(i == "caller"){
-                obj.caller = this.caller.__signature__;
+                obj.caller = (this.caller!= null ? this.caller.__signature__ : null);
             }
             else if(i == "calleed"){
                 if(this.calleed instanceof ModelClass)
                     obj.callee = this.calleed.name;
                 else
-                    obj.callee = this.calleed.__signature__;
+                    obj.callee = ( this.calleed != null ? this.calleed.__signature__ : null);
             }
             else if(i == "instr"){
-                obj.instr = this.instr.exportType(); //toJsonObject(["name"]);
+                obj.instr = (this.instr != null ? this.instr.exportType() : null); //toJsonObject(["name"]);
             }
         }
         return obj;

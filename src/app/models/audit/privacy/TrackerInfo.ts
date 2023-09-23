@@ -2,6 +2,7 @@ import { NodeInternalType } from "../../NodeInternalType";
 import {CodeSignature} from "./CodeSignature";
 import {NetworkSignature} from "./NetworkSignature";
 import { TrackerCategory } from "./TrackerCategory";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 export class TrackerInfo {
@@ -19,7 +20,7 @@ export class TrackerInfo {
 
     constructor( pConfig:any) {
         for(const i in pConfig){
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         }
     }
 

@@ -5,8 +5,9 @@ import { ConstraintMatch } from "./ConstraintMatch";
 import CodeConstraint from "./CodeConstraint";
 import DexcaliburProject from "../../DexcaliburProject";
 import AssuranceModel from "./AssuranceModel";
+import {IStringIndex} from "../../../base/IStringIndex";
 
-export interface AssuranceReportOptions {
+export interface AssuranceReportOptions extends IStringIndex<any>{
     time?:number;
 
     application?:any;
@@ -39,7 +40,7 @@ export default class AssuranceReport {
 
 
     constructor( pConfig:AssuranceReportOptions = {}) {
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
     getThreats():ConstraintMatch<Threat>[] {
         return this.globalThreats;

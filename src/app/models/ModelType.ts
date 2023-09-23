@@ -1,6 +1,8 @@
 import { CONST } from "./CoreConst";
 import {Savable, Stub, STUB_TYPE} from "./ModelSavable";
 import {NodeInternalType} from "./NodeInternalType";
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 
 /**
@@ -9,10 +11,10 @@ import {NodeInternalType} from "./NodeInternalType";
  */
 export class ModelBasicType extends Savable
 {
-    name:string = null;
+    name:Nullable<string> = null;
     arr:boolean = false;
-    _name:string = null;
-    _hashcode:string = null;
+    _name:string = "";
+    _hashcode:string = ""
 
 
     /**
@@ -21,19 +23,19 @@ export class ModelBasicType extends Savable
      * @param {boolean} isArray - Array flag should be TRUE if the type is an array, else FALSE
      * @constructor
      */
-    constructor(raw_type:string=null, isArray:boolean=false){
+    constructor(raw_type:string|null=null, isArray:boolean=false){
         super(STUB_TYPE.BASIC_TYPE);
 
 //        this.$ = STUB_TYPE.BASIC_TYPE;
         if(raw_type!==null){
-            this.name = CONST.TYPES[raw_type];
-            this._name = (CONST.WORDS[raw_type]!=undefined)? CONST.WORDS[raw_type] : "???";
+            this.name = (CONST.TYPES as IStringIndex<any>)[raw_type];
+            this._name = ((CONST.WORDS as IStringIndex<any>)[raw_type]!=undefined)? (CONST.WORDS as IStringIndex<any>)[raw_type] : "???";
             this._hashcode = raw_type;
         }
         this.arr = isArray;
     }
 
-    import(pConfig: any): ModelBasicType {
+    override  import(pConfig: any): ModelBasicType {
         return super.import(pConfig);
     }
 
@@ -58,7 +60,12 @@ export class ModelBasicType extends Savable
      * @returns {boolean} - Returns TRUE if the type is integer or long or short, else FALSE
      */
     isNumeric():boolean{
-        return [CONST.WORDS.S, CONST.WORDS.I, CONST.WORDS.J].indexOf(this.name)>-1;
+        if(this.name != null){
+            return [CONST.WORDS.S, CONST.WORDS.I, CONST.WORDS.J].indexOf(this.name)>-1;
+        }else{
+            throw new Error('ModelType : cannot state if the value is a numeric or not');
+        }
+
         //return [CONST.TYPES.S, CONST.TYPES.I, CONST.TYPES.J].indexOf(this.name)>-1;
         // return [CONST.TYPES.S, CONST.TYPES.I, CONST.TYPES.J].indexOf(this._hashcode)>-1;
     }
@@ -102,12 +109,12 @@ export class ModelBasicType extends Savable
 
 export class ModelObjectType extends Savable
 {
-    name:string = null;
+    name:Nullable<string> = null;
     arr:boolean = false;
-    _name:string = null;
-    _hashcode:string = null;
+    _name:Nullable<string> = null;
+    _hashcode:Nullable<string> = null;
 
-    constructor(pFQCN:string=null, isArray:boolean=false) {
+    constructor(pFQCN:Nullable<string>=null, isArray:boolean=false) {
         super(STUB_TYPE.OBJ_TYPE);
 
         if(pFQCN!==null){
@@ -119,15 +126,15 @@ export class ModelObjectType extends Savable
         this.tags = [];
     }
 
-    import(pConfig: any): ModelObjectType {
+    override import(pConfig: any): ModelObjectType {
         return super.import(pConfig);
     }
 
-    export():Stub{
+    override export():Stub{
         return super.export();
     }
 
-    hashcode():string{
+    hashcode():Nullable<string>{
         return this._hashcode
     }
 
@@ -143,7 +150,7 @@ export class ModelObjectType extends Savable
     isString():boolean{
         return this.name == "java.lang.String";
     }
-Ò
+
     /**
      * To make the signature of the current type instance
      * It has one of these forms :

@@ -1,5 +1,7 @@
 import {NodeType} from "../NodeType";
 import {NodeInternalType} from "../NodeInternalType";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 export default class HookStrategySelector {
@@ -12,7 +14,7 @@ export default class HookStrategySelector {
 
     uid?:any = null;
 
-    req?:string = null;
+    req?:Nullable<string> = null;
 
 
     /**
@@ -25,7 +27,7 @@ export default class HookStrategySelector {
         // this.requiresNode = [];
         if(pConfig!=null)
             for(let i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
 
     }
 
@@ -57,7 +59,7 @@ export default class HookStrategySelector {
         this.req = pReq;
     }
 
-    getRequest():string{
+    getRequest():Nullable<string>{
         return this.req;
     }
 

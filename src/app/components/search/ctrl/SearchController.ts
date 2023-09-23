@@ -45,7 +45,7 @@ export class SearchController implements IController {
     if(pConfig==null) return;
 
     for(let i in pConfig){
-      if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

@@ -40,7 +40,7 @@ export class PrivacyReport {
 
     constructor(pOptions:PrivacyReportOptions) {
         for(const i in pOptions){
-            this[i] = pOptions[i];
+            (this as IStringIndex<any>)[i] = pOptions[i];
         }
 
         if(this.time === -1){

@@ -5,6 +5,8 @@
 import {INode} from "./INode";
 import {NodeInternalType} from "./NodeInternalType";
 import {Tag} from "./tags/Tag";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 export enum STUB_TYPE {
     METHOD= 0x1,
@@ -29,7 +31,7 @@ export enum STUB_TYPE {
 
 export class Stub
 {
-    __type__:number = null;
+    __type__:number = -1;
 
     constructor(type:number, data:any, exclude:any=null){
         this.__type__ = type;
@@ -37,7 +39,7 @@ export class Stub
 
         for(const i in data){
             if(exclude.indexOf(i)==-1)
-                this[i]=data[i]
+                (this as IStringIndex<any>)[i]=data[i]
         }
 
     }
@@ -47,9 +49,9 @@ export class Stub
 /**
  *
  */
-export class Savable implements INode
+export class Savable implements INode, IStringIndex<any>
 {
-  _uid:any;
+  _uid:Nullable<any>;
   __:NodeInternalType;
   $:STUB_TYPE;
   tags:number[] = []
@@ -58,16 +60,16 @@ export class Savable implements INode
     this.$ = pType;
   }
 
-  export( pStubType:STUB_TYPE=null, pExclude:string[]=null):Stub{
+  export( pStubType:Nullable<STUB_TYPE>=null, pExclude:string[]= []):Stub{
     return new Stub(
-      (pStubType!==null ? pStubType : this.$),
+      (pStubType!=null ? pStubType : this.$),
       this,
       pExclude
     )
   }
 
   import( pConfig:any):any{
-    for(const i in pConfig) this[i] = pConfig[i];
+    for(const i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
 
     return this;
   }
@@ -93,7 +95,7 @@ export class Savable implements INode
     return this.tags;
   }
 
-  getUID(): string {
+  getUID(): Nullable<any> {
     return this._uid;
   }
 }

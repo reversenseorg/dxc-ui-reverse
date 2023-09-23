@@ -1,6 +1,7 @@
 import {ModelFunction} from "./ModelFunction";
 import {AbstractHook} from "./AbstractHook";
 import {NodeInternalType} from "./NodeInternalType";
+import {IStringIndex} from "../base/IStringIndex";
 
 export enum HookTargetType {
     STATIC_OFFSET,
@@ -15,9 +16,9 @@ export enum HookTargetType {
 export default class NativeFunctionHook extends AbstractHook {
 
 
-    __:NodeInternalType = NodeInternalType.HOOK_NATIVE;
+    override __:NodeInternalType = NodeInternalType.HOOK_NATIVE;
 
-     _t:NodeInternalType = NodeInternalType.FUNC;
+     override _t:NodeInternalType = NodeInternalType.FUNC;
 
     /**
      * Targeted method
@@ -38,7 +39,7 @@ export default class NativeFunctionHook extends AbstractHook {
 
         if(pData != null)
             for(const i in pData){
-                this[i] = pData[i];
+                (this as IStringIndex<any>)[i] = pData[i];
             }
     }
 

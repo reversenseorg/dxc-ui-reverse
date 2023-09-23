@@ -2,29 +2,33 @@ import {NavbarSimpleView} from "./NavbarSimpleView";
 import {TerminalTab} from "./TerminalTab";
 import {NavbarTabView} from "./NavbarTabView";
 import {IconView} from "./IconView";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export class TerminalView {
 
-  id:string = null;
+  id: Nullable<string> = null;
   label:string = "label";
-  icon: IconView = null
+  icon: Nullable<IconView> = null
   labelColor:string = "#ccc";
   ctn:string = "";
 
-  tab: TerminalTab = null;
-  nav:NavbarSimpleView = null;
-  navtab:NavbarTabView = null;
-  subnav:NavbarSimpleView = null;
+  tab: Nullable<TerminalTab>  = null;
+  nav: Nullable<NavbarSimpleView> = null;
+  navtab: Nullable<NavbarTabView> = null;
+  subnav: Nullable<NavbarSimpleView> = null;
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 
 
   getNavID():string {
+
+
     if(this.nav != null){
       return this.nav.getID(this.id);
     }else{
@@ -44,7 +48,7 @@ export class TerminalView {
     return this.id+'Ctn';
   }
 
-  getNavElement():HTMLElement {
+  getNavElement():Nullable<HTMLElement> {
     return document.getElementById(this.getNavID());
   }
 }

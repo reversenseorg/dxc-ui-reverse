@@ -1,12 +1,14 @@
 import {NodeInternalType} from "../NodeInternalType";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 export class AndroidPermission
 {
   __:NodeInternalType = NodeInternalType.ANDROID_PERM;
-    description:string = null;
-    label:string = null;
-    name:string = null;
-    permissionGroup:AndroidPermissionGroup = null;
+    description:Nullable<string> = null;
+    label:Nullable<string> = null;
+    name:Nullable<string> = null;
+    permissionGroup:Nullable<AndroidPermissionGroup> = null;
     protectionLevel:any = null;
     apiVersion:number = 1;
     controls:any = null;
@@ -20,12 +22,12 @@ export class AndroidPermission
 
         if(config != null){
             for(let i in config){
-                this[i] = config[i];
+                (this as IStringIndex<any>)[i] = config[i];
             }
         }
     }
 
-    getName():string{
+    getName():Nullable<string>{
         return this.name;
     }
 
@@ -49,8 +51,8 @@ export class AndroidPermission
 
     update(otherPerm:AndroidPermission, override:boolean=false){
         for(let i in otherPerm){
-            if(override || (this[i]===null)){
-                this[i] = otherPerm[i];
+            if(override || (this as IStringIndex<any>)[i]===null){
+                (this as IStringIndex<any>)[i] = (otherPerm as IStringIndex<any>)[i];
             }
         }
     }
@@ -71,9 +73,9 @@ export class AndroidPermission
         p.__raw = xmlobj;
         for(let i in xmlobj){
             if(i.startsWith('android:')){
-                p[i.substr(8)] = xmlobj[i];
+                (p as IStringIndex<any>)[i.substr(8)] = xmlobj[i];
             }else{
-                p[i] = xmlobj[i];
+                (p as IStringIndex<any>)[i] = xmlobj[i];
             }
         }
 
@@ -115,19 +117,19 @@ export class AndroidPermission
 
 export class AndroidPermissionGroup
 {
-    description:string = null;
-    label:string = null;
-    name:string = null;
+    description:Nullable<string> = null;
+    label:Nullable<string> = null;
+    name:Nullable<string> = null;
 
     children:AndroidPermission[] = [];
 
-    constructor(config=null){
+    constructor(config:any=null){
 
         // auto config
         if(config != null){
             for(let i in config)
-                if(this[i] !==  undefined)
-                    this[i] = config[i];
+                if((this as IStringIndex<any>)[i] !== undefined)
+                    (this as IStringIndex<any>)[i] = config[i];
         }
 
         for(let i=0; i<this.children.length; i++){
@@ -152,9 +154,9 @@ export class AndroidPermissionGroup
         let p = new AndroidPermissionGroup();
         for(let i in xmlobj){
             if(i.startsWith('android:'))
-                p[i.substr(8)] = xmlobj[i];
+                (p as IStringIndex<any>)[i.substr(8)] = xmlobj[i];
             else
-                p[i] = xmlobj[i];
+                (p as IStringIndex<any>)[i] = xmlobj[i];
         }
         return p;
     }
@@ -163,17 +165,17 @@ export class AndroidPermissionGroup
 
 export class AndroidPermissionTree
 {
-    icon:string = null;
-    label:string = null;
-    name:string = null;
+    icon:Nullable<string> = null;
+    label:Nullable<string> = null;
+    name:Nullable<string> = null;
 
     constructor(config:any=null){
 
         // auto config
         if(config != null){
             for(let i in config)
-                if(this[i] !==  undefined)
-                    this[i] = config[i];
+                if((this as IStringIndex<any>)[i] !== undefined)
+                    (this as IStringIndex<any>)[i] = config[i];
         }
     }
 
@@ -192,9 +194,9 @@ export class AndroidPermissionTree
         let p = new AndroidPermissionTree();
         for(let i in xmlobj){
             if(i.startsWith('android:'))
-                p[i.substr(8)] = xmlobj[i];
+                (p as IStringIndex<any>)[i.substr(8)] = xmlobj[i];
             else
-                p[i] = xmlobj[i];
+                (p as IStringIndex<any>)[i] = xmlobj[i];
         }
         return p;
     }
@@ -210,13 +212,13 @@ export class AndroidProtectionLevel
     static PRIVILEGED:AndroidProtectionLevel = new AndroidProtectionLevel({ name:"privileged" });
     static DEVELOPMENT:AndroidProtectionLevel = new AndroidProtectionLevel({ name:"development" });
 
-    name:string = null;
+    name:Nullable<string> = null;
 
     constructor(config:any=null){
 
         if(config != null){
             for(let i in config){
-                this[i] = config[i];
+                (this as IStringIndex<any>)[i] = config[i];
             }
         }
     }
@@ -230,8 +232,8 @@ export class AndroidPermissionSdk23
         maxSdkVersion:"integer"
     }
 
-    name:string = null;
-    maxSdkversion:string = null;
+    name:Nullable<string> = null;
+    maxSdkversion:Nullable<string> = null;
 
     constructor(){
 
@@ -248,14 +250,14 @@ export class AndroidPermissionSdk23
         return o;
     }
 
-    static fromXml(xmlobj){
+    static fromXml(xmlobj:IStringIndex<any>){
         let o = new AndroidPermissionSdk23();
 
         for(let i in xmlobj){
             if(i.startsWith('android:')){
-                o[i.substr(8)] = xmlobj[i];
+                (o as IStringIndex<any>)[i.substr(8)] = xmlobj[i];
             }else{
-                o[i] = xmlobj[i];
+                (o as IStringIndex<any>)[i] = xmlobj[i];
             }
         }
 

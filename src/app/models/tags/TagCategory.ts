@@ -1,6 +1,8 @@
 import {NodeInternalType} from "../NodeInternalType";
 import {Tag} from "./Tag";
 import {INode} from "../INode";
+import {IStringIndex} from "../../base/IStringIndex";
+import {Nullable} from "../../base/Nullable";
 
 /**
  * Tag categories are conceptuals, and are only used to help to manage tags
@@ -13,12 +15,12 @@ export default class TagCategory implements INode
 {
     __:NodeInternalType = NodeInternalType.TAG_CATEGORY;
 
-    _uid:string = null;
+    _uid:Nullable<string> = null;
     /**
      * Category name
      */
-    name:string = null;
-    descr:string = null;
+    name:Nullable<string> = null;
+    descr:Nullable<string> = null;
     tags:number[] = [];
 
     _tags:Tag[] = [];
@@ -30,7 +32,7 @@ export default class TagCategory implements INode
      */
     constructor(pConfig:any) {
         for(const i in pConfig){
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         }
     }
 
@@ -77,6 +79,6 @@ export default class TagCategory implements INode
      *
      */
     getUID(): string {
-        return this._uid;
+        return this._uid as string;
     }
 }

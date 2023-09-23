@@ -3,20 +3,22 @@
 import {AbstractHook} from "./AbstractHook";
 import {NodeInternalType} from "./NodeInternalType";
 import ModelMethod from "./ModelMethod";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export default class JavaMethodHook extends AbstractHook {
 
-    __:NodeInternalType = NodeInternalType.HOOK_JAVA;
+    override __:NodeInternalType = NodeInternalType.HOOK_JAVA;
 
-    _t:NodeInternalType = NodeInternalType.METHOD;
+    override  _t:NodeInternalType = NodeInternalType.METHOD;
 
     /**
      * Targeted method
      * @field
      * @
      */
-    public _target:ModelMethod = null;
+    public _target:Nullable<ModelMethod> = null;
 
     public method:ModelMethod;
 
@@ -27,7 +29,7 @@ export default class JavaMethodHook extends AbstractHook {
 
         if(pData !== null)
             for(const i in pData){
-                this[i] = pData[i];
+                (this as IStringIndex<any>)[i] = pData[i];
             }
     }
 
@@ -40,7 +42,7 @@ export default class JavaMethodHook extends AbstractHook {
      * @since 1.0.0
      */
     isTarget(pNode: ModelMethod): boolean {
-        return ( this._target.getUID() === pNode.getUID());
+        return (this._target!=null) && ( this._target.getUID() === pNode.getUID());
     }
 
     /**
@@ -48,7 +50,7 @@ export default class JavaMethodHook extends AbstractHook {
      * @method
      * @since 1.0.0
      */
-    getTarget():ModelMethod {
+    getTarget():Nullable<ModelMethod> {
         return this._target;
     }
 

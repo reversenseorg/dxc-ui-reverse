@@ -1,5 +1,6 @@
 import { CONST } from "./CoreConst";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
 
 interface PackedCaseList {
     [p: number]: ModelSwitchCase
@@ -16,7 +17,7 @@ interface AssociativeCaseList {
 export class ModelSwitchCase
 {
   __:NodeInternalType = NodeInternalType.SWITCH_CASE;
-    value:number|string = null;
+    value:Nullable<number|string> = null;
     target:any = null;
     type:any = null;
 
@@ -32,9 +33,9 @@ export class ModelSwitchCase
  */
 export class ModelPackedSwitchStatement
 {
-    start:number = null;
-    cases:PackedCaseList = null;
-    offset:number = null;
+    start:Nullable<number> = null;
+    cases:PackedCaseList = {};
+    offset:Nullable<number> = null;
     length:number = 0;
 
     constructor(start:number){
@@ -45,12 +46,18 @@ export class ModelPackedSwitchStatement
     }
 
     appendCase(tag:any){
+        if(this.cases==null || this.offset==null){
+            throw new Error("ModelPackedSwitchStatement :  cases/offset are null");
+        }
         this.cases[this.offset+1] = new ModelSwitchCase(this.offset+1, tag, CONST.CASE_TYPE.PACKED);
         this.offset++;
         this.length++;
     }
 
     getStartValue():string{
+        if(this.start==null){
+            throw new Error("ModelPackedSwitchStatement :  start is null");
+        }
         return this.start.toString();
     }
 
@@ -67,7 +74,7 @@ export class ModelPackedSwitchStatement
  */
 export class ModelSparseSwitchStatement
 {
-    cases:AssociativeCaseList = null;
+    cases:AssociativeCaseList = {};
     length:number = 0;
 
     constructor(){

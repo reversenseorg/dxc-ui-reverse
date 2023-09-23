@@ -6,6 +6,8 @@ import {ModelVariable} from "./ModelVariable";
 import {ModelNativeRef} from "./ModelNativeRef";
 import {NodeInternalType} from "./NodeInternalType";
 import {Savable, STUB_TYPE} from "./ModelSavable";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 export interface ModelFunctionList {
   [pAddress:string] :ModelFunction
@@ -26,7 +28,7 @@ export class ModelFunction extends Savable {
 
   __p?:any = {};
 
-  __:NodeInternalType = NodeInternalType.FUNC;
+  override __:NodeInternalType = NodeInternalType.FUNC;
   _t:NodeType = NodeType.FUNC;
 
   sz:number = -1;
@@ -38,13 +40,13 @@ export class ModelFunction extends Savable {
 
   addr:number = -1;
 
-  name: string = null;
-  symbol: string = null;
+  name: Nullable<string> = null;
+  symbol: Nullable<string> = null;
 
   args:(ModelObjectType|ModelBasicType)[] = [];
-  ret:(ModelObjectType|ModelBasicType) = null;
+  ret:Nullable<(ModelObjectType|ModelBasicType)> = null;
 
-  src:ModelFile = null;
+  src:Nullable<ModelFile> = null;
 
   regvars:ModelVariable[] = [];
   spvars:ModelVariable[] = [];
@@ -56,16 +58,16 @@ export class ModelFunction extends Savable {
   dref:ModelNativeRef[] = [];
 
   stack?:number = -1;
-  ctype:string = null;
+  ctype:Nullable<string> = null;
 
   nbbs:number = -1;
   edges:number = -1;
-  _r2_s:string = null;
+  _r2_s:Nullable<string> = null;
 
   instr:ModelCpuInstruction[];
 
   // signature
-  __s:string = null;
+  __s:Nullable<string> = null;
 
   _s:any = {};
 
@@ -73,7 +75,7 @@ export class ModelFunction extends Savable {
     super(STUB_TYPE.CALL)
     if(pConfig!==undefined)
       for(let i in pConfig)
-        this[i]=pConfig[i];
+        (this as IStringIndex<any>)[i]=pConfig[i];
 
   }
 
@@ -95,7 +97,7 @@ export class ModelFunction extends Savable {
       this.__s += ':'+this.name+':0x'+this.addr.toString(16);
     }
 
-    return this.__s;
+    return this.__s as string;
   }
 
   addDisass(pInstrs:ModelCpuInstruction[]):void {
@@ -110,7 +112,7 @@ export class ModelFunction extends Savable {
     return this.addr;
   }
 
-  getUID():string {
+  override getUID():string {
     return this.signature();
   }
 
@@ -131,7 +133,7 @@ export class ModelFunction extends Savable {
   }
 
 
-  getSignature():string {
+  getSignature():Nullable<string> {
     return this.__s;
   }
 
@@ -139,16 +141,16 @@ export class ModelFunction extends Savable {
     let obj:any = this.toJsonObject(fields,exclude);
 
     for(let i=0; i<pCommand.length; i++){
-      if( CMD_ATTR_MAPPING[pCommand[i]] != null){
-        CMD_ATTR_MAPPING[pCommand[i]].map( vAttr => {
-          if(typeof this[vAttr] === 'object'){
-            if(this[vAttr].hasOwnProperty('toJsonObject')){
-              obj[vAttr] = this[vAttr].toJsonObject();
+      if( (CMD_ATTR_MAPPING as IStringIndex<any>)[pCommand[i]] != null){
+        (CMD_ATTR_MAPPING as IStringIndex<any>)[pCommand[i]].map( (vAttr:any) => {
+          if(typeof (this as IStringIndex<any>)[vAttr] === 'object'){
+            if((this as IStringIndex<any>)[vAttr].hasOwnProperty('toJsonObject')){
+              obj[vAttr] = (this as IStringIndex<any>)[vAttr].toJsonObject();
             }else{
-              obj[vAttr] = this[vAttr];
+              obj[vAttr] = (this as IStringIndex<any>)[vAttr];
             }
           }else{
-            obj[vAttr] = this[vAttr];
+            obj[vAttr] = (this as IStringIndex<any>)[vAttr];
           }
         })
       }
@@ -161,10 +163,10 @@ export class ModelFunction extends Savable {
     let obj:any = {};
     if(fields != null && fields.length>0){
       for(let i:number=0; i<fields.length; i++){
-        if(this[fields[i]] != null && this[fields[i]].toJsonObject != null){
-          obj[fields[i]] = this[fields[i]].toJsonObject();
+        if((this as IStringIndex<any>)[fields[i]] != null && (this as IStringIndex<any>)[fields[i]].toJsonObject != null){
+          obj[fields[i]] = (this as IStringIndex<any>)[fields[i]].toJsonObject();
         }else{
-          obj[fields[i]] = this[fields[i]];
+          obj[fields[i]] = (this as IStringIndex<any>)[fields[i]];
         }
       }
     }else{
@@ -181,10 +183,10 @@ export class ModelFunction extends Savable {
             }
             break;
           case "src":
-            obj.ret = this.src.getUID();
+            obj.src = (this.src !=null ? this.src.getUID() : null);
             break;
           case "ret":
-            obj.ret = this.ret.toJsonObject();
+            obj.ret = (this.ret != null ? this.ret.toJsonObject() : null);
             break;
           default:
             obj[i] = this[i];

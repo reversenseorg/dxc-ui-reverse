@@ -36,6 +36,7 @@ import {ExpandableItemComponent} from "../../../base/expandable-list/expandable-
 import {Device} from "../../../models/Device";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -78,7 +79,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @type {AppComponent}
    * @field
    */
-  app:any = null;
+  override  app:any = null;
 
   /**
    * The default controller associated to this UI component
@@ -86,7 +87,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @type {CodeController}
    * @field
    */
-  @Input() controller: TopologyController;
+  @Input() override controller!: TopologyController;
 
   /**
    * This field holds the parent component, here the main explorer component.
@@ -94,7 +95,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @type {ExplorerComponent}
    * @field
    */
-  @Input() parent:any;
+  @Input() override parent!:any;
 
   /**
    * The reference to the DOM element containing this component
@@ -102,7 +103,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @type {ElementRef}
    * @field
    */
-  @ViewChild("explRef", {read: ElementRef}) explRef: ElementRef;
+  @ViewChild("explRef", {read: ElementRef}) explRef!: ElementRef;
 
   /**
    * The reference to the DOM element containing the dynamic part (data)
@@ -110,7 +111,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @type {ElementRef}
    * @field
    */
-  @ViewChild("explCtnRef", {read: ElementRef}) explCtnRef: ElementRef;
+  @ViewChild("explCtnRef", {read: ElementRef}) explCtnRef!: ElementRef;
 
   /**
    * The list of contextual menu declared
@@ -118,25 +119,25 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @type {QueryList<ContextMenuComponent>}
    * @field
    */
-  @ViewChildren(ContextMenuComponent) ctxMenuChildren: QueryList<ContextMenuComponent>;
+  @ViewChildren(ContextMenuComponent) ctxMenuChildren!: QueryList<ContextMenuComponent>;
 
   /**
    * The list pf expandable items
    */
-  @ViewChildren(ExpandableItemComponent) expandableItems: QueryList<ExpandableItemComponent<any>>;
+  @ViewChildren(ExpandableItemComponent) expandableItems!: QueryList<ExpandableItemComponent<any>>;
 
   protected _cuid:number = -1;
 
   onKeyboardEvent:Subject<any> = new Subject<any>();
 
-  id:string = "explorerTopo";
+  override id = "explorerTopo";
 
   ctxMenu: ContextMenuList = {};
 
   selected:number = this.SUBVIEW.ALL;
   activeItem: any = null;
 
-  icons:  any = TOPO_ICONS;
+  overrideicons:  any = TOPO_ICONS;
   gIcons: any = GLOBAL_ICONS;
 
   offset:number = 5;
@@ -650,7 +651,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     return null;
   }
 
-  filterPkg( pOtions:string):any[]{
+  filterPkg( pOtions:string): Nullable<any[]>{
     return null ;
   }
 

@@ -63,7 +63,7 @@ export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterVie
 
     let c:any = null;
     if(changes.hasOwnProperty('data')){
-      const data = changes.data.currentValue.__ppts.internals;
+      const data = (changes as any).data.currentValue.__ppts.internals;
 
       this.data.impl = {};
       this.data.internals = [];

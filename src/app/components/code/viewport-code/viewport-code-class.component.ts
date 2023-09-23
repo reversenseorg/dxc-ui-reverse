@@ -114,7 +114,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('data')){
-      this.codeSvc.getCompleteClass(changes.data.currentValue.name).subscribe( (pClass:ModelClass)=>{
+      this.codeSvc.getCompleteClass((changes as any).data.currentValue.name).subscribe( (pClass:ModelClass)=>{
         this.data = pClass;
         this.showContents();
       })

@@ -2,6 +2,8 @@ import {INode} from "../INode";
 import {Tag} from "../tags/Tag";
 import BusEvent from "../BusEvent";
 import {NodeInternalType} from "../NodeInternalType";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 export enum RuntimeEventType {
   HOOK= 'h',
@@ -24,11 +26,11 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
   __:NodeInternalType = NodeInternalType.RUNTIME_EVENT;
 
-  type:RuntimeEventType = null;
+  override type:Nullable<RuntimeEventType> = null;
 
   id:any = null;
 
-  raw: P = null;
+  raw: Nullable<P> = null;
 
   node:INode[] = [];
 
@@ -39,7 +41,7 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
     for(const i in this){
       if(this.hasOwnProperty(i))
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 
@@ -48,7 +50,7 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
     return this.id;
   }
 
-  getMessage():P {
+  getMessage():Nullable<P> {
     return this.raw;
   }
 

@@ -1,5 +1,6 @@
+import {IStringIndex} from "../../../base/IStringIndex";
 
-export interface FindingOptions {
+export interface FindingOptions extends IStringIndex<any>{
     node?:any;
     kb?:any;
     impact?:number;
@@ -21,7 +22,7 @@ export class Finding  {
 
     constructor( pConfig:FindingOptions) {
         for(const i in pConfig){
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         }
     }
 

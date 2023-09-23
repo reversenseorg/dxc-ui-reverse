@@ -1,25 +1,27 @@
 import {Savable, STUB_TYPE} from "./ModelSavable";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export default class ModelStringValue extends Savable
 {
-  __:NodeInternalType = NodeInternalType.STRING;
+  override __:NodeInternalType = NodeInternalType.STRING;
 
   // SRC_NODE_TYPE : SRC_UUID : STR_TYPE : UID
-  _uid:string;
+  override _uid:string;
 
   src:any = null;
   instr:any = null;
-  value:string = null;
-  tags:number[] = [];
+  value:Nullable<string> = null;
+  override tags:number[] = [];
 
   constructor(pConfig:any=null) {
     super(STUB_TYPE.STRING_VALUE);
 
     if(pConfig !== null)
       for(const i in pConfig)
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
   }
 
 

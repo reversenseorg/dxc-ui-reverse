@@ -1,3 +1,5 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 export enum FileLocation {
   LOCAL,
@@ -6,15 +8,15 @@ export enum FileLocation {
 
 export class File {
   type:FileLocation = FileLocation.LOCAL;
-  path:string = null;
-  name:string = null;
-  ext:string = null;
+  path:Nullable<string>  = null;
+  name:Nullable<string> = null;
+  ext:Nullable<string> = null;
   ctn:any = null;
   fmt:string[] = [];
 
   constructor( pConfig:any = {}) {
     for(let p in pConfig)
-      this[p] = pConfig[p];
+      (this as IStringIndex<any>)[p] = pConfig[p];
   }
 
   isLocal():boolean {

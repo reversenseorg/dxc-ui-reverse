@@ -1,4 +1,5 @@
 import {UNKNOWN_ERROR_CODE} from "@angular/compiler-cli";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export enum ModelNativeRefType {
@@ -16,7 +17,7 @@ export class ModelNativeRef {
 
     if(pConfig!==undefined)
       for(let i in pConfig)
-        this[i]=pConfig[i];
+        (this as IStringIndex<any>)[i]=pConfig[i];
 
   }
 }

@@ -3,14 +3,16 @@ import AndroidComponent from "./AndroidComponent";
 import {NodeType} from "../../components/search/ctrl/ModelNode";
 import {IconModel} from "../../base/icon/IconModel";
 import {NodeInternalType} from "../NodeInternalType";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 export default class AndroidReceiver extends AndroidComponent
 {
 
-  __:NodeInternalType = NodeInternalType.ANDROID_RECEIVER;
+  override __:NodeInternalType = NodeInternalType.ANDROID_RECEIVER;
     _t:NodeType = NodeType.RECEIVER;
-    _icon?:IconModel = null;
+    _icon?:Nullable<IconModel> = null;
 
     constructor(config:any=null){
         super();
@@ -18,8 +20,8 @@ export default class AndroidReceiver extends AndroidComponent
         // auto config
         if(config != null){
             for(let i in config)
-                if(this[i] !==  undefined)
-                    this[i] = config[i];
+                if((this as IStringIndex<any>)[i] !== undefined)
+                    (this as IStringIndex<any>)[i] = config[i];
         }
     }
 }

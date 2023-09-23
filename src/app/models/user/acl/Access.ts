@@ -41,7 +41,7 @@ export class Access {
     private _n:string;
     private _d:string;
 
-    constructor( pType:AccessType, pName:string, pDescr:string = null) {
+    constructor( pType:AccessType, pName:string, pDescr:string = "") {
         this._t = pType;
         this._n = pName;
         this._d = pDescr;
@@ -64,7 +64,7 @@ export class Access {
 export class AccessException extends Error {
 
     _c:AccesErrCode = AccesErrCode.NONE
-    constructor(pMsg, pCode:AccesErrCode = AccesErrCode.NONE) {
+    constructor(pMsg:string, pCode:AccesErrCode = AccesErrCode.NONE) {
         super(pMsg);
         this._c = pCode;
     }

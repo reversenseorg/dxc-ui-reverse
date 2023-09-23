@@ -7,26 +7,28 @@ import AndroidComponent from "./AndroidComponent";
 import {AndroidPermission} from "./Permissions";
 import {IconModel} from "../../base/icon/IconModel";
 import {NodeInternalType} from "../NodeInternalType";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 
 
 // TODO : not integrated
 class AndroidActivityAlias
 {
-    enabled:boolean = null;
-    exported:boolean =null;
-    icon:string =null;
-    label:string =null;
-    name:string =null;
-    permission:AndroidPermission =null;
-    targetActivity:AndroidActivity =null;
+    enabled:Nullable<boolean> = null;
+    exported:Nullable<boolean> =null;
+    icon:Nullable<string> =null;
+    label:Nullable<string> =null;
+    name:Nullable<string> =null;
+    permission:Nullable<AndroidPermission> =null;
+    targetActivity:Nullable<AndroidActivity> =null;
 
     constructor(config:any=null){
 
         if(config != null){
             for(let i in config)
-                if(this[i] !==  undefined)
-                    this[i] = config[i];
+                if((this as IStringIndex<any>)[i] !==  undefined)
+                    (this as IStringIndex<any>)[i] = config[i];
         }
     }
 
@@ -46,9 +48,9 @@ class AndroidActivityAlias
 
         for(let i in xmlobj.$){
             if(i.indexOf("android:")>-1)
-                act[i.substr(8)] = xmlobj.$[i];
+                (act as IStringIndex<any>)[i.substr(8)] = xmlobj.$[i];
             else
-                act[i] = xmlobj.$[i];
+                (act as IStringIndex<any>)[i] = xmlobj.$[i];
         }
 
         return act;
@@ -62,10 +64,10 @@ class AndroidActivityAlias
  */
 export default class AndroidActivity extends AndroidComponent
 {
-    __:NodeInternalType = NodeInternalType.ANDROID_ACTIVITY;
+    override __:NodeInternalType = NodeInternalType.ANDROID_ACTIVITY;
     _t?:string;
 
-    _icon?:IconModel = null;
+    _icon?:Nullable<IconModel> = null;
 
     static MODEL = {
         allowEmbedded:["true" , "false"],
@@ -134,8 +136,8 @@ export default class AndroidActivity extends AndroidComponent
         // auto config
         if(pConfig != null){
             for(let i in pConfig)
-                if(this[i] !==  undefined)
-                    this[i] = pConfig[i];
+                if((this as IStringIndex<any>)[i] !==  undefined)
+                    (this as IStringIndex<any>)[i] = pConfig[i];
 
         }
     }
@@ -148,8 +150,8 @@ export default class AndroidActivity extends AndroidComponent
             switch(j){
                 case '$':
                     act.setAttributes(xmlobj.$);
-                    act.label = act.attr.label;
-                    act.name = act.attr.name;
+                    act.label = (act.attr as any).label;
+                    act.name = (act.attr as any).name;
 
 
                     break;

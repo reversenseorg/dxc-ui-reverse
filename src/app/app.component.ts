@@ -23,7 +23,7 @@ import {WebsocketClient} from "./base/WebsocketClient";
 import {GLOBAL_ICONS} from "./cmp/GLOBAL_ICONS";
 import {ElectronService} from "./core/services";
 import {environment} from "../environments/environment";
-import {Menu} from "electron";
+//import {Menu} from "electron";
 //import {TranslateService} from "@ngx-translate/core";
 
 
@@ -45,7 +45,9 @@ interface ModalMap {
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  menu: Menu = null;
+  menu: any = null;
+
+  title = "Reverse Mode";
 
   constructor(
     private elementRef: ElementRef,

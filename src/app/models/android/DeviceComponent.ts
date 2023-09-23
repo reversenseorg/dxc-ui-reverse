@@ -1,3 +1,5 @@
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 const ANDROID_PREFIX = "android:";
 
@@ -26,7 +28,7 @@ class XmlSerializable
 
 export class AndroidGlTexture extends XmlSerializable
 {
-    name:string = null;
+    name:Nullable<string> = null;
 
     constructor(){
         super();
@@ -35,9 +37,9 @@ export class AndroidGlTexture extends XmlSerializable
 
 export class AndroidFeature extends XmlSerializable
 {
-    name:string = null;
-    require:string = null;
-    glEsVersion:string = null;
+    name:Nullable<string> = null;
+    require:Nullable<string> = null;
+    glEsVersion:Nullable<string> = null;
 
     constructor(){
         super();
@@ -60,13 +62,13 @@ export class AndroidInstrumentation extends XmlSerializable
     }*/
 
 
-    functionalTest:string =null;
-    handleProfiling:string =null;
-    icon:string =null;
-    label:string =null;
-    name:string =null;
-    targetPackage:string =null;
-    targetProcesses:string =null;
+    functionalTest:Nullable<string> =null;
+    handleProfiling:Nullable<string> =null;
+    icon:Nullable<string> =null;
+    label:Nullable<string> =null;
+    name:Nullable<string> =null;
+    targetPackage:Nullable<string> =null;
+    targetProcesses:Nullable<string> =null;
 
     constructor(){
         super();
@@ -88,15 +90,15 @@ export class AndroidSupportedScreen extends XmlSerializable
         largestWidthLimitDp:"integer"
     }*/
 
-    resizeable:string =null;
-    smallScreens:string =null;
-    normalScreens:string =null;
-    largeScreens:string =null;
-    xlargeScreens:string =null;
-    anyDensity:string =null;
-    requiresSmallestWidthDp:string =null;
-    compatibleWidthLimitDp:string =null;
-    largestWidthLimitDp:string =null;
+    resizeable:Nullable<string> =null;
+    smallScreens:Nullable<string> =null;
+    normalScreens:Nullable<string> =null;
+    largeScreens:Nullable<string> =null;
+    xlargeScreens:Nullable<string> =null;
+    anyDensity:Nullable<string> =null;
+    requiresSmallestWidthDp:Nullable<string> =null;
+    compatibleWidthLimitDp:Nullable<string> =null;
+    largestWidthLimitDp:Nullable<string> =null;
 
     constructor(){
         super();
@@ -108,14 +110,14 @@ export class AndroidSupportedScreen extends XmlSerializable
 export class AndroidScreen extends XmlSerializable
 {
 
-    screenSize:string = null;
-    screenDensity:string = null;
+    screenSize:Nullable<string> = null;
+    screenDensity:Nullable<string> = null;
 
     constructor(pConfig:any=null){
         super();
         if(pConfig!==null)
             for(let i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
     }
 }
 
@@ -131,11 +133,11 @@ export class AndroidConfiguration extends XmlSerializable
         reqTouchScreen:["undefined" | "notouch" | "stylus" | "finger"]
     }*/
 
-    reqFiveWayNav:string =null;
-    reqHardKeyboard:string =null;
-    reqKeyboardType:string =null;
-    reqNavigation:string =null;
-    reqTouchScreen:string =null;
+    reqFiveWayNav:Nullable<string> =null;
+    reqHardKeyboard:Nullable<string> =null;
+    reqKeyboardType:Nullable<string> =null;
+    reqNavigation:Nullable<string> =null;
+    reqTouchScreen:Nullable<string> =null;
 
     constructor(){
         super();

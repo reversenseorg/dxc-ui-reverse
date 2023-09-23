@@ -9,6 +9,8 @@ import ModelBasicBlock from "./ModelBasicBlock";
 import ModelCall from "./ModelCall";
 import {NodeType} from "../components/search/ctrl/ModelNode";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /*interface LazyMethodReference {
@@ -29,15 +31,15 @@ import {NodeInternalType} from "./NodeInternalType";
  */
 export default class ModelMethod extends Savable
 {
-    __:NodeInternalType = NodeInternalType.METHOD;
+    override __:NodeInternalType = NodeInternalType.METHOD;
     _t:NodeType = NodeType.METHOD;
 
-    alias:string = null;
+    alias:Nullable<string> = null;
 
-    name:string = null;
-    modifiers:Modifier = null;
+    name:Nullable<string> = null;
+    modifiers:Modifier = Modifier.NONE;
     args:(ModelObjectType|ModelBasicType)[] = []; // TODO
-    ret:(ModelObjectType|ModelBasicType) = null; // TODO
+    ret:Nullable<(ModelObjectType|ModelBasicType)> = null; // TODO
     instr:ModelBasicBlock[] = []; // TODO
 
     datas:any = []; // TODO
@@ -49,18 +51,18 @@ export default class ModelMethod extends Savable
     registers:number = 0;
     params:any = [];
 
-    enclosingClass:ModelClass = null;
-    declaringClass:ModelClass|string = null; // TODO : rename for memory perfomance
+    enclosingClass:Nullable<ModelClass> = null;
+    declaringClass:Nullable<ModelClass|string> = null; // TODO : rename for memory perfomance
 
-    _hashcode:string = null;
+    _hashcode:Nullable<string> = null;
 
     // ========= Signatures ================
 
     //
-    __callSignature__:string = null;
-    __aliasedCallSignature__:string = null;
-    __signature__:string = null;
-    __pretty_signature__:string = null;
+    __callSignature__:Nullable<string> = null;
+    __aliasedCallSignature__:Nullable<string> = null;
+    __signature__:Nullable<string> = null;
+    __pretty_signature__:Nullable<string> = null;
 
     // array of MethodModel signatures
     _callers:string[]|ModelMethod[] = [];
@@ -78,7 +80,7 @@ export default class ModelMethod extends Savable
 
     isDerived:boolean = false; // TODO
 
-    __view_code?:string = null;
+    __view_code?:Nullable<string> = null;
 
     /**
      *
@@ -91,41 +93,41 @@ export default class ModelMethod extends Savable
 
         if(pConfig!==undefined)
             for(const i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
-    getUID():string {
+    override getUID():string {
       return this.signature();
     }
 
     callSignature2():string{
-        if(this.__callSignature__===null){
+        if(this.__callSignature__==null){
             let xargs:string = "";
             for(let i in this.args) xargs+="<"+this.args[i]._hashcode+">";
 
-            this.__callSignature__ = this.name+"("+xargs+")"+this.ret._hashcode;
+            this.__callSignature__ = this.name+"("+xargs+")"+(this.ret!=null ? this.ret._hashcode:"-");
         }
 
         return this.__callSignature__;
     }
 
     aliasedCallSignature():string{
-        if(this.__aliasedCallSignature__===null){
+        if(this.__aliasedCallSignature__==null){
             let xargs:string = "";
             for(let i in this.args) xargs+=this.args[i].signature();
 
-            this.__aliasedCallSignature__ = this.alias+"("+xargs+")"+this.ret.signature();
+            this.__aliasedCallSignature__ = this.alias+"("+xargs+")"+(this.ret!=null ? this.ret.signature():"-");
         }
 
         return this.__aliasedCallSignature__;
     }
 
     callSignature():string{
-        if(this.__callSignature__===null){
+        if(this.__callSignature__==null){
             let xargs:string = "";
             for(let i in this.args) xargs+=this.args[i].signature();
 
-            this.__callSignature__ = this.name+"("+xargs+")"+this.ret.signature();
+            this.__callSignature__ = this.name+"("+xargs+")"+(this.ret!=null ? this.ret.signature() : "-");
         }
 
         return this.__callSignature__;
@@ -134,7 +136,7 @@ export default class ModelMethod extends Savable
     hashCode():string{
         let xargs:string = "";
         for(let i in this.args) xargs+="<"+this.args[i]._hashcode+">";
-        return this.enclosingClass.name+"|"+this.name+"|"+xargs+"|"+this.ret._hashcode;
+        return (this.enclosingClass!=null ? this.enclosingClass.name:"")+"|"+this.name+"|"+xargs+"|"+(this.ret!=null ? this.ret._hashcode : "-");
     }
 
     dump(){
@@ -156,7 +158,7 @@ export default class ModelMethod extends Savable
      * @function
      */
     signature():string{
-        if(this.__signature__ !== null) return this.__signature__;
+        if(this.__signature__ != null) return this.__signature__;
 
         let xargs:string = "", hash:string ="";
 
@@ -166,7 +168,7 @@ export default class ModelMethod extends Savable
         //    hash = this.fqcn+"."+this.name+"("+xargs+")"+this.ret.signature();
         //else{
             //console.log(this.ret);
-            hash = this.enclosingClass.name+"."+this.name+"("+xargs+")"+this.ret.signature();
+            hash = (this.enclosingClass!=null ? this.enclosingClass.name:".")+"."+this.name+"("+xargs+")"+(this.ret!=null ? this.ret.signature():"-");
         //}
 
         this.__signature__  = hash;
@@ -191,7 +193,7 @@ export default class ModelMethod extends Savable
      * @param seed The property involved into signature
      */
     signatureFactory(ppt:string, seed:string):string{
-        if(this[ppt] !== null) return this[ppt];
+        if((this as IStringIndex<any>)[ppt] != null) return (this as IStringIndex<any>)[ppt];
 
         let xargs:string = "", hash:string ="";
 
@@ -201,14 +203,14 @@ export default class ModelMethod extends Savable
         //    hash = this.fqcn+"."+this[seed]+"("+xargs+")"+this.ret.signatureFactory(ppt, seed);
         //else{
             //console.log(this.ret);
-            hash = this.enclosingClass[seed]+"."+this[seed]+"("+xargs+")"+this.ret.signature(); //signatureFactory(ppt, seed);
+            hash = (this.enclosingClass!=null ? (this.enclosingClass as IStringIndex<any>)[seed]:".")+"."+(this as IStringIndex<any>)[seed]+"("+xargs+")"+(this.ret!=null ? this.ret.signature() : "-"); //signatureFactory(ppt, seed);
         //}
-        this[ppt]  = hash;
+        (this as IStringIndex<any>)[ppt]  = hash;
         return hash;
     }
 
     sprint():string{
-        let s:string="\t"+ModifierFormat.sprintModifier(this.modifiers)+" "+this.ret.sprint()+" "+this.name+"(";
+        let s:string="\t"+ModifierFormat.sprintModifier(this.modifiers)+" "+(this.ret!=null ? this.ret.sprint():"-")+" "+this.name+"(";
         for(let i:number=0; i<this.args.length; i++){
             s+=((i>1)?",":"")+this.args[i].sprint();
         }
@@ -301,12 +303,12 @@ export default class ModelMethod extends Savable
                     }*/
                     break;
                 case "ret":
-                    if(this.ret.signature() != meth.ret.signature()){
+                    if((this.ret!=null) && (meth.ret!=null) && this.ret.signature() != meth.ret.signature()){
                         diff.push({ ppt:"ret", old:this.ret.signature(), new:meth.ret.signature() });
                     }
                     break;
                 case "enclosingClass":
-                    if(this.enclosingClass.getName() != meth.enclosingClass.getName()){
+                    if((this.enclosingClass!=null) && (meth.enclosingClass!=null) && (this.enclosingClass.getName() != meth.enclosingClass.getName())){
                         diff.push({ ppt:"enclosingClass", old:this.enclosingClass.getName(), new:meth.enclosingClass.getName() });
                     }
                     // TODO
@@ -322,7 +324,7 @@ export default class ModelMethod extends Savable
     }
 
 
-    import(obj:any){
+    override import(obj:any){
 
         // raw impport
         super.import(obj);
@@ -352,10 +354,10 @@ export default class ModelMethod extends Savable
         let obj:any = {};
         if(fields.length>0){
             for(let i:number=0; i<fields.length; i++){
-                if(this[fields[i]] != null && this[fields[i]].toJsonObject != null){
-                    obj[fields[i]] = this[fields[i]].toJsonObject();
+                if((this as IStringIndex<any>)[fields[i]] != null && (this as IStringIndex<any>)[fields[i]].toJsonObject != null){
+                    obj[fields[i]] = (this as IStringIndex<any>)[fields[i]].toJsonObject();
                 }else{
-                    obj[fields[i]] = this[fields[i]];
+                    obj[fields[i]] = (this as IStringIndex<any>)[fields[i]];
                 }
             }
         }else{
@@ -421,7 +423,7 @@ export default class ModelMethod extends Savable
                         }
                         break;
                     case "ret":
-                        obj.ret = this.ret.toJsonObject();
+                        obj.ret = (this.ret!=null ? this.ret.toJsonObject() : null) ;
                         break;
                     case "enclosingClass":
                         obj.enclosingClass = (this.enclosingClass!=null)? this.enclosingClass.name : "";
@@ -465,7 +467,7 @@ export default class ModelMethod extends Savable
         return this.instr;
     }
 
-   getBlock(offset:number):ModelBasicBlock{
+   getBlock(offset:number):Nullable<ModelBasicBlock>{
         for(let i:number=0; i<this.instr.length; i++){
             if(i==offset) return this.instr[i];
         }
@@ -537,7 +539,7 @@ export default class ModelMethod extends Savable
         return this.dyn;
     }
 
-   getAlias():string{
+   getAlias():Nullable<string>{
         return this.alias;
     }
    setAlias(name:string){
@@ -547,13 +549,13 @@ export default class ModelMethod extends Savable
    setEnclosingClass(cls:ModelClass){
         this.enclosingClass = cls;
     }
-   getEnclosingClass():ModelClass{
+   getEnclosingClass():Nullable<ModelClass>{
         return this.enclosingClass;
     }
    setReturnType(rettype:ModelObjectType|ModelBasicType){
         this.ret = rettype;
     }
-   getReturnType():ModelObjectType|ModelBasicType{
+   getReturnType():Nullable<ModelObjectType|ModelBasicType>{
         return this.ret;
     }
    setArgsType(argsType:any){
@@ -590,7 +592,7 @@ export default class ModelMethod extends Savable
         return this._useField;
     }
 
-   getTryStartBlock(pLabel:string):ModelBasicBlock{
+   getTryStartBlock(pLabel:string):Nullable<ModelBasicBlock>{
         let bb:ModelBasicBlock[] = this.getBasicBlocks();
         for(let i=0; i<bb.length; i++){
             if(bb[i].getTryStartLabel()==pLabel){
@@ -600,7 +602,7 @@ export default class ModelMethod extends Savable
         return null;
     }
 
-   getTryEndBlock(pLabel:string):ModelBasicBlock{
+   getTryEndBlock(pLabel:string):Nullable<ModelBasicBlock>{
         let bb:ModelBasicBlock[] = this.getBasicBlocks();
         for(let i=0; i<bb.length; i++){
             if(bb[i].getTryEndLabel()==pLabel){
@@ -611,7 +613,7 @@ export default class ModelMethod extends Savable
     }
 
 
-   getCatchBlock(pLabel:string):ModelBasicBlock{
+   getCatchBlock(pLabel:string):Nullable<ModelBasicBlock>{
         let bb:ModelBasicBlock[] = this.getBasicBlocks();
         for(let i=0; i<bb.length; i++){
             if(bb[i].getCatchLabel()==pLabel){
@@ -621,7 +623,7 @@ export default class ModelMethod extends Savable
         return null;
     }
 
-    getBasicBlockByLabel(pLabel:string, pType:number):ModelBasicBlock{
+    getBasicBlockByLabel(pLabel:string, pType:number):Nullable<ModelBasicBlock>{
         //if(pType == CONST.INSTR_TYPE.IF){
         switch(pType)
         {

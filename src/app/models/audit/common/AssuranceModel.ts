@@ -2,6 +2,7 @@ import Asset from "./Asset";
 import Threat from "./Threat";
 import Control from "./Control";
 import ControlAssessment from "./ControlAssessment";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 export enum AssuranceModelType {
     SECURITY="sec",
@@ -52,26 +53,26 @@ export default class AssuranceModel {
 
 
     constructor( pConfig:any = null) {
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     static fromJsonObject(pOpts:any):AssuranceModel {
       const a = new AssuranceModel(pOpts);
 
-      pOpts.globalThreats.map( (x,i) => {
+      pOpts.globalThreats.map( (x:Threat,i:number) => {
         a.globalThreats[i] = new Threat(x);
       });
 
-      pOpts.primaryAssets.map( (x,i) => {
+      pOpts.primaryAssets.map( (x:Asset,i:number) => {
         a.primaryAssets[i] = new Asset(x);
       });
 
-      pOpts.secondaryAssets.map( (x,i) => {
+      pOpts.secondaryAssets.map( (x:Asset,i:number) => {
         a.secondaryAssets[i] = new Asset(x);
       });
 
       const ctrls:Control[] = [];
-      pOpts.controls.map( x => {
+      pOpts.controls.map( (x:Control) => {
         ctrls.push(Control.fromJsonObject(x));
       });
       a.controls = ctrls;

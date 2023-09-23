@@ -1,22 +1,24 @@
 import {Person} from "./Person";
 import {UserRole} from "./acl/rbac/UserRole";
+import {IStringIndex} from "../../base/IStringIndex";
+import {Nullable} from "../../base/Nullable";
 
-export class UserAccount {
+export class UserAccount implements IStringIndex<any>{
 
-    private _uid:string;
-    private _person: Person;
-    private _role:UserRole;
-    private _username:string;
-    private _password:string;
-    private _salt:string;
-    private _padding:string;
-    private _time:string;
+    private _uid:Nullable<string>  = null;
+    private _person: Nullable<Person> = null;
+    private _role:Nullable<UserRole>  = null;
+    private _username:Nullable<string> = null;
+    private _password:Nullable<string> = null;
+    private _salt:Nullable<string> = null;
+    private _padding:Nullable<string> = null;
+    private _time:Nullable<string> = null;
     private _locked:boolean = false;
 
 
     constructor(pConfig:any = null) {
         if(pConfig != null){
-            for(let i in pConfig) this[i] = pConfig[i];
+            for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
         }
         // TODO : replace by incremental uid
         if(this._uid==null && this._username!=null){
@@ -24,7 +26,7 @@ export class UserAccount {
         }
     }
 
-    get person(): Person {
+    get person(): Nullable<Person> {
         return this._person;
     }
 
@@ -32,7 +34,7 @@ export class UserAccount {
         this._person = value;
     }
 
-    get username(): string {
+    get username(): Nullable<string> {
         return this._username;
     }
 
@@ -40,7 +42,7 @@ export class UserAccount {
         this._username = value;
     }
 
-    get password(): string {
+    get password():  Nullable<string> {
         return this._password;
     }
 
@@ -48,7 +50,7 @@ export class UserAccount {
         this._password = value;
     }
 
-    get salt(): string {
+    get salt():  Nullable<string> {
         return this._salt;
     }
 
@@ -56,7 +58,7 @@ export class UserAccount {
         this._salt = value;
     }
 
-    get padding(): string {
+    get padding():  Nullable<string> {
         return this._padding;
     }
 
@@ -64,7 +66,7 @@ export class UserAccount {
         this._padding = value;
     }
 
-    get time(): string {
+    get time():  Nullable<string> {
         return this._time;
     }
 
@@ -76,8 +78,12 @@ export class UserAccount {
         this._locked = value;
     }
 
-    get role(): string {
-        return this._role.name;
+    get role():  Nullable<string> {
+        if(this._role != null){
+            return this._role.name;
+        }else{
+            return null;
+        }
     }
 
 
@@ -86,7 +92,7 @@ export class UserAccount {
         return this;
     }
 
-    getUserRole( ):UserRole {
+    getUserRole( ): Nullable<UserRole> {
         return this._role;
     }
 
@@ -107,7 +113,7 @@ export class UserAccount {
         return (this._username === pUsername);
     }
 
-    getUID():string {
+    getUID(): Nullable<string> {
         return this.username;
     }
 

@@ -9,6 +9,7 @@ import {
     AndroidScreen,
     AndroidSupportedScreen
 } from "./DeviceComponent";
+import {Nullable} from "../../base/Nullable";
 
 export class AndroidManifest
 {
@@ -26,15 +27,15 @@ export class AndroidManifest
     usesConfiguration:AndroidConfiguration[] = [];
     usesFeatures = [];
 
-    supportsScreens:AndroidSupportedScreen[] = null;
+    supportsScreens:AndroidSupportedScreen[] = [];
     compatibleScreens:AndroidScreen[] = [];
     supportsGlTextures:AndroidGlTexture[] = [];
-    application:AndroidApplication = null;
+    application:Nullable<AndroidApplication> = null;
 
-    __context:DexcaliburProject = null;
+    __context:Nullable<DexcaliburProject> = null;
     __additionalContent:any = {};
 
-    constructor(ctx:DexcaliburProject=null){
+    constructor(ctx:Nullable<DexcaliburProject> = null){
 
 
         this.usesSdk = {
@@ -85,7 +86,7 @@ export class AndroidManifest
      * To get the Application description as declared into the manifest
      * @returns {AndroidApplication} The manifest's description of the application
      */
-    getApplication():AndroidApplication{
+    getApplication():Nullable<AndroidApplication>{
         return this.application;
     }
 

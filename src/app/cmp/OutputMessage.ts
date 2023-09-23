@@ -1,3 +1,5 @@
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 export enum OutputMessageType {
   INFO,
@@ -13,11 +15,11 @@ export class OutputMessage {
   src:any = null;
   msg:string = "";
   data:any = {};
-  cb:Function = null;
+  cb:Function = (()=>{});
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

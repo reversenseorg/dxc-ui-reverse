@@ -1,7 +1,9 @@
 import { Metric } from "./Metric.js";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
-export interface IndicatorOptions {
+export interface IndicatorOptions extends IStringIndex<any>{
     name?:string;
     description?:string;
     metric?:Metric;
@@ -19,7 +21,7 @@ export class Indicator {
 
     description:string = "";
 
-    metric: Metric = null;
+    metric: Nullable<Metric> = null;
 
     events: any[] = [];
 
@@ -29,7 +31,7 @@ export class Indicator {
 
     constructor(pConfig:IndicatorOptions) {
         for(const i in pConfig){
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         }
     }
 

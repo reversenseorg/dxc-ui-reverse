@@ -1,14 +1,15 @@
-import {NavbarSimpleView} from "./NavbarSimpleView";
-import {IconView} from "./IconView";
+
 import {IconModel} from "../base/icon/IconModel";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export class NavbarTab {
 
-  uid:string = null;
+  uid:Nullable<string> = null;
   offset:number = -1;
   label:string = "";
-  icon:IconModel = null;
+  icon:Nullable<IconModel> = null;
   iconColor:string = '';
   color:string = '';
   closable: boolean = true;
@@ -18,7 +19,7 @@ export class NavbarTab {
     if(pConfig != null){
       for(let i in pConfig)
         if(this.hasOwnProperty(i))
-          this[i] = pConfig[i];
+          (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

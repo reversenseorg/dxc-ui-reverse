@@ -4,6 +4,8 @@ import {ModelFunction, ModelFunctionList} from "./ModelFunction";
 import {IconModel} from "../base/icon/IconModel";
 import DataScope from "./DataScope";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /**
@@ -15,15 +17,15 @@ import {NodeInternalType} from "./NodeInternalType";
 export default class ModelFile
 {
   __:NodeInternalType = NodeInternalType.FILE;
-  _uid:string = null;
+  _uid:Nullable<string> = null;
   _d:string = 'f';
-  _icon?:IconModel = null;
+  _icon?:Nullable<IconModel> = null;
 
-  name:string = null;
-  type:string = null;
+  name:Nullable<string> = null;
+  type:Nullable<string> = null;
   size:number = -1;
-  path:string = null;
-  location:string = null;
+  path:Nullable<string> = null;
+  location:Nullable<string> = null;
   //trueFile:boolean = false;
 
   scope:any = null;
@@ -52,10 +54,10 @@ export default class ModelFile
     if(pConfig != null){
       for(let i in pConfig){
 
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
         /*
         if(i!=="type")
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         else{
             if(pConfig.type instanceof EncodedDataType)
                 this.type = pConfig.type;
@@ -66,7 +68,7 @@ export default class ModelFile
     }
   }
 
-  getUID():string {
+  getUID():Nullable<string> {
     return this._uid;
   }
 
@@ -79,15 +81,15 @@ export default class ModelFile
     return this.size;
   }
 
-  getPath():string{
+  getPath():Nullable<string>{
     return this.path;
   }
 
-  getName():string{
+  getName():Nullable<string>{
     return this.name;
   }
 
-  getType():string{
+  getType():Nullable<string>{
     return this.type;
   }
 
@@ -103,12 +105,12 @@ export default class ModelFile
     return this.__p.m;
   }
 
-  static unserialize(o):ModelFile {
+  static unserialize(o:any):ModelFile {
     return new ModelFile(o);
   }
 
   isExecutable():boolean {
-    return (['ELF'].indexOf(this.type)>-1);
+    return (this.type!=null) && (['ELF'].indexOf(this.type)>-1);
   }
 
 

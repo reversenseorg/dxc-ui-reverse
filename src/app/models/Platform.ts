@@ -1,3 +1,5 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 const PLATFORM_RE:RegExp = new RegExp('(?<source>[^_.]+)_(?<name>[^_.]+)_(?<version>[^_.]+)_(?<vendor>[^_.]+)\.(?<format>[^.]+)');
 const LOCAL_PLATFORM_RE:RegExp = new RegExp('(?<source>[^_.]+)_(?<name>[^_.]+)_(?<version>[^_.]+)_(?<vendor>[^_.]+)');
@@ -5,33 +7,33 @@ const LOCAL_PLATFORM_RE:RegExp = new RegExp('(?<source>[^_.]+)_(?<name>[^_.]+)_(
 
 export default class Platform
 {
-    uid:string = null;
-    name:string = null;
-    version:string = null;
-    source:string = null;
-    vendor:string = null;
-    model:string = null;
-    format:string = null;
-    path:string = null;
-    hash:string = null;
-    size:number = null;
-    remoteURL:string = null;
-    localPath:string = null;
+    uid:Nullable<string> = null;
+    name:Nullable<string> = null;
+    version:Nullable<string> = null;
+    source:Nullable<string> = null;
+    vendor:Nullable<string> = null;
+    model:Nullable<string> = null;
+    format:Nullable<string> = null;
+    path:Nullable<string> = null;
+    hash:Nullable<string> = null;
+    size:Nullable<string> = null;
+    remoteURL:Nullable<string> = null;
+    localPath:Nullable<string> = null;
     installed:boolean = false;
 
-    apiVersion:string = null;
-    binaryPath:string = null;
+    apiVersion:Nullable<string> = null;
+    binaryPath:Nullable<string> = null;
 
     _installing:boolean = false;
 
     constructor(pPlatformConfig:any ){
 
-        for(let i in pPlatformConfig) this[i] = pPlatformConfig[i];
+        for(let i in pPlatformConfig) (this as IStringIndex<any>)[i] = pPlatformConfig[i];
 
         return this;
     }
 
-    static fromRemoteName( pName:string):Platform{
+    static fromRemoteName( pName:string):Nullable<Platform>{
         let matches:any = PLATFORM_RE.exec(pName);
 
         if(matches[0] === pName){
@@ -48,7 +50,7 @@ export default class Platform
 
     }
 
-    static fromLocalName( pName:string):Platform{
+    static fromLocalName( pName:string):Nullable<Platform>{
         let matches:any = LOCAL_PLATFORM_RE.exec(pName);
 
         if(matches[0] === pName){
@@ -64,11 +66,11 @@ export default class Platform
     }
 
 
-    getRemotePath():string{
+    getRemotePath():Nullable<string>{
         return this.remoteURL;
     }
 
-    getLocalPath():string{
+    getLocalPath():Nullable<string>{
         return this.localPath;
     }
 
@@ -86,10 +88,16 @@ export default class Platform
     }
 
     isAndroid():boolean{
+        if(this.name==null){
+            throw new Error("Exception : cannot state if platform is Android based or not");
+        }
         return this.name.indexOf("android")>-1;
     }
 
     isIOS():boolean{
+        if(this.name==null){
+            throw new Error("Exception : cannot state if platform is iOS based or not");
+        }
         return this.name.indexOf('ios')>-1;
     }
 
@@ -107,11 +115,11 @@ export default class Platform
         return this.name+":"+this.version;
     }
 
-    getApiVersion():string{
+    getApiVersion():Nullable<string>{
         return this.apiVersion;
     }
 
-    getBinPath():string{
+    getBinPath():Nullable<string>{
         return this.binaryPath;
     }
 
@@ -122,7 +130,7 @@ export default class Platform
         let o:any = {};
 
         for(let i in this){
-            if(typeof this[i] == 'function') continue;
+            if(typeof (this as IStringIndex<any>)[i] == 'function') continue;
             o[i] = this[i];
         }
 

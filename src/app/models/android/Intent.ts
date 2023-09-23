@@ -1,4 +1,6 @@
 import {IntentFilter} from "./IntentFilter";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 const ANDROID_PREFIX = "android:";
 const ANDROID_PREFIX_LEN = 8;
@@ -7,14 +9,14 @@ class IntentCriteria
 {
 
     __attr:any = null;
-    name:string = null;
+    name:Nullable<string> = null;
 
     constructor(){
         this.__attr = [];
         this.name = null;
     }
 
-    getName():string{
+    getName():Nullable<string>{
         return this.name;
     }
 
@@ -27,7 +29,7 @@ class IntentCriteria
     }
 
     toJsonObject():any{
-        let o:any = new Object();
+        let o:any = {};
         o.name = this.__attr.name;
         return o;
     }
@@ -35,7 +37,7 @@ class IntentCriteria
 
 export class IntentActionCriteria extends IntentCriteria
 {
-    static androidPrefixed = [];
+    static androidPrefixed:any[] = [];
 
     constructor(){
        super();
@@ -84,7 +86,7 @@ export class IntentActionCriteria extends IntentCriteria
 
 export class IntentCategoryCriteria extends IntentCriteria
 {
-    static androidPrefixed = [];
+    static androidPrefixed:string[] = [];
 
     constructor(){
         super();
@@ -130,13 +132,16 @@ export class IntentCategoryCriteria extends IntentCriteria
 
 export class IntentDataCriteria
 {
-    scheme:string =null;
-    host:string =null;
+
+    static androidPrefixed:string[] = [];
+
+    scheme:Nullable<string> =null;
+    host:Nullable<string> =null;
     port:string ='*';
     path:string ='*';
-    pathPattern:string =null;
-    pathPrefix:string =null;
-    mimeType:string =null;
+    pathPattern:Nullable<string> =null;
+    pathPrefix:Nullable<string> =null;
+    mimeType:Nullable<string> =null;
 
     constructor(){
 
@@ -157,9 +162,22 @@ export class IntentDataCriteria
         return o as IntentDataCriteria;
     }
 
+    toXmlObject():any{
+        let o:any = {};
+
+        o.$ = {};
+        for(let i in (this as IStringIndex<any>)){
+            if(IntentDataCriteria.androidPrefixed.indexOf(i)>-1)
+                o.$[ANDROID_PREFIX+i] = (this as IStringIndex<any>)[i];
+            else
+                o.$[i] = (this as IStringIndex<any>)[i];
+        }
+
+        return o;
+    }
 
     toJsonObject():any{
-        let o:any = new Object();
+        let o:any = {};
         o.scheme = this.scheme;
         o.host = this.host;
         o.port = this.port;
@@ -189,7 +207,7 @@ export class AndroidIntentable
         return this.intentFilters.length;
     }
 
-    getIntentFilterByUid(id:string):IntentFilter{
+    getIntentFilterByUid(id:string):Nullable<IntentFilter>{
         for(let i:number=0; i<this.intentFilters.length; i++){
             if(this.intentFilters[i].getUid()===id)
                 return this.intentFilters[i];

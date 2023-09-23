@@ -15,6 +15,8 @@
  *  @class
  */
 import DexcaliburProject from "./DexcaliburProject";
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 
 export default class DexcaliburEngine
@@ -64,7 +66,7 @@ export default class DexcaliburEngine
     constructor(pConfig:any={}){
       for(let i in pConfig)
         if(this.hasOwnProperty(i))
-          this[i] = pConfig[i];
+          (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
 
@@ -85,7 +87,7 @@ export default class DexcaliburEngine
      *
      * @method
      */
-    loadWorkspaceFromConfig(pDexcaliburHome:string=null, pOverride:any=null){
+    loadWorkspaceFromConfig(pDexcaliburHome:Nullable<string>=null, pOverride:any=null){
 
 /*        this.workspace = DexcaliburWorkspace.getInstance( d.workspace);
         this.registry = new DexcaliburRegistry( d.registry, d.registryAPI); */
@@ -141,7 +143,7 @@ export default class DexcaliburEngine
     /**
      * @method
      */
-    getProject(pProjectUID:string):DexcaliburProject{
+    getProject(pProjectUID:string):Nullable<DexcaliburProject>{
         if(this.active[pProjectUID] instanceof DexcaliburProject){
             return this.active[pProjectUID];
         }
@@ -157,35 +159,12 @@ export default class DexcaliburEngine
         return success;
     }
 
-    async openProject( pUID:string):Promise<DexcaliburProject>{
-      /*
-        let project:DexcaliburProject = null, success:any = false;
-
-        try{
-            await DeviceManager.getInstance().scan();
-
-            project = DexcaliburProject.load(this, pUID);
-
-            // init
-
-//            project = new DexcaliburProject( this, pUID);
-
-            DexcaliburEngine.printBanner();
-
-            success = await project.open();
-            this.active[pUID] = project;
-            this.webserver.setProject(project);
-        }catch(err){
-            console.log(err);
-            Logger.error("ENGINE"," openProject() failed");
-        }
-*/
-
-        return null;
+    async openProject( pUID:string):Promise<Nullable<DexcaliburProject>>{
+        return Promise.resolve(null);
     }
 
     // TODO : remove platform ?
-    async newProject( pUID:string, pApkPath:string, pDevice:any):Promise<DexcaliburProject>{
+    async newProject( pUID:string, pApkPath:string, pDevice:any):Promise<Nullable<DexcaliburProject>>{
 /*
         let project:DexcaliburProject = null;
         let success:boolean = null;
@@ -224,13 +203,13 @@ export default class DexcaliburEngine
             Logger.error('[ENGINE] Error : APK extraction failed.')
             return null;
         }*/
-      return  null;
+      return  Promise.resolve(null);
     }
 
     /**
      * To detect if Frida is installed and get version
      */
-    getLocalFridaVersion():string{
+    getLocalFridaVersion():Nullable<string>{
       // add binbding
         return null; // return FridaHelper.getLocalFridaVersion(FRIDA_BIN);
     }

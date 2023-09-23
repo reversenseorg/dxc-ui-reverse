@@ -1,3 +1,4 @@
+import {Nullable} from "../../base/Nullable";
 
 
 export enum DexcaliburConnectionType {
@@ -25,10 +26,10 @@ export class DexcaliburConnectionParams {
     /**
      *
      */
-    ipv4:string = null;
-    ipv6:string = null;
-    port:number = null;
-    hostname:string = null;
+    ipv4:Nullable<string> = null;
+    ipv6:Nullable<string> = null;
+    port:number = -1;
+    hostname:Nullable<string> = null;
 
     /**
      * Name for this configuration
@@ -36,7 +37,7 @@ export class DexcaliburConnectionParams {
      * @field
      * @type string
      */
-    name:string = null;
+    name:Nullable<string> = null;
 
     /**
      * UID
@@ -44,7 +45,7 @@ export class DexcaliburConnectionParams {
      * @field
      * @type string
      */
-    uid:string = null;
+    uid:Nullable<string> = null;
 
     /**
      * Preferred authentication type
@@ -83,16 +84,16 @@ export class DexcaliburConnectionParams {
     /**
      * To get configuration name
      */
-    getName():string {
+    getName():Nullable<string> {
         return  this.name;
     }
 
-    getUID():string {
+    getUID():Nullable<string> {
         return this.uid;
     }
 
 
-    getIpAddress():string{
+    getIpAddress():Nullable<string>{
         if(this.ipv4 != null){
             return this.ipv4
         }
@@ -104,7 +105,7 @@ export class DexcaliburConnectionParams {
         }
     }
 
-    getHostname():string {
+    getHostname():Nullable<string> {
         if(this.hostname != null){
             return this.hostname;
         }
@@ -119,7 +120,7 @@ export class DexcaliburConnectionParams {
             return this.port;
         }
         else{
-            return null; //throw DexcaliburConnectionException.PORT_NOT_DEFINED();
+            return -1; //throw DexcaliburConnectionException.PORT_NOT_DEFINED();
         }
     }
 

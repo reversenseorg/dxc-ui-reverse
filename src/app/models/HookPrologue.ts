@@ -1,11 +1,13 @@
 import DexcaliburProject from "./DexcaliburProject";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 export default class HookPrologue
 {
-    parentID:string = null;
-    script:string = null;
-    builtScript:string = null;
-    context:DexcaliburProject = null;
+    parentID:Nullable<string> = null;
+    script:Nullable<string> = null;
+    builtScript:Nullable<string> = null;
+    context:Nullable<DexcaliburProject> = null;
 
     /**
      * To configure and manage a static part of the hook code
@@ -18,7 +20,7 @@ export default class HookPrologue
     constructor(pConfig:any = null){
         if(pConfig != null){
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
         }
     }
 }

@@ -1,6 +1,8 @@
 import KeyPoint from "./KeyPoint";
 import HookTemplateFragment from "./hook/HookTemplateFragment";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 
@@ -25,9 +27,9 @@ export class AbstractHook {
 
     public __:NodeInternalType;
 
-     _t:NodeInternalType = null;
+     _t:Nullable<NodeInternalType> = null;
 
-     _uid:string = null;
+     _uid:Nullable<string> = null;
 
     //protected _hookset:HookSet = null;
 
@@ -35,11 +37,11 @@ export class AbstractHook {
      * Key Point from where the hook is loaded or unload
      * @protected
      */
-     _kp:KeyPoint = null;
+     _kp:Nullable<KeyPoint> = null;
 
-     _loadkp:KeyPoint = null;
+     _loadkp:Nullable<KeyPoint> = null;
 
-     _unloadkp:KeyPoint = null;
+     _unloadkp:Nullable<KeyPoint> = null;
 
 
       script:string;
@@ -67,32 +69,32 @@ export class AbstractHook {
      * Hold the ID of variable shared with previous executions
      * @protected
      */
-      _varID:string = null;
+      _varID:Nullable<string> = null;
 
       _enabled = true;
 
-      _code:string = null;
+      _code:Nullable<string> = null;
 
-      _vars:string = null;
+      _vars:IStringIndex<any> = {};
 
-     customName:string = null;
+     customName:Nullable<string> = null;
 
-     color:string = null;
+     color:Nullable<string> = null;
 
-     _time:number = null;
+     _time:number = -1;
     /**
      *
      */
-     parentID:string = null;
+     parentID:Nullable<string> = null;
 
      edited = false;
 
      id?:string;
 
 
-     constructor(pConfig = null) {
+     constructor(pConfig:any = null) {
        if(pConfig != null){
-         for(const i in pConfig) this[i] = pConfig[i];
+         for(const i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
        }
      }
 
@@ -100,7 +102,7 @@ export class AbstractHook {
         this._uid = pGUID;
     }
 
-    getGUID():string{
+    getGUID():Nullable<string>{
        if(this._uid != null){
          return this._uid;
        }
@@ -108,7 +110,7 @@ export class AbstractHook {
     }
 
 
-    getVariable(pID:string){
+    getVariable(pID:string):Nullable<string>{
         return this._vars[pID];
     }
 
@@ -116,15 +118,15 @@ export class AbstractHook {
         this._varID = pID;
     }
 
-    getVariableID():string {
+    getVariableID():Nullable<string> {
         return this._varID;
     }
 
-    getLoadKeyPoint():KeyPoint {
+    getLoadKeyPoint():Nullable<KeyPoint> {
         return this._loadkp;
     }
 
-    getUnloadKeyPoint():KeyPoint {
+    getUnloadKeyPoint():Nullable<KeyPoint> {
         return this._unloadkp;
     }
 
@@ -137,7 +139,7 @@ export class AbstractHook {
         this._unloadkp = pKP;
     }
 
-    getKeyPoint():KeyPoint {
+    getKeyPoint():Nullable<KeyPoint> {
         return this._kp;
     }
 
@@ -163,7 +165,7 @@ export class AbstractHook {
         this._enabled = pBool;
     }
 
-    getGeneratedCode():string {
+    getGeneratedCode():Nullable<string> {
         return this._code;
     }
 
@@ -179,16 +181,16 @@ export class AbstractHook {
      * @return {HookTemplateFragment} Hook template fragment
      * @method
      */
-    getFragment( pFragmentUID:string ):HookTemplateFragment {
-        let frag:HookTemplateFragment = null;
+    getFragment( pFragmentUID:string ):Nullable<HookTemplateFragment>  {
+        let frag:Nullable<HookTemplateFragment> = null;
         const pos = ["_before","_after","_replace"];
         let fl:number;
 
         for(let k=0; k<pos.length; k++){
-            fl = this[pos[k]].length ;
+            fl = (this as IStringIndex<any>)[pos[k]].length ;
             for(let i = 0; i<fl; i++){
-                if(this[pos[k]][i].getUID()===pFragmentUID){
-                    frag = this[pos[k]][i];
+                if((this as IStringIndex<any>)[pos[k]][i].getUID()===pFragmentUID){
+                    frag = (this as IStringIndex<any>)[pos[k]][i];
                     break;
                 }
             }
@@ -256,7 +258,7 @@ export class AbstractHook {
             return this._replace;
         }
         else{
-            return null;
+            throw new Error("Invalid fragment location");
         }
     }
 

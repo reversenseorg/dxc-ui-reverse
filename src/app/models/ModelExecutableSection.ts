@@ -1,5 +1,7 @@
 import {NodeType} from "./NodeType";
 import {NodeInternalType} from "./NodeInternalType";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 /**
  * Represents a section into an executable file
@@ -16,7 +18,7 @@ export default class ModelExecutableSection {
     sz:number = -1;
     memsz:number = -1;
     perm:string = "----";
-    name:string = null;
+    name:Nullable<string> = null;
 
     data:any= null;
 
@@ -24,7 +26,7 @@ export default class ModelExecutableSection {
 
         if(pConfig!==undefined)
             for(let i in pConfig)
-                this[i]=pConfig[i];
+                (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     getVirtualAddr():number {
@@ -36,7 +38,7 @@ export default class ModelExecutableSection {
     getPermissions():string {
         return this.perm;
     }
-    getName():string {
+    getName():Nullable<string> {
         return this.name;
     }
     getMemSize():number {

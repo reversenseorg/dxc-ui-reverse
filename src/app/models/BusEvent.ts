@@ -1,15 +1,18 @@
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
+
 export default class BusEvent
 {
-  type:string = null;
+  type:Nullable<string> = null;
   data:any = null;
 
   constructor(pConfig:any=null) {
     if(pConfig!=null)
       for(let i in pConfig)
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
   }
 
-  getType():string{
+  getType():Nullable<string>{
     return this.type;
   }
 

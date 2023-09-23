@@ -1,3 +1,6 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
+
 export enum NodeInternalType {
   BASIC_BLOCK,
   CLASS,
@@ -113,7 +116,7 @@ export const NodeInternalTypeName = {
  */
 export class NodeTypeHelper {
 
-  static UID_MAPPING = {
+  static UID_MAPPING:IStringIndex<any> = {
     [NodeInternalType.BASIC_BLOCK]: "name",
     [NodeInternalType.CLASS]: "name",
     [NodeInternalType.METHOD]: "__signature__",
@@ -132,7 +135,7 @@ export class NodeTypeHelper {
    * @param pNode
    * @param pNodeType
    */
-  static getUIDof( pNode:any, pNodeType:string = null):string{
+  static getUIDof( pNode:any, pNodeType:Nullable<string> = null):string{
     const type = (pNodeType == null ? pNode.__ : pNodeType);
 
     const pptUID = NodeTypeHelper.UID_MAPPING[type];

@@ -6,6 +6,7 @@ import {AndroidIntentable} from "./Intent";
 import ModelClass from "../ModelClass";
 import {AndroidAttributeSet} from "./AndroidAttribute";
 import {NodeInternalType} from "../NodeInternalType";
+import {Nullable} from "../../base/Nullable";
 
 
 const ANDROID_PREFIX = "android:";
@@ -15,14 +16,14 @@ export default class AndroidComponent extends AndroidIntentable
 {
     __:NodeInternalType;
     androidPrefixed:string[] = [];
-    attr:AndroidAttributeSet = {};
+    attr:AndroidAttributeSet  = {};
 
-    label:string = null;
-    name:string = null;
+    label:Nullable<string> = null;
+    name:Nullable<string> = null;
 
     metadata:any = null;
 
-    __id:string = null;
+    __id:Nullable<string> = null;
     __impl:any = null;
     __tag:any = [];
     __ppts:any = {};
@@ -32,7 +33,7 @@ export default class AndroidComponent extends AndroidIntentable
     }
 
 
-    getUID():string{
+    getUID():Nullable<string>{
         return this.__id;
     }
 
@@ -53,11 +54,11 @@ export default class AndroidComponent extends AndroidIntentable
         return this.attr[name];
     }
 
-    getLabel():string{
+    getLabel():Nullable<string>{
         return this.label
     }
 
-    getName():string{
+    getName():Nullable<string>{
         return this.name;
     }
 
@@ -79,7 +80,8 @@ export default class AndroidComponent extends AndroidIntentable
     }
 
     isExported():boolean{
-        return (this.attr.exported != null) && (this.attr.exported === "true");
+
+        return ((this.attr as any).exported != null) && ((this.attr as any).exported === "true");
     }
 
 

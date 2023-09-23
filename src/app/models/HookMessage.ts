@@ -1,14 +1,16 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export default class HookMessage
 {
 
     data:any = null;
-    msg:string = null;
-    match:boolean = null;
+    msg:Nullable<string> = null;
+    match:Nullable<boolean> = null;
     isIntercept:boolean = false;
-    hook:string = null;
-    when:number = null;
+    hook:Nullable<string> = null;
+    when:number = 0;
     action:string = "";
     tags:any = null;
 
@@ -19,7 +21,7 @@ export default class HookMessage
     constructor(pConfig:any=null){
         if(pConfig!=null){
             for(let i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
         }
         return this;
     }
@@ -32,7 +34,7 @@ export default class HookMessage
         return this.when>0;
     }
 
-    getHook():string{
+    getHook():Nullable<string>{
         return this.hook;
     }
 
@@ -54,7 +56,7 @@ export default class HookMessage
      * @returns {Object} Returns an Object instance representing the type
      */
     toJsonObject():any{
-        let o:any = new Object();
+        let o:any = {};
         o.data = this.data;
         o.hook = this.hook;
         o.msg = this.msg;

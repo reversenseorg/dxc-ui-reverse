@@ -1,5 +1,7 @@
 import HookSet from "./HookSet";
 import {NodeInternalType} from "./NodeInternalType";
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 const TASK_CODE = {
     NO_RESULT: 0,
@@ -31,7 +33,7 @@ export class StaticTask
     constructor(pConfig:any=null){
         if(pConfig!==null)
             for(let i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
     setCondition(fn:any){
@@ -55,13 +57,13 @@ export class StaticTask
 export class Inspector
 {
     __:NodeInternalType = NodeInternalType.INSPECTOR;
-    id:string = null;
-    name:string = null;
-    description:string = null;
+    id:Nullable<string> = null;
+    name:Nullable<string> = null;
+    description:Nullable<string> = null;
 
     //context:DexcaliburProject = null;
-    hookset: HookSet = null;
-    staticTasks:StaticTask[] = null;
+    hookset: Nullable<HookSet> = null;
+    staticTasks:StaticTask[] = [];
     running:boolean = false;
     listener:ListenerList = {};
 
@@ -90,7 +92,7 @@ export class Inspector
                     this.hookset = new HookSet(config[i]);
                     break;
                   default:
-                    this[i] = config[i];
+                    (this as IStringIndex<any>)[i] = config[i];
                     break;
                 }
             }
@@ -117,7 +119,7 @@ export class Inspector
     }
 
 
-    getID():string{
+    getID():Nullable<string>{
         return this.id;
     }
 
@@ -141,7 +143,7 @@ export class Inspector
 
     }
 
-    getHooks():HookSet {
+    getHooks():Nullable<HookSet> {
       return this.hookset;
     }
 

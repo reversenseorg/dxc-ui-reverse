@@ -9,7 +9,7 @@ export interface  UserRoleMap {
  */
 export class UserRole {
 
-    private _uid:string = null;
+    private _uid:string;
     private _name:string ;
     private _access:AccessMap = {};
 

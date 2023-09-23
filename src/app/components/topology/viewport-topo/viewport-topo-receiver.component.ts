@@ -23,14 +23,14 @@ export class ViewportTopoReceiverComponent implements OnInit, OnChanges, AfterVi
 
   @Input() item: any;
   @Input() data: any; // ModelMethod
-  @Input() controller: TopologyController;
-  @Input() parent: ViewportComponent;
+  @Input() controller!: TopologyController;
+  @Input() parent!: ViewportComponent;
 
-  @Input() height: number;
-  @Input() width: number;
+  @Input() height!: number;
+  @Input() width!: number;
 
-  @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
-  @ViewChild(ViewportSplittedComponent) layout:ViewportSplittedComponent;
+  @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl!:ElementRef;
+  @ViewChild(ViewportSplittedComponent) layout!:ViewportSplittedComponent;
 
 
   NODE_TYPES = NodeInternalType;
@@ -42,8 +42,8 @@ export class ViewportTopoReceiverComponent implements OnInit, OnChanges, AfterVi
   id: number = -1;
 
 
-  ctr: number = 0;
-  activeTop: string;
+  //ctr: number = 0;
+  //activeTop: string;
   activeTopLeft: string = 'if';
 
   constructor(private codeService:CodeControllerService) {
@@ -57,7 +57,7 @@ export class ViewportTopoReceiverComponent implements OnInit, OnChanges, AfterVi
 
     let c:any = null;
     if(changes.hasOwnProperty('data')){
-      const data = changes.data.currentValue.__ppts.internals;
+      const data = (changes as any).data.currentValue.__ppts.internals;
 
       this.data.internals = [];
       for(let clz in data){

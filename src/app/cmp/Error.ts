@@ -1,3 +1,5 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export enum MessageType {
@@ -12,11 +14,11 @@ export enum MessageType {
  */
 export class Message {
   type: MessageType = MessageType.INFO;
-  src: string = null;
+  src: Nullable<string> = null;
   msg: string = '';
 
   constructor(pConfig:any={}) {
-    for(let i in pConfig) if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+    for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
   }
 
   // shortcut

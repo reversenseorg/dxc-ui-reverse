@@ -2,6 +2,8 @@
 import ModelSyscall from "./ModelSyscall";
 import {IBridge} from "./IBridge";
 import DeviceProfile from "./DeviceProfile";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 export enum EDevType  {
     UNKNOW=0x0,
@@ -37,7 +39,7 @@ export class Device
     /**
      * @field
      */
-    type:EOsType = null;
+    type:Nullable<EOsType> = null;
 
     /**
      * Flag. TRUE if currently connected, else FALSE
@@ -70,13 +72,13 @@ export class Device
      * Device internal UID
      * @field
      */
-    uid:string = null;
+    uid:Nullable<string> = null;
 
     /**
      * Real device ID
      * @field
      */
-    id:string =  null;
+    id:Nullable<string> =  null;
 
     /**
      * TRUE if debugging is authorized, else FALSE
@@ -88,16 +90,16 @@ export class Device
      * Device model
      * @field
      */
-    model:string = null;
+    model:Nullable<string> = null;
 
     /**
      * Device product name
      * @field
      */
-    product:string = null;
+    product:Nullable<string> = null;
 
     // ??s
-    device:string = null;
+    device:Nullable<string> = null;
 
     /**
      * Transport ID
@@ -105,7 +107,7 @@ export class Device
      * @field
      * @deprecated
      */
-    transportId:string = null;
+    transportId:Nullable<string> = null;
 
     /**
      * USB qualifier.
@@ -114,14 +116,14 @@ export class Device
      *
      * @field
      */
-    usbQualifier:string = null;
+    usbQualifier:Nullable<string> = null;
 
     /**
      * Device profile built by DeviceProfiler
      * @type {DeviceProfile}
      * @field
      */
-    profile:DeviceProfile = null;
+    profile:Nullable<DeviceProfile> = null;
 
     /**
      * Device profile built by DeviceProfiler
@@ -179,7 +181,7 @@ export class Device
         }
 
         if(config !== null)
-            for(let i in config) this[i] = config[i];
+            for(let i in config) (this as IStringIndex<any>)[i] = config[i];
     }
 
     /**
@@ -317,7 +319,7 @@ export class Device
      *
      * @returns {String} Internal device UID
      */
-    getUID():string{
+    getUID():Nullable<string>{
         return this.uid;
     }
 

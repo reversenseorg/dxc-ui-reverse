@@ -13,6 +13,8 @@ import HookMessage from "../HookMessage";
 import {NodeInternalType} from "../NodeInternalType";
 import {RuntimeEvent} from "./RuntimeEvent";
 import HookMessageV2 from "./HookMessageV2";
+import {Nullable} from "../../base/Nullable";
+import {IStringIndex} from "../../base/IStringIndex";
 
 // Stub.
 // TODO :  replace by defined type
@@ -42,7 +44,7 @@ export default class HookSession
 {
   __:NodeInternalType = NodeInternalType.HOOK_SESSION;
 
-  public _uid:string = null;
+  public _uid:Nullable<string>  = null;
 
   /**
    * The stack containing the received message
@@ -68,7 +70,7 @@ export default class HookSession
    * To hold some references from frida-node
    * @field
    */
-  frida:FridaBindings = null
+  frida:Nullable<FridaBindings> = null
 
 
   active = false;
@@ -86,9 +88,9 @@ export default class HookSession
    * @param {HookManager} manager
    * @constructor
    */
-  constructor(pConfig) {
+  constructor(pConfig:any) {
 
-    for(const i in pConfig) this[i] = pConfig[i];
+    for(const i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
   }
 
   getUID(){

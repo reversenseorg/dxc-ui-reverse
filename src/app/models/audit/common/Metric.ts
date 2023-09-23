@@ -1,3 +1,5 @@
+import {IStringIndex} from "../../../base/IStringIndex";
+
 /**
  * Represent a metric in a dashboard
  * @class
@@ -13,7 +15,7 @@ export class Metric {
 
     constructor(pConfig:any) {
         for(const i in pConfig){
-            this[i] = pConfig[i];
+            (this as IStringIndex<any>)[i] = pConfig[i];
         }
     }
 

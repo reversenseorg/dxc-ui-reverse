@@ -25,7 +25,7 @@ export interface Authenticator {
 export class AuthenticationException extends Error {
 
     _c:AuthCode = AuthCode.NONE
-    constructor(pMsg, pCode:AuthCode = AuthCode.NONE) {
+    constructor(pMsg:string, pCode:AuthCode = AuthCode.NONE) {
         super(pMsg);
         this._c = pCode;
     }

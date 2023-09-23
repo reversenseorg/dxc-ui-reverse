@@ -1,3 +1,6 @@
+import {IStringIndex} from "../../../base/IStringIndex";
+import {Nullable} from "../../../base/Nullable";
+
 export enum ConstraintType {
     CODE,
     FLOW,
@@ -6,7 +9,7 @@ export enum ConstraintType {
     PHYSICAL
 }
 
-export interface ConstraintOptions {
+export interface ConstraintOptions extends IStringIndex<any>{
     type?:ConstraintType;
     name?:string;
 
@@ -24,7 +27,7 @@ export default class Constraint  {
 
     el:any = null;
 
-    constructor( pType:ConstraintType, pConfig:ConstraintOptions = null) {
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+    constructor( pType:ConstraintType, pConfig:Nullable<ConstraintOptions> = null) {
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
 }

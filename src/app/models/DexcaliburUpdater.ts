@@ -1,6 +1,8 @@
 import vm from "node:vm";
 import DexcaliburProject from "./DexcaliburProject";
 import DexcaliburEngine from "./DexcaliburEngine";
+import {IStringIndex} from "../base/IStringIndex";
+import {Nullable} from "../base/Nullable";
 
 export enum DXC_LIFECYCLE_EVENT {
   NEW_ENGINE,
@@ -19,7 +21,7 @@ export class DexcaliburPatch {
 
   constructor(pConfig:any) {
     for(let i in pConfig){
-      this[i] = pConfig[i];
+      (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 
@@ -33,7 +35,7 @@ export class DexcaliburPatch {
  */
 export class DexcaliburUpdater {
 
-  engine:DexcaliburEngine = null;
+  engine:Nullable<DexcaliburEngine> = null;
 
   patches:DexcaliburPatch[] = [];
 

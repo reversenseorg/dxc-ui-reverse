@@ -3,6 +3,8 @@ import DexcaliburProject from "./DexcaliburProject";
 import Hook from "./Hook";
 import { NodeInternalType } from "./NodeInternalType";
 import HookStrategy from "./hook/HookStrategy";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /**
@@ -11,11 +13,11 @@ import HookStrategy from "./hook/HookStrategy";
 export default class HookSet
 {
     __:NodeInternalType = NodeInternalType.HOOK_SET;
-    id:string = null;
-    name:string = null;
-    description:string = null;
-    prologue:HookPrologue = null;
-    category:string = null;
+    id:Nullable<string> = null;
+    name:Nullable<string> = null;
+    description:Nullable<string> = null;
+    prologue:Nullable<HookPrologue> = null;
+    category:Nullable<string> = null;
 
     builtin = false;
     dynamic = false;
@@ -27,7 +29,7 @@ export default class HookSet
 
     hooks:Hook[] = [];
 
-    context:DexcaliburProject = null;
+    context:Nullable<DexcaliburProject> = null;
     enable = false;
     requires:string[] = [];
     color:any = null;
@@ -51,7 +53,7 @@ export default class HookSet
                 });
                 break;
               default:
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
                 break;
             }
           }
@@ -62,7 +64,7 @@ export default class HookSet
         return this.enable;
     }
 
-    getID():string{
+    getID():Nullable<string>{
         return this.id;
     }
 

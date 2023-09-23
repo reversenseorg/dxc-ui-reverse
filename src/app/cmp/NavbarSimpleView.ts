@@ -3,17 +3,19 @@ import {IconView} from "./IconView";
 import {UI} from "./ui.const";
 import {NavbarOption} from "./NavbarOption";
 import {IconModel} from "../base/icon/IconModel";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 
 
 export class NavbarSimpleView {
 
-  id:string = null;
-  label:string = null;
-  color:string = null;
-  icon:IconModel = null;
-  menu:MenuView = null;
+  id:Nullable<string> = null;
+  label:Nullable<string> = null;
+  color:Nullable<string> = null;
+  icon:Nullable<IconModel> = null;
+  menu:Nullable<MenuView>  = null;
   listeners:any = {};
   selected:any = null;
 
@@ -34,19 +36,30 @@ export class NavbarSimpleView {
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(const i in pConfig) if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+      for(const i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
-    if(this.selected != null){
-      const el = this.menu.getItemByID(this.selected);
-      if(el != null){
-        this.label =  el.label;
-        this.icon = el.icon;
+    if(this.menu != null){
+      if(this.selected != null){
+        const el = this.menu.getItemByID(this.selected);
+        if(el != null){
+          this.label =  el.label;
+          this.icon = el.icon;
+        }
       }
+    }else{
+      throw new Error(("UIException : NavbarSimpleView : menu is not defined"));
     }
+
+
   }
 
   selectItemByID( pName:string):any {
+
+    if(this.menu==null){
+      throw new Error(("UIException : NavbarSimpleView : selectItemByID : menu is not defined"));
+    }
+
     const el = this.menu.getItemByID(this.selected);
     if(el != null){
       this.label =  el.label;
@@ -69,11 +82,16 @@ export class NavbarSimpleView {
     return (this.opt != null);
   }
 
-  getDOMElement(): HTMLElement {
-    return document.getElementById(this.id);
+  getDOMElement(): Nullable<HTMLElement> {
+    if(this.id==null){
+      return null;
+    }else{
+      return document.getElementById(this.id);
+    }
+
   }
 
-  getID(pParentID:string):string{
+  getID(pParentID:Nullable<string>):string{
     if(this.id==null)
       this.id = pParentID+"Nav";
 

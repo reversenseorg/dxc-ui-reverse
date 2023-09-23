@@ -1,3 +1,5 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /**
@@ -8,8 +10,8 @@
  */
 export default class AppPackage {
 
-    packageIdentifier:string = null;
-    packagePath:string =  null;
+    packageIdentifier:Nullable<string> = null;
+    packagePath:Nullable<string> =  null;
     patched:boolean = false;
     workspaceExists:boolean = false;
     currentWd:boolean = false;
@@ -30,7 +32,7 @@ export default class AppPackage {
         if(pConfig !== null)
             for(let i in pConfig)
             {
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
             }
     }
 

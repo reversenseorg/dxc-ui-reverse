@@ -1,8 +1,8 @@
+import {Nullable} from "../base/Nullable";
 
 
 export class SerializeSelector {
     field:string;
-    alias
     cond:boolean = false;
     selectors:SerializeSelector[];
 }
@@ -33,24 +33,25 @@ export class SerializeFilter {
         let rootFields:string[] = pSelector.split(',');
 
         rootFields.map( (pField) => {
-            let m = TOKEN_RE.exec(pField);
-            let t = null;
-            if(m[1]==undefined) return;
+            let m:Nullable<RegExpExecArray> = TOKEN_RE.exec(pField);
+            if(m!=null){
+                let t = null;
+                if(m[1]==undefined) return;
 
-            if(m[4]!=undefined){
-                t = m[4].substring(1,-1).split(':');
+                if(m[4]!=undefined){
+                    t = m[4].substring(1,-1).split(':');
+                }
+
+
+                if(m[2]==undefined){
+                    this.query[m[1]] = m[1];
+                }else{
+                    this.query[m[1]] = m[2].substr(2);
+                }
+
+                console.log(m);
+
             }
-
-
-            if(m[2]==undefined){
-              this.query[m[1]] = m[1];
-            }else{
-              this.query[m[1]] = m[2].substr(2);
-            }
-
-            console.log(m);
-
-
         });
 
         console.log(this);

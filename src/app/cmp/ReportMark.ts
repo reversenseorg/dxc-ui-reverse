@@ -1,3 +1,4 @@
+import {Nullable} from "../base/Nullable";
 
 
 export enum MarkType {
@@ -10,8 +11,8 @@ export enum MarkType {
 
 
 export class ReportTopic {
-  title: string = null;
-  description: string = null;
+  title: Nullable<string> = null;
+  description: Nullable<string> = null;
 
   reportTitle: string = '';
   reportDescription: string = '';
@@ -19,8 +20,8 @@ export class ReportTopic {
 
 
 export class ReportTest {
-  title: string = null;
-  description: string = null;
+  title: Nullable<string> = null;
+  description: Nullable<string> = null;
 
   reportTitle: string = '';
   reportDescription: string = '';

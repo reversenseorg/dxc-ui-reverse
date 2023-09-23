@@ -1,8 +1,9 @@
 
 import Constraint, {ConstraintType} from "./Constraint";
 import Asset from "./Asset";
+import {IStringIndex} from "../../../base/IStringIndex";
 
-export interface ThreatOptions {
+export interface ThreatOptions extends IStringIndex<any>{
     id?:string;
     uid?:string ;
     name?:string;
@@ -30,7 +31,7 @@ export default class Threat extends Asset{
     constructor( pConfig:any = null) {
         super(pConfig);
 
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     appendSignature(pConstraint:Constraint):void{

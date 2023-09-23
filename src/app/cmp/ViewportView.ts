@@ -1,23 +1,25 @@
 import {NavbarSimpleView} from "./NavbarSimpleView";
 import {ViewportTab} from "./ViewportTab";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export class ViewportView {
 
-  id:string = null;
+  id:Nullable<string> = null;
   label:string = "label";
   icon:string = "file";
   iconColor:string = "#ccc";
   labelColor:string = "#ccc";
   ctn:string = "";
 
-  tab: ViewportTab = null;
-  nav:NavbarSimpleView = null;
-  subnav:NavbarSimpleView = null;
+  tab: Nullable<ViewportTab> = null;
+  nav: Nullable<NavbarSimpleView> = null;
+  subnav: Nullable<NavbarSimpleView> = null;
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 
@@ -42,7 +44,7 @@ export class ViewportView {
     return this.id+'Ctn';
   }
 
-  getNavElement():HTMLElement {
+  getNavElement():Nullable<HTMLElement> {
     return document.getElementById(this.getNavID());
   }
 }

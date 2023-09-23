@@ -1,6 +1,8 @@
 import {NodeInternalType} from "../NodeInternalType";
 import TagCategory from "./TagCategory";
 import {INode} from "../INode";
+import {IStringIndex} from "../../base/IStringIndex";
+import {Nullable} from "../../base/Nullable";
 
 
 export interface TagMap {
@@ -33,14 +35,14 @@ export class Tag implements INode
     tags:number[] = [];
 
     name:string;
-    category:TagCategory = null;
+    category:Nullable<TagCategory> = null;
 
     child:Tag[]; // ??
 
     constructor(pConfig:any=null){
         if(pConfig!=null)
             for(const i in pConfig)
-                this[i] = pConfig[i];
+                (this as IStringIndex<any>)[i] = pConfig[i];
 
         if(this.name!=null && this.label==null){
             this.label = this.name;
@@ -63,7 +65,7 @@ export class Tag implements INode
         return this._;
     }
 
-    getCategory():TagCategory {
+    getCategory():Nullable<TagCategory> {
         return this.category;
     }
 

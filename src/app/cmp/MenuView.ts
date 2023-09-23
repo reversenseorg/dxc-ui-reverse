@@ -2,6 +2,8 @@
  *
  */
 import {IconModel} from "../base/icon/IconModel";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 interface MenuItemListeners {
   [eventName:string] :Function
@@ -15,15 +17,15 @@ export class MenuItem<T> {
   id = "";
   label = "";
   color = "";
-  icon:IconModel = null;
+  icon:Nullable<IconModel> = null;
   children:MenuItem<T>[] = [];
   listeners:MenuItemListeners = {};
-  click:string = null;
+  click:Nullable<string> = null;
   data:T[] = [];
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 }
@@ -35,7 +37,7 @@ export class MenuView {
   constructor(pConfig:any=null) {
     if(pConfig != null){
       for(let i in pConfig)
-        if(this.hasOwnProperty(i)) this[i] = pConfig[i];
+        if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

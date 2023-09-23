@@ -1,3 +1,4 @@
+import {Nullable} from "../base/Nullable";
 
 export interface DataScopeMap {
   [name:string] :DataScope
@@ -9,7 +10,7 @@ export enum DataScopePpts {
 }
 
 export default class DataScope {
-  _n:string = null;
+  _n:Nullable<string> = null;
   _p:any = null;
 
   constructor( pName:string, pOpts:any={}){
@@ -17,7 +18,7 @@ export default class DataScope {
     this._p = pOpts;
   }
 
-  getName():string {
+  getName():Nullable<string> {
     return this._n;
   }
 

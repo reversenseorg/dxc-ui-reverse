@@ -1,3 +1,5 @@
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 /**
@@ -7,7 +9,7 @@
  */
 export class AppIcon {
 
-  data:Buffer = null;
+  data:Nullable<Buffer> = null;
 
   localPath:string = "";
   appPath:string = "";
@@ -17,7 +19,7 @@ export class AppIcon {
    */
   size:any = null;
 
-  format:string = null;
+  format:Nullable<string> = null;
 
   /**
    * @constructor
@@ -26,7 +28,7 @@ export class AppIcon {
   constructor( pConfig:any = {}) {
     for(let i in pConfig)
       if(this.hasOwnProperty(i))
-        this[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
   }
 
   toJsonObject(){

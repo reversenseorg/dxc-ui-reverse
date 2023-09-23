@@ -1,5 +1,6 @@
 
 export const enum Modifier {
+     NONE=0,
      PUBLIC = 0b1,
      PROTECTED = 0b10,
      STATIC = 0b10 << 1,

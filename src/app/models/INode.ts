@@ -1,4 +1,5 @@
 import {NodeInternalType} from "./NodeInternalType";
+import {IStringIndex} from "../base/IStringIndex";
 
 export interface INode {
     __:NodeInternalType;
@@ -13,7 +14,7 @@ export class Node implements INode{
 
     constructor(pConfig:any = null) {
         if(pConfig != null){
-            for(const  i in pConfig) this[i]=pConfig[i];
+            for(const  i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
         }
     }
 

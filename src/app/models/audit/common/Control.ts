@@ -1,6 +1,8 @@
 import ControlAssessment from "./ControlAssessment";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
-export interface ControlOptions {
+export interface ControlOptions extends IStringIndex<any>{
     id?:string;
     name?:string;
     description?:string;
@@ -27,8 +29,8 @@ export default class Control {
 
     assessments:ControlAssessment[] = []
 
-    constructor( pConfig:ControlOptions = null) {
-        if(pConfig!=null) for(const i in pConfig) this[i]=pConfig[i];
+    constructor( pConfig:Nullable<ControlOptions> = null) {
+        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
     }
 
     hasChildren():boolean {
@@ -68,13 +70,13 @@ export default class Control {
       const a = new Control(pOpts);
 
       let ctrls:any[] = [];
-      pOpts.children.map( x => {
+      pOpts.children.map( (x:any) => {
         ctrls.push(Control.fromJsonObject(x));
       });
       a.children = ctrls;
 
       ctrls = []
-      pOpts.assessments.map( x => {
+      pOpts.assessments.map( (x:any) => {
         ctrls.push(ControlAssessment.fromJsonObject(x));
       });
       a.assessments = ctrls;
