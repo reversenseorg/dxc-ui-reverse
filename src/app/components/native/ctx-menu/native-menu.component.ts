@@ -8,9 +8,9 @@ import {Component} from "@angular/core";
       <app-context-item [label]="'Disassemble'" (click)="disass(ctxMenuState.subject)"></app-context-item>
       <app-context-item [label]="'Xref from'" [disabled]="true" (click)="xreffrom(ctxMenuState.subject)"></app-context-item>
       <app-context-item [label]="'Xref to'"  (click)="xrefto(ctxMenuState.subject)"></app-context-item>
-      <app-context-item [label]="'Generate hook'" [icon]="gIcons.HOOKS"  (click)="goHook(ctxMenuState.subject)"></app-context-item>
-      <app-context-item [label]="'Add bookmark'" [icon]="gIcons.BOOKMARK"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
-      <app-context-item [label]="'Show details'" [icon]="gIcons.FIND"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>
+      <app-context-item [label]="'Generate hook'" [icon]="gIcons['HOOKS']"  (click)="goHook(ctxMenuState.subject)"></app-context-item>
+      <app-context-item [label]="'Add bookmark'" [icon]="gIcons['BOOKMARK']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+      <app-context-item [label]="'Show details'" [icon]="gIcons['FIND']"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>
     </app-context-menu>
 
 

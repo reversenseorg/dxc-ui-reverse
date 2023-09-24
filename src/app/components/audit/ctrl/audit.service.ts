@@ -13,6 +13,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {CodeMenuEvent, ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";
 import AssuranceReport from "../../../models/audit/common/AssuranceReport";
+import {Nullable} from "../../../base/Nullable";
 
 
 @Injectable({
@@ -34,7 +35,7 @@ export class AuditService extends DxcApiService{
 
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
-  constructor( private appmenuSvc:AppMenuService, private topoSvc:TopologyService, private outputSvc:OutputService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, private topoSvc:TopologyService, private outputSvc:OutputService, protected override _http:HttpClient) {
 
       super({
         audit: {
@@ -52,7 +53,7 @@ export class AuditService extends DxcApiService{
     /*
     this.appmenuSvc.getMenu( 'plug').addItem({
         label: 'Privacy assessment',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           //this.onMenuClick.next({ item:'login', win:pBrowserWindow });
         }
       });
@@ -66,7 +67,7 @@ export class AuditService extends DxcApiService{
 
   getDashboards(pModelId:string):Observable<DashBoard[]> {
     return this._process(
-      this.endpoints.audit.dashboard,
+      this.endpoints['audit']['dashboard'],
       { model: pModelId }
     ).pipe(map( (pEl:any) => {
 
@@ -74,7 +75,7 @@ export class AuditService extends DxcApiService{
 
         const dbs:DashBoard[] = [];
 
-        pEl.data.dashboards.map(x => {
+        pEl.data.dashboards.map((x:any) => {
           dbs.push(new DashBoard(x));
         });
 
@@ -89,20 +90,21 @@ export class AuditService extends DxcApiService{
           src: "Audit",
           msg: `Scan dashboard cannot be retrieved`
         }));
+        return [];
       }
     }));
   }
 
   getReports():Observable<AssuranceReport[]> {
     return this._process(
-      this.endpoints.audit.reports
+      this.endpoints['audit']['reports']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
 
         const reports:AssuranceReport[] = [];
 
-        pEl.data.map((vRaw)=>{
+        pEl.data.map((vRaw:any)=>{
             reports.push(AssuranceReport.fromJsonObject(vRaw));
         });
 
@@ -117,13 +119,14 @@ export class AuditService extends DxcApiService{
           src: "Audit",
           msg: `Scan reports cannot be listed`
         }));
+        return [];
       }
     }));
   }
 
-  getModel(pModelId:string):Observable<AssuranceModel> {
+  getModel(pModelId:string):Observable<Nullable<AssuranceModel>> {
     return this._process(
-      this.endpoints.audit.model,
+      this.endpoints['audit']['model'],
       { model: pModelId }
     ).pipe(map( (pEl:any) => {
 
@@ -142,19 +145,21 @@ export class AuditService extends DxcApiService{
           src: "Audit",
           msg: `Assurance model cannot be retrieved`
         }));
+
+        return null;
       }
     }));
   }
 
   getModels():Observable<AssuranceModel[]> {
     return this._process(
-      this.endpoints.audit.models
+      this.endpoints['audit']['models']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
 
         const models:AssuranceModel[] = [];
-        pEl.data.map(x => {
+        pEl.data.map((x:any) => {
           const a = AssuranceModel.fromJsonObject( x);
           models.push( a);
         });
@@ -170,13 +175,14 @@ export class AuditService extends DxcApiService{
           src: "Audit",
           msg: `Assurance model cannot be retrieved`
         }));
+        return [];
       }
     }));
   }
 
-  scan(pModelId:string):Observable<AssuranceReport> {
+  scan(pModelId:string):Observable<Nullable<AssuranceReport>> {
     return this._process(
-      this.endpoints.audit.scan,
+      this.endpoints['audit']['scan'],
       { model: pModelId }
     ).pipe(map( (pEl:any) => {
 
@@ -195,6 +201,7 @@ export class AuditService extends DxcApiService{
           src: "Audit",
           msg: `Audit scan failed`
         }));
+        return null;
       }
     }));
   }

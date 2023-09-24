@@ -146,7 +146,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   tab:ExplorerTab = new ExplorerTab({
     offset: 0,
     label: 'Application',
-    icon: GLOBAL_ICONS.GLOBE,
+    icon: GLOBAL_ICONS['GLOBE'],
     color: 'dxc-icon-window'
   });
 
@@ -159,61 +159,61 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
             id:this.SUBVIEW.ALL,
             label:'All',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.WINDOW
+            icon: GLOBAL_ICONS['WINDOW']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.ACT,
             label:'Activities',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.ACTIVITY
+            icon: TOPO_ICONS['ACTIVITY']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.PROV,
             label:'Providers',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.PROVIDER
+            icon: TOPO_ICONS['PROVIDER']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.SRV,
             label:'Services',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.SERVICE
+            icon: TOPO_ICONS['SERVICE']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.RECV,
             label:'Receiver',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.RECEIVER
+            icon: TOPO_ICONS['RECEIVER']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.PERM,
             label:'Permissions',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.PERM
+            icon: TOPO_ICONS['PERM']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.DATA,
             label:'Data',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.DB
+            icon: TOPO_ICONS['DB']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.KS,
             label:'Key Store',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.KS
+            icon: TOPO_ICONS['KS']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.DEX,
             label:'Dex files',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.DEX
+            icon: TOPO_ICONS['DEX']
           }),
           new MenuItem<any>({
             id:this.SUBVIEW.LIB,
             label:'Libraries',
             color: 'dxc-text-clear75',
-            icon: TOPO_ICONS.LIBS
+            icon: TOPO_ICONS['LIBS']
           })
         ]
       })
@@ -244,16 +244,16 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     this._cuid = nextCUID();
     this.view.id = this.id;
 
-    this.data[this.SUBVIEW.ACT] = { _t: 'f', _s:0, children: [], name: 'Activities', _c: NodeInternalType.ANDROID_ACTIVITY, _icon: TOPO_ICONS.ACTIVITIES };
-    this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _c: NodeInternalType.ANDROID_PROVIDER, _icon: TOPO_ICONS.PROVIDER };
-    this.data[this.SUBVIEW.RECV] = { _t: 'f', _s:0, children: [], name: 'Receivers', _c: NodeInternalType.ANDROID_RECEIVER, _icon: TOPO_ICONS.RECEIVER };
-    this.data[this.SUBVIEW.SRV] = { _t: 'f', _s:0, children: [], name: 'Services', _c: NodeInternalType.ANDROID_SERVICE, _icon: TOPO_ICONS.SERVICE };
-    this.data[this.SUBVIEW.KS] = { _t: 'f', _s:0, children: [], name: 'Key Store', _c: NodeInternalType.FILE, _icon: TOPO_ICONS.KS };
-    //this.data[this.SUBVIEW.DATA] = { _t: 'f', _s:0, children: [], name: 'Data', _icon: TOPO_ICONS.DB };
-    this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', _c: NodeInternalType.FILE, _icon: TOPO_ICONS.DEX };
-    this.data[this.SUBVIEW.PERM] = { _t: 'f', _s:0, children: [], name: 'Permissions', _c: NodeInternalType.ANDROID_PERM, _icon: TOPO_ICONS.PERM };
-    this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', _c: NodeInternalType.FILE, _icon: TOPO_ICONS.LIBS };
-    //this.data[this.SUBVIEW.TA] = { _t: 'f', children: [], name: 'Trusted Apps', _icon: GLOBAL_ICONS.FOLDER };
+    this.data[this.SUBVIEW.ACT] = { _t: 'f', _s:0, children: [], name: 'Activities', _c: NodeInternalType.ANDROID_ACTIVITY, _icon: TOPO_ICONS['ACTIVITIES'] };
+    this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _c: NodeInternalType.ANDROID_PROVIDER, _icon: TOPO_ICONS['PROVIDER'] };
+    this.data[this.SUBVIEW.RECV] = { _t: 'f', _s:0, children: [], name: 'Receivers', _c: NodeInternalType.ANDROID_RECEIVER, _icon: TOPO_ICONS['RECEIVER'] };
+    this.data[this.SUBVIEW.SRV] = { _t: 'f', _s:0, children: [], name: 'Services', _c: NodeInternalType.ANDROID_SERVICE, _icon: TOPO_ICONS['SERVICE'] };
+    this.data[this.SUBVIEW.KS] = { _t: 'f', _s:0, children: [], name: 'Key Store', _c: NodeInternalType.FILE, _icon: TOPO_ICONS['KS'] };
+    //this.data[this.SUBVIEW.DATA] = { _t: 'f', _s:0, children: [], name: 'Data', _icon: TOPO_ICONS['DB'] };
+    this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', _c: NodeInternalType.FILE, _icon: TOPO_ICONS['DEX'] };
+    this.data[this.SUBVIEW.PERM] = { _t: 'f', _s:0, children: [], name: 'Permissions', _c: NodeInternalType.ANDROID_PERM, _icon: TOPO_ICONS['PERM'] };
+    this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', _c: NodeInternalType.FILE, _icon: TOPO_ICONS['LIBS'] };
+    //this.data[this.SUBVIEW.TA] = { _t: 'f', children: [], name: 'Trusted Apps', _icon: GLOBAL_ICONS['FOLDER'] };
     this.filtered = this.data;
   }
 
@@ -315,7 +315,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
           pActs.map( vChild => {
             vChild._t = NodeType.ACTIVITY;
-            vChild._icon = this.icons.ACTIVITY;
+            vChild._icon = this.icons['ACTIVITY'];
             // TODO : add intent filter as children
           });
 
@@ -402,7 +402,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
         pActs.map( vChild => {
           vChild.__ = NodeInternalType.ANDROID_ACTIVITY;
-          vChild._icon = this.icons.ACTIVITY;
+          vChild._icon = this.icons['ACTIVITY'];
           // TODO : add intent filter as children
         });
 
@@ -418,7 +418,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
         pActs.map( vChild => {
           vChild.__ = NodeInternalType.ANDROID_PROVIDER;
-          vChild._icon = this.icons.PROVIDER;
+          vChild._icon = this.icons['PROVIDER'];
           // TODO : add intent filter as children
         });
 
@@ -435,7 +435,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
         pActs.map( vChild => {
           vChild.__ = NodeInternalType.ANDROID_SERVICE;
-          vChild._icon = this.icons.SERVICE;
+          vChild._icon = this.icons['SERVICE'];
           // TODO : add intent filter as children
         });
 
@@ -466,7 +466,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
         pActs.map( vChild => {
           vChild.__ = NodeInternalType.ANDROID_PERM;
-          vChild._icon = this.icons.PERM;
+          vChild._icon = this.icons['PERM'];
           // TODO : add intent filter as children
         });
 
@@ -571,13 +571,13 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
           .listPackages( this.selected, '^'+pItem.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+'$')
           .pipe(
             map( (pObs:any)=>{
-              //pObs.data._icon = this.icons.CLASS;
+              //pObs.data._icon = this.icons['CLASS'];
 
               pObs.data[0].children.map( vSelf => {
                 if(vSelf._t=='c'){
-                  vSelf._icon = this.icons.CLASS;
+                  vSelf._icon = this.icons['CLASS'];
                 }else{
-                  vSelf._icon = this.icons.PKG;
+                  vSelf._icon = this.icons['PKG'];
                 }
                 //expandable
                 vSelf._e = true;
@@ -595,11 +595,11 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
               if(pObs.hasOwnProperty('data')==false || pObs.data==null) return;
 
-              pObs.data._icon = this.icons.CLASS;
+              pObs.data._icon = this.icons['CLASS'];
               pObs.data.fields.map( (vField)=>{
                 vField['_t'] = 'f';
                 vField['mod'] = ModifierFormat.toJsonObject(vField.modifiers);
-                vField._icon = this.icons.FIELD;
+                vField._icon = this.icons['FIELD'];
                 //expandable
                 vField._e = false;
                 children.push(vField);
@@ -612,17 +612,17 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
                 if(vMeth.mod.construct){
                   if(vMeth.mod.static) {
                     vMeth.mod._t = 'clinit';
-                    vMeth._icon = this.icons.STATICB;
+                    vMeth._icon = this.icons['STATICB'];
                   }else {
                     vMeth.mod._t = 'new';
-                    vMeth._icon = this.icons.NEW;
+                    vMeth._icon = this.icons['NEW'];
                   }
                 }else if(vMeth.mod.static){
-                  vMeth._icon = this.icons.STATIC;
+                  vMeth._icon = this.icons['STATIC'];
                 }else if(vMeth.mod.native){
-                  vMeth._icon = this.icons.NATIVE;
+                  vMeth._icon = this.icons['NATIVE'];
                 }else{
-                  vMeth._icon = this.icons.METH;
+                  vMeth._icon = this.icons['METH'];
                 }
 
                 vMeth._e = false;
@@ -698,7 +698,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    * @since 1.0.0
    */
   displayCtxMenu(pEvent:any, pType:string, pObject:any):void{
-    let type:string = null;
+    let type:Nullable<string> = null;
     pEvent.preventDefault();
 
     this.ctxMenuState = {
@@ -720,16 +720,16 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    */
   reset():void {
 
-    this.data[this.SUBVIEW.ACT] = { _t: 'f', _s:0, children: [], name: 'Activities', _icon: TOPO_ICONS.ACTIVITIES };
-    this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _icon: TOPO_ICONS.PROVIDER };
-    this.data[this.SUBVIEW.RECV] = { _t: 'f', _s:0, children: [], name: 'Receivers', _icon: TOPO_ICONS.RECEIVER };
-    this.data[this.SUBVIEW.SRV] = { _t: 'f', _s:0, children: [], name: 'Services', _icon: TOPO_ICONS.SERVICE };
-    this.data[this.SUBVIEW.KS] = { _t: 'f', _s:0, children: [], name: 'Key Store', _icon: TOPO_ICONS.KS };
-    this.data[this.SUBVIEW.DATA] = { _t: 'f', _s:0, children: [], name: 'Data', _icon: TOPO_ICONS.DB };
-    this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', _icon: TOPO_ICONS.DEX };
-    this.data[this.SUBVIEW.PERM] = { _t: 'f', _s:0, children: [], name: 'Permissions', _icon: TOPO_ICONS.PERM };
-    this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', _icon: TOPO_ICONS.LIBS };
-    //this.data[this.SUBVIEW.TA] = { _t: 'f', children: [], name: 'Trusted Apps', _icon: GLOBAL_ICONS.FOLDER };
+    this.data[this.SUBVIEW.ACT] = { _t: 'f', _s:0, children: [], name: 'Activities', _icon: TOPO_ICONS['ACTIVITIES'] };
+    this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _icon: TOPO_ICONS['PROVIDER'] };
+    this.data[this.SUBVIEW.RECV] = { _t: 'f', _s:0, children: [], name: 'Receivers', _icon: TOPO_ICONS['RECEIVER'] };
+    this.data[this.SUBVIEW.SRV] = { _t: 'f', _s:0, children: [], name: 'Services', _icon: TOPO_ICONS['SERVICE'] };
+    this.data[this.SUBVIEW.KS] = { _t: 'f', _s:0, children: [], name: 'Key Store', _icon: TOPO_ICONS['KS'] };
+    this.data[this.SUBVIEW.DATA] = { _t: 'f', _s:0, children: [], name: 'Data', _icon: TOPO_ICONS['DB'] };
+    this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', _icon: TOPO_ICONS['DEX'] };
+    this.data[this.SUBVIEW.PERM] = { _t: 'f', _s:0, children: [], name: 'Permissions', _icon: TOPO_ICONS['PERM'] };
+    this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', _icon: TOPO_ICONS['LIBS'] };
+    //this.data[this.SUBVIEW.TA] = { _t: 'f', children: [], name: 'Trusted Apps', _icon: GLOBAL_ICONS['FOLDER'] };
     this.filtered = this.data;
 
 

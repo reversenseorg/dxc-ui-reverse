@@ -54,7 +54,7 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
   @Input() message:Message = null;
 
@@ -69,14 +69,14 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   // model
   projectName = "";
   method = "fs";
-  targetFile:string = null;
-  targetUrl:string = null;
-  proxyIp:string = null;
-  proxyPort:string = null;
-  httpHeaders:string = null;
+  targetFile:Nullable<string> = null;
+  targetUrl:Nullable<string> = null;
+  proxyIp:Nullable<string> = null;
+  proxyPort:Nullable<string> = null;
+  httpHeaders:Nullable<string> = null;
   deviceList: any;
   device: Device;
-  devuid: string = null;
+  devuid:Nullable<string> = null;
   pltList: any;
   platform: any;
 

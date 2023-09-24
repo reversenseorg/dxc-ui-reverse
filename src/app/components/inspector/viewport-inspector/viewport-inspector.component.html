@@ -8,7 +8,7 @@
 
 
   <div class="container-fluid dxc-text-100" style="margin: 10px 0px;padding:10px;">
-    <dxc-icon [model]="gIcons.HELPER" style="font-size:14px;color:#fff;margin:0px 5px;"></dxc-icon>
+    <dxc-icon [model]="gIcons['HELPER']" style="font-size:14px;color:#fff;margin:0px 5px;"></dxc-icon>
     <span>{{ data.description }}</span>
   </div>
 
@@ -32,16 +32,16 @@
         <ng-container *ngFor="let h of hooks">
           <div class="row hook-row" (click)="openNode(h, h.__)">
             <div class="col-lg-1">
-              <dxc-icon [model]="h.enable? hIcons.UP : hIcons.DOWN"></dxc-icon>
+              <dxc-icon [model]="h.enable? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
             </div>
             <div class="col-lg-9 hook-label">
               <span *ngIf="h.method">{{ h.method.__signature__ }}</span>
               <span *ngIf="h.func">{{ h.func.__signature__ }}</span>
             </div>
             <div class="col-lg-2">
-              <dxc-icon [model]="gIcons.START_OBSERVE" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
-              <dxc-icon [model]="gIcons.EDIT" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
-              <dxc-icon [model]="gIcons.HELPER" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
+              <dxc-icon [model]="gIcons['START_OBSERVE']" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
+              <dxc-icon [model]="gIcons['EDIT']" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
+              <dxc-icon [model]="gIcons['HELPER']" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
             </div>
           </div>
         </ng-container>
@@ -59,7 +59,7 @@
               {{ l.n }}
             </div>
             <div class="col-lg-2">
-              <dxc-icon [model]="gIcons.HELPER" [color1]="'dxc-text-darker'"></dxc-icon>
+              <dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>
             </div>
           </div>
         </ng-container>
@@ -76,7 +76,7 @@
                 {{ e }}
               </div>
               <div class="col-lg-2">
-                <dxc-icon [model]="gIcons.HELPER"></dxc-icon>
+                <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
               </div>
             </div>
           </ng-container>
@@ -104,7 +104,7 @@
               {{ e.name }}
             </div>
             <div class="col-lg-2">
-              <dxc-icon [model]="gIcons.HELPER"></dxc-icon>
+              <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
             </div>
           </div>
         </ng-container>
@@ -117,7 +117,7 @@
               {{ l.n }}
             </div>
             <div class="col-lg-2">
-              <dxc-icon [model]="gIcons.HELPER" [color1]="'dxc-text-darker'"></dxc-icon>
+              <dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>
             </div>
           </div>
         </ng-container>
@@ -153,8 +153,8 @@
         <div *ngIf="activeItem.search.req"  class="box m-1 mt-1 p-2">
             <div class="row dxc-text-yellow">
               <div class="col-12">
-                <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons.FIND" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
-                <!--<dxc-meta ><dxc-icon [model]="gIcons.FIND" [color1]="'yellow'"></dxc-icon>&nbsp;request</dxc-meta>-->
+                <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
+                <!--<dxc-meta ><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;request</dxc-meta>-->
               </div>
             </div>
             <div class="row">
@@ -168,7 +168,7 @@
         <div *ngIf="activeItem.search.uid"  class="box m-1 mt-3 p-2">
           <div class="row dxc-text-yellow">
             <div class="col-12">
-              <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons.TARGET" [color1]="'yellow'"></dxc-icon>&nbsp;static signature</span>
+              <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons['TARGET']" [color1]="'yellow'"></dxc-icon>&nbsp;static signature</span>
             </div>
           </div>
           <div class="row mt-1">

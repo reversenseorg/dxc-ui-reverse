@@ -21,7 +21,7 @@ export class NativeController extends UiController implements IController {
    */
   name:string = 'native-main';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: NativeService = null;
@@ -130,19 +130,19 @@ export class NativeController extends UiController implements IController {
       return;
     }
 
-    pItem._icon = FILE_ICONS.BIN;
+    pItem._icon = FILE_ICONS['BIN'];
     this.rendered.push({ item:pItem, uid:vid });
     this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
     /*
     switch(pItem._t){
       case NodeType.FILE:
 
-        pItem._icon = GLOBAL_ICONS.FILE;
+        pItem._icon = GLOBAL_ICONS['FILE'];
         this.rendered.push({ item:pItem, uid:vid });
         this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
         /*
         this.service.getLibrary(pItem.getUID()).subscribe( (pData:data)=>{
-          pItem._icon = GLOBAL_ICONS.FILE;
+          pItem._icon = GLOBAL_ICONS['FILE'];
           this.rendered.push({ item:pItem, uid:vid });
           this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
         });

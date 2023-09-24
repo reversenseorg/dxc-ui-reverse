@@ -23,7 +23,7 @@ export class TerminalSearchComponent implements OnInit, ITerminalContainer {
   tab:TerminalTab = new TerminalTab({
     offset: 0,
     label: 'Find',
-    icon: GLOBAL_ICONS.FIND,
+    icon: GLOBAL_ICONS['FIND'],
     color: 'dxc-text-clear100'
   });
 

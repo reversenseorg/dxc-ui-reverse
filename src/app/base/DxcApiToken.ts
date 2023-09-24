@@ -1,7 +1,8 @@
 import {AuthenticationException} from "../models/user/auth/AuthTypes";
+import {Nullable} from "./Nullable";
 
 interface DxcApiTokenMap {
-  [name:string] :DxcApiToken;
+  [name:string] :Nullable<DxcApiToken>;
 }
 
 var _TOKENS:DxcApiTokenMap = {};
@@ -11,20 +12,20 @@ export class DxcApiToken {
 
   static ready:boolean = false;
 
-  _n:string = null;
-  _t:string = null;
+  _n:string;
+  _t:Nullable<string> = null;
 
   constructor(pName:string, pToken:string) {
     this._t = pToken;
     this._n = pName;
-
-
   }
 
   // TODO : add a mask unique per session
   static updateLocalStorage():void{
     for(let n in _TOKENS){
-      localStorage.setItem('DxcApiToken:'+n, _TOKENS[n].getToken());
+      if(_TOKENS[n]!=null){
+        localStorage.setItem('DxcApiToken:'+n, (_TOKENS[n] as DxcApiToken).getToken());
+      }
     }
   }
 
@@ -59,7 +60,10 @@ export class DxcApiToken {
     for(let n in localStorage){
       if(n.startsWith('DxcApiToken:')){
         tkn = n.substr(OFFSET);
-        _TOKENS[tkn] = new DxcApiToken( tkn, localStorage.getItem(n));
+        if(localStorage.getItem(n) == null){
+          throw new Error("DxcApiToken not found");
+        }
+        _TOKENS[tkn] = new DxcApiToken( tkn, localStorage.getItem(n) as string);
       }
     }
 
@@ -76,15 +80,15 @@ export class DxcApiToken {
       DxcApiToken.updateLocalStorage();
     }
 
-    return _TOKENS[pName];
+    return _TOKENS[pName] as DxcApiToken;
   }
 
-  static getInstance( pName = "local"):DxcApiToken {
+  static getInstance( pName:Nullable<string> = "local"):Nullable<DxcApiToken> {
     if(pName==null && DxcApiToken.count()==1){
       return Object.values(_TOKENS)[0];
     }
 
-    if(_TOKENS.hasOwnProperty(pName)==false){
+    if(pName==null || _TOKENS.hasOwnProperty(pName)==false){
       throw new AuthenticationException("API token not found");
     }
 

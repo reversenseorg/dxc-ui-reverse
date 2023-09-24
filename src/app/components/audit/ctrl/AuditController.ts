@@ -4,6 +4,8 @@ import {ViewportView} from "../../../cmp/ViewportView";
 import {ComponentFactoryResolver} from "@angular/core";
 import {StageComponent} from "../../stage/stage.component";
 import { AuditService } from "./audit.service";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 export class AuditController implements IController {
@@ -14,17 +16,17 @@ export class AuditController implements IController {
    */
   name = 'privacy';
 
-  id:string = null;
-  app: StageComponent = null;
+  id: Nullable<string> = null;
+  app: Nullable<StageComponent> = null;
 
-  service: AuditService = null;
+  service: AuditService;
 
   explorerCmp: any = null;
   viewCmp: ViewCmpMap = {};
   terminalCmp: any = null;
   modalCmp: any = null;
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   views:ViewportView[] = [];
   explorer:any = null;
@@ -61,7 +63,7 @@ export class AuditController implements IController {
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter( (vItem:any) => {
       return (vItem.id !== pItem.id);
     });
 
@@ -72,7 +74,7 @@ export class AuditController implements IController {
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
 
-    this.rendered.map( pView => {
+    this.rendered.map( (pView:any) => {
       console.log(pView);
       if(pView.__signature__ === pItem.__signature__){
         f = pView;

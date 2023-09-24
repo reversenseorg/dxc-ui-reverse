@@ -3,14 +3,14 @@
     Open project
   </div>
   <ng-container options>
-    <span><dxc-icon [model]="gIcons.REFRESH" (click)="refresh()"></dxc-icon></span>
+    <span><dxc-icon [model]="gIcons['REFRESH']" (click)="refresh()"></dxc-icon></span>
   </ng-container>
   <div body class="dxc-modal-body">
       <div class="fullwidth-list" style="height:200px;">
         <ng-container *ngFor="let proj of projects; let index = index">
           <div class="row no-gutters" [ngClass]="focusEl==index?'focus':''" (click)="selectProject(proj, index)">
             <div class="col-lg-10 offset-1 dxc-noselect">{{ proj.uid }}</div>
-            <div class="col-lg-1"><dxc-icon *ngIf="focusEl==index" [model]="gIcons.TRASH" (click)="removeProject(proj)"></dxc-icon></div>
+            <div class="col-lg-1"><dxc-icon *ngIf="focusEl==index" [model]="gIcons['TRASH']" (click)="removeProject(proj)"></dxc-icon></div>
           </div>
         </ng-container>
       </div>

@@ -52,7 +52,7 @@ export class DeobfuscationService extends DxcApiService {
 
 
       return this._process(
-        this.endpoints.action.nop_count, opts
+        this.endpoints['action']['nop_count'], opts
       ).pipe(map((pRes:any)=>{
         if(pRes.success===false){
           this.outputSvc.print(OutputMessage.newError({ msg:"[NOP Count] An error occured. See server logs for more details.", src:"Deobfuscation Svc" }))
@@ -74,7 +74,7 @@ export class DeobfuscationService extends DxcApiService {
     }
 
     return this._process(
-      this.endpoints.action.nop_clean, opts
+      this.endpoints['action']['nop_clean'], opts
     ).pipe(map((pRes:any)=>{
       if(pRes.success===false){
         this.outputSvc.print(OutputMessage.newError({ msg:"[NOP Cleaner] An error occured. See server logs for more details.", src:"Deobfuscation Svc" }))
@@ -97,7 +97,7 @@ export class DeobfuscationService extends DxcApiService {
     }
 
     return this._process(
-      this.endpoints.action.wrap_clean,
+      this.endpoints['action']['wrap_clean'],
       opts
     ).pipe(map((pRes:any)=>{
       if(pRes.success===false){

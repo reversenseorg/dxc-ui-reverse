@@ -24,10 +24,10 @@
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
           <app-subnavbar-btn [active]="activeLeft=='md'"  (click)="showModel()">Details</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons.LIST" (click)="showContents()">Contents</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons.ANALYZE" (click)="showInstance()">Instances</app-subnavbar-btn>
-          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='pm'"  [icon]="gIcons.LOCK" (click)="showAndroidAPI()">Android API</app-subnavbar-btn>
-          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='io'"  [icon]="gIcons.FILE" (click)="showIO()">I/O</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showContents()">Contents</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['ANALYZE']" (click)="showInstance()">Instances</app-subnavbar-btn>
+          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='pm'"  [icon]="gIcons['LOCK']" (click)="showAndroidAPI()">Android API</app-subnavbar-btn>
+          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='io'"  [icon]="gIcons['FILE']" (click)="showIO()">I/O</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -47,7 +47,7 @@
             <div class="row no-gutters dxc-text-clear75" (dblclick)="controller.showClass(e.name)" (contextmenu)="controller.displayCtxMenu($event,'cls', e.name)">
               <div class="col-lg-12 pl-2 dxc-nowrap" >
                 <span [ngClass]="'ml-'+i">&nbsp;</span>
-                <dxc-icon [model]="icons.CLASS" ></dxc-icon>&nbsp;
+                <dxc-icon [model]="icons['CLASS']" ></dxc-icon>&nbsp;
                 <span *ngIf="e.alias" class="text-warning">@:{{e.alias}}&nbsp;</span>
                 {{ e.name }}
               </div>
@@ -72,7 +72,7 @@
         <ng-container *ngIf="(data.implements!=null && data.implements.length>0); else noInterf">
           <div *ngFor="let i of data.implements" class="row no-gutters dxc-text-clear75" (dblclick)="controller.showClass(i)" (contextmenu)="controller.displayCtxMenu($event,'cls', i)">
             <div class="col-lg-12 pl-2 dxc-nowrap">
-              <dxc-icon [model]="icons.CLASS"></dxc-icon>&nbsp;
+              <dxc-icon [model]="icons['CLASS']"></dxc-icon>&nbsp;
               <!-- <span *ngIf="fd.alias" class="text-warning">@:{{data.extends.alias}}&nbsp;</span> -->
               {{ i }}
             </div>
@@ -110,7 +110,7 @@
           <div class="row no-gutters" (dblclick)="controller.showItem(mt)"  (contextmenu)="controller.displayCtxMenu($event,'meth', mt)">
             <div class="col-lg-1">
               <ng-container *ngIf="((mt.name!='<clinit>') && mt.probing); else noProbing">
-                <span class="badge badge-pill badge-success dxc-btn-hook" (click)="disableProbe(mt)"><dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon> -&nbsp;Hooked</span>
+                <span class="badge badge-pill badge-success dxc-btn-hook" (click)="disableProbe(mt)"><dxc-icon [model]="gIcons['GEN_HOOK']"></dxc-icon> -&nbsp;Hooked</span>
               </ng-container>
               <ng-template #noProbing>
                 <span class="badge badge-pill badge-primary dxc-btn-hook" (click)="setProbe(mt)">New hook</span>
@@ -122,7 +122,7 @@
               </ng-container>
               <!--
               <ng-container *ngIf="mt.probing; else noProbing">
-                <span class="badge badge-pill badge-success dxc-btn-hook" (click)="disableProbe(mt)"><dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon> -&nbsp;Hooked</span>
+                <span class="badge badge-pill badge-success dxc-btn-hook" (click)="disableProbe(mt)"><dxc-icon [model]="gIcons['GEN_HOOK']"></dxc-icon> -&nbsp;Hooked</span>
               </ng-container>-->
             </div>
             <div class="col-lg-9 hook-label dxc-nowrap">

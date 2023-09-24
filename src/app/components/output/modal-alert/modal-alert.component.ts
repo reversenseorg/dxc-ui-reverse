@@ -69,7 +69,7 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
    */
   @Input() title:string = ModalAlertComponent.DEFAULT_TITLE;
 
-  @Input() message:string = null;
+  @Input() message:Nullable<string> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -79,7 +79,7 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
 
   controls: AlertControl[] = [];
 
-  helpDocID:string = null;
+  helpDocID:Nullable<string> = null;
 
   @Output() confirm: EventEmitter<any>;
 

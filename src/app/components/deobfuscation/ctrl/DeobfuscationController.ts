@@ -18,7 +18,7 @@ export class DeobfuscationController implements IController {
    */
   name:string = 'deobfuscation';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: DeobfuscationService = null;
@@ -101,7 +101,7 @@ export class DeobfuscationController implements IController {
 
     this.service.getInspectorByID(pItem.name).subscribe( (pInspector:any)=>{
       console.log(pInspector);
-      pInspector._icon = GLOBAL_ICONS.FIND;
+      pInspector._icon = GLOBAL_ICONS['FIND'];
       pInspector = this.app.getController('ctrl:hook-main').bindInspector(pInspector);
       this.rendered.push({ item:pItem, uid:vid });
       this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pInspector, uid:vid });

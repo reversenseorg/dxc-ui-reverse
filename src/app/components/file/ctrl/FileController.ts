@@ -20,7 +20,7 @@ export class FileController implements IController {
    */
   name:string = 'file';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: FilesystemService = null;

@@ -60,7 +60,7 @@ export class ViewportPrivacyDashboardComponent implements OnInit, IViewportConta
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Dashboard',
-      icon: GLOBAL_ICONS.GLOBE,
+      icon: GLOBAL_ICONS['GLOBE'],
       color: 'dxc-text-clear100'
     })
   });

@@ -22,7 +22,7 @@ export class DxcHelperBtnComponent  {
   @Input() fmt: HelperBtnType;
   @Input() type: HelperType = HelperType.VIEWER;
 
-  helpIcon:IconModel = GLOBAL_ICONS.HELPER;
+  helpIcon:IconModel = GLOBAL_ICONS['HELPER'];
 
   constructor( public helperSvc:HelperService) {
     this.fmt = helperSvc.BTN_BTN;

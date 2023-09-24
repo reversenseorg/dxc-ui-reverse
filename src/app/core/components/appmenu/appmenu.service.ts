@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
 import {Subject} from "rxjs";
-import {ElectronService} from "../../services";
-import {Menu, MenuItem} from "electron";
+import {Menu} from "../../../base/menu/Menu";
+import {AppMenu} from "../../../base/menu/AppMenu";
+import {Nullable} from "../../../base/Nullable";
+import {MenuItem, MenuItemConstructorOptions} from "../../../base/menu/MenuItem";
 
-let ElectronMenu:any = null;
 
 export interface MenuEvent {
   item:string
@@ -29,16 +30,15 @@ export class AppMenuService {
    */
   tpl:any = [];
 
-  menu:Menu = null;
+  menu:AppMenu; //Menu;
   beforeRender:Subject<any> = new Subject<any>();
   afterRender:Subject<any> = new Subject<any>();
 
   rendered = false;
   menuStatus:any = {};
 
-  constructor( private electronSvc:ElectronService) {
+  constructor() {
 
-    ElectronMenu = this.electronSvc.remote.Menu;
   }
 
 
@@ -52,9 +52,9 @@ export class AppMenuService {
 
     for(const id in this.menuStatus){
 
-      this.tpl.map( menu => {
-        if(menu.id===id)
-          menu.enabled = true;
+      this.tpl.map((vOpts:MenuItemConstructorOptions) => {
+        if(vOpts.id===id)
+          vOpts.enabled = true;
       });
     }
 
@@ -68,14 +68,16 @@ export class AppMenuService {
    * @method
    */
   onProjectClose():void {
-    /*
-    for(let id in this.menuStatus){
-      console.log(ElectronMenu.getApplicationMenu());
-      ElectronMenu.getApplicationMenu().getMenuItemById(id).enabled = this.menuStatus[id];
-    }*/
+
   }
 
 
+  /**
+   * to append a menu template to template list, before app menu rendering
+   *
+   * @param pTpl
+   * @param pOffset
+   */
   addMenu(pTpl:any, pOffset=-1):void{
 
     if(typeof pTpl.enabled==='boolean'){
@@ -91,9 +93,10 @@ export class AppMenuService {
   render():void{
     //this.beforeRender.next(this.tpl);
 
-    this.menu = ElectronMenu.buildFromTemplate( this.tpl);
-    ElectronMenu.setApplicationMenu(this.menu);
-    this.rendered = true;
+    //this.menu = AppMenu.getInstance();
+
+    AppMenu.getInstance().buildFromTemplate( this.tpl);
+    this.rendered = AppMenu.getInstance().render();
     //this.afterRender.next(this.tpl);
   }
 
@@ -101,8 +104,8 @@ export class AppMenuService {
    * To get the menu
    * @method
    */
-  getMenu():Menu{
-    return this.menu;
+  getMenu():AppMenu{
+    return AppMenu.getInstance();
   }
 
   /**
@@ -110,7 +113,7 @@ export class AppMenuService {
    *
    * @param {string} pId submenu id
    */
-  getSubMenu( pId:string):MenuItem {
+  getSubMenu( pId:string):Nullable<MenuItem> {
     return this.menu.getMenuItemById(pId);
   }
 

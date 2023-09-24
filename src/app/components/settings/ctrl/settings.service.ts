@@ -43,7 +43,7 @@ export class SettingsService extends DxcApiService {
 
   onSettingUpdate:Subject<any> = new Subject<any>();
 
-  constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, protected override _http:HttpClient) {
     super(
       {
         global: {
@@ -56,7 +56,7 @@ export class SettingsService extends DxcApiService {
   }
 
   listNetworkSettings():Observable<WebServerSettings> {
-    return this._process( this.endpoints.global.list, {type:'web'})
+    return this._process( this.endpoints['global']['list'], {type:'web'})
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Settings"}));
@@ -71,7 +71,7 @@ export class SettingsService extends DxcApiService {
 
   private _listSettings(pType:string):Observable<any> {
 
-    return this._process( this.endpoints.global.list, {type:pType})
+    return this._process( this.endpoints['global']['list'], {type:pType})
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Settings"}));
@@ -87,7 +87,7 @@ export class SettingsService extends DxcApiService {
   }
 
   private _updateSetting(pType:string, pName:string, pValue:number):Observable<boolean> {
-    return this._process( this.endpoints.global.editSingle, {
+    return this._process( this.endpoints['global']['editSingle'], {
       type: pType,
       name: pName,
       value: pValue
@@ -107,7 +107,7 @@ export class SettingsService extends DxcApiService {
   }
 
   listExternalTools():Observable<ExternalTool[]> {
-    return this._process( this.endpoints.global.list, {type:'ext'})
+    return this._process( this.endpoints['global']['list'], {type:'ext'})
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Settings"}));
@@ -123,7 +123,7 @@ export class SettingsService extends DxcApiService {
 
 
   updateExternalTool( pTool:ExternalTool):Observable<boolean> {
-    return this._process( this.endpoints.global.editSingle, {
+    return this._process( this.endpoints['global']['editSingle'], {
         type:'ext',
         name: pTool.getUID(),
         value: pTool.getPath()
@@ -148,7 +148,7 @@ export class SettingsService extends DxcApiService {
    * @method
    */
   addSetting( pType:string, pName:string, pValue:any):Observable<boolean> {
-    return this._process( this.endpoints.global.new, {
+    return this._process( this.endpoints['global']['new'], {
       type:pType,
       name: pName,
       value: pValue

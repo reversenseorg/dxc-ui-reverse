@@ -19,7 +19,7 @@ export class InspectorController implements IController {
    */
   name:string = 'inspector';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: InspectorService = null;
@@ -101,7 +101,7 @@ export class InspectorController implements IController {
 
     this.service.getInspectorByID(pItem.id).subscribe( (pInspector:any)=>{
       console.log(pInspector);
-      pInspector._icon = GLOBAL_ICONS.FIND;
+      pInspector._icon = GLOBAL_ICONS['FIND'];
       pInspector = this.app.getController('ctrl:hook-main').bindInspector(pInspector);
       this.rendered.push({ item:pItem, uid:vid });
       this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pInspector, uid:vid });

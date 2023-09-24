@@ -13,5 +13,5 @@ export interface IViewportContainer {
   resize$: Subject<any>;
 
   onClose():boolean;
-  resize(any):void;
+  resize(opts:any):void;
 }

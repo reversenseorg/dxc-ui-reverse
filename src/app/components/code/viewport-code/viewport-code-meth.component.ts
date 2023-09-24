@@ -82,7 +82,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
   ctr: number = 0;
   activeTop: string = 'bc';
-  activeBottom: string = null;
+  activeBottom:Nullable<string> = null;
   hooksLen: number = -1;
   vmLog: any = [];
   tags:Tag[];
@@ -97,13 +97,13 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   ddvmOpts: any[] = [{
     _t: 'c',
     _c: 'p',
-    _i: GLOBAL_ICONS.EDIT,
+    _i: GLOBAL_ICONS['EDIT'],
     label: 'Parameters',
     children: []
   },{
     _t: 'c',
     _c: 's',
-    _i: GLOBAL_ICONS.INTERNAL,
+    _i: GLOBAL_ICONS['INTERNAL'],
     label: 'Context',
     children: [{
       _t: 'o',
@@ -115,7 +115,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   },{
     _t: 'c',
     _c: 'o',
-    _i: GLOBAL_ICONS.LIST,
+    _i: GLOBAL_ICONS['LIST'],
     label: 'Options',
     children: [{
       _t: 'o',
@@ -441,7 +441,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       }else{
         this.ddvmOpts[0].children.push({
           _t: 'e',
-          _i: GLOBAL_ICONS.WARNING,
+          _i: GLOBAL_ICONS['WARNING'],
           label: 'This methods has not parameters'
         });
       }

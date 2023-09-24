@@ -63,11 +63,11 @@ export default class AppUtils {
       return;
     }
 
-    process.env.PATH = AppUtils.getEnv('PATH') || [
+    process.env['PATH'] = AppUtils.getEnv('PATH') || [
       './node_modules/.bin',
       '/.nodebrew/current/bin',
       '/usr/local/bin',
-      process.env.PATH
+      process.env['PATH']
     ].join(':');
   }
 }

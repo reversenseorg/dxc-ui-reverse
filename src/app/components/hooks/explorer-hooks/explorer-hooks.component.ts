@@ -92,15 +92,15 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   icons: any = HOOK_ICONS;
 
   hookPoolsIcons:any =  {
-    /*builtin: HOOK_ICONS.BUILTIN_HS,
-    onDemand: HOOK_ICONS.CUSTOM_HS,
-    native: HOOK_ICONS.NATIVE_HS,
-    dynamic: HOOK_ICONS.CUSTOM_HS,*/
-    thema: HOOK_ICONS.CUSTOM_HS,
-    keypoint: HOOK_ICONS.KEYPOINT,
-    process: HOOK_ICONS.PROCESS,
-    thread: HOOK_ICONS.THREAD,
-    sessions: GLOBAL_ICONS.HISTORY
+    /*builtin: HOOK_ICONS['BUILTIN_HS'],
+    onDemand: HOOK_ICONS['CUSTOM_HS'],
+    native: HOOK_ICONS['NATIVE_HS'],
+    dynamic: HOOK_ICONS['CUSTOM_HS'],*/
+    thema: HOOK_ICONS['CUSTOM_HS'],
+    keypoint: HOOK_ICONS['KEYPOINT'],
+    process: HOOK_ICONS['PROCESS'],
+    thread: HOOK_ICONS['THREAD'],
+    sessions: GLOBAL_ICONS['HISTORY']
   };
 
   hookPools: any = {
@@ -122,7 +122,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   tab:ExplorerTab = new ExplorerTab({
     offset: 1,
     label: 'Hooks',
-    icon: GLOBAL_ICONS.HOOKS,
+    icon: GLOBAL_ICONS['HOOKS'],
     color: 'dxc-text-clear100'
   });
 
@@ -131,7 +131,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   view:ExplorerView = new ExplorerView({
     nav: new NavbarSimpleView({
       label: 'Key Points',
-      icon: HOOK_ICONS.KEYPOINT,
+      icon: HOOK_ICONS['KEYPOINT'],
       color: 'dxc-text-clear100',
       menu: new MenuView({
         items: [
@@ -139,37 +139,37 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
             id:HOOK_VIEW.KP,
             label:'Key Points',
             color: 'dxc-text-clear75',
-            icon: HOOK_ICONS.KEYPOINT
+            icon: HOOK_ICONS['KEYPOINT']
           }),
           new MenuItem({
             id:HOOK_VIEW.HOOK,
             label:'Hooks',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.HOOKS
+            icon: GLOBAL_ICONS['HOOKS']
           }),
           new MenuItem({
             id:HOOK_VIEW.INSPECTOR,
             label:'Inspectors',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.TOOLS
+            icon: GLOBAL_ICONS['TOOLS']
           }),
           new MenuItem({
             id:HOOK_VIEW.THEMA,
             label:'Strategies',
             color: 'dxc-text-clear75',
-            icon: HOOK_ICONS.CUSTOM_HS
+            icon: HOOK_ICONS['CUSTOM_HS']
           }),
           new MenuItem({
             id:HOOK_VIEW.SESSIONS,
             label:'Sessions',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.HISTORY
+            icon: GLOBAL_ICONS['HISTORY']
           }),
           new MenuItem({
             id:HOOK_VIEW.THREAD,
             label:'Thread',
             color: 'dxc-text-clear75',
-            icon: HOOK_ICONS.THREAD
+            icon: HOOK_ICONS['THREAD']
           })
         ]
       })
@@ -336,24 +336,24 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
         pItem.children = [{
           _t: 'kt',
           name: 'load',
-          _icon : HOOK_ICONS.HK_LOAD,
+          _icon : HOOK_ICONS['HK_LOAD'],
           children: []
         },{
           _t: 'kt',
           name: 'unload',
-          _icon : HOOK_ICONS.HK_UNLOAD,
+          _icon : HOOK_ICONS['HK_UNLOAD'],
           children: []
 
         }];
         pHooks.load.map( x => {
           x._t = 'h';
-          x._icon = GLOBAL_ICONS.HOOKS;
+          x._icon = GLOBAL_ICONS['HOOKS'];
           x._kt = 'load';
           pItem.children[0].children.push(x);
         });
         pHooks.unload.map( x => {
           x._t = 'h';
-          x._icon = GLOBAL_ICONS.HOOKS;
+          x._icon = GLOBAL_ICONS['HOOKS'];
           x._kt = 'unload';
           pItem.children[1].children.push(x);
         });
@@ -464,7 +464,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   enableKP(pKeyPoint:KeyPoint) {
     this.hookSvc.enableKeyPoint(pKeyPoint, pKeyPoint.enabled?false:true ).subscribe( vRes => {
       pKeyPoint.enabled = (pKeyPoint.enabled? false : true);
-      (pKeyPoint as any)._icon = HOOK_ICONS.KEYPOINT_DOWN;
+      (pKeyPoint as any)._icon = HOOK_ICONS['KEYPOINT_DOWN'];
       this.refresh();
     });
   }
@@ -517,7 +517,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     this.hookPools[HOOK_VIEW.KP].app = pKPS;
     this.activePool = this.hookPools[HOOK_VIEW.KP];
     this.hookPools[HOOK_VIEW.KP].app.map( x => {
-      x._icon = HOOK_ICONS.KEYPOINT;
+      x._icon = HOOK_ICONS['KEYPOINT'];
       if(x.name == null){
         x.name = "core."+x.condition+(x.node.lengt>0 ? "."+x.node[0].uid : "");
       }

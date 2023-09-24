@@ -35,7 +35,7 @@ export class ViewportHookInspectorComponent implements OnInit, AfterViewInit, IV
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Code',
-      icon: HOOK_ICONS.DEFAULT,
+      icon: HOOK_ICONS['DEFAULT'],
       color: 'dxc-text-clear100'
     })
   });

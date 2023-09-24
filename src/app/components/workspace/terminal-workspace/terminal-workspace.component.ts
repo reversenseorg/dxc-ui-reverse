@@ -56,7 +56,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
   tab:TerminalTab = new TerminalTab({
     offset: 5,
     label: 'Terminal',
-    icon: GLOBAL_ICONS.TERMINAL,
+    icon: GLOBAL_ICONS['TERMINAL'],
     color: 'dxc-text-clear100'
   });
 
@@ -69,7 +69,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
         offset: 0,
         label: 'Code',
         closable:true,
-        icon: GLOBAL_ICONS.CODE,
+        icon: GLOBAL_ICONS['CODE'],
         iconColor: 'dxc-text-clear100',
         color: 'dxc-text-clear100'
       })
@@ -304,15 +304,15 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
 
     info.type = (pInfo!=null && pInfo.type != null ? pInfo.type : TerminalSessionType.SH);
     info.uid = (pInfo!=null && pInfo.uid != null ? pInfo.uid+'_'+this.ctr : 't'+this.ctr) ;
-    info.icon = (pInfo!=null && pInfo.icon!=null ? pInfo.icon : this.gIcons.CODE);
+    info.icon = (pInfo!=null && pInfo.icon!=null ? pInfo.icon : this.gIcons['CODE']);
     info.label = (pInfo!=null && pInfo.label!=null ? pInfo.label : 'Terminal '+this.ctr);
 
     const sess = this.controller.newTermSession(info);
     /*
     if(pInfo!==null){
-      sess = this.controller.newTermSession({pInfo.label, (pInfo.icon!=null ? pInfo.icon : this.gIcons.CODE), pInfo.uid+'_'+this.ctr);
+      sess = this.controller.newTermSession({pInfo.label, (pInfo.icon!=null ? pInfo.icon : this.gIcons['CODE']), pInfo.uid+'_'+this.ctr);
     }else{
-      sess = this.controller.newTermSession('Terminal '+this.ctr, this.gIcons.CODE, 't'+this.ctr);
+      sess = this.controller.newTermSession('Terminal '+this.ctr, this.gIcons['CODE'], 't'+this.ctr);
     }*/
 
     this._sessions.push(sess);

@@ -67,7 +67,7 @@ export class ViewportHookScriptComponent implements OnInit, AfterViewInit, IView
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Agent script',
-      icon: GLOBAL_ICONS.HOOKS,
+      icon: GLOBAL_ICONS['HOOKS'],
       color: 'dxc-text-clear100'
     })
   });

@@ -103,7 +103,7 @@ export class DexcaliburServerChildProcess {
       return;
     }
 
-    let dxcWebRoot:string = null;
+    let dxcWebRoot:Nullable<string> = null;
 
     this.engine.loadWorkspaceFromConfig();
 

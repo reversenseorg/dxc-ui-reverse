@@ -34,6 +34,8 @@ import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import {SearchService} from "../../search/ctrl/search.service";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {SearchController} from "../../search/ctrl/SearchController";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 
@@ -64,7 +66,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   searchCtrl: SearchController;
   id = -1;
   activeLeft =  AUDIT_PANEL.RESULT;
-  activeRight:string = null;
+  //activeRight:Nullable<string> = null;
   defaultWidth = 70;
   defaultWidths = {
     [AUDIT_PANEL.RULES]: 30,
@@ -78,15 +80,15 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
     style: 'vp-navbar',
     entries: [
       new MenuItem({
-        icon: GLOBAL_ICONS.JAVA,
+        icon: GLOBAL_ICONS['JAVA'],
         label: "Implemented By"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.FIND,
+        icon: GLOBAL_ICONS['FIND'],
         label: "Instances"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         label: "Permissions",
       })
     ]
@@ -98,12 +100,12 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
       items: [
         new MenuItem({
           id: 'app',
-          icon: GLOBAL_ICONS.WINDOW,
+          icon: GLOBAL_ICONS['WINDOW'],
           label: "Application"
         }),
         new MenuItem({
           id: 'api',
-          icon: GLOBAL_ICONS.ANDROID,
+          icon: GLOBAL_ICONS['ANDROID'],
           label: "Android"
         })
       ]
@@ -113,15 +115,15 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   rightNav: NavbarSimpleView = new NavbarSimpleView({
     entries: [
       new MenuItem({
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         label: "Hook logs"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.LIBS,
+        icon: GLOBAL_ICONS['LIBS'],
         label: "VM Out"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.ANDROID,
+        icon: GLOBAL_ICONS['ANDROID'],
         label: "adb logs"
       })
     ]
@@ -133,10 +135,12 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
 
   now:Date = new Date();
 
+
+
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Audit',
-      icon: GLOBAL_ICONS.DEFAULT,
+      icon: GLOBAL_ICONS['DEFAULT'],
       color: 'dxc-text-clear100'
     })
   });
@@ -146,7 +150,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   fridaTrans: any = "usb";
   fridaOK =  false;
 
-  selectedSyscall:ModelSyscall = null;
+  selectedSyscall:Nullable<ModelSyscall> = null;
 
   activeItem:any = null;
   selectedData: any = null;
@@ -170,6 +174,9 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
     this.height = this.height-this.layout.topHeight;
     // this.metadataEl.nativeElement .getComputedStyle().height
     this.resize({ height:this.height})
+    if(this.controller.app==null){
+      throw UIException.APP_NOT_INITIALIZED;
+    }
     this.searchCtrl = this.controller.app.getController('ctrl:search');
   }
 
@@ -185,7 +192,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
 
     console.log('configure device viewport>',pData);
 
-    this.view.tab.icon = this.gIcons.HOOKS;
+    this.view.tab.icon = this.gIcons['HOOKS'];
     this.view.tab.label = pData.id;
     this.view.tab.tip = pData.model;
     this.view.tab.color = 'dxc-text-blue font-weight-bold';

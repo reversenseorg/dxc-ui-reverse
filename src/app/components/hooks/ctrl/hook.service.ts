@@ -215,12 +215,12 @@ export class HookService extends DxcApiService {
       enabled:false,
       submenu:[{
         label: 'Custom hook',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onNewCustomHook.next(true)
         }
       },{
         label: 'New scratchpad hook',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onNewCustomHook.next(true)
         }
       }, {
@@ -232,21 +232,21 @@ export class HookService extends DxcApiService {
             label: 'Follow thread',
             type: 'radio',
             checked: (this.options.followThread == true),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchProperty("followThread");
             }
           },{
             label: 'Follow fork',
             type: 'radio',
             checked: (this.options.followFork == true),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchProperty("followFork");
             }
           },{
             label: 'Record hook sessions',
             type: 'radio',
             checked: (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
 
               this.switchProperty("cache_policy",
                 (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS)?
@@ -258,31 +258,31 @@ export class HookService extends DxcApiService {
         type: 'separator'
       },{
         label: 'System calls',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onCreateHook.next({ type:HOOK_TARGET_TYPE.SYSCALL });
         }
       }/*,{
         label: 'Hypervisor calls',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onCreateHook.next({ type:HOOK_TARGET_TYPE.INT });
         }
       },{
         label: 'SecureMonitor calls',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onCreateHook.next({ type:HOOK_TARGET_TYPE.INT });
         }
       }*/,{
         type: 'separator'
       },{
         label: 'Show key points',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({ item:HOOK_TARGET_TYPE.KP });
         }
         /*
         submenu: [
           {
             label: 'List',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               //this.draw({ type:'hook_points' });
               //this.displayHookPointList()
               //this..next({ type:HOOK_TARGET_TYPE.INT });
@@ -291,7 +291,7 @@ export class HookService extends DxcApiService {
           },
           {
             label: 'New hook oriented',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.onCreateKeyPoint.next({ type:'hook_based' });
             }
           }
@@ -300,17 +300,17 @@ export class HookService extends DxcApiService {
         type: 'separator'
       },{
         label: 'File Descriptors',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_FDS });
         }
       },{
         label: 'Keystores',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_KEYSTORE_OPE });
         }
       },{
         label: 'Clear Dynamic DEX bytecode',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.clearDynamicDex().subscribe();
         }
       }, {
@@ -322,49 +322,49 @@ export class HookService extends DxcApiService {
             label: 'Spawn target app',
             type: 'radio',
             checked: (this.mode=="spawn-self"),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchToMode("spawn-self");
             }
           },{
             label: 'Spawn custom app',
             type: 'radio',
             checked: (this.mode=="spawn-app"),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchToMode("spawn-app");
             }
           },{
             label: 'Attach to gadget',
             type: 'radio',
             checked: (this.mode=="attach-gadget"),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchToMode("attach-gadget");
             }
           },{
             label: 'Attach to PID ...',
             type: 'radio',
             checked: (this.mode=="attach-pid"),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchToMode("attach-pid");
             }
           },{
             label: 'Attach to target app',
             type: 'radio',
             checked: (this.mode=="attach-app-self"),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchToMode("attach-app-self");
             }
           },{
             label: 'Attach to app ...',
             type: 'radio',
             checked: (this.mode=="attach-app"),
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.switchToMode("attach-app");
             }
           },{
             type: 'separator',
           },{
             label: 'Settings',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               this.openFridaSettings();
             }
           }
@@ -374,14 +374,14 @@ export class HookService extends DxcApiService {
       },{
         label: 'Kill target app',
         id:'hook-kill-target',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.killApp().subscribe( );
         }
       },{
         label: 'Start server',
         id:'hook-server-start',
         enabled:(this.getServerStatus()==false),
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.startServer().subscribe( (pRes:any)=>{
             pMenuItem.enabled = !this.serverRunning;
             this.appmenuSvc.getMenu().getMenuItemById('hook-server-stop').enabled = this.serverRunning;
@@ -391,7 +391,7 @@ export class HookService extends DxcApiService {
         label: 'Stop server',
         id:'hook-server-stop',
         enabled:(this.getServerStatus()),
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.stopServer().subscribe( (pRes:any)=>{
             console.log(pRes);
             pMenuItem.enabled = this.serverRunning;
@@ -523,7 +523,7 @@ export class HookService extends DxcApiService {
    */
   getSessions():Observable<HookSession[]> {
     return this._process(
-      this.endpoints.sessions.list,
+      this.endpoints['sessions']['list'],
       {}
     ).pipe(
       map((pEl:any)=>{
@@ -550,7 +550,7 @@ export class HookService extends DxcApiService {
    */
   getMessageFromSession( pSessID:string):Observable<RuntimeEvent<any>[]> {
     return this._process(
-      this.endpoints.sessions.get_msg,
+      this.endpoints['sessions']['get_msg'],
       {
         sess: pSessID
       }
@@ -580,7 +580,7 @@ export class HookService extends DxcApiService {
    */
   getAllMessagesForNode( pTarget:ModelMethod|ModelFunction):Observable<HookMessage[]> {
     return this._process(
-      this.endpoints.sessions.get_msg,
+      this.endpoints['sessions']['get_msg'],
       {
         node: pTarget.getUID()
       }
@@ -600,7 +600,7 @@ export class HookService extends DxcApiService {
 
   getHooksByKeyPoint( pKP:KeyPoint):Observable<any> {
     return this._process(
-      this.endpoints.hook.listByKp,
+      this.endpoints['hook']['listByKp'],
       {
         name: pKP.getUID()
       }
@@ -644,7 +644,7 @@ export class HookService extends DxcApiService {
 
   listInspectors(pScope:string = null):Observable<any>{
     return this._process(
-      this.endpoints.inspector.list
+      this.endpoints['inspector']['list']
     ).pipe(
       map((pEl:any)=>{
         if(!pEl.success){
@@ -661,7 +661,7 @@ export class HookService extends DxcApiService {
 
   listHooks(pScope:string = null, pOptions:any={}):Observable<any>{
     return this._process(
-      this.endpoints.hook.list,
+      this.endpoints['hook']['list'],
       pOptions
     ).pipe(
       map((pEl:any)=>{
@@ -684,7 +684,7 @@ export class HookService extends DxcApiService {
    *
   showMessages( pSession:HookSession):Observable<HookMessage[]> {
     return this._process(
-      this.endpoints.session.open,
+      this.endpoints['session']['open'],
       pOptions
     ).pipe(
       map((pEl:any)=>{
@@ -715,7 +715,7 @@ export class HookService extends DxcApiService {
     for(const i in pOptions) opts[i] = pOptions[i];
 
     return this._process(
-      this.endpoints.server.start,opts
+      this.endpoints['server']['start'],opts
     ).pipe(
       map( pRes => {
         if(!pRes.success){
@@ -761,7 +761,7 @@ export class HookService extends DxcApiService {
 
   stopServer():Observable<any>{
     return this._process(
-      this.endpoints.server.stop,
+      this.endpoints['server']['stop'],
       {
         privileged: 'true'
       }
@@ -791,7 +791,7 @@ export class HookService extends DxcApiService {
    */
   updateHookLibs():Observable<boolean> {
     return this._process(
-      this.endpoints.global.update_libs
+      this.endpoints['global']['update_libs']
     ).pipe(
       map( pRes => {
         if(!pRes.success){
@@ -814,7 +814,7 @@ export class HookService extends DxcApiService {
    */
   addHookFragment( pHook:AbstractHook, pOptions:any):Observable<AbstractHook>{
     return this._process(
-      this.endpoints.frag.new,
+      this.endpoints['frag']['new'],
       {
         'uid':pHook.getGUID(),
         'pos': pOptions.pos,
@@ -848,7 +848,7 @@ export class HookService extends DxcApiService {
 
     }
 
-    return this._process( this.endpoints.frag.edit,data)
+    return this._process( this.endpoints['frag']['edit'],data)
       .pipe(
         map( (pRes:any) => {
           if(!pRes.success){
@@ -866,7 +866,7 @@ export class HookService extends DxcApiService {
 
   deleteHookFragment( pHook:AbstractHook, pFrag:HookTemplateFragment, pPos:any = null):Observable<boolean>{
     return this._process(
-      this.endpoints.frag.del,
+      this.endpoints['frag']['del'],
       {
         'uid':pHook.getGUID(),
         'frag_uid': pFrag._uid
@@ -901,7 +901,7 @@ export class HookService extends DxcApiService {
 
   getHook( pId:string) :Observable<AbstractHook> {
     return this._process(
-      this.endpoints.hook.get,
+      this.endpoints['hook']['get'],
       { 'uid': pId }
     ).pipe(
       map((pEl:any)=>{
@@ -947,7 +947,7 @@ export class HookService extends DxcApiService {
 
 
     return this._process(
-      this.endpoints.hook.probe,
+      this.endpoints['hook']['probe'],
       opts
     ).pipe(
       map((pEl:any)=>{
@@ -986,7 +986,7 @@ export class HookService extends DxcApiService {
   /*
   saveHook( pHook:AbstractHook, pCode:string[]): Observable<any> {
     return this._process(
-      this.endpoints.hook.save,
+      this.endpoints['hook']['save'],
       {
         'uid':pHook.getGUID(),
         'code[]': pCode
@@ -1011,7 +1011,7 @@ export class HookService extends DxcApiService {
 
     }else{
       return this._process(
-        this.endpoints.hook.start,
+        this.endpoints['hook']['start'],
         pOptions
       ).pipe(
         map((pEl:any)=>{
@@ -1043,7 +1043,7 @@ export class HookService extends DxcApiService {
    */
   buildAgentScript():Observable<string> {
     return this._process(
-      this.endpoints.hook.buildScript
+      this.endpoints['hook']['buildScript']
     ).pipe(
       map((pEl:any)=>{
         if(pEl.success){
@@ -1074,7 +1074,7 @@ export class HookService extends DxcApiService {
     opt[pOptName] = pOptValue;
 
     return this._process(
-      this.endpoints.global.edit_config,
+      this.endpoints['global']['edit_config'],
       { opts:opt }
     ).pipe(
       map((pEl:any)=>{
@@ -1092,13 +1092,13 @@ export class HookService extends DxcApiService {
 
   killApp():Observable<any>{
     return this._process(
-      this.endpoints.hook.kill
+      this.endpoints['hook']['kill']
     );
   }
 
   attachApp( pOptions:any):Observable<any> {
     return this._process(
-      this.endpoints.hook.start,
+      this.endpoints['hook']['start'],
       pOptions
     ).pipe(
       map((pEl:any)=>{
@@ -1121,7 +1121,7 @@ export class HookService extends DxcApiService {
 
   detachApp( pOptions:any):Observable<any> {
     return this._process(
-      this.endpoints.hook.start,
+      this.endpoints['hook']['start'],
       pOptions
     ).pipe(
       map((pEl:any)=>{
@@ -1144,7 +1144,7 @@ export class HookService extends DxcApiService {
 
   getInspector( pId:string) :Observable<any> {
     return this._process(
-      this.endpoints.inspector.get,
+      this.endpoints['inspector']['get'],
       { 'name': pId }
     ).pipe(
       map((pEl:any)=>{
@@ -1200,7 +1200,7 @@ export class HookService extends DxcApiService {
 
     const localID=this.generateSessID(pProject,opts);
 
-    const sess: HookSession = new HookSession(localID, GLOBAL_ICONS.HOOKS, localID, pProject);
+    const sess: HookSession = new HookSession(localID, GLOBAL_ICONS['HOOKS'], localID, pProject);
 
     sess.setHookErrorObservable(this.onHookError);
     pWebsocketClient.registerChannel(sess.channel);
@@ -1222,7 +1222,7 @@ export class HookService extends DxcApiService {
   enableHook( pHook:AbstractHook, pStatus:boolean): Observable<any> {
 
     return this._process(
-      (pStatus==true? this.endpoints.hook.enable : this.endpoints.hook.disable),
+      (pStatus==true? this.endpoints['hook']['enable'] : this.endpoints['hook']['disable']),
       {
         'hookid': pHook.getGUID()
       }
@@ -1254,7 +1254,7 @@ export class HookService extends DxcApiService {
     }
 
     return this._process(
-      this.endpoints.hook.remove ,
+      this.endpoints['hook']['remove'] ,
       {
         'hookid':pHook.getGUID()
       }
@@ -1341,7 +1341,7 @@ export class HookService extends DxcApiService {
    */
   getHooksMsgForMeth(pMethod: any):Observable<HookSession[]> {
     return this._process(
-        this.endpoints.hook.list_session,
+        this.endpoints['hook']['list_session'],
       {}
     ).pipe(
       map((pRes:any) => {
@@ -1359,7 +1359,7 @@ export class HookService extends DxcApiService {
    */
   clearDynamicDex():Observable<any> {
     return this._process(
-      this.endpoints.inspector.dyn,
+      this.endpoints['inspector']['dyn'],
       { action: 'cleanup' }
     ).pipe(
       map((pRes:any) => {
@@ -1421,7 +1421,7 @@ export class HookService extends DxcApiService {
    */
   listKeyPoints(pUpdateCache= true):Observable<KeyPoint[]> {
     return this._process(
-      this.endpoints.kp.list
+      this.endpoints['kp']['list']
     ).pipe(
       map((pEl:any)=>{
         if( pEl.success){
@@ -1454,7 +1454,7 @@ export class HookService extends DxcApiService {
    */
   updateKeyPointsOn( pSubject:any, pOptions:any, pCreate = false) {
     return this._process(
-      this.endpoints.kp[ pCreate? 'new' : 'save'],
+      this.endpoints['kp'][ pCreate? 'new' : 'save'],
       { target: { __:pSubject.__, uid:NodeTypeHelper.getUIDof(pSubject) }, opts:pOptions }
     ).pipe(
       map((pRes:any) => {
@@ -1479,7 +1479,7 @@ export class HookService extends DxcApiService {
   enableKeyPoint( pSubject:KeyPoint, pStatus:boolean) {
 
     return this._process(
-      this.endpoints.kp.enable,
+      this.endpoints['kp']['enable'],
       { kp:NodeTypeHelper.getUIDof(pSubject), enable:(pStatus? 1 : 0) }
     ).pipe(
       map((pRes:any) => {
@@ -1501,7 +1501,7 @@ export class HookService extends DxcApiService {
    */
   deleteKeyPoint( pSubject:KeyPoint, pByToken = false) {
     return this._process(
-      this.endpoints.kp[ pByToken ? "removeByToken" : "del"],
+      this.endpoints['kp'][ pByToken ? "removeByToken" : "del"],
       pByToken? { token:pSubject.token } : { uid: pSubject.name }
     ).pipe(
       map((pRes:any) => {
@@ -1517,7 +1517,7 @@ export class HookService extends DxcApiService {
    */
   updateKeyPoint( pKeyPoint:KeyPoint, pEdited:any) {
     return this._process(
-      this.endpoints.kp.save,
+      this.endpoints['kp']['save'],
       { uid:pKeyPoint.getUID(), opts:  pEdited }
     ).pipe(
       map((pRes:any) => {
@@ -1548,7 +1548,7 @@ export class HookService extends DxcApiService {
   attachHookTo( pTargetHook:Hook, pSubject:KeyPoint|string, pHookAction:string) {
     console.log(pTargetHook,pSubject,pHookAction);
     return this._process(
-      this.endpoints.kp.attach,
+      this.endpoints['kp']['attach'],
       (typeof (pSubject)!='string')? { hook:pTargetHook, kp:NodeTypeHelper.getUIDof(pSubject), type:pHookAction  } : { hook:pTargetHook, kp:pSubject, type:pHookAction   }
     ).pipe(
       map((pRes:any) => {
@@ -1565,7 +1565,7 @@ export class HookService extends DxcApiService {
 
   downloadAgentScript():Observable<any>{
     return this._process(
-      this.endpoints.hook.download
+      this.endpoints['hook']['download']
     ).pipe(
       map((pEl:any)=>{
         console.log(pEl);

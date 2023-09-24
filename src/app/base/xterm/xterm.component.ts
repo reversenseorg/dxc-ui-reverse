@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {Subject} from "rxjs";
 import {IconModel} from "../icon/IconModel";
 import {TerminalSession} from "../../components/workspace/ctrl/TerminalSession";
+import {Nullable} from "../Nullable";
 
 @Component({
   selector: 'dxc-xterm',
@@ -10,8 +11,8 @@ import {TerminalSession} from "../../components/workspace/ctrl/TerminalSession";
 })
 export class XtermComponent implements OnInit, OnChanges {
 
-  @Input() session:TerminalSession = null;
-  @Input() type:string = null;
+  @Input() session:Nullable<TerminalSession> = null;
+  @Input() type:Nullable<string> = null;
   @Input() writeSubject:Subject<any> = new Subject<any>();
 
   constructor() { }

@@ -12,12 +12,12 @@
     <ng-container nav-left>
       <app-subnavbar [type]="'navbar'" [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [icon]="icons.FUNC" [active]="activeTopLeft == 'fl'" (click)="show('fn_list','fl')">&nbsp;Functions</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="icons.SECTIONS" [active]="activeTopLeft == 'is'" (click)="show('sections','is')">&nbsp;Sections</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="icons.IMPORTS" [active]="activeTopLeft == 'ii'" (click)="show('imports','ii')">&nbsp;Imports</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="icons.IMPORTS" [active]="activeTopLeft == 'ex'" (click)="show('exports','ex')">&nbsp;Exports</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="icons.STRINGS" [active]="activeTopLeft == 'st'" (click)="show('strings','st')">&nbsp;Strings</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="icons.SYSCALL" [active]="activeTopLeft == 'ss'" (click)="show('syscall','ss')">&nbsp;Syscall</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons['FUNC']" [active]="activeTopLeft == 'fl'" (click)="show('fn_list','fl')">&nbsp;Functions</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons['SECTIONS']" [active]="activeTopLeft == 'is'" (click)="show('sections','is')">&nbsp;Sections</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons['IMPORTS']" [active]="activeTopLeft == 'ii'" (click)="show('imports','ii')">&nbsp;Imports</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons['IMPORTS']" [active]="activeTopLeft == 'ex'" (click)="show('exports','ex')">&nbsp;Exports</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons['STRINGS']" [active]="activeTopLeft == 'st'" (click)="show('strings','st')">&nbsp;Strings</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="icons['SYSCALL']" [active]="activeTopLeft == 'ss'" (click)="show('syscall','ss')">&nbsp;Syscall</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -144,12 +144,12 @@
     <ng-container nav-right>
       <app-subnavbar [type]="'navbar'"  [parent]="this" [opts]="true">
         <ng-container main>
-          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="gIcons.ANDROID" [active]="activeTopRight == 'di'" (click)="selectRightTab('di')">Disassembly</app-subnavbar-btn>
-          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="cIcons.XREF_TO" [active]="activeTopRight == 'xr'" (click)="selectRightTab('xr')">Xref</app-subnavbar-btn>
-          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="gIcons.HOOKS" [active]="activeTopRight == 'hk'" (click)="selectRightTab('hk')">Hooks</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="gIcons['ANDROID']" [active]="activeTopRight == 'di'" (click)="selectRightTab('di')">Disassembly</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="cIcons['XREF_TO']" [active]="activeTopRight == 'xr'" (click)="selectRightTab('xr')">Xref</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="activeRight=='fn'" [icon]="gIcons['HOOKS']" [active]="activeTopRight == 'hk'" (click)="selectRightTab('hk')">Hooks</app-subnavbar-btn>
         </ng-container>
         <ng-container options>
-          <app-subnavbar-btn [icon]="gIcons.FIND" (click)="findInRight()"></app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons['FIND']" (click)="findInRight()"></app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -185,15 +185,15 @@
             <ng-template #expItem let-itemObj="item" >
 
               <span *ngIf="itemObj._t=='c'" (contextmenu)="displayExtMenu($event,'clzz',itemObj)">
-                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
                 {{ itemObj.name  }}
               </span>
               <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                <dxc-icon [model]="cIcons['METH']"></dxc-icon>
                 {{ itemObj.__callSignature__  }}
               </span>
               <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
                 {{ itemObj.__signature__  }}
               </span>
             </ng-template>
@@ -229,32 +229,32 @@
   <app-context-item [separator]="true" [label]="'Track call'" (itemclick)="trackValueOf(ctxMenuState.subject, { type: PRESET_HOOK.TRACK })"></app-context-item>
   <app-context-item [label]="'Tamper return value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_RET  })"></app-context-item>
   <app-context-item [label]="'Tamper param value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_PARAM  })"></app-context-item>
-  <app-context-item [label]="'Generate empty hook'" [icon]="gIcons.GEN_HOOK"  (click)="trackValueOf( ctxMenuState.subject, {type: PRESET_HOOK.NONE  } )"></app-context-item>
-  <app-context-item [separator]="true" [label]="'Add bookmark'" [icon]="gIcons.BOOKMARK"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
-  <!--<app-context-item [label]="'Show details'" [icon]="gIcons.FIND"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>-->
+  <app-context-item [label]="'Generate empty hook'" [icon]="gIcons['GEN_HOOK']"  (click)="trackValueOf( ctxMenuState.subject, {type: PRESET_HOOK.NONE  } )"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Add bookmark'" [icon]="gIcons['BOOKMARK']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <!--<app-context-item [label]="'Show details'" [icon]="gIcons['FIND']"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>-->
 </app-context-menu>
 
 
 <app-context-menu [width]="200" [name]="id+'inst'">
   <app-context-item [label]="'Track context'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
   <app-context-item [label]="'Track ...'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
-  <app-context-item [label]="'Hook'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Hook'" [icon]="gIcons['GEN_HOOK']"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
   <app-context-item [label]="'Memory snapshot here'" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
   <app-context-item [label]="'Xref to'"   (click)="showDetail('fn', ctxMenuState.subject, 'xt')"></app-context-item>
-  <app-context-item [label]="'Patch'" [icon]="gIcons.HOOKS"  (click)="goHook( 'fn', ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Add bookmark'" [icon]="gIcons.BOOKMARK"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Patch'" [icon]="gIcons['HOOKS']"  (click)="goHook( 'fn', ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Add bookmark'" [icon]="gIcons['BOOKMARK']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Search syscalls'" [separator]="true"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Search ...'"   [icon]="gIcons.FIND"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Start emulation here'"   [icon]="gIcons.FIND"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
-  <!--<app-context-item [label]="'Show details'" [icon]="gIcons.FIND"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>-->
+  <app-context-item [label]="'Search ...'"   [icon]="gIcons['FIND']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Start emulation here'"   [icon]="gIcons['FIND']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <!--<app-context-item [label]="'Show details'" [icon]="gIcons['FIND']"  (click)="showDetails(ctxMenuState.subject)"></app-context-item>-->
 </app-context-menu>
 
 <app-context-menu [width]="200" [name]="'syscall'">
   <app-context-item [label]="'Track context'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
   <app-context-item [label]="'Track ...'" (click)="showDetail('fn', ctxMenuState.subject, 'di')"></app-context-item>
-  <app-context-item [label]="'Tamper syscall arguments'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
-  <app-context-item [label]="'Tamper syscall results'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
-  <app-context-item [label]="'Custom hook ...'" [icon]="gIcons.GEN_HOOK"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Tamper syscall arguments'" [icon]="gIcons['GEN_HOOK']"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Tamper syscall results'" [icon]="gIcons['GEN_HOOK']"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
+  <app-context-item [label]="'Custom hook ...'" [icon]="gIcons['GEN_HOOK']"  (click)="createInsnHook('fn', ctxMenuState.subject, 'xf')"></app-context-item>
   <app-context-item [separator]="true" [label]="'Do memory snapshot here'" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
   <app-context-item [label]="'Dump stack here'" (click)="showDetail('fn', ctxMenuState.subject, 'xf')"></app-context-item>
 </app-context-menu>

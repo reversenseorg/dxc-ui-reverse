@@ -1,9 +1,10 @@
+import {Nullable} from "../../../base/Nullable";
 
 
 export class DeviceItem
 {
 
-  _t:string = null;
+  _t:Nullable<string> = null;
 
   /**
    * Package name
@@ -11,10 +12,10 @@ export class DeviceItem
    * @type {String}
    * @field
    */
-  name:string = null;
+  name:Nullable<string> = null;
 
 
-  sname:string = null;
+  sname:Nullable<string> = null;
 
   /**
    * Package metadata

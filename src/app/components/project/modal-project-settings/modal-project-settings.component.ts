@@ -65,7 +65,7 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
   // model
   deviceList: Device[] = [];
   device: string;
-  devuid: string = null;
+  devuid:Nullable<string> = null;
   pltList: any;
   platform: any;
 

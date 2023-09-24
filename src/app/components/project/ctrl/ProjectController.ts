@@ -17,7 +17,7 @@ export class ProjectController implements IController {
    */
   name:string = 'project';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: ProjectService = null;

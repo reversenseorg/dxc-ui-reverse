@@ -12,6 +12,7 @@ import {UserAccount} from "../../../models/user/UserAccount";
 import {UserRole} from "../../../models/user/acl/rbac/UserRole";
 import {DxcApiToken} from "../../../base/DxcApiToken";
 import { DexcaliburConnectionParams } from "../../../models/remote/DexcaliburConnectionParams";
+import {Nullable} from "../../../base/Nullable";
 
 
 @Injectable({
@@ -19,8 +20,8 @@ import { DexcaliburConnectionParams } from "../../../models/remote/DexcaliburCon
 })
 export class AuthService extends DxcApiService{
 
-  token: DxcApiToken = null;
-  account: UserAccount = null;
+  override token: Nullable<DxcApiToken> = null;
+  account: Nullable<UserAccount> = null;
 
   /**
    * Event stream.
@@ -35,7 +36,7 @@ export class AuthService extends DxcApiService{
   onLogout:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
   onAuthentication:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
 
-  constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, protected override _http:HttpClient) {
 
       super({
         auth: {
@@ -58,15 +59,19 @@ export class AuthService extends DxcApiService{
       enabled:false,
       submenu:[{
         label: 'Login',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: () => {
           //this.onMenuClick.next({ item:'login', win:pBrowserWindow });
         }
       },{
         label: 'Logout',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any) => {
           console.log(DxcApiToken.count());
           if(DxcApiToken.count()==1){
-            this.logout(DxcApiToken.getInstance(null).getName()).subscribe();
+            const tok = DxcApiToken.getInstance(null);
+            if(tok!=null){
+              this.logout(tok.getName()).subscribe();
+            }
+
           }else{
             this.onMenuClick.next({ item:'logout', win:pBrowserWindow });
           }
@@ -88,7 +93,7 @@ export class AuthService extends DxcApiService{
 
   restore():Observable<any> {
     return this._process(
-      this.endpoints.account.info
+      this.endpoints['account']['info']
     ).pipe(map((pEl:any)=>{
       const info: any = {
         restored: false
@@ -113,9 +118,9 @@ export class AuthService extends DxcApiService{
     }));
   }
 
-  getUserInfo():Observable<UserAccount> {
+  getUserInfo():Observable<Nullable<UserAccount>> {
     return this._process(
-      this.endpoints.account.info
+      this.endpoints['account']['info']
     ).pipe(map((pEl:any)=>{
       if(pEl.success){
         const data = pEl.data;
@@ -130,17 +135,21 @@ export class AuthService extends DxcApiService{
           src: "Authentication",
           msg: `Account information cannot be retrieved : ${pEl.msg}`
         }));
+        return null;
       }
     }));
   }
 
-  logout(pConnName:string = null):Observable<boolean> {
+  logout(pConnName:Nullable<string> = null):Observable<boolean> {
     return this._process(
-      this.endpoints.auth.logout
+      this.endpoints['auth']['logout']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
-        DxcApiToken.remove(pConnName);
+        if(pConnName!=null){
+          DxcApiToken.remove(pConnName);
+        }
+
         this.outputSvc.print(OutputMessage.newSuccess({
           src: "Authentication",
           msg: `Logout successfully from ${pConnName!=null ? pConnName : "<null>"}`
@@ -188,7 +197,7 @@ export class AuthService extends DxcApiService{
 
   doPasswordAuthentication( pConnName:string, pLogin:string, pPassword:string):Observable<any> {
     return this._process(
-      this.endpoints.auth.passwd,
+      this.endpoints['auth']['passwd'],
       {
         conn: pConnName,
         login: pLogin,
@@ -237,7 +246,7 @@ export class AuthService extends DxcApiService{
 
   listConnectionsSettings():Observable<DexcaliburConnectionParams[]> {
     return this._process(
-      this.endpoints.connections.list,
+      this.endpoints['connections']['list'],
       {}
     ).pipe(
       map((pEl:any)=>{
@@ -262,14 +271,14 @@ export class AuthService extends DxcApiService{
 
   getConnectionParams( pOptions:any):Observable<DexcaliburConnectionParams> {
     return this._process(
-      this.endpoints.connections.list,
+      this.endpoints['connections']['list'],
       pOptions
     );
   }
 
   changePassword( pCurrrentPwd:string, pNewPwd:string ):Observable<any>{
     return this._process(
-      this.endpoints.account.change_pwd,
+      this.endpoints['account']['change_pwd'],
       {
         pwd:pCurrrentPwd,
         new: pNewPwd

@@ -5,6 +5,8 @@ import {ComponentFactoryResolver} from "@angular/core";
 import {StageComponent} from "../../stage/stage.component";
 import {ViewerController} from "../../viewer/ctrl/ViewerController";
 import {AuthService} from "./auth.service";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 export class AuthController implements IController {
@@ -15,7 +17,7 @@ export class AuthController implements IController {
    */
   name:string = 'auth';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: AuthService = null;

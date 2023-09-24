@@ -3,7 +3,7 @@
                  (closeTab)="onClose($event)" (selectTab)="switchSession($event)" #termWsNav>
     <b class="nav-label" navLabel>Terminal :</b>
     <ng-container rightTab>
-      <app-subnavbar-tab [icon]="gIcons.PLUS" [closable]="false" (click)="newSession()"></app-subnavbar-tab>
+      <app-subnavbar-tab [icon]="gIcons['PLUS']" [closable]="false" (click)="newSession()"></app-subnavbar-tab>
     </ng-container>
   </app-subnavbar>
 

@@ -27,7 +27,7 @@ export class TeamService extends DxcApiService{
 
   //onAuthentication:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
 
-  constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, private authSvc:AuthService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, private authSvc:AuthService, protected override _http:HttpClient) {
 
     super({
 
@@ -40,12 +40,12 @@ export class TeamService extends DxcApiService{
       enabled:true,
       submenu:[{
         label: 'Login ...',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.authSvc.askAuthentication();
         }
       },{
         label: 'Logout ...',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           if(DxcApiToken.count()==1){
             this.authSvc.logout(DxcApiToken.getInstance(null).getName())
               .subscribe(function(vSuccess){

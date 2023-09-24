@@ -7,11 +7,11 @@
       <div class="col-3" style="background-color: #333">
         <app-subnavbar [direction]="'col'">
           <ng-container vmain>
-            <app-subnavbar-btn [active]="active=='srv'" [vert]="true" [icon]="gIcons.LIST" [fwicon]="true" (click)="showTab('srv')">Server</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="active=='etools'" [vert]="true" [icon]="gIcons.TOOLS" [fwicon]="true" (click)="showTab('etools')">External tools</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="active=='plt'" [vert]="true" [icon]="gIcons.DEVICE" [fwicon]="true" (click)="showTab('plt')">Platform images</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="active=='sec'" [vert]="true" [icon]="gIcons.LOCK" [fwicon]="true" (click)="showTab('sec')">Security</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="active=='eng'" [vert]="true" [icon]="gIcons.ANALYZE" [fwicon]="true" (click)="showTab('eng')">Engine</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='srv'" [vert]="true" [icon]="gIcons['LIST']" [fwicon]="true" (click)="showTab('srv')">Server</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='etools'" [vert]="true" [icon]="gIcons['TOOLS']" [fwicon]="true" (click)="showTab('etools')">External tools</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='plt'" [vert]="true" [icon]="gIcons['DEVICE']" [fwicon]="true" (click)="showTab('plt')">Platform images</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='sec'" [vert]="true" [icon]="gIcons['LOCK']" [fwicon]="true" (click)="showTab('sec')">Security</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="active=='eng'" [vert]="true" [icon]="gIcons['ANALYZE']" [fwicon]="true" (click)="showTab('eng')">Engine</app-subnavbar-btn>
           </ng-container>
         </app-subnavbar>
       </div>
@@ -25,8 +25,8 @@
           <div class="container-fluid p-2">
             <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
               <ng-container main>
-                <app-subnavbar-btn [icon]="gIcons.ADD" (click)="openNewSetting('ext')"></app-subnavbar-btn>
-                <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" (click)="export('ext')"></app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['ADD']" (click)="openNewSetting('ext')"></app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" (click)="export('ext')"></app-subnavbar-btn>
               </ng-container>
             </app-subnavbar>
 
@@ -58,8 +58,8 @@
           <div class="container-fluid p-2">
             <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
               <ng-container main>
-                <app-subnavbar-btn [icon]="gIcons.ADD" (click)="openNewSetting('ext')"></app-subnavbar-btn>
-                <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" (click)="export('ext')"></app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['ADD']" (click)="openNewSetting('ext')"></app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" (click)="export('ext')"></app-subnavbar-btn>
               </ng-container>
             </app-subnavbar>
             <table class="table table-bordered table-sm dxc-grid">
@@ -78,10 +78,10 @@
                   <input *ngIf="ext._editing" type="text" class="form-input dxc-cell-input" style="width:300px" [name]="ext._uid+'_path'" [(ngModel)]="ext.path" (keydown.control.v)="onPaste('ext',ext)"  (keydown.escape)="quitEditMode($event,ext)" (keyup.enter)="saveExtPath($event,ext)"/>
                 </td>
                 <td>
-                  <app-subnavbar-btn *ngIf="!ext._editing" [icon]="gIcons.EDIT" [color]="'dxc-grid'" (click)="extEdit(ext)"></app-subnavbar-btn>
-                  <app-subnavbar-btn *ngIf="ext._editing" [icon]="gIcons.SAVE" [color]="'dxc-grid'" (click)="saveExtPath(null,ext)"></app-subnavbar-btn>
-                  <app-subnavbar-btn *ngIf="!ext._editing && ext._edited" [icon]="gIcons.CHECK"  [color]="'dxc-grid'">Saved !</app-subnavbar-btn>
-                  <app-subnavbar-btn [icon]="gIcons.TRASH" [color]="'dxc-grid'"  (click)="remove('ext', ext)"></app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="!ext._editing" [icon]="gIcons['EDIT']" [color]="'dxc-grid'" (click)="extEdit(ext)"></app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="ext._editing" [icon]="gIcons['SAVE']" [color]="'dxc-grid'" (click)="saveExtPath(null,ext)"></app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="!ext._editing && ext._edited" [icon]="gIcons['CHECK']"  [color]="'dxc-grid'">Saved !</app-subnavbar-btn>
+                  <app-subnavbar-btn [icon]="gIcons['TRASH']" [color]="'dxc-grid'"  (click)="remove('ext', ext)"></app-subnavbar-btn>
                 </td>
               </tr>
               </tbody>
@@ -110,10 +110,10 @@
                     <td>{{ plt.source }}</td>
                     <td>
                       <span *ngIf="plt.installed && !plt._installing" class="text-success">
-                        <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Installed
+                        <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Installed
                       </span>
                       <span *ngIf="!plt.installed && !plt._installing">
-                        <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                        <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
                       </span>
                       <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
                     </td>
@@ -179,10 +179,10 @@
               <tr >
                 <!--<td>
                      <span *ngIf="plt.installed && !plt._installing" class="text-success">
-                        <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Installed
+                        <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Installed
                       </span>
                   <span *ngIf="!plt.installed && !plt._installing">
-                        <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                        <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
                       </span>
                   <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
                 </td>-->
@@ -193,10 +193,10 @@
                 <td>{{ plt.source }}</td>
                 <td>
                       <span *ngIf="plt.installed && !plt._installing" class="text-success">
-                        <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Installed
+                        <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Installed
                       </span>
                   <span *ngIf="!plt.installed && !plt._installing">
-                        <app-subnavbar-btn [icon]="gIcons.DOWNLOAD" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                        <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
                       </span>
                   <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
                 </td>
@@ -218,7 +218,7 @@
               <div class="col-9">
                 <input type="number" id="srv_heapsize" name="srv_heapsize" class="dxc-frm-input dxc-input-sm" min="2048" [(ngModel)]="srv.heapSize.value" (keyup.enter)="doSave('srv', srv.heapSize)">
                 <span *ngIf="srv.heapSize.saved===true">
-                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
                 </span>
                 <span *ngIf="srv.heapSize.saved===false">
                   &nbsp;Error !
@@ -232,7 +232,7 @@
               <div class="col-9">
                 <input type="number" id="net_http" name="net_http" class="dxc-frm-input dxc-input-sm" min="1" max="65535" [(ngModel)]="net.http.value" (keyup.enter)="doSave('srv', net.http)">
                 <span *ngIf="net.http.saved===true">
-                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
                 </span>
                 <span *ngIf="net.http.saved===false">
                   &nbsp;Error !
@@ -246,7 +246,7 @@
               <div class="col-9">
                 <input type="number" id="net_ws" name="net_ws" class="dxc-frm-input dxc-input-sm" min="1" max="65535" [(ngModel)]="net.ws.value" (keyup.enter)="doSave('srv', net.ws)">
                 <span *ngIf="net.ws.saved===true">
-                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
                 </span>
                 <span *ngIf="net.ws.saved===false">
                   &nbsp;Error !
@@ -260,7 +260,7 @@
               <div class="col-9">
                 <input type="text" id="srv_reg" name="srv_reg" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registry.value" (keyup.enter)="doSave('srv', srv.registry)">
                 <span *ngIf="srv.registry.saved===true">
-                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
                 </span>
                 <span *ngIf="srv.registry.saved===false">
                   &nbsp;Error !
@@ -274,7 +274,7 @@
               <div class="col-9">
                 <input type="text" name="srv_regapi" id="srv_regapi" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registryAPI.value" (change)="doSave('srv', srv.registryAPI)">
                 <span *ngIf="srv.registryAPI.saved===true">
-                  <dxc-icon [model]="gIcons.CHECK"></dxc-icon>&nbsp;Saved
+                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
                 </span>
                 <span *ngIf="srv.registryAPI.saved===false">
                   &nbsp;Error !
@@ -322,7 +322,7 @@
 
   </div>
   <div footer>
-    <button class="dxc-frm-btn" (click)="restart()"><dxc-icon [model]="gIcons.REFRESH"></dxc-icon>&nbsp;Restart</button>
+    <button class="dxc-frm-btn" (click)="restart()"><dxc-icon [model]="gIcons['REFRESH']"></dxc-icon>&nbsp;Restart</button>
     <button class="dxc-frm-btn" (click)="close()">Cancel</button>
     <button class="dxc-frm-btn default" (click)="save()"><dxc-icon [model]=""></dxc-icon>Close</button>
   </div>

@@ -15,7 +15,7 @@ export class TeamController implements IController {
    */
   name:string = 'team';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: TeamService = null;

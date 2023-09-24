@@ -12,8 +12,8 @@
     </div>
     <input type="text" class="form-control" autofocus="autofocus" name="alias" [formControl]="aliasControl" (keyup)="resetError($event)" (keydown.enter)="submitAlias()">
     <div class="input-group-append">
-      <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="controller.gIcons.CHECK" (click)="submitAlias()"></dxc-icon>
-      <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="controller.gIcons.WARNING"></dxc-icon>
+      <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="controller.gIcons['CHECK']" (click)="submitAlias()"></dxc-icon>
+      <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="controller.gIcons['WARNING']"></dxc-icon>
     </div>
   </div>
   <ng-container footer>

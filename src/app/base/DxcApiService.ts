@@ -8,6 +8,8 @@ import {DexcaliburConnectionParams} from "../models/remote/DexcaliburConnectionP
 import {WebApiWindowing} from "./WebApiWindowing";
 import {OutputService} from "../components/output/ctrl/output.service";
 import {OutputMessage} from "../cmp/OutputMessage";
+import {Nullable} from "./Nullable";
+import {IStringIndex} from "./IStringIndex";
 
 /*
 export interface ServerResponse {
@@ -58,16 +60,16 @@ let gAuthProfile:any = null;
 })*/
 export class DxcApiService {
 
-  token: DxcApiToken = null;
+  token: Nullable<DxcApiToken> = null;
 
   private _baseURL = "";
 
-  protected _http:HttpClient = null;
+  protected _http:HttpClient;
   endpoints: EndpointMap;
-  window: WebApiWindowing = null;
-  protected _output:OutputService = null;
+  window: Nullable<WebApiWindowing> = null;
+  protected _output:Nullable<OutputService>;
 
-  constructor(pEndpoints:EndpointMap, pHttp:HttpClient, pOutputSvc:OutputService = null) {
+  constructor(pEndpoints:EndpointMap, pHttp:HttpClient, pOutputSvc:Nullable<OutputService> = null) {
     this.endpoints = pEndpoints;
     this._http = pHttp;
     this._output = pOutputSvc;
@@ -76,7 +78,7 @@ export class DxcApiService {
 
     if(gAuthProfile===null){
       if(params.get('auth')!=null){
-        gAuthProfile = JSON.parse(atob(params.get('auth')));
+        gAuthProfile = JSON.parse(atob(params.get('auth') as string));
         console.log("[AUTH PROFILE] Saving profile ",gAuthProfile);
         this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
         // persist
@@ -117,7 +119,7 @@ export class DxcApiService {
     return gAuthProfile;
   }
 
-  protected _setWindowing( pOffset, pSize):void {
+  protected _setWindowing( pOffset:number, pSize:number):void {
     this.window = new WebApiWindowing(pOffset,pSize);
   }
 
@@ -131,9 +133,9 @@ export class DxcApiService {
    * @param pOptions
    * @protected
    */
-  protected _delegateProcess( pEndpoint:EndpointInfo, pConnParam:DexcaliburConnectionParams = null, pOptions:any = {}):Observable<any>{
+  protected _delegateProcess( pEndpoint:EndpointInfo, pConnParam:Nullable<DexcaliburConnectionParams> = null, pOptions:any = {}):Observable<any>{
     let url:string = this._baseURL; //environment.apiUrl ;
-    const extra = {};
+    const extra:any = {};
 
     if(pEndpoint.url.indexOf(':')>-1){
       url += Utils.dxc_prepareURL( pEndpoint.url, pOptions);
@@ -141,7 +143,7 @@ export class DxcApiService {
       url += pEndpoint.url;
     }
 
-    let obs:Observable<any> = null;
+    let obs:Observable<any>;
     let body:any;
     switch (pEndpoint.method) {
       case "GET":
@@ -156,7 +158,7 @@ export class DxcApiService {
 
         if(pEndpoint.puid){
           if(DxcApiToken.exists("puid")){
-            url += `&_puid=${DxcApiToken.getInstance( "puid").getToken()}`;
+            url += `&_puid=${(DxcApiToken.getInstance( "puid") as DxcApiToken).getToken()}`;
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"ProjectUID token is required but not set."}));
             return from([]);
@@ -167,7 +169,11 @@ export class DxcApiService {
 
         if(pEndpoint.auth){
           if(DxcApiToken.exists()){
-            url += `&_a=${DxcApiToken.getInstance( pConnParam==null? "local":pConnParam.getName()).getToken()}`;
+            const t = DxcApiToken.getInstance( pConnParam==null? "local":pConnParam.getName());
+            if(t!=null){
+              url += `&_a=${t.getToken()}`;
+            }
+
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"API token is required but not set."}));
             return from([]);
@@ -201,7 +207,10 @@ export class DxcApiService {
 
         if(pEndpoint.puid){
           if(DxcApiToken.exists("puid")){
-            url += `${url.indexOf('?')>-1? '&':'?'}_puid=${DxcApiToken.getInstance( "puid").getToken()}`;
+            const puid_t = DxcApiToken.getInstance( "puid");
+            if(puid_t!=null){
+              url += `${url.indexOf('?')>-1? '&':'?'}_puid=${puid_t.getToken()}`;
+            }
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"ProjectUID token is required but not set."}));
             return from([]);
@@ -212,8 +221,13 @@ export class DxcApiService {
 
         if(pEndpoint.auth){
           if(DxcApiToken.exists()){
-            //body["_a"] = DxcApiToken.getInstance( pConnParam==null? "local":pConnParam.getName()).getToken();
-            url += `${url.indexOf('?')>-1? '&':'?'}_a=${DxcApiToken.getInstance( pConnParam==null? "local":pConnParam.getName()).getToken()}`;
+
+            const t1 = DxcApiToken.getInstance( pConnParam==null? "local":pConnParam.getName());
+            if(t1!=null){
+              url += `${url.indexOf('?')>-1? '&':'?'}_a=${t1.getToken()}`;
+            }
+
+
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"API token is required but not set."}));
             return from([]);
@@ -226,7 +240,8 @@ export class DxcApiService {
           url += `${url.indexOf('?')>-1? '&':'?'}__f=${JSON.stringify(pEndpoint.window.and(extra).toJsonObject())}`;
         }
 
-        obs = this._http[pEndpoint.method.toLowerCase()]<any>(
+        // @ts-ignore
+        obs = (this._http as IStringIndex<any>)[pEndpoint.method.toLowerCase()]<any>(
           url,
           body,
           {
@@ -234,6 +249,9 @@ export class DxcApiService {
             responseType: 'json' //(pEndpoint.format as string)
           }
         );
+        break;
+      default:
+        throw new Error("DxcApiService cannot build request");
         break;
     }
 

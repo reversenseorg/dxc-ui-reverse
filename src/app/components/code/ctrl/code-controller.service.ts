@@ -136,7 +136,7 @@ export class CodeControllerService extends DxcApiService{
       submenu: [{
         label: 'Search ...',
         accelerator: 'CommandOrControl+F',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'search', win: pBrowserWindow});
         }
       }, {
@@ -145,17 +145,17 @@ export class CodeControllerService extends DxcApiService{
         label: 'Show control-flow graph',
       }, {
         label: 'Show cross-reference',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xrefs', win: pBrowserWindow});
         }
       }, {
         label: 'Show xref graph from ...',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xfrom', win: pBrowserWindow});
         }
       }, {
         label: 'Show xref graph to ...',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xto', win: pBrowserWindow});
         }
       }, {
@@ -164,27 +164,27 @@ export class CodeControllerService extends DxcApiService{
         label: 'Search',
         submenu: [{
           label: "System calls",
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({item: 'curr-sysc', win: pBrowserWindow});
           }
         }, {
           label: "Data",
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({item: 'curr-data', win: pBrowserWindow});
           }
         }, {
           label: "Runtime data",
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({item: 'run-data', win: pBrowserWindow});
           }
         }, {
           label: "Getters / Setters",
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({item: 'curr-xetters', win: pBrowserWindow});
           }
         }, {
           label: "Callers",
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({item: 'curr-callers', win: pBrowserWindow});
           }
         }, {
@@ -276,20 +276,20 @@ export class CodeControllerService extends DxcApiService{
 
     switch(pName){
       case CODE_SUBVIEW.APP:
-        endpoint = this.endpoints.package.app;
+        endpoint = this.endpoints['package']['app'];
         break;
       case CODE_SUBVIEW.ANDROID_API:
-        endpoint = this.endpoints.package.android_api;
+        endpoint = this.endpoints['package']['android_api'];
         break;
       case CODE_SUBVIEW.ANDROID_FWK:
-        endpoint = this.endpoints.package.android_int;
+        endpoint = this.endpoints['package']['android_int'];
         break;
       case CODE_SUBVIEW.VENDOR:
-        endpoint = this.endpoints.package.vendor;
+        endpoint = this.endpoints['package']['vendor'];
         break;
       case CODE_SUBVIEW.ALL:
       default:
-        endpoint = this.endpoints.package.all;
+        endpoint = this.endpoints['package']['all'];
         break;
     }
 
@@ -398,7 +398,7 @@ export class CodeControllerService extends DxcApiService{
 
     if(pComplete){
       return this._process(
-        this.endpoints.class.info,
+        this.endpoints['class']['info'],
         {
           'id': pQuery
         }
@@ -414,12 +414,12 @@ export class CodeControllerService extends DxcApiService{
       }));
     }else{
       return this._process(
-        /*this.endpoints.finder.search,
+        /*this.endpoints['finder']['search'],
         {
           ':query': encodeURIComponent(btoa(`get.class("${pQuery}")`))
         }*/
 
-        this.endpoints.class.info,
+        this.endpoints['class']['info'],
         {
           'id': pQuery
         }
@@ -439,7 +439,7 @@ export class CodeControllerService extends DxcApiService{
   getCompleteClass( pQuery:string):Observable<ModelClass> {
 
       return this._process(
-        this.endpoints.class.info,
+        this.endpoints['class']['info'],
         {
           'id': pQuery
         }
@@ -460,7 +460,7 @@ export class CodeControllerService extends DxcApiService{
   getMethod( pQuery:string, pComplete = false):Observable<CodeItem> {
     if(pComplete){
       return this._process(
-        this.endpoints.method.info,
+        this.endpoints['method']['info'],
         {
           'id': pQuery,
           'probing': true
@@ -475,7 +475,7 @@ export class CodeControllerService extends DxcApiService{
       }));
     }else{
       return this._process(
-        this.endpoints.finder.search,
+        this.endpoints['finder']['search'],
         {
           ':query': encodeURIComponent(btoa(`get.method("${pQuery}")`))
         }
@@ -491,7 +491,7 @@ export class CodeControllerService extends DxcApiService{
   getMethodXref( pMethod:ModelMethod|string, pType:string):Observable<CodeItem> {
 
     return this._process(
-      this.endpoints.method.xref,
+      this.endpoints['method']['xref'],
       {
         'id': ((typeof pMethod==='string') ? pMethod : pMethod.__signature__  ),
         'type': pType
@@ -518,7 +518,7 @@ export class CodeControllerService extends DxcApiService{
 
   getField( pQuery:string):Observable<CodeItem> {
     return this._process(
-      this.endpoints.finder.search,
+      this.endpoints['finder']['search'],
       {
         ':query': encodeURIComponent(btoa(`get.field("${pQuery}")`))
       }
@@ -528,7 +528,7 @@ export class CodeControllerService extends DxcApiService{
   getCompleteField( pQuery:string):Observable<ModelField> {
 
     return this._process(
-      this.endpoints.field.info,
+      this.endpoints['field']['info'],
       {
         'id': pQuery
       }
@@ -544,7 +544,7 @@ export class CodeControllerService extends DxcApiService{
 
   getPackage( pQuery:string):Observable<CodeItem> {
     return this._process(
-      this.endpoints.finder.search,
+      this.endpoints['finder']['search'],
       {
         ':query': encodeURIComponent(btoa(`get.package("${pQuery}")`))
       }
@@ -553,7 +553,7 @@ export class CodeControllerService extends DxcApiService{
 
   disassMethod( pRef:string):Observable<string> {
     return this._process(
-      this.endpoints.method.disass,
+      this.endpoints['method']['disass'],
       {
         'id': pRef
       }
@@ -627,7 +627,7 @@ export class CodeControllerService extends DxcApiService{
     }
 
     return this._process(
-      this.endpoints.vm.simplify,
+      this.endpoints['vm']['simplify'],
       pDdvmOpts
     ).pipe(map((vRes:any) => {
       if(!vRes.success){
@@ -655,7 +655,7 @@ export class CodeControllerService extends DxcApiService{
 
   xrefAndroidApi(pNode: ModelMethod | ModelClass) {
     return this._process(
-      this.endpoints.finder.androidXref,
+      this.endpoints['finder']['androidXref'],
       {
         'type': pNode.__,
         'id': pNode.getUID()

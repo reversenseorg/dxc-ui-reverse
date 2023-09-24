@@ -117,7 +117,7 @@ export class CodeController extends UiController implements IController {
     let target:ModelMethod;
 
     if(typeof (pMethod)=='string'){
-      target = new ModelMethod({ __signature__: pMethod, _icon: this.gIcons.METHOD });
+      target = new ModelMethod({ __signature__: pMethod, _icon: this.gIcons['METHOD'] });
     }else{
       target = pMethod;
     }
@@ -125,7 +125,7 @@ export class CodeController extends UiController implements IController {
     this.service.getMethod(target.__signature__,true).subscribe( (pObs:any)=>{
       console.log(pObs);
       pObs._t = 'm';
-      pObs._icon = ((target as any)._icon != null)? (target as any)._icon : this.gIcons.METHOD;
+      pObs._icon = ((target as any)._icon != null)? (target as any)._icon : this.gIcons['METHOD'];
 
       if(pInstruction != null){
         pObs.focus = pInstruction;
@@ -182,7 +182,7 @@ export class CodeController extends UiController implements IController {
       pItem.__ = this.getNodeTypeFrom(pItem);
     }
 
-    let uid:string = null;
+    let uid:Nullable<string> = null;
     switch(pItem.__){
       case NodeInternalType.METHOD:
         this.openMethodAt(pItem,pInstruction, { vid:vid });
@@ -320,13 +320,13 @@ export class CodeController extends UiController implements IController {
   openNode(pUID: any, pNodeType:number) {
     switch(pNodeType){
       case NodeInternalType.METHOD:
-        this.open({ _t:'m', __:pNodeType, __signature__:pUID, _icon:this.lIcons.METH });
+        this.open({ _t:'m', __:pNodeType, __signature__:pUID, _icon:this.lIcons['METH'] });
         break;
       case NodeInternalType.CLASS:
-        this.open({ _t:'c', __:pNodeType, name:pUID, _icon:this.lIcons.CLASS });
+        this.open({ _t:'c', __:pNodeType, name:pUID, _icon:this.lIcons['CLASS'] });
         break;
       case NodeInternalType.FIELD:
-        this.open({ _t:'f', __:pNodeType, __signature__:pUID, _icon:this.lIcons.CLASS });
+        this.open({ _t:'f', __:pNodeType, __signature__:pUID, _icon:this.lIcons['CLASS'] });
         break;
     }
   }

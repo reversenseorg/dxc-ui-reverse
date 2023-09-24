@@ -29,9 +29,9 @@
     <ng-container nav-left>
       <app-subnavbar [type]="'navbar'" [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [icon]="gIcons.LIST" [active]="true" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
-          <!--<app-subnavbar-btn [disable]="true"  [icon]="gIcons.LIST">&nbsp;Behavior analysis</app-subnavbar-btn>-->
-          <!--<app-subnavbar-btn [disable]="true" [icon]="gIcons.LIST">&nbsp;Security analysis</app-subnavbar-btn>-->
+          <app-subnavbar-btn [icon]="gIcons['LIST']" [active]="true" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
+          <!--<app-subnavbar-btn [disable]="true"  [icon]="gIcons['LIST']">&nbsp;Behavior analysis</app-subnavbar-btn>-->
+          <!--<app-subnavbar-btn [disable]="true" [icon]="gIcons['LIST']">&nbsp;Security analysis</app-subnavbar-btn>-->
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -44,7 +44,7 @@
 
 
               <span (contextmenu)="displayExtMenu($event,'if',filt)">
-                <dxc-icon [model]="icons.INTENT_FILTER"></dxc-icon>
+                <dxc-icon [model]="icons['INTENT_FILTER']"></dxc-icon>
                 Intent_filter_{{ offset }}
 
                 <ng-container  *ngIf="filt.data!=null && filt.data.length>0">
@@ -60,7 +60,7 @@
                           </div>
 
                           <div class="col-lg-2 text-right">
-                            <span class="badge badge-pill badge-success" (click)="sendIntent(data, filt, dat)"><dxc-icon [model]="gIcons.PLAY" [color1]="'dxc-text-clear100'"></dxc-icon>&nbsp;Send</span>
+                            <span class="badge badge-pill badge-success" (click)="sendIntent(data, filt, dat)"><dxc-icon [model]="gIcons['PLAY']" [color1]="'dxc-text-clear100'"></dxc-icon>&nbsp;Send</span>
                           </div>
                         </div>
                       </ng-container>
@@ -98,8 +98,8 @@
     <ng-container nav-right>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [icon]="cIcons.CLASS" [active]="activeTopRight == 'cmp'" (click)="showImplementation('cmp')">Implementation</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="gIcons.ANDROID" [active]="activeTopRight == 'xr'" (click)="selectRightTab('xr')">Android API xref</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="cIcons['CLASS']" [active]="activeTopRight == 'cmp'" (click)="showImplementation('cmp')">Implementation</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons['ANDROID']" [active]="activeTopRight == 'xr'" (click)="selectRightTab('xr')">Android API xref</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -116,16 +116,16 @@
               <ng-template #expItem let-itemObj="item" >
 
               <span *ngIf="itemObj._t=='c'" (contextmenu)="displayExtMenu($event,'clzz',itemObj)">
-                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
                 {{ itemObj.name  }}
               </span>
                 <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                <dxc-icon [model]="cIcons['METH']"></dxc-icon>
                   <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
                   {{ itemObj.__callSignature__  }}
               </span>
                 <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
                   {{ itemObj.__signature__  }}
               </span>
               </ng-template>
@@ -145,7 +145,7 @@
         <ng-template #noInternal>
           <div class="text-center dxc-text-clear100 pt-4 row">
             <div class="col-4">
-              <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+              <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
             </div>
             <div class="col-8 text-center">
               Deep Cross-references to Android API not found<br>The class implementing this service is probably missing
@@ -157,7 +157,7 @@
 
       <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='cmp')">
         <span *ngIf="data.impl" (contextmenu)="displayExtMenu($event,'clzz',data.impl)">
-                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
           {{ data.impl.name  }}
               </span>
         <app-expandable-list *ngIf="data.impl" style="overflow: auto;">
@@ -166,7 +166,7 @@
 
             <ng-template #impFieldItem let-itemObj="item" >
               <span (contextmenu)="displayExtMenu($event,'field',itemObj)">
-                <dxc-icon [model]="cIcons.FIELD"></dxc-icon>
+                <dxc-icon [model]="cIcons['FIELD']"></dxc-icon>
                 <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
                 {{ itemObj.name  }}
                 <span *ngIf="itemObj.type" class="text-warning">
@@ -191,7 +191,7 @@
 
             <ng-template #impMethItem let-itemObj="item" >
               <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                <dxc-icon [model]="cIcons['METH']"></dxc-icon>
                 <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
                 {{ itemObj.__callSignature__  }}
               </span>
@@ -221,7 +221,7 @@
 <app-context-menu [width]="200" [name]="'meth'">
   <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons['DOWNLOAD']"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 -->
 <!--

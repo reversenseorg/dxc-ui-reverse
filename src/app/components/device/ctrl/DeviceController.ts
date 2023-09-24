@@ -20,7 +20,7 @@ export class DeviceController extends UiController  implements IController {
    */
   name:string = 'device';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: any = null;

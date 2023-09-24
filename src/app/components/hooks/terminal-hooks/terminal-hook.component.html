@@ -1,10 +1,10 @@
 <div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-hook" #termHook>
   <!--<app-subnavbar [type]="'navtab'" [navtab]="this.view.nav" [items]="views" [parent]="this" #termHookNav>
     <ng-container leftTab>
-      <app-subnavbar-tab [active]="true" [label]="'Index'" [icon]="gIcons.LIST" [closable]="false">Output</app-subnavbar-tab>
+      <app-subnavbar-tab [active]="true" [label]="'Index'" [icon]="gIcons['LIST']" [closable]="false">Output</app-subnavbar-tab>
     </ng-container>
     <ng-container rightTab>
-      <app-subnavbar-tab [active]="true" [icon]="gIcons.PLUS" [closable]="false"></app-subnavbar-tab>
+      <app-subnavbar-tab [active]="true" [icon]="gIcons['PLUS']" [closable]="false"></app-subnavbar-tab>
     </ng-container>
   </app-subnavbar>-->
 
@@ -12,8 +12,8 @@
                  (closeTab)="onClose($event)" (selectTab)="switchSession($event)" #termHookNav>
     <span class="nav-label pt-2" navLabel>Sessions :</span>
     <ng-container rightTab>
-      <app-subnavbar-tab [icon]="gIcons.PLAY" [closable]="false" (click)="newSession()"></app-subnavbar-tab>
-      <app-subnavbar-tab [icon]="gIcons.DOWNLOAD" [closable]="false" (click)="save()"></app-subnavbar-tab>
+      <app-subnavbar-tab [icon]="gIcons['PLAY']" [closable]="false" (click)="newSession()"></app-subnavbar-tab>
+      <app-subnavbar-tab [icon]="gIcons['DOWNLOAD']" [closable]="false" (click)="save()"></app-subnavbar-tab>
     </ng-container>
   </app-subnavbar>
 
@@ -40,9 +40,9 @@
           <ng-container *ngFor="let n of msg.node">
             <ng-container *ngIf="n.__==NODE_TYPE.METHOD">
 
-              <dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;<span (click)="open(n.enclosingClass,NODE_TYPE.CLASS)" class="actionable">{{ n.enclosingClass }}</span>
+              <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(n.enclosingClass,NODE_TYPE.CLASS)" class="actionable">{{ n.enclosingClass }}</span>
               .
-              <dxc-icon [model]="cIcons.METH"></dxc-icon>&nbsp;<span (click)="open(n,NODE_TYPE.METHOD)" class="actionable">{{ n.name }}</span>(...)
+              <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(n,NODE_TYPE.METHOD)" class="actionable">{{ n.name }}</span>(...)
             </ng-container>
           </ng-container>
         </div>
@@ -51,23 +51,23 @@
 
             <ng-container [ngSwitch]="d.value.__">
               <ng-container *ngSwitchCase="NODE_TYPE.CLASS">
-                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;<span (click)="open(d.value,NODE_TYPE.CLASS)" class="actionable">{{ d.value.fqcn }}</span>
+                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d.value,NODE_TYPE.CLASS)" class="actionable">{{ d.value.fqcn }}</span>
               </ng-container>
               <ng-container *ngSwitchCase="NODE_TYPE.METHOD">
-                <dxc-icon [model]="cIcons.METH"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+                <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
               </ng-container>
               <ng-container *ngSwitchCase="NODE_TYPE.FILE">
-                <dxc-icon [model]="cIcons.FILE"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>
+                <dxc-icon [model]="cIcons['FILE']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>
               </ng-container>
               <ng-container *ngSwitchDefault>
                 <div *ngIf="d.key[0]!='_'">
                   <span>{{ d.key }}</span>&nbsp;:&nbsp;<span>{{ d.value }}</span>
                 </div>
                 <div *ngIf="d.key=='__class__'">
-                  <dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.CLASS)" class="actionable">{{ d.value }}</span>
+                  <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.CLASS)" class="actionable">{{ d.value }}</span>
                 </div>
                 <div *ngIf="d.key=='__meth__'">
-                  <dxc-icon [model]="cIcons.METH"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+                  <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
                 </div>
               </ng-container>
             </ng-container>

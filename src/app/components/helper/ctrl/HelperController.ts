@@ -17,7 +17,7 @@ export class HelperController implements IController {
    */
   name:string = 'helper';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: HelperService = null;

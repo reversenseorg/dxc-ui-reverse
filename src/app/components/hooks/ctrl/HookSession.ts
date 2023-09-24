@@ -27,7 +27,7 @@ export enum HOOK_SESSION_CMD {
  */
 export class HookSession {
 
-  uid:string = null;
+  uid:Nullable<string> = null;
   icon:IconModel = null;
   label:string = 'Session';
   active: boolean = false;

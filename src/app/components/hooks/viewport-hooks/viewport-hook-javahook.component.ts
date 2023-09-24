@@ -65,7 +65,7 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Hooks',
-      icon: GLOBAL_ICONS.HOOKS,
+      icon: GLOBAL_ICONS['HOOKS'],
       color: 'dxc-text-clear100'
     })
   });

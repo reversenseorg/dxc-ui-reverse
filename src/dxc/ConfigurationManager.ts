@@ -1,7 +1,6 @@
 import * as _fs_ from "fs";
 import * as _path_ from "path";
 import * as _os_ from "os";
-import {app} from 'electron';
 
 import {DEFAULT_DXC_CONFIG_FILE, DEFAULT_DXC_CONN_FILE, DEFAULT_DXC_FOLDER} from "./const";
 
@@ -36,16 +35,16 @@ export class ConfigurationManager {
       this._userData = pUserData;
 
       // load client config
-      //this.clientPath = _path_.join(__dirname, 'config',(process.env.DXC_DEVMODE==="1" ? "dxc.dev.json" : "dxc.prod.json"));
-      this.clientPath = _path_.join(this._userData,(process.env.DXC_DEVMODE==="1" ? "dxc.dev.json" : "dxc.prod.json"));
+      //this.clientPath = _path_.join(__dirname, 'config',(process.env['DXC_DEVMODE']==="1" ? "dxc.dev.json" : "dxc.prod.json"));
+      this.clientPath = _path_.join(this._userData,(process.env['DXC_DEVMODE']==="1" ? "dxc.dev.json" : "dxc.prod.json"));
       if(_fs_.existsSync(this.clientPath)){
         this._client  = JSON.parse(_fs_.readFileSync(this.clientPath).toString());
       }
 
 
       // try to load local server config
-      if(process.env.DXC_HOME!=null && process.env.DXC_HOME.length>0){
-        this.localServerPath = _path_.join(process.env.DXC_HOME, DEFAULT_DXC_CONFIG_FILE);
+      if(process.env['DXC_HOME']!=null && process.env['DXC_HOME'].length>0){
+        this.localServerPath = _path_.join(process.env['DXC_HOME'], DEFAULT_DXC_CONFIG_FILE);
       }else{
         this.localServerPath = _path_.join(_os_.homedir(), DEFAULT_DXC_FOLDER, DEFAULT_DXC_CONFIG_FILE);
       }

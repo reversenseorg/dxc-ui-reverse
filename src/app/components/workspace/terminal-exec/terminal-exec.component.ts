@@ -27,7 +27,7 @@ export class TerminalExecComponent implements OnInit, AfterViewInit, ITerminalCo
   tab:TerminalTab = new TerminalTab({
     offset: 0,
     label: 'JavaScript',
-    icon: GLOBAL_ICONS.JS,
+    icon: GLOBAL_ICONS['JS'],
     color: 'dxc-text-clear100'
   });
 
@@ -37,7 +37,7 @@ export class TerminalExecComponent implements OnInit, AfterViewInit, ITerminalCo
       tab: new NavbarTab({
         offset: 0,
         label: 'Code',
-        icon: GLOBAL_ICONS.JS,
+        icon: GLOBAL_ICONS['JS'],
         color: 'dxc-text-clear100',
         closable: true
       })

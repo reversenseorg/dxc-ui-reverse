@@ -55,7 +55,7 @@ export class NativeService extends DxcApiService {
 
   getFunction(pId:string):Observable<ModelFunction>{
     return this._process(
-      this.endpoints.get.func,
+      this.endpoints['get']['func'],
       {
         uid: pId
       }
@@ -70,7 +70,7 @@ export class NativeService extends DxcApiService {
 
   disass(pFn:string):Observable<ModelFunction>{
     return this._process(
-      this.endpoints.get.disass_func,
+      this.endpoints['get']['disass_func'],
       {
         uid: pFn
       }
@@ -90,7 +90,7 @@ export class NativeService extends DxcApiService {
 
   listImports(pFile:ModelFile):Observable<any>{
     return this._process(
-      this.endpoints.list.imports,
+      this.endpoints['list']['imports'],
       {
         uid: pFile.getUID()
       }
@@ -113,7 +113,7 @@ export class NativeService extends DxcApiService {
     const cmd = pCommands==null? this.commands.discover_lib : pCommands;
 
     return this._process(
-      this.endpoints.do.file_anal,
+      this.endpoints['do']['file_anal'],
       {
         uid: pFile._uid,
         cmd: cmd

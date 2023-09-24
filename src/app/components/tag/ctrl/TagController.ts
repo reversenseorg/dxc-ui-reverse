@@ -16,7 +16,7 @@ export class TagController implements IController {
    */
   name:string = 'tag';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: TagService = null;

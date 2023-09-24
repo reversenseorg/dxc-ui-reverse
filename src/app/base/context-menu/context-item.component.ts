@@ -4,6 +4,7 @@ import {IconView} from "../../cmp/IconView";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {ContextMenuComponent} from "./context-menu.component";
 import {IconModel} from "../icon/IconModel";
+import {Nullable} from "../Nullable";
 
 /**
  * Third column : shortcut
@@ -16,15 +17,15 @@ import {IconModel} from "../icon/IconModel";
 export class ContextItemComponent implements OnInit {
 
   // @ts-ignore
-  @Input() label: string = null;
-  @Input() iconName: string = null;
-  @Input() icon: IconModel = null;
+  @Input() label:Nullable<string> = null;
+  @Input() iconName: Nullable<string> = null;
+  @Input() icon: Nullable<IconModel> = null;
   @Input() separator: boolean = false;
   @Input() disabled: boolean = false;
 
   @Output() itemclick: EventEmitter<any> = new EventEmitter<any>();
 
-  parent: ContextMenuComponent = null;
+  parent: Nullable<ContextMenuComponent> = null;
   border: string = '';
   target: any = null;
   rendered:boolean = false;
@@ -43,7 +44,12 @@ export class ContextItemComponent implements OnInit {
 
 
   onClick(pEvent:any):void {
-      this.parent.hide(null);
+      if(this.parent==null){
+
+      }else{
+        this.parent.hide(null);
+      }
+
       this.itemclick.emit(pEvent);
   }
 }

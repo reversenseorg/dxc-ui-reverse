@@ -36,7 +36,7 @@ export class ViewportHookComponent implements OnInit, AfterViewInit, IViewportCo
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Hook',
-      icon: GLOBAL_ICONS.HOOKS,
+      icon: GLOBAL_ICONS['HOOKS'],
       color: 'dxc-text-clear100'
     })
   });
@@ -76,7 +76,7 @@ export class ViewportHookComponent implements OnInit, AfterViewInit, IViewportCo
         break;
       default:
         if(pData._t=='s'){
-          this.view.tab.icon = GLOBAL_ICONS.INFO;
+          this.view.tab.icon = GLOBAL_ICONS['INFO'];
           this.view.tab.label = "Compiled script" ;
           this.view.tab.color = 'dxc-text-clear100';
         }

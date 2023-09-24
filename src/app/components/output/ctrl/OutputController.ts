@@ -15,7 +15,7 @@ export class OutputController implements IController {
    */
   name:string = 'out';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: OutputService = null;

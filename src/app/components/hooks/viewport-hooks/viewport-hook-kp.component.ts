@@ -51,9 +51,9 @@ export class ViewportHookKpComponent implements OnInit, AfterViewInit, IViewport
   gIcons :any = GLOBAL_ICONS;
   icons :any = HOOK_ICONS;
 
-  name:string = null;
-  token:string = null;
-  description:string = null;
+  name:Nullable<string> = null;
+  token:Nullable<string> = null;
+  description:Nullable<string> = null;
   priority:number = -1;
 
 
@@ -68,7 +68,7 @@ export class ViewportHookKpComponent implements OnInit, AfterViewInit, IViewport
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'KeyPoint',
-      icon: GLOBAL_ICONS.HOOKS,
+      icon: GLOBAL_ICONS['HOOKS'],
       color: 'dxc-text-clear100'
     })
   });

@@ -5,17 +5,17 @@
         <span class="badge padge-pill badge-success" *ngIf="data.enable">ON</span>
         <span class="badge padge-pill badge-danger" *ngIf="!data.enable">OFF</span>
       </app-subnavbar-btn>
-      <!-- <app-subnavbar-btn [icon]="gIcons.FILE" (click)="saveHook()">Save</app-subnavbar-btn> -->
-      <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="startApp()">Run</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="startApp()">Run ALL</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.REFRESH" (click)="restartApp()">Restart</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.TRASH" [ngClass]="'text-danger'" (click)="deleteHook()">Remove</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.CODE" (click)="openMethod(data)">Show method</app-subnavbar-btn>
+      <!-- <app-subnavbar-btn [icon]="gIcons['FILE']" (click)="saveHook()">Save</app-subnavbar-btn> -->
+      <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="startApp()">Run</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="startApp()">Run ALL</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['REFRESH']" (click)="restartApp()">Restart</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['TRASH']" [ngClass]="'text-danger'" (click)="deleteHook()">Remove</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['CODE']" (click)="openMethod(data)">Show method</app-subnavbar-btn>
     </ng-container>
   </app-subnavbar>
 
   <div #metadata>
-    <div class="title pl-1"><dxc-icon [model]="gIcons.TARGET"></dxc-icon>
+    <div class="title pl-1"><dxc-icon [model]="gIcons['TARGET']"></dxc-icon>
       <ng-container *ngIf="data.__==HOOK_JAVA; else nuid">
         <span class="dxc-ilink pl-1" (contextmenu)="displayExtMenu($event, 'meth', data.method)">{{ data.method.__signature__ }}</span>
       </ng-container>
@@ -73,11 +73,11 @@
     <ng-container nav-right>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
           <ng-container main>
-          <app-subnavbar-btn [active]="activeRight=='fr'" [icon]="icons.FRAGMENTS" (click)="showFragments()">Fragments</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeRight=='ct'" [icon]="gIcons.MSG" (click)="showLatestCatch()">Latest messages</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeRight=='ss'" [icon]="gIcons.HISTORY" (click)="showHistory()">Sessions</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeRight=='ds'" [icon]="gIcons.INFO" (click)="showMeta()">Meta</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeRight=='ex'" [icon]="gIcons.FILE" (click)="showExport()">Export</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='fr'" [icon]="icons['FRAGMENTS']" (click)="showFragments()">Fragments</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeRight=='ct'" [icon]="gIcons['MSG']" (click)="showLatestCatch()">Latest messages</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='ss'" [icon]="gIcons['HISTORY']" (click)="showHistory()">Sessions</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='ds'" [icon]="gIcons['INFO']" (click)="showMeta()">Meta</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeRight=='ex'" [icon]="gIcons['FILE']" (click)="showExport()">Export</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -90,7 +90,7 @@
                   <strong>Description</strong>
                 </div>
                 <div class="col-2 text-right">
-                  <dxc-icon [model]="gIcons.EDIT" [color1]="'dxc-text-75'"></dxc-icon>
+                  <dxc-icon [model]="gIcons['EDIT']" [color1]="'dxc-text-75'"></dxc-icon>
                   <!--<dxc-icon [model]="gIcons." [color1]="'dxc-text-75'"></dxc-icon>-->
                 </div>
               </div>
@@ -109,7 +109,7 @@
                 <ng-template  #noNameF><strong class="pl-1">Fragment#{{i}}</strong></ng-template>
               </div>
               <div class="col-2 text-right">
-                <!--<dxc-icon [model]="gIcons.SAVE" [color1]="'dxc-text-75'"></dxc-icon>-->
+                <!--<dxc-icon [model]="gIcons['SAVE']" [color1]="'dxc-text-75'"></dxc-icon>-->
                 <span>Priority: {{ frag.weight }}</span>
               </div>
             </div>
@@ -158,7 +158,7 @@
               {{ l.n }}
             </div>
             <div class="col-lg-2">
-              <dxc-icon [model]="gIcons.HELPER" [color1]="'dxc-text-darker'"></dxc-icon>
+              <dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>
             </div>
           </div>
         </ng-container>

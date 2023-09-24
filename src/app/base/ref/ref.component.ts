@@ -19,7 +19,7 @@ let i = 0;
 })
 export class RefComponent extends DxcComponent implements OnInit {
 
-  @Input() style:string = null;
+  @Input() style:Nullable<string> = null;
 
   uid = -1;
 

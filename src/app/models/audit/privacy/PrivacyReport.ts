@@ -3,8 +3,9 @@
 import {PrivacyFinding} from "./PrivacyFinding";
 import {TrackerInfo} from "./TrackerInfo";
 import {DataFlowInfo} from "../common/DataFlowInfo";
+import {IStringIndex} from "../../../base/IStringIndex";
 
-export interface PrivacyReportOptions {
+export interface PrivacyReportOptions extends IStringIndex<any>{
     time?:number;
     threats?:PrivacyFinding<TrackerInfo>[];
     pii?:PrivacyFinding<DataFlowInfo<any>>[];

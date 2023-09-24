@@ -41,7 +41,7 @@ import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigat
     </app-modal-base>
 
     <app-context-menu [name]="'actP'">
-      <app-context-item [label]="'Close'" [icon]="gIcons.ERROR" (itemclick)="closeProject(ctxMenuState.subject)"></app-context-item>
+      <app-context-item [label]="'Close'" [icon]="gIcons['ERROR']" (itemclick)="closeProject(ctxMenuState.subject)"></app-context-item>
     </app-context-menu>
   `,
   styleUrls: ['../project.component.scss']

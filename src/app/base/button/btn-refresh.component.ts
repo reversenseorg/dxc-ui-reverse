@@ -10,7 +10,7 @@ import {IconModelCollection} from "../icon/IconModel";
   selector: 'dxc-refresh-btn',
   template: `
       <button class="btn btn-inline btn-sm" (click)="onClick($event)">
-        <dxc-icon [model]="icons.REFRESH"></dxc-icon><ng-content></ng-content>
+        <dxc-icon [model]="icons['REFRESH']"></dxc-icon><ng-content></ng-content>
       </button>
   `,
   styleUrls: ['../../forms.scss'],

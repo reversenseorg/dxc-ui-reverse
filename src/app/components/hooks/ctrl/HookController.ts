@@ -37,7 +37,7 @@ export class HookController extends UiController implements IController {
    */
   name:string = 'hook-main';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: HookService = null;
@@ -243,7 +243,7 @@ export class HookController extends UiController implements IController {
       case NodeInternalType.HOOK_NATIVE:
       case NodeInternalType.HOOK_JAVA:
         this.service.getHook(pItem.id).subscribe( (pHook:AbstractHook)=>{
-          (pHook as any)._icon = GLOBAL_ICONS.HOOKS;
+          (pHook as any)._icon = GLOBAL_ICONS['HOOKS'];
           this.rendered.push({ item:pHook, uid:vid });
           this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pHook, uid:vid });
         });
@@ -270,7 +270,7 @@ export class HookController extends UiController implements IController {
       // is the item is a method
       /*case 'm':
         this.service.getHookFor((pItem as ModelMethod).getSignature()).subscribe( (pHook:Hook)=>{
-          pHook._icon = GLOBAL_ICONS.HOOKS;
+          pHook._icon = GLOBAL_ICONS['HOOKS'];
           this.rendered.push({ item:pHook, uid:vid });
           this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pHook, uid:vid });
         });

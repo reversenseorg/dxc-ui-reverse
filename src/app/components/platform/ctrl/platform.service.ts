@@ -37,7 +37,7 @@ export class PlatformService extends DxcApiService{
   list():Observable<Platform[]> {
 
     return this._process(
-      this.endpoints.main.list
+      this.endpoints['main']['list']
     ).pipe(map((pRes:any) => {
       if(!pRes.success){
         this.outputSvc.print( OutputMessage.newError({ msg:pRes.msg, src:"Platform Manager" }));
@@ -54,7 +54,7 @@ export class PlatformService extends DxcApiService{
 
   install(pUID:string):Observable<boolean> {
     return this._process(
-      this.endpoints.main.install,
+      this.endpoints['main']['install'],
       { uid:pUID }
     ).pipe(map((pRes:any) => {
       if(!pRes.success){

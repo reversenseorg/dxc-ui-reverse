@@ -40,7 +40,7 @@ export class TerminalOutputComponent implements  OnInit, OnChanges, AfterViewIni
   tab:TerminalTab = new TerminalTab({
     offset: 0,
     label: 'Output',
-    icon: GLOBAL_ICONS.BELL,
+    icon: GLOBAL_ICONS['BELL'],
     color: 'dxc-text-clear100'
   });
 
@@ -53,7 +53,7 @@ export class TerminalOutputComponent implements  OnInit, OnChanges, AfterViewIni
         offset: 0,
         label: 'Code',
         closable:true,
-        icon: GLOBAL_ICONS.CODE,
+        icon: GLOBAL_ICONS['CODE'],
         iconColor: 'dxc-text-clear100',
         color: 'dxc-text-clear100'
       })

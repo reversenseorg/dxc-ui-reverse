@@ -48,14 +48,14 @@ export class ViewportSplashComponent implements OnInit, AfterViewInit, IViewport
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Home',
-      icon: GLOBAL_ICONS.PACKAGE,
+      icon: GLOBAL_ICONS['PACKAGE'],
       color: 'dxc-text-clear100'
     })
   });
 
   data:any = null;
 
-  projectName:string = null;
+  projectName:Nullable<string> = null;
 
   @ViewChild(ModalNewProjectComponent) modalNewProj:ModalNewProjectComponent;
   @ViewChild(ModalOpenProjectComponent) modalOpenProj:ModalOpenProjectComponent;

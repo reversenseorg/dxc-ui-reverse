@@ -21,7 +21,7 @@ export class FilesystemService extends DxcApiService{
 
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
-  constructor( private outputSvc:OutputService, protected _http:HttpClient) {
+  constructor( private outputSvc:OutputService, protected override _http:HttpClient) {
 
       super({
         list: {
@@ -69,7 +69,7 @@ export class FilesystemService extends DxcApiService{
 
   listDevicePath( pOptions = null):Observable<any[]> {
     return this._process(
-      (pOptions.app!=null ? this.endpoints.list.devData : this.endpoints.list.dev),
+      (pOptions.app!=null ? this.endpoints['list']['devData'] : this.endpoints['list']['dev']),
       pOptions
     ).pipe(
       map((pObs)=>{
@@ -86,7 +86,7 @@ export class FilesystemService extends DxcApiService{
   /*
   listAppPath( pOptions = null):Observable<any[]> {
     return this._process(
-      this.endpoints.list.app,
+      this.endpoints['list']['app'],
       pOptions
     ).pipe(
       map((pObs)=>{
@@ -103,7 +103,7 @@ export class FilesystemService extends DxcApiService{
 
   listWorkspace( pPath:string = null, pOptions = null):Observable<any[]> {
     return this._process(
-      this.endpoints.list.ws,
+      this.endpoints['list']['ws'],
       {
         path: pPath
       }
@@ -121,7 +121,7 @@ export class FilesystemService extends DxcApiService{
 
   listPackageContent( pPath:string = null, pOptions = null):Observable<any[]> {
     return this._process(
-      this.endpoints.list.pkg,
+      this.endpoints['list']['pkg'],
       {
         path: pPath
       }
@@ -140,7 +140,7 @@ export class FilesystemService extends DxcApiService{
 
   viewNativeFileContent( pRpath:string, pScope:string):Observable<ModelFile> {
     return this._process(
-      this.endpoints.view.file,
+      this.endpoints['view']['file'],
       {
         path: pRpath,
         scope: pScope,
@@ -160,7 +160,7 @@ export class FilesystemService extends DxcApiService{
 
   viewFileContent( pUID:string, pOptions = null):Observable<ModelFile> {
     return this._process(
-      this.endpoints.view.file,
+      this.endpoints['view']['file'],
       {
         uid: pUID
       }

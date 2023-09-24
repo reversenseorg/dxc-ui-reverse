@@ -212,7 +212,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
 
 
   displayCtxMenu(pEvent:any, pType:string, pObject:any):void{
-    let type:string = null;
+    let type:Nullable<string> = null;
     pEvent.preventDefault();
 
     if(pType.indexOf('inst')>-1){

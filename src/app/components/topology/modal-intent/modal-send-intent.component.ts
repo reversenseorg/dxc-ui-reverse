@@ -51,7 +51,7 @@ export class ModalSendIntentComponent  extends AbstractKeyboardNavigable impleme
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
   @Input() message:Message = null;
 

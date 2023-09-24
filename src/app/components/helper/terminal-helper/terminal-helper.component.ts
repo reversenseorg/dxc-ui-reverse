@@ -12,8 +12,8 @@ import {IconModel} from "../../../base/icon/IconModel";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 
 export class HelperTab  {
-  uid:string = null;
-  icon:IconModel = GLOBAL_ICONS.HELPER;
+  uid:Nullable<string> = null;
+  icon:IconModel = GLOBAL_ICONS['HELPER'];
   label:string = 'Doc';
   active: boolean = false;
   exited:boolean = false;
@@ -50,7 +50,7 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
   tab:TerminalTab = new TerminalTab({
     offset: 0,
     label: 'Help',
-    icon: GLOBAL_ICONS.HELPER,
+    icon: GLOBAL_ICONS['HELPER'],
     color: 'dxc-text-clear100'
   });
 
@@ -63,7 +63,7 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
         offset: 0,
         label: 'Code',
         closable:true,
-        icon: GLOBAL_ICONS.HELPER,
+        icon: GLOBAL_ICONS['HELPER'],
         iconColor: 'dxc-text-clear100',
         color: 'dxc-text-clear100'
       })
@@ -114,7 +114,7 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
       title: 'Index',
       doc: ''
     });
-    this.viewsMap.index.icon = GLOBAL_ICONS.LIST;
+    this.viewsMap.index.icon = GLOBAL_ICONS['LIST'];
     this.viewsMap.index.closable = false;
     this.currentTab = this.viewsMap.index;
     this.views.push(this.viewsMap.index);

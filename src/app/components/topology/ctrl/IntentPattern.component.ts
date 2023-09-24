@@ -58,9 +58,9 @@ export class IntentPatternComponent implements OnChanges{
   @Input() inputMode:boolean = false;
   @Output() enter:EventEmitter<any> = new EventEmitter<any>()
 
-  uri:string = null;
-  prefix:string = null;
-  pattern:string = null;
+  uri:Nullable<string> = null;
+  prefix:Nullable<string> = null;
+  pattern:Nullable<string> = null;
 
   constructor() {
   }

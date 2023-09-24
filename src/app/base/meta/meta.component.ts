@@ -17,7 +17,7 @@ import {DxcComponent} from "../DxcComponent";
 export class MetaComponent extends DxcComponent implements OnInit, OnChanges {
 
 
-  @Input() style:string = null;
+  @Input() style:Nullable<string> = null;
 
   @Input() css:string = '';
 

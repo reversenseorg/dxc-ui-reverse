@@ -1,7 +1,7 @@
 
 export class AuthToken {
 
-  _t:string = null;
+  _t:Nullable<string> = null;
 
   constructor(pToken:string) {
     this._t = pToken;

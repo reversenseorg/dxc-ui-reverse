@@ -10,16 +10,17 @@ import {
   ViewChild
 } from '@angular/core';
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
+import {Nullable} from "../../base/Nullable";
 
 @Component({
   selector: 'dxc-bookmark-btn',
   template: `
     <ng-container *ngIf="type=='nb'">
-      <app-subnavbar-btn *ngIf="form=='btn'" [icon]="gIcons.BOOKMARK">
+      <app-subnavbar-btn *ngIf="form=='btn'" [icon]="gIcons['BOOKMARK']">
         Add bookmark
       </app-subnavbar-btn>
-      <app-subnavbar-menu *ngIf="form=='menu'" [label]="'Mark'" [icon]="gIcons.BOOKMARK">
-        <app-subnavbar-btn [icon]="gIcons.PLUS" (click)="addBm()">Custom</app-subnavbar-btn>
+      <app-subnavbar-menu *ngIf="form=='menu'" [label]="'Mark'" [icon]="gIcons['BOOKMARK']">
+        <app-subnavbar-btn [icon]="gIcons['PLUS']" (click)="addBm()">Custom</app-subnavbar-btn>
         <app-subnavbar-btn [separator]="true" (click)="addBm('integrity')">Obfuscation</app-subnavbar-btn>
         <app-subnavbar-btn (click)="addBm('Hook detection')">Integrity check</app-subnavbar-btn>
         <app-subnavbar-btn (click)="addBm('Hook detection')">Device Fingerprint</app-subnavbar-btn>
@@ -56,7 +57,7 @@ export class BookmarkButtonComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  addBm( pType:string = null) {
+  addBm( pType:Nullable<string> = null) {
 
   }
 

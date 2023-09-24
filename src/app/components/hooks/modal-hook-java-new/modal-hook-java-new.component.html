@@ -9,7 +9,7 @@
         </div>
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="gIcons.TARGET"></dxc-icon>&nbsp;Where hook seats :
+            <dxc-icon [model]="gIcons['TARGET']"></dxc-icon>&nbsp;Where hook seats :
           </div>
           <div class="col-2">
             <input type="checkbox" name="hk_loc" id="hk_loc_before" [(ngModel)]="location.before" [value]="1"><label for="hk_loc_before" class="dxc-text-75 pl-1">Before</label>
@@ -24,7 +24,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="icons.HK_LOAD"></dxc-icon>&nbsp;Load on KeyPoint :
+            <dxc-icon [model]="icons['HK_LOAD']"></dxc-icon>&nbsp;Load on KeyPoint :
           </div>
           <div class="col-8">
             <div class="row no-gutters">
@@ -46,7 +46,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="icons.HK_UNLOAD"></dxc-icon>&nbsp;Unload on KeyPoint :
+            <dxc-icon [model]="icons['HK_UNLOAD']"></dxc-icon>&nbsp;Unload on KeyPoint :
           </div>
           <div class="col-8">
             <div class="row no-gutters">
@@ -70,7 +70,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="icons.PRIORITY"></dxc-icon>&nbsp;Priority :
+            <dxc-icon [model]="icons['PRIORITY']"></dxc-icon>&nbsp;Priority :
           </div>
           <div class="col-8">
             <input type="number" name="hk_weight" id="hk_weight" [(ngModel)]="weight"  [value]="0">
@@ -80,7 +80,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="gIcons.BOOKMARK"></dxc-icon>&nbsp;Name :
+            <dxc-icon [model]="gIcons['BOOKMARK']"></dxc-icon>&nbsp;Name :
           </div>
           <div class="col-8">
             <input type="text" name="hk_name" id="hk_name" [(ngModel)]="name">
@@ -89,7 +89,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="gIcons.USER"></dxc-icon>&nbsp;Visibility :
+            <dxc-icon [model]="gIcons['USER']"></dxc-icon>&nbsp;Visibility :
           </div>
           <div class="col-4">
             <input type="radio" name="hk_vis" id="hk_vis_priv" [(ngModel)]="visibility" [value]="'private'"><label for="hk_vis_priv" class="dxc-text-75 pl-1">Private</label>
@@ -106,7 +106,7 @@
   <div footer>
     <button class="dxc-frm-btn" (click)="close()">Cancel</button>
     <button class="dxc-frm-btn default" (click)="generateHook()">
-      <dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon>&nbsp;Generate
+      <dxc-icon [model]="gIcons['GEN_HOOK']"></dxc-icon>&nbsp;Generate
     </button>
   </div>
 </app-modal-base>

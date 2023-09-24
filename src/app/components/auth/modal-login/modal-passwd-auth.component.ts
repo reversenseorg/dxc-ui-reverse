@@ -48,7 +48,7 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
   @Input() message:Message = null;
 
@@ -57,9 +57,9 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
   gIcons:any = GLOBAL_ICONS;
   icons:any = AUTH_ICONS;
 
-  username:string = null;
-  passwd:string = null;
-  server:string = null; //"local";
+  username:Nullable<string> = null;
+  passwd:Nullable<string> = null;
+  server:Nullable<string> = null; //"local";
   conns:DexcaliburConnectionParams[] = [];
 
   onKeyboardEvent:Subject<any> = new Subject<any>();

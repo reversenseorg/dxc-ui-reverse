@@ -66,7 +66,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
   @Input() message:Message = null;
 
@@ -103,12 +103,12 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
 
   authType = "none";
 
-  targetFile:string = null;
-  targetUrl:string = null;
+  targetFile:Nullable<string> = null;
+  targetUrl:Nullable<string> = null;
   /*
-  proxyIp:string = null;
-  proxyPort:string = null;
-  httpHeaders:string = null;*/
+  proxyIp:Nullable<string> = null;
+  proxyPort:Nullable<string> = null;
+  httpHeaders:Nullable<string> = null;*/
   pltList: any;
   platform: any;
 

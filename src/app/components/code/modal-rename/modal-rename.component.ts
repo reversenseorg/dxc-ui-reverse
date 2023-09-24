@@ -105,7 +105,7 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
    * @method
    */
   onOpen(pSubject:any):void {
-    let val:string = null;
+    let val:Nullable<string> = null;
 
     this.item = pSubject.target.options;
 

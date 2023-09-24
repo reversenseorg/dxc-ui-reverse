@@ -43,7 +43,7 @@ export class ViewportCodeComponent implements OnInit, AfterViewInit, IViewportCo
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Code',
-      icon: CODE_ICONS.DEFAULT,
+      icon: CODE_ICONS['DEFAULT'],
       color: 'dxc-text-clear100'
     })
   });
@@ -69,7 +69,7 @@ export class ViewportCodeComponent implements OnInit, AfterViewInit, IViewportCo
     switch(pData._t){
       case 'm':
         if(this.view.tab.icon==null)
-          this.view.tab.icon = this.icons.METH;
+          this.view.tab.icon = this.icons['METH'];
         this.view.tab.label = pData.name;
         this.view.tab.tip = pData.__signature__;
         this.view.tab.color = 'dxc-text-clear100';

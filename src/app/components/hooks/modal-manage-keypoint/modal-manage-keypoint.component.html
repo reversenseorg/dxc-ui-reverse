@@ -11,7 +11,7 @@
 
           <div class="row no-gutters">
             <div class="col-4">
-              <dxc-icon [model]="gIcons.TARGET"></dxc-icon>&nbsp;Element :
+              <dxc-icon [model]="gIcons['TARGET']"></dxc-icon>&nbsp;Element :
             </div>
             <div class="col-8">
               <span>{{ target }}</span>
@@ -56,7 +56,7 @@
                 </select>
               </div>
               <div class="col-3">
-                <button class="btn btn-sm text-warning" style="font-size:11px"><dxc-icon [model]="gIcons.PLUS" [color1]="'text-warning'"></dxc-icon>&nbsp;New</button>
+                <button class="btn btn-sm text-warning" style="font-size:11px"><dxc-icon [model]="gIcons['PLUS']" [color1]="'text-warning'"></dxc-icon>&nbsp;New</button>
               </div>
             </div>
 
@@ -68,7 +68,7 @@
 
 
           <div class="col-4">
-            <dxc-icon [model]="gIcons.TARGET"></dxc-icon>&nbsp;What is observed :
+            <dxc-icon [model]="gIcons['TARGET']"></dxc-icon>&nbsp;What is observed :
           </div>
           <div class="col-2">
             <input type="radio" name="hk_loc" id="hk_loc_before" [(ngModel)]="location" [value]="'before'"><label for="hk_loc_before" class="dxc-text-75 pl-1">Before</label>
@@ -83,7 +83,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="icons.HK_UNLOAD"></dxc-icon>&nbsp;Unload on Cut-Point :
+            <dxc-icon [model]="icons['HK_UNLOAD']"></dxc-icon>&nbsp;Unload on Cut-Point :
           </div>
           <div class="col-8">
             <div class="row no-gutters">
@@ -101,7 +101,7 @@
                 </select>
               </div>
               <div class="col-3">
-                <button class="btn btn-sm text-warning" style="font-size:11px"><dxc-icon [model]="gIcons.PLUS" [color1]="'text-warning'"></dxc-icon>&nbsp;New</button>
+                <button class="btn btn-sm text-warning" style="font-size:11px"><dxc-icon [model]="gIcons['PLUS']" [color1]="'text-warning'"></dxc-icon>&nbsp;New</button>
               </div>
             </div>
             <div class="container-fluid dxc-frm-desc">
@@ -112,7 +112,7 @@
 
         <div class="row no-gutters">
           <div class="col-4">
-            <dxc-icon [model]="icons.PRIORITY"></dxc-icon>&nbsp;Priority :
+            <dxc-icon [model]="icons['PRIORITY']"></dxc-icon>&nbsp;Priority :
           </div>
           <div class="col-8">
             <input type="number" name="hk_weight" id="hk_weight" [(ngModel)]="weight"  value="0">
@@ -124,7 +124,7 @@
   <div footer>
     <button class="dxc-frm-btn" (click)="close()">Cancel</button>
     <button class="dxc-frm-btn default" (click)="generateHook()">
-      <dxc-icon [model]="gIcons.GEN_HOOK"></dxc-icon>&nbsp;Generate
+      <dxc-icon [model]="gIcons['GEN_HOOK']"></dxc-icon>&nbsp;Generate
     </button>
   </div>
 </app-modal-base>

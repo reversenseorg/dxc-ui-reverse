@@ -82,58 +82,58 @@ export class TopologyService extends DxcApiService {
       enabled:false,
       submenu:[{
         label: 'Dashboard',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.DASHBOARD });
         }
       },{
         type: 'separator',
       },{
         label: 'Activities',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.ANDROID_ACTIVITY });
         }
       },{
         label: 'Providers',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.ANDROID_PROVIDER });
         }
       },{
         label: 'Services',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.ANDROID_SERVICE });
         }
       },{
         label: 'Receivers',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.ANDROID_RECEIVER });
         }
       }, {
         type: 'separator'
       },{
         label: 'Show Android manifest',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onOpenPackageFile$.next({ item:NodeInternalType.FILE, file:"AndroidManifest.xml", scope:'PKG', type:'manifest' });
         }
       },{
         label: 'Show AIDL file',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.FILE, scope:'DEVICE', type:'aidl' });
         }
       },{
         type: 'separator'
       },{
         label: 'Dex files and buffers',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.FILE, scope:'PKG', type:'dex' });
         }
       },{
         label: 'Libraries',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.FILE, scope:'PKG', type:'libs' });
         }
       },{
         label: 'Key Stores',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick$.next({ item:NodeInternalType.FILE, scope:'PKG', type:'ks' });
         }
       }, {
@@ -149,19 +149,19 @@ export class TopologyService extends DxcApiService {
         submenu: [
           {
             label: 'Spawn main activity',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           },{
             label: 'Send intent',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           },{
             label: 'Install',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           },{
             label: 'Dumpsys',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           }
         ]
@@ -172,7 +172,7 @@ export class TopologyService extends DxcApiService {
         submenu: [
           {
             label: 'Privacy Impact',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
               //this.onMenuClick$.next({ item:NodeInternalType.DASHBOARD, product:"PRI_CLD_SSCAN" });
               this.onMenuClick$.next({ item:NodeInternalType.DASHBOARD, product:"privacy.generic" });
             }
@@ -185,19 +185,19 @@ export class TopologyService extends DxcApiService {
         submenu: [
           {
             label: 'Show versions',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           },{
             label: 'Show patches',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           },{
             label: 'Install patched app',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           },{
             label: 'Save current as ...',
-            click: (pMenuItem, pBrowserWindow, pEvent) => {
+            click: (pMenuItem:any, pBrowserWindow:any ) => {
             }
           }
         ]
@@ -209,7 +209,7 @@ export class TopologyService extends DxcApiService {
 
   getActivities():Observable<AndroidActivity[]> {
     return this._process(
-      this.endpoints.app.act
+      this.endpoints['app']['act']
     ).pipe(map((pObs)=>{
       if(pObs.success){
         return pObs.data;
@@ -225,7 +225,7 @@ export class TopologyService extends DxcApiService {
 
   getProviders():Observable<AndroidProvider[]> {
     return this._process(
-      this.endpoints.app.prov
+      this.endpoints['app']['prov']
     ).pipe(map((pObs)=>{
       if(pObs.success){
         return pObs.data;
@@ -241,7 +241,7 @@ export class TopologyService extends DxcApiService {
 
   getServices():Observable<AndroidService[]> {
     return this._process(
-      this.endpoints.app.serv
+      this.endpoints['app']['serv']
     ).pipe(map((pObs)=>{
       if(pObs.success){
         return pObs.data;
@@ -257,7 +257,7 @@ export class TopologyService extends DxcApiService {
 
   getReceivers():Observable<AndroidReceiver[]> {
     return this._process(
-      this.endpoints.app.recv
+      this.endpoints['app']['recv']
     ).pipe(map((pObs)=>{
       if(pObs.success){
         return pObs.data;
@@ -272,7 +272,7 @@ export class TopologyService extends DxcApiService {
 
   scanComponent( pComponent:AndroidComponent):Observable<AndroidComponent> {
     return this._process(
-      this.endpoints.anal.cmp,{
+      this.endpoints['anal']['cmp'],{
         type: pComponent.__,
         uid: pComponent.name
       }
@@ -292,7 +292,7 @@ export class TopologyService extends DxcApiService {
 
   getManifest():Observable<AndroidManifest> {
     return this._process(
-      this.endpoints.app.manifest
+      this.endpoints['app']['manifest']
     ).pipe(map((pObs)=>{
       if(pObs.success){
         return pObs.data;
@@ -308,7 +308,7 @@ export class TopologyService extends DxcApiService {
 
   getPermissions():Observable<AndroidPermission[]> {
     return this._process(
-      this.endpoints.app.perm
+      this.endpoints['app']['perm']
     ).pipe(map((pObs)=>{
       if(pObs.success){
         return pObs.data;
@@ -339,7 +339,7 @@ export class TopologyService extends DxcApiService {
             return f;
           })),
           this._process(
-            this.endpoints.dyn.dex,
+            this.endpoints['dyn']['dex'],
             { action:'refresh_dex' }
             ).pipe(map( vFile => {
               console.log("Dyn Dex : ",vFile);

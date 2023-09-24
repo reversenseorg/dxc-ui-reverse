@@ -16,7 +16,7 @@
         <tbody>
           <tr>
             <td>
-              <dxc-icon [model]="icons.MOBILE"></dxc-icon>&nbsp;
+              <dxc-icon [model]="icons['MOBILE']"></dxc-icon>&nbsp;
             </td>
             <td>{{ data.id }}</td>
             <td>{{ data.uid }}</td>
@@ -38,14 +38,14 @@
       <ng-container nav-left>
         <app-subnavbar [type]="'navbar'"  [parent]="this">
           <ng-container main>
-            <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="tIcons.PERM" (click)="showDetail('pm')">Permisions</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='ss'"  [icon]="gIcons.LIST" (click)="showDetail('ss')">System</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='sc'"  [icon]="gIcons.LIST" (click)="showDetail('sc')">Syscalls</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='nt'"  [icon]="gIcons.LIST" (click)="showDetail('nt')">Network</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='usb'"  [icon]="gIcons.LIST" (click)="showDetail('usb')">USB</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons.LIST" (click)="showDetail('ct')">Certificates</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='mnt'"  [icon]="gIcons.LIST" (click)="showDetail('mnt')">Partitions</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='fr'"  [icon]="gIcons.HOOKS" (click)="showDetail('fr')">Frida</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="tIcons['PERM']" (click)="showDetail('pm')">Permisions</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='ss'"  [icon]="gIcons['LIST']" (click)="showDetail('ss')">System</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='sc'"  [icon]="gIcons['LIST']" (click)="showDetail('sc')">Syscalls</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='nt'"  [icon]="gIcons['LIST']" (click)="showDetail('nt')">Network</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='usb'"  [icon]="gIcons['LIST']" (click)="showDetail('usb')">USB</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showDetail('ct')">Certificates</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='mnt'"  [icon]="gIcons['LIST']" (click)="showDetail('mnt')">Partitions</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='fr'"  [icon]="gIcons['HOOKS']" (click)="showDetail('fr')">Frida</app-subnavbar-btn>
           </ng-container>
         </app-subnavbar>
       </ng-container>
@@ -55,7 +55,7 @@
               <div class="col-lg-2">Server path</div>
               <div class="col-lg-7"><input type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}" [(ngModel)]="data.frida.server"></div>
               <div class="col-lg-3 text-right">
-                <button class="dxc-frm-btn" (click)="testFridaConnection()"><dxc-icon [model]="gIcons.REFRESH"></dxc-icon>&nbsp;Test</button>
+                <button class="dxc-frm-btn" (click)="testFridaConnection()"><dxc-icon [model]="gIcons['REFRESH']"></dxc-icon>&nbsp;Test</button>
                 <button class="dxc-frm-btn default" (click)="saveFrida($event)">Save</button>
               </div>
             </div>
@@ -221,8 +221,8 @@
                   <div class="col-2">
 
                     <div>
-                      <dxc-icon [model]="gIcons.EDIT"></dxc-icon>&nbsp;
-                      <dxc-icon [model]="gIcons.COPY"></dxc-icon>
+                      <dxc-icon [model]="gIcons['EDIT']"></dxc-icon>&nbsp;
+                      <dxc-icon [model]="gIcons['COPY']"></dxc-icon>
                     </div>
                     <div>{{ ac.validity.notBefore }}</div>
                     <div class="text-success">{{ ac.validity.notAfter }}</div>
@@ -245,8 +245,8 @@
                   <div class="col-2">
 
                     <div>
-                      <dxc-icon [model]="gIcons.EDIT"></dxc-icon>&nbsp;
-                      <dxc-icon [model]="gIcons.COPY"></dxc-icon>
+                      <dxc-icon [model]="gIcons['EDIT']"></dxc-icon>&nbsp;
+                      <dxc-icon [model]="gIcons['COPY']"></dxc-icon>
                     </div>
                     <div>{{ ac.validity.notBefore }}</div>
                     <div class="text-success" [ngClass]="{ 'text-danger':ac.validity.exp }">{{ ac.validity.notAfter }}</div>
@@ -308,7 +308,7 @@
             <div *ngIf="selectedSyscall.ret.e"  class="box m-1 mt-1 p-2">
               <!--<div class="row dxc-text-yellow">
                 <div class="col-12">
-                  <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons.FIND" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
+                  <span class="badge badge-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
                 </div>
               </div>-->
               <div *ngFor="let err of selectedSyscall.ret.e">

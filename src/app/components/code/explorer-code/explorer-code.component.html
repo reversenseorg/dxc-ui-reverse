@@ -148,7 +148,7 @@
       </app-expandable-list>
       <p>{{checkRendering()}}</p>
       <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
-        <dxc-icon [model]="gIcons.SPINNER"></dxc-icon>&nbsp;Loading
+        <dxc-icon [model]="gIcons['SPINNER']"></dxc-icon>&nbsp;Loading
         Open a project first.
       </div>
     </div>
@@ -157,20 +157,20 @@
 
 
 <app-context-menu [name]="'meth'"  [width]="300">
-  <app-context-item [icon]="gIcons.COPY" [label]="'Copy'" (itemclick)="copy(ctxMenuState.subject,'__callSignature__')"></app-context-item>
+  <app-context-item [icon]="gIcons['COPY']" [label]="'Copy'" (itemclick)="copy(ctxMenuState.subject,'__callSignature__')"></app-context-item>
   <app-context-item [label]="'Copy name'" (itemclick)="copyAttr(ctxMenuState.subject, 'name')"></app-context-item>
   <app-context-item [label]="'Copy aliased signature'" (itemclick)="copyAttr(ctxMenuState.subject, '__aliasedSignature__')"></app-context-item>
   <app-context-item [label]="'Copy class name'" (itemclick)="copyAttr(ctxMenuState.subject, 'enclosingClass')"></app-context-item>
   <!--<app-context-item [label]="'Copy package name'" (itemclick)="copyAttr(ctxMenuState.subject, 'enclosingClass.pkg.name')"></app-context-item>-->
-  <app-context-item [separator]="true" [label]="'Rename method'" [icon]="gIcons.EDIT" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Show method'" [icon]="gIcons.FIND" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Rename method'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show method'" [icon]="gIcons['FIND']" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Xref from'" (itemclick)="controller.showXref(ctxMenuState.subject, {type:'from'})"></app-context-item>
   <app-context-item [label]="'Xref to'" (itemclick)="controller.showXref(ctxMenuState.subject, {type:'to'})"></app-context-item>
   <app-context-item [separator]="true" [label]="'Trace call'" (itemclick)="trackValueOf(ctxMenuState.subject, { type: PRESET_HOOK.TRACK })"></app-context-item>
   <app-context-item [label]="'Tamper return value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_RET  })"></app-context-item>
   <app-context-item [label]="'Tamper param value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_PARAM  })"></app-context-item>
-  <app-context-item [icon]="gIcons.GEN_HOOK" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [icon]="gIcons.PLAY" [label]="'Run'" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [icon]="gIcons['GEN_HOOK']" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [icon]="gIcons['PLAY']" [label]="'Run'" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'New KeyPoint on define'" (itemclick)="newKP(ctxMenuState.subject, {condition:'mthkp_def'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint before call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'mthkp_bef'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint after call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'mthkp_aft'})"></app-context-item>
@@ -182,11 +182,11 @@
   <app-context-item [label]="'Copy class name'" (itemclick)="copyAttr(ctxMenuState.subject, 'sname')"></app-context-item>
   <app-context-item [label]="'Copy FQCN'" (itemclick)="copyAttr(ctxMenuState.subject, 'name')"></app-context-item>
   <!--<app-context-item [label]="'Copy package name'" (itemclick)="copyAttr(ctxMenuState.subject.package.name)"></app-context-item>-->
-  <app-context-item [separator]="true" [label]="'Rename class'" [icon]="gIcons.EDIT" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Show class'" [icon]="gIcons.FIND" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Rename class'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show class'" [icon]="gIcons['FIND']" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <!--<app-context-item [label]="'Xref'" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>-->
   <app-context-item [separator]="true" [label]="'Trace new instance'" (itemclick)="trackValueOf(ctxMenuState.subject, { type:PRESET_HOOK.TRACK_JAVA_NEW_INST })"></app-context-item>
-  <app-context-item [icon]="gIcons.GEN_HOOK" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject.name)"></app-context-item>
+  <app-context-item [icon]="gIcons['GEN_HOOK']" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject.name)"></app-context-item>
   <app-context-item [separator]="true" [label]="'New KeyPoint on load'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_load' })"></app-context-item>
   <app-context-item [label]="'New KeyPoint on first new instance'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_new_1st' })"></app-context-item>
   <app-context-item [label]="'New KeyPoint on any new instance'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_new_any' })"></app-context-item>
@@ -194,12 +194,12 @@
 </app-context-menu>
 
 <app-context-menu [name]="'par'"  [width]="300">
-  <app-context-item [label]="'Rename class'" [icon]="gIcons.EDIT" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Show class'" [icon]="gIcons.FIND" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Rename class'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show class'" [icon]="gIcons['FIND']" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Xref'" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'Trace value'" (itemclick)="trackValueOf(ctxMenuState.subject, { type:PRESET_HOOK.TRACK_PARAM })"></app-context-item>
   <app-context-item [label]="'Tamper value'" (itemclick)="trackValueOf(ctxMenuState.subject.name, { type:PRESET_HOOK.TAMPER_PARAM })"></app-context-item>
-  <app-context-item [icon]="gIcons.GEN_HOOK" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject.name, {type:'param' })"></app-context-item>
+  <app-context-item [icon]="gIcons['GEN_HOOK']" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject.name, {type:'param' })"></app-context-item>
   <app-context-item [separator]="true" [label]="'Copy class name'" (itemclick)="copyAttr(ctxMenuState.subject, 'simpleName')"></app-context-item>
   <app-context-item [label]="'Copy FQCN'" (itemclick)="copyAttr(ctxMenuState.subject, 'name')"></app-context-item>
   <app-context-item [label]="'Copy package name'" (itemclick)="copyAttr(ctxMenuState.subject.package.name)"></app-context-item>
@@ -212,7 +212,7 @@
 <app-context-menu [name]="'fld'" [width]="300">
   <app-context-item [label]="'Search Read'" (itemclick)="controller.showXref(ctxMenuState.subject,{ type:'read' })"></app-context-item>
   <app-context-item [label]="'Search Write'" (itemclick)="controller.showXref(ctxMenuState.subject,{ type:'write' })"></app-context-item>
-  <app-context-item [label]="'Rename field'" [icon]="gIcons.EDIT" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Rename field'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'Copy field name'" (itemclick)="copyAttr(ctxMenuState.subject, 'simpleName')"></app-context-item>
   <app-context-item [label]="'Copy FQN'" (itemclick)="copyAttr(ctxMenuState.subject, 'name')"></app-context-item>
   <app-context-item [label]="'Copy value'" (itemclick)="copyAttr(ctxMenuState.subject, 'value')"></app-context-item>
@@ -249,16 +249,16 @@
 </app-context-menu>
 
 <app-context-menu [name]="'fun'" [width]="300">
-  <app-context-item [label]="'Rename (alias)'" [icon]="gIcons.EDIT" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Rename (alias)'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Show'" (click)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Xref from'" [disabled]="true" (click)="controller.showXref(ctxMenuState.subject,{ type:'xf' })"></app-context-item>
   <app-context-item [label]="'Xref to'"  [disabled]="true"  (click)="controller.showXref(ctxMenuState.subject,{ type:'xt' })"></app-context-item>
-  <!--<app-context-item [icon]="gIcons.GEN_HOOK"  [label]="'Generate hook'" (click)="createNativeHook( 'fn', ctxMenuState.subject)"></app-context-item>-->
+  <!--<app-context-item [icon]="gIcons['GEN_HOOK']"  [label]="'Generate hook'" (click)="createNativeHook( 'fn', ctxMenuState.subject)"></app-context-item>-->
   <app-context-item [separator]="true" [label]="'Trace call'" (itemclick)="trackValueOf(ctxMenuState.subject, { type: PRESET_HOOK.TRACK })"></app-context-item>
   <app-context-item [label]="'Tamper return value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_RET  })"></app-context-item>
   <app-context-item [label]="'Tamper param value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_PARAM  })"></app-context-item>
-  <app-context-item [label]="'Generate empty hook'" [icon]="gIcons.GEN_HOOK"  (click)="trackValueOf( ctxMenuState.subject, {type: PRESET_HOOK.NONE  } )"></app-context-item>
-  <app-context-item [label]="'Add bookmark'" [icon]="gIcons.BOOKMARK"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Generate empty hook'" [icon]="gIcons['GEN_HOOK']"  (click)="trackValueOf( ctxMenuState.subject, {type: PRESET_HOOK.NONE  } )"></app-context-item>
+  <app-context-item [label]="'Add bookmark'" [icon]="gIcons['BOOKMARK']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'New KeyPoint before call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_bef'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint after call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_aft'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint on dlsym'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_dlsym'})"></app-context-item>

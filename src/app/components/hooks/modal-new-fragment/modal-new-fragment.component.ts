@@ -52,7 +52,7 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
   @Input() message:Message = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
@@ -63,7 +63,7 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
   icons:any = HOOK_ICONS;
   item: any = null;
   hook:AbstractHook = null;
-  observed: string = null;
+  observed:Nullable<string> = null;
 
   uid = '';
   pos = '';

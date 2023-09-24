@@ -34,8 +34,8 @@ const LOG_FILE = (CONFIG.gui.log ?
     ):false
 );
 
-if(process.env.DXC_TMP_LOG != null){
-  _fs_.writeFileSync(process.env.DXC_TMP_LOG,JSON.stringify({
+if(process.env['DXC_TMP_LOG'] != null){
+  _fs_.writeFileSync(process.env['DXC_TMP_LOG'],JSON.stringify({
     logfile:LOG_FILE
   }));
 }

@@ -34,9 +34,9 @@
     <ng-container nav-left>
       <app-subnavbar [type]="'navbar'" [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [icon]="gIcons.LIST" [active]="true" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
-          <!--<app-subnavbar-btn [icon]="gIcons.LIST">&nbsp;Behavior analysis</app-subnavbar-btn>-->
-          <!--<app-subnavbar-btn [icon]="gIcons.LIST">&nbsp;Security analusis</app-subnavbar-btn>-->
+          <app-subnavbar-btn [icon]="gIcons['LIST']" [active]="true" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
+          <!--<app-subnavbar-btn [icon]="gIcons['LIST']">&nbsp;Behavior analysis</app-subnavbar-btn>-->
+          <!--<app-subnavbar-btn [icon]="gIcons['LIST']">&nbsp;Security analusis</app-subnavbar-btn>-->
         </ng-container>
       </app-subnavbar>
       <!--
@@ -92,7 +92,7 @@
     <ng-container nav-right>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [icon]="gIcons.ANDROID" [active]="true">Android API xref</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons['ANDROID']" [active]="true">Android API xref</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -108,16 +108,16 @@
           <ng-template #expItem let-itemObj="item" >
 
               <span *ngIf="itemObj._t=='c'" (contextmenu)="displayExtMenu($event,'clzz',itemObj)">
-                <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
+                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
                 {{ itemObj.name  }}
               </span>
               <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.METH"></dxc-icon>
+                <dxc-icon [model]="cIcons['METH']"></dxc-icon>
               <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
               {{ itemObj.__callSignature__  }}
               </span>
               <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons.XREF_TO"></dxc-icon>
+                <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
                 {{ itemObj.__signature__  }}
               </span>
           </ng-template>
@@ -137,7 +137,7 @@
       <ng-template #noInternal>
         <div class="dxc-text-clear100 pt-4 row">
           <div class="text-right col-2 pt-2">
-            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+            <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
           </div>
           <div class="col-8 text-left">
             Deep Cross-references to Android API not found<br>The class implementing this provider is probably missing
@@ -154,7 +154,7 @@
 <app-context-menu [width]="200" [name]="'meth'">
   <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons['DOWNLOAD']"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 -->
 <!--

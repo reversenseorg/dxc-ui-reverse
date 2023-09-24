@@ -1,6 +1,7 @@
 export enum ErrorCode {
     GLOBAL= 1000,
     CONN= 20000,
+    UI=120000
 }
 
 

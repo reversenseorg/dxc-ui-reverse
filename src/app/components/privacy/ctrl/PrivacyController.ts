@@ -14,7 +14,7 @@ export class PrivacyController implements IController {
    */
   name = 'privacy';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: PrivacyService = null;

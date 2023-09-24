@@ -27,7 +27,7 @@
 
           <ng-container *ngIf="data.enclosingClass.package">
             <span (click)="openPackage(data.enclosingClass.package)">
-              <!--<dxc-icon [model]="icons.PKG"></dxc-icon>&nbsp;-->
+              <!--<dxc-icon [model]="icons['PKG']"></dxc-icon>&nbsp;-->
               <span class="dxc-icon-folders dxc-obj" *ngIf="data.enclosingClass.package.name!=''" (contextmenu)="controller.displayCtxMenu($event,'pkg',data.enclosingClass.package)">
                   <i *ngIf="data.enclosingClass.package.alias" class="text-warning dxc-obj">@{{ data.enclosingClass.package.alias}} : </i>
                 {{ data.enclosingClass.package.name }}
@@ -45,7 +45,7 @@
 
 
         <span (contextmenu)="controller.displayCtxMenu($event,'clazz',data.enclosingClass)">
-          <!--<dxc-icon [model]="icons.CLASS"></dxc-icon>&nbsp;-->
+          <!--<dxc-icon [model]="icons['CLASS']"></dxc-icon>&nbsp;-->
           <i *ngIf="data.enclosingClass.alias" class="text-warning dxc-obj">.@{{ data.enclosingClass.alias}}</i>
           <i *ngIf="data.enclosingClass.alias == null" class="dxc-obj">.{{ data.enclosingClass.simpleName }}</i>
         </span>
@@ -96,26 +96,26 @@
       <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
 
           <ng-container main>
-            <app-subnavbar-btn [active]="activeTop=='bc'" [icon]="gIcons.LIST" (click)="showBytecode()">&nbsp;Bytecode</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons.PLAY" (click)="showDxcVM()">&nbsp;Dexcalibur VM</app-subnavbar-btn>
-            <app-subnavbar-menu [label]="'Deobfuscation'" [icon]="gIcons.ANALYZE">
+            <app-subnavbar-btn [active]="activeTop=='bc'" [icon]="gIcons['LIST']" (click)="showBytecode()">&nbsp;Bytecode</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons['PLAY']" (click)="showDxcVM()">&nbsp;Dexcalibur VM</app-subnavbar-btn>
+            <app-subnavbar-menu [label]="'Deobfuscation'" [icon]="gIcons['ANALYZE']">
               <ng-container entries>
-                <app-subnavbar-btn [icon]="gIcons.PLUS" (click)="doDeobfuscationTask('count_nop')">Count NOP</app-subnavbar-btn>
-                <app-subnavbar-btn [icon]="gIcons.PLUS" (click)="doDeobfuscationTask('rm_nop')">Remove NOP</app-subnavbar-btn>
-                <app-subnavbar-btn [icon]="gIcons.EDIT" (click)="doDeobfuscationTask('rename')">Auto-rename</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['PLUS']" (click)="doDeobfuscationTask('count_nop')">Count NOP</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['PLUS']" (click)="doDeobfuscationTask('rm_nop')">Remove NOP</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['EDIT']" (click)="doDeobfuscationTask('rename')">Auto-rename</app-subnavbar-btn>
                 <app-subnavbar-btn [disable]="true">Simplify CFG</app-subnavbar-btn>
               </ng-container>
             </app-subnavbar-menu>
 
-            <app-subnavbar-btn [disable]="true" [active]="activeTop=='ed'" [icon]="gIcons.EDIT">&nbsp;Patch</app-subnavbar-btn>
-            <app-subnavbar-btn [disable]="true" [active]="activeTop=='pv'" [icon]="icons.LIST">&nbsp;Param values</app-subnavbar-btn>
-            <app-subnavbar-btn *ngIf="!data.probing" [active]="activeTop=='hk'" [icon]="gIcons.GEN_HOOK" (click)="addProbe()">&nbsp;Generate hook</app-subnavbar-btn>
-            <app-subnavbar-btn *ngIf="data.probing && data.hooked" [active]="activeTop=='hk'" [icon]="gIcons.STOP" (click)="stopHooking()">&nbsp;Stop hooking</app-subnavbar-btn>
-            <app-subnavbar-btn *ngIf="data.probing && (!data.hooked)" [active]="activeTop=='hk'" [icon]="gIcons.STOP" (click)="stopHooking()">&nbsp;Start hooking</app-subnavbar-btn>
-            <!-- <app-subnavbar-btn [icon]="gIcons.LAUNCH" (click)="startApp()">&nbsp;Start Application</app-subnavbar-btn> -->
+            <app-subnavbar-btn [disable]="true" [active]="activeTop=='ed'" [icon]="gIcons['EDIT']">&nbsp;Patch</app-subnavbar-btn>
+            <app-subnavbar-btn [disable]="true" [active]="activeTop=='pv'" [icon]="icons['LIST']">&nbsp;Param values</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="!data.probing" [active]="activeTop=='hk'" [icon]="gIcons['GEN_HOOK']" (click)="addProbe()">&nbsp;Generate hook</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="data.probing && data.hooked" [active]="activeTop=='hk'" [icon]="gIcons['STOP']" (click)="stopHooking()">&nbsp;Stop hooking</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="data.probing && (!data.hooked)" [active]="activeTop=='hk'" [icon]="gIcons['STOP']" (click)="stopHooking()">&nbsp;Start hooking</app-subnavbar-btn>
+            <!-- <app-subnavbar-btn [icon]="gIcons['LAUNCH']" (click)="startApp()">&nbsp;Start Application</app-subnavbar-btn> -->
           </ng-container>
           <!--<ng-container options>
-            <app-subnavbar-btn [icon]="gIcons.FILE" [position]="'right'">&nbsp;Save</app-subnavbar-btn>
+            <app-subnavbar-btn [icon]="gIcons['FILE']" [position]="'right'">&nbsp;Save</app-subnavbar-btn>
           </ng-container>-->
       </app-subnavbar>
     </ng-container>
@@ -135,8 +135,8 @@
           <div class="col-lg-4" style="overflow-y: scroll">
             <app-subnavbar [type]="'navbar'" [style]="{ 'background-color': '#333'}" [parent]="this">
               <ng-container main>
-                <app-subnavbar-btn [active]="true" [icon]="gIcons.INTERNAL">&nbsp;Configuration</app-subnavbar-btn>
-                <app-subnavbar-btn [icon]="gIcons.PLAY" (click)="ddvmExec()">&nbsp;Run</app-subnavbar-btn>
+                <app-subnavbar-btn [active]="true" [icon]="gIcons['INTERNAL']">&nbsp;Configuration</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="ddvmExec()">&nbsp;Run</app-subnavbar-btn>
               </ng-container>
             </app-subnavbar>
 
@@ -205,10 +205,10 @@
     <ng-container nav-bottom>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [active]="activeBottom=='hk'" [icon]="gIcons.HOOKS" (click)="showHooks()">Hooks</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeBottom=='hm'" [icon]="gIcons.LIST" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeBottom=='xt'" [icon]="icons.XREF"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeBottom=='xf'" [icon]="icons.XREF"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='hk'" [icon]="gIcons['HOOKS']" (click)="showHooks()">Hooks</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='hm'" [icon]="gIcons['LIST']" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='xt'" [icon]="icons['XREF']"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeBottom=='xf'" [icon]="icons['XREF']"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeBottom=='vml'" (click)="showVmLogs()">Dxc VM Logs</app-subnavbar-btn>
         </ng-container>
         <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
@@ -318,7 +318,7 @@
         </ng-container>
         <ng-template #noHooks>
           <div class="row"><div class="col-lg-12 text-center">
-            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>This method is not hooked.
+            <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>This method is not hooked.
             <br>
             <button class="btn btn-success btn-sm mt-2" (click)="addProbe()">Generate hook</button>
           </div></div>
@@ -352,7 +352,7 @@
         </ng-container>
         <ng-template #noHooks>
           <div class="row"><div class="col-lg-12 text-center">
-            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>This method has been never hooked.</div></div>
+            <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>This method has been never hooked.</div></div>
         </ng-template>
 
       </div>
@@ -378,7 +378,7 @@
         </ng-container>
         <ng-template #noVM>
           <div class="row"><div class="col-lg-12 text-center">
-            <dxc-icon [model]="gIcons.WARNING"></dxc-icon>
+            <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
             This method has not been emulated into Dexcalibur VM.
           </div></div>
         </ng-template>
@@ -394,7 +394,7 @@
 <app-context-menu [width]="200" [name]="'meth'">
   <app-context-item [label]="'Open as new project'" (click)="analyzeApp(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Attach to  project'" [disabled]="true" (click)="controller.attachToProject(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Pull application'" [icon]="gIcons.DOWNLOAD"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Pull application'" [icon]="gIcons['DOWNLOAD']"  (click)="pullApp(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 -->
 <!--

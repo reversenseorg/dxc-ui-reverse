@@ -56,7 +56,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
   @Input() message:Message = null;
 
@@ -77,7 +77,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
   targetName:string;
   htype:string = HOOK_TARGET_TYPE.METHOD;
   target:any = null;
-  observed: string = null;
+  observed:Nullable<string> = null;
   ktype = 'java';
   weight = -1;
   name:string;

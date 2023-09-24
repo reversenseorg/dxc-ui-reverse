@@ -16,7 +16,7 @@ export class SplashController implements IController {
    */
   name:string = 'splash';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: ProjectService = null;

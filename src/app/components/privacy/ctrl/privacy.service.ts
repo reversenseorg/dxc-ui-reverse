@@ -33,7 +33,7 @@ export class PrivacyService extends DxcApiService{
 
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
-  constructor( private appmenuSvc:AppMenuService, private topoSvc:TopologyService, private outputSvc:OutputService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, private topoSvc:TopologyService, private outputSvc:OutputService, protected override _http:HttpClient) {
 
       super({
         assess: {
@@ -49,7 +49,7 @@ export class PrivacyService extends DxcApiService{
     /*
     this.appmenuSvc.getMenu( 'plug').addItem({
         label: 'Privacy assessment',
-        click: (pMenuItem, pBrowserWindow, pEvent) => {
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           //this.onMenuClick.next({ item:'login', win:pBrowserWindow });
         }
       });*/
@@ -65,7 +65,7 @@ export class PrivacyService extends DxcApiService{
 
   getDashboards():Observable<DashBoard[]> {
     return this._process(
-      this.endpoints.assess.dashboard
+      this.endpoints['assess']['dashboard']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
@@ -93,7 +93,7 @@ export class PrivacyService extends DxcApiService{
 
   getReports():Observable<PrivacyReport[]> {
     return this._process(
-      this.endpoints.assess.reports
+      this.endpoints['assess']['reports']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
@@ -121,7 +121,7 @@ export class PrivacyService extends DxcApiService{
 
   getModel():Observable<PrivacyModel> {
     return this._process(
-      this.endpoints.assess.model
+      this.endpoints['assess']['model']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
@@ -145,7 +145,7 @@ export class PrivacyService extends DxcApiService{
 
   scan():Observable<PrivacyReport> {
     return this._process(
-      this.endpoints.assess.scan
+      this.endpoints['assess']['scan']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
@@ -172,7 +172,7 @@ export class PrivacyService extends DxcApiService{
 
   scan2(pModel:string):Observable<PrivacyReport> {
     return this._process(
-      this.endpoints.assess.scan2,
+      this.endpoints['assess']['scan2'],
       { model:pModel }
     ).pipe(map( (pEl:any) => {
 
@@ -200,7 +200,7 @@ export class PrivacyService extends DxcApiService{
 
   scanModel():Observable<PrivacyReport> {
     return this._process(
-      this.endpoints.assess.scanModel
+      this.endpoints['assess']['scanModel']
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){

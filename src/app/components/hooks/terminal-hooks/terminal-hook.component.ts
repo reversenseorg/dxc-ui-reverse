@@ -39,7 +39,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   tab:TerminalTab = new TerminalTab({
     offset: 0,
     label: 'Hook Logs',
-    icon: GLOBAL_ICONS.HOOKS,
+    icon: GLOBAL_ICONS['HOOKS'],
     color: 'dxc-text-clear100'
   });
 
@@ -56,7 +56,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
         offset: 0,
         label: 'Code',
         closable:true,
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         iconColor: 'dxc-text-clear100',
         color: 'dxc-text-clear100'
       })

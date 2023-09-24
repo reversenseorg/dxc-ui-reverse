@@ -39,25 +39,25 @@ export class IconComponent implements OnInit, OnChanges {
    * TODO : add support for others source (not only Font Awesome)
    * @type string
    */
-  @Input() type:string = null;
+  @Input() type:Nullable<string> = null;
 
   /**
    * Icon name
    * @type string
    */
-  @Input() name:string = null;
+  @Input() name:Nullable<string> = null;
 
   /**
    * Icon primary color (class name)
    * @type string
    */
-  @Input() color1:string = null;
+  @Input() color1:Nullable<string> = null;
 
   /**
    * Icon secondary color (class name)
    * @type string
    */
-  @Input() color2:string = null;
+  @Input() color2:Nullable<string> = null;
 
   /**
    *
@@ -70,7 +70,7 @@ export class IconComponent implements OnInit, OnChanges {
    * Icon name
    * @type string
    */
-  @Input() label:string = null;
+  @Input() label:Nullable<string> = null;
 
   @Input() model: IconModel = null;
 

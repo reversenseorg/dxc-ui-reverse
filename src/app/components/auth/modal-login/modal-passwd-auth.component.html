@@ -3,7 +3,7 @@
     Authentication
   </div>
   <ng-container options>
-    <span><dxc-icon [model]="gIcons.HELPER" (click)="showHelp()"></dxc-icon></span>
+    <span><dxc-icon [model]="gIcons['HELPER']" (click)="showHelp()"></dxc-icon></span>
   </ng-container>
   <div body class="dxc-modal-body pt-1">
       <div class="row no-gutters" *ngIf="firstLogin">
@@ -11,7 +11,7 @@
       </div>
     <div class="row no-gutters pt-1 pl-1">
       <div class="col-lg-2  pr-2 text-right dxc-text-clear75">
-        <dxc-icon [model]="icons.SERVER"></dxc-icon>
+        <dxc-icon [model]="icons['SERVER']"></dxc-icon>
       </div>
       <div class="col-lg-10  dxc-text-clear100 ">
         <select name="server" [(ngModel)]="server" placeholder="Select a server" class="dxc-input" style="width:200px">
@@ -28,7 +28,7 @@
     <ng-template #newAuth>
       <div class="row no-gutters pt-1 pl-1">
         <div class="col-lg-2 pr-2  text-right dxc-text-clear75">
-          <dxc-icon [model]="icons.USER"></dxc-icon>
+          <dxc-icon [model]="icons['USER']"></dxc-icon>
         </div>
         <div class="col-lg-10  dxc-text-clear100 ">
           <input type="text" class="pl-1" name="username" id="username" placeholder=" username"[(ngModel)]="username" style="width:200px"/>
@@ -36,7 +36,7 @@
       </div>
       <div class="row no-gutters pt-1 pl-1">
         <div class="col-lg-2 pr-2 text-right dxc-text-clear75">
-          <dxc-icon [model]="icons.KEY"></dxc-icon>
+          <dxc-icon [model]="icons['KEY']"></dxc-icon>
         </div>
         <div class="col-lg-10 dxc-text-clear100 ">
           <input type="password" class="pl-1" name="passwd" id="passwd" placeholder=" password" [(ngModel)]="passwd" style="width:200px"/>
@@ -54,7 +54,7 @@
     <div footer>
         <button class="dxc-frm-btn" (click)="warnOnClose()">Cancel</button>
         <button class="dxc-frm-btn default" (click)="doPasswordLogin()">
-          <dxc-icon [model]="icons.UNLOCK"></dxc-icon>&nbsp;Login
+          <dxc-icon [model]="icons['UNLOCK']"></dxc-icon>&nbsp;Login
         </button>
     </div>
 </app-modal-base>

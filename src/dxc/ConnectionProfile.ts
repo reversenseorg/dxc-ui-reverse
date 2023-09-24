@@ -26,10 +26,10 @@ export class ConnectionProfile {
   /**
    *
    */
-  ipv4:string = null;
-  ipv6:string = null;
+  ipv4:Nullable<string> = null;
+  ipv6:Nullable<string> = null;
   port:number = null;
-  hostname:string = null;
+  hostname:Nullable<string> = null;
 
   /**
    * A volatile flag TRUE if the profile is the default profile.
@@ -43,7 +43,7 @@ export class ConnectionProfile {
    * @field
    * @type string
    */
-  name:string = null;
+  name:Nullable<string> = null;
 
   /**
    * UID
@@ -51,9 +51,9 @@ export class ConnectionProfile {
    * @field
    * @type string
    */
-  uid:string = null;
+  uid:Nullable<string> = null;
 
-  rawIP:string = null;
+  rawIP:Nullable<string> = null;
 
   /**
    * Preferred authentication type

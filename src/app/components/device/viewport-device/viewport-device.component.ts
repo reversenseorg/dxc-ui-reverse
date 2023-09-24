@@ -63,9 +63,9 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
 
   id = -1;
-  icn: IconModel = DEV_ICONS.MOBILE;
+  icn: IconModel = DEV_ICONS['MOBILE'];
   activeLeft =  'ss';
-  activeRight:string = null;
+  activeRight:Nullable<string> = null;
   defaultWidth = 70;
   defaultWidths = {
     [DEVICE_PANEL.MOUNTS]: 100,
@@ -79,15 +79,15 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     style: 'vp-navbar',
     entries: [
       new MenuItem({
-        icon: GLOBAL_ICONS.JAVA,
+        icon: GLOBAL_ICONS['JAVA'],
         label: "Implemented By"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.FIND,
+        icon: GLOBAL_ICONS['FIND'],
         label: "Instances"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         label: "Permissions",
       })
     ]
@@ -99,12 +99,12 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
       items: [
         new MenuItem({
           id: 'app',
-          icon: GLOBAL_ICONS.WINDOW,
+          icon: GLOBAL_ICONS['WINDOW'],
           label: "Application"
         }),
         new MenuItem({
           id: 'api',
-          icon: GLOBAL_ICONS.ANDROID,
+          icon: GLOBAL_ICONS['ANDROID'],
           label: "Android"
         })
       ]
@@ -114,15 +114,15 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   rightNav: NavbarSimpleView = new NavbarSimpleView({
     entries: [
       new MenuItem({
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         label: "Hook logs"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.LIBS,
+        icon: GLOBAL_ICONS['LIBS'],
         label: "VM Out"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.ANDROID,
+        icon: GLOBAL_ICONS['ANDROID'],
         label: "adb logs"
       })
     ]
@@ -138,7 +138,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Device',
-      icon: DEV_ICONS.DEFAULT,
+      icon: DEV_ICONS['DEFAULT'],
       color: 'dxc-text-clear100'
     })
   });
@@ -191,7 +191,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
 
     console.log('configure device viewport>',pData);
 
-    this.view.tab.icon = this.icons.MOBILE;
+    this.view.tab.icon = this.icons['MOBILE'];
     this.view.tab.label = pData.id;
     this.view.tab.tip = pData.model;
     this.view.tab.color = 'dxc-text-blue font-weight-bold';

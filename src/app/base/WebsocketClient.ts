@@ -1,6 +1,7 @@
 import {EndpointMap} from "./DxcApiService";
 import {w3cwebsocket as W3CWebSocket} from "websocket" ;
 import {Subject} from "rxjs";
+import {Nullable} from "./Nullable";
 
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
@@ -18,9 +19,9 @@ const ALPHANUM =  'abcdefghijklmnopqrstuvwxyz0123456789';
  */
 export abstract class WebsocketChannel {
 
-  localid: string = null;
-  sessid: string = null;
-  group: string = null;
+  localid:Nullable<string> = null;
+  sessid:Nullable<string> = null;
+  group:Nullable<string> = null;
   data:string = '';
   ready:boolean = false;
 

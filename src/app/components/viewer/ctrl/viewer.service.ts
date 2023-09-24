@@ -18,7 +18,7 @@ export class ViewerService extends DxcApiService {
   //onSearchReady:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
   //onProjectOpening:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
 
-  constructor( private appmenuSvc:AppMenuService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, protected override _http:HttpClient) {
     super(
       {
         file: {
@@ -32,7 +32,7 @@ export class ViewerService extends DxcApiService {
 
   openFile():Observable<any> {
     return this._process(
-      this.endpoints.file.open
+      this.endpoints['file']['open']
     ).pipe(map((pObs)=>{
       return pObs.data;
     }));
@@ -41,7 +41,7 @@ export class ViewerService extends DxcApiService {
 
   saveFile():Observable<any> {
     return this._process(
-      this.endpoints.file.save
+      this.endpoints['file']['save']
     ).pipe(map((pObs)=>{
       return pObs.data;
     }));

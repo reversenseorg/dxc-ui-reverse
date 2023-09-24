@@ -49,7 +49,7 @@ export class ModalInterruptorSettingsComponent extends AbstractKeyboardNavigable
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
   @Input() message:Message = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
@@ -58,7 +58,7 @@ export class ModalInterruptorSettingsComponent extends AbstractKeyboardNavigable
   icons:any = HOOK_ICONS;
   item: any = null;
   target:any = null;
-  observed: string = null;
+  observed:Nullable<string> = null;
   currentKP:KeyPoint = null;
   selectedKP:KeyPoint = null;
   kpList:KeyPoint[] = [];

@@ -215,7 +215,7 @@ export class DeviceManagerService extends DxcApiService {
 
   readFile( pDevice:Device, pPath:string, pStt:string):Observable<any>{
     return this._process(
-      this.endpoints.device.readFile, {
+      this.endpoints['device']['readFile'], {
         uid: pDevice.uid,
         path: pPath,
         type: pStt
@@ -253,7 +253,7 @@ export class DeviceManagerService extends DxcApiService {
       if(sel.el.hasOwnProperty('_t') && (sel.el._t=='dev')){
 
         this._process(
-          this.endpoints.device.restartBridge,{
+          this.endpoints['device']['restartBridge'],{
             uid:pDevice.uid
           }
         ).pipe(
@@ -285,7 +285,7 @@ export class DeviceManagerService extends DxcApiService {
     }
 
     return this._process(
-      this.endpoints.device.list
+      this.endpoints['device']['list']
     ).pipe(
       map((pEl:any)=>{
         if(pEl.success){
@@ -325,7 +325,7 @@ export class DeviceManagerService extends DxcApiService {
 
     //
     return this._process(
-      this.endpoints.device.profileAll,{
+      this.endpoints['device']['profileAll'],{
         uid:uid,
       }
     ).pipe(
@@ -352,7 +352,7 @@ export class DeviceManagerService extends DxcApiService {
     const opts = pOptions;
 
     return this._process(
-      this.endpoints.device.doProfiling,{
+      this.endpoints['device']['doProfiling'],{
         uid:uid,
         type: pType,
         opts:opts
@@ -405,7 +405,7 @@ export class DeviceManagerService extends DxcApiService {
    */
   getProcesses( pDevice:Device, pStrategy:string):Observable<any[]>{
     return this._process(
-      this.endpoints.device.getPS,{
+      this.endpoints['device']['getPS'],{
         uid:pDevice.uid,
         type:pStrategy
       }
@@ -436,7 +436,7 @@ export class DeviceManagerService extends DxcApiService {
     }
 
     return this._process(
-      this.endpoints.device.getApp,
+      this.endpoints['device']['getApp'],
       { uid:pDevice.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -472,7 +472,7 @@ export class DeviceManagerService extends DxcApiService {
     }
 
     return this._process(
-      this.endpoints.device.getSyscalls,
+      this.endpoints['device']['getSyscalls'],
       { uid:pDevice.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -515,7 +515,7 @@ export class DeviceManagerService extends DxcApiService {
   enroll( pDevice:Device):Observable<any> {
 
     return this._process(
-      this.endpoints.device.enroll,
+      this.endpoints['device']['enroll'],
       {
         uid:pDevice.uid,
         opts: {
@@ -558,7 +558,7 @@ export class DeviceManagerService extends DxcApiService {
   enrollStatus( pDevice:Device):Observable<any> {
 
     return this._process(
-      this.endpoints.device.enrollStatus,
+      this.endpoints['device']['enrollStatus'],
       { uid:pDevice.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -578,7 +578,7 @@ export class DeviceManagerService extends DxcApiService {
 
   pullApp( pDevice:Device, pApp:any, pPath:any = null): Observable<any>  {
     return this._process(
-      this.endpoints.device.pullApp,
+      this.endpoints['device']['pullApp'],
       (pPath!=null ? { uid:pDevice.uid, package:pApp, path:pPath } : { uid:pDevice.uid, package:pApp })
     ).pipe(
       map((pEl:any)=>{
@@ -605,7 +605,7 @@ export class DeviceManagerService extends DxcApiService {
   removeDeviceByUID( pDeviceUid: string): Observable<boolean> {
     console.log("Remove : "+pDeviceUid);
     return this._process(
-      this.endpoints.device.clearDev,
+      this.endpoints['device']['clearDev'],
       { uid: pDeviceUid }
     ).pipe(map( (pRes: any) => {
       if(!pRes.success){
@@ -633,7 +633,7 @@ export class DeviceManagerService extends DxcApiService {
     for(const i in pSettings) opts.opts[i] = pSettings[i];
 
     return this._process(
-      this.endpoints.frida.save, opts
+      this.endpoints['frida']['save'], opts
     ).pipe(map( (pRes: any) => {
       if(!pRes.success){
         this.outputSvc.alert( OutputMessage.newError({ msg: pRes.msg }));
@@ -648,7 +648,7 @@ export class DeviceManagerService extends DxcApiService {
 
   installApp( pDevice:Device, pOptions:any):Observable<any>{
     const opts = { uid: pDevice.uid, opts:pOptions };
-    const endpoint = pOptions.src=='proj' ? this.endpoints.device.installProject : this.endpoints.device.installApp;
+    const endpoint = pOptions.src=='proj' ? this.endpoints['device']['installProject'] : this.endpoints['device']['installApp'];
 
     return this._process(
       endpoint, opts
@@ -667,7 +667,7 @@ export class DeviceManagerService extends DxcApiService {
     const opts = { uid: pDevice.uid, opts:pOptions };
 
     return this._process(
-      this.endpoints.device.uninstallApp, opts
+      this.endpoints['device']['uninstallApp'], opts
     ).pipe(map( (pRes: any) => {
       if(!pRes.success){
         this.outputSvc.alert( OutputMessage.newError({ msg: pRes.msg }));
@@ -687,7 +687,7 @@ export class DeviceManagerService extends DxcApiService {
 
 
     return this._process(
-      this.endpoints.device.admin, opts
+      this.endpoints['device']['admin'], opts
     ).pipe(map( (pRes: any) => {
       if(!pRes.success){
         this.outputSvc.alert( OutputMessage.newError({ msg: pRes.msg }));

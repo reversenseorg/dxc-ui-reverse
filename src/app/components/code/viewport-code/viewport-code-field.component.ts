@@ -43,15 +43,15 @@ export class ViewportCodeFieldComponent implements OnInit, AfterViewInit {
     style: 'vp-navbar',
     entries: [
       new MenuItem({
-        icon: GLOBAL_ICONS.JAVA,
+        icon: GLOBAL_ICONS['JAVA'],
         label: "Implemented By"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.FIND,
+        icon: GLOBAL_ICONS['FIND'],
         label: "Instances"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         label: "Permissions"
       })
     ]
@@ -63,12 +63,12 @@ export class ViewportCodeFieldComponent implements OnInit, AfterViewInit {
       items: [
         new MenuItem({
           id: 'app',
-          icon: GLOBAL_ICONS.WINDOW,
+          icon: GLOBAL_ICONS['WINDOW'],
           label: "Application"
         }),
         new MenuItem({
           id: 'api',
-          icon: GLOBAL_ICONS.ANDROID,
+          icon: GLOBAL_ICONS['ANDROID'],
           label: "Android"
         })
       ]
@@ -78,15 +78,15 @@ export class ViewportCodeFieldComponent implements OnInit, AfterViewInit {
   rightNav: NavbarSimpleView = new NavbarSimpleView({
     entries: [
       new MenuItem({
-        icon: GLOBAL_ICONS.HOOKS,
+        icon: GLOBAL_ICONS['HOOKS'],
         label: "Hook logs"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.LIBS,
+        icon: GLOBAL_ICONS['LIBS'],
         label: "VM Out"
       }),
       new MenuItem({
-        icon: GLOBAL_ICONS.ANDROID,
+        icon: GLOBAL_ICONS['ANDROID'],
         label: "adb logs"
       })
     ]

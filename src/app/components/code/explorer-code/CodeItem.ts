@@ -1,11 +1,10 @@
-
-
+import {Nullable} from "../../../base/Nullable";
 
 
 export class CodeItem
 {
 
-  _t:string = null;
+  _t:Nullable<string> = null;
 
   /**
    * Package name
@@ -13,10 +12,10 @@ export class CodeItem
    * @type {String}
    * @field
    */
-  name:string = null;
+  name:Nullable<string> = null;
 
 
-  sname:string = null;
+  sname:Nullable<string> = null;
 
   /**
    * Package metadata

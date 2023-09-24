@@ -88,7 +88,7 @@ export class ModalDmComponent implements OnInit {
 
   mode = "";
 
-  bridge:string = null;
+  bridge:Nullable<string> = null;
 
   bridges:BridgeOption[] = [];
 

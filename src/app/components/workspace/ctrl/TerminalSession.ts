@@ -26,7 +26,7 @@ export interface TerminalInfo {
 
 export class TerminalSession {
 
-  uid:string = null;
+  uid:Nullable<string> = null;
   icon:IconModel = null;
   label:string = 'Terminal';
   active: boolean = false;

@@ -1,13 +1,13 @@
 <div class="container-fluid viewport-class">
   <!--<app-subnavbar [type]="'navbar'" [navbar]="topNav" [parent]="this">
     <ng-container main>
-      <app-subnavbar-btn [icon]="gIcons.JAVA">Implemented by</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.LIST">Instances</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.PERM">Permissions</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.HOOKS">Hooks</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['JAVA']">Implemented by</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['LIST']">Instances</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['PERM']">Permissions</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['HOOKS']">Hooks</app-subnavbar-btn>
     </ng-container>
     <ng-container options>
-      <app-subnavbar-btn  [icon]="gIcons.FILE" [position]="'right'">Save</app-subnavbar-btn>
+      <app-subnavbar-btn  [icon]="gIcons['FILE']" [position]="'right'">Save</app-subnavbar-btn>
     </ng-container>
   </app-subnavbar>-->
 
@@ -31,10 +31,10 @@
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
           <app-subnavbar-btn [active]="activeLeft=='md'"  (click)="showModel(80)">Details</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons.LIST" (click)="showContents(30)">Contents</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons.ANALYZE" (click)="showInstance(50)">Instances</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="gIcons.LOCK" (click)="showPerm(50)">Permission</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='io'"  [icon]="gIcons.FILE" (click)="showIO(50)">I/O</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showContents(30)">Contents</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['ANALYZE']" (click)="showInstance(50)">Instances</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="gIcons['LOCK']" (click)="showPerm(50)">Permission</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='io'"  [icon]="gIcons['FILE']" (click)="showIO(50)">I/O</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -44,7 +44,7 @@
         <!--<ng-container *ngFor="let h of data.fields">
           <div class="row hook-row">
             <div class="col-lg-1">
-              <dxc-icon [model]="h.enable? hIcons.UP : hIcons.DOWN"></dxc-icon>
+              <dxc-icon [model]="h.enable? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
             </div>
             <div class="col-lg-9 hook-label">
               {{ h.method }}

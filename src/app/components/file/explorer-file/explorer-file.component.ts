@@ -64,7 +64,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
   tab:ExplorerTab = new ExplorerTab({
     offset: 1,
     label: 'Data',
-    icon: GLOBAL_ICONS.FILE,
+    icon: GLOBAL_ICONS['FILE'],
     color: 'dxc-text-clear100'
   });
 
@@ -72,32 +72,32 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
   view:ExplorerView = new ExplorerView({
     nav: new NavbarSimpleView({
       label: 'Package',
-      icon: GLOBAL_ICONS.PACKAGE,
+      icon: GLOBAL_ICONS['PACKAGE'],
       menu: new MenuView({
         items: [
           new MenuItem({
             id: FS_SUBVIEW.PKG,
             label:'App Package',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.PACKAGE
+            icon: GLOBAL_ICONS['PACKAGE']
           }),
           new MenuItem({
             id: FS_SUBVIEW.APP,
             label:'App device data',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.DEVICE
+            icon: GLOBAL_ICONS['DEVICE']
           }),
           new MenuItem({
             id: FS_SUBVIEW.DEV,
             label:'Device FS',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.FILE
+            icon: GLOBAL_ICONS['FILE']
           }),
           new MenuItem({
             id: FS_SUBVIEW.WS,
             label:'Workspace',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.FOLDER
+            icon: GLOBAL_ICONS['FOLDER']
           }),
         ]
       })
@@ -366,13 +366,13 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
   getIconForType(pType: any):IconModel {
     switch (pType.t) {
       case 'XML':
-        return this.icons.XML;
+        return this.icons['XML'];
       case 'PNG':
-        return this.icons.PNG;
+        return this.icons['PNG'];
       case 'ELF':
-        return this.icons.BIN;
+        return this.icons['BIN'];
       default:
-        return this.icons.FILE;
+        return this.icons['FILE'];
     }
   }
 

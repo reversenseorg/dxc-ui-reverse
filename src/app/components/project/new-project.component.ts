@@ -69,12 +69,12 @@ import {SPLASH_ICONS} from "./icons";
 
                     <ng-template #expDevItem let-itemObj="item" >
                     <span *ngIf="itemObj.children">
-                      <dxc-icon [model]="gIcons.FOLDER"></dxc-icon>
+                      <dxc-icon [model]="gIcons['FOLDER']"></dxc-icon>
                       {{ itemObj.label  }}
                     </span>
 
                       <span *ngIf="itemObj.children==null">
-                            <dxc-icon [model]="dmSvc.isDeviceOnline(itemObj)? gIcons.UP : gIcons.DOWN"></dxc-icon>
+                            <dxc-icon [model]="dmSvc.isDeviceOnline(itemObj)? gIcons['UP'] : gIcons['DOWN']"></dxc-icon>
                         {{ itemObj.method  }}
                     </span>
                     </ng-template>
@@ -101,7 +101,7 @@ import {SPLASH_ICONS} from "./icons";
                   <ng-container main>
                   </ng-container>
                   <ng-container options>
-                    <app-subnavbar-btn [icon]="gIcons.PLUS" [position]="'right'">&nbsp;Add</app-subnavbar-btn>
+                    <app-subnavbar-btn [icon]="gIcons['PLUS']" [position]="'right'">&nbsp;Add</app-subnavbar-btn>
                   </ng-container>
                 </app-subnavbar>
 -->

@@ -38,7 +38,7 @@ export interface ContextMenuState {
 })
 export class ContextMenuComponent implements OnInit, AfterContentInit {
 
-  @Input() name: string = null;
+  @Input() name:Nullable<string> = null;
 
   @Input() width: number = 160;
 

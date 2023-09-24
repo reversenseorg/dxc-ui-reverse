@@ -81,7 +81,7 @@ export class OpenProjectComponent implements OnInit {
 
   projectsCount:number = 0;
   projects:DexcaliburProject[] = [];
-  selectedUid:string = null;
+  selectedUid:Nullable<string> = null;
 
   selectedProject:any = null;
 

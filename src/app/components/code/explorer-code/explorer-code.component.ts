@@ -147,7 +147,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   tab:ExplorerTab = new ExplorerTab({
     offset: 0,
     label: 'Code',
-    icon: GLOBAL_ICONS.CODE,
+    icon: GLOBAL_ICONS['CODE'],
     color: 'dxc-text-clear100'
   });
 
@@ -160,32 +160,32 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
             id:CODE_SUBVIEW.APP,
             label:'Application',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.WINDOW
+            icon: GLOBAL_ICONS['WINDOW']
           }),
           new MenuItem<CodeItem>({
             id:CODE_SUBVIEW.ANDROID_API,
             label:'Android API',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.ANDROID
+            icon: GLOBAL_ICONS['ANDROID']
           }),
           new MenuItem<CodeItem>({
             id:CODE_SUBVIEW.ANDROID_FWK,
             label:'Android Internals',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.ANDROID
+            icon: GLOBAL_ICONS['ANDROID']
           }),
           new MenuItem<CodeItem>({
             id:CODE_SUBVIEW.VENDOR,
             label:'Vendor-specific',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.INTERNAL
+            icon: GLOBAL_ICONS['INTERNAL']
           }),
 
           new MenuItem<CodeItem>({
             id:CODE_SUBVIEW.ALL,
             label:'All',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.GLOBE
+            icon: GLOBAL_ICONS['GLOBE']
           }),
         ]
       })
@@ -218,24 +218,24 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     this.view.id = this.id;
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
     /*
-    this.codeService.mapIcons(NODE_TYPE.CLASS, this.icons.CLASS);
-    this.codeService.mapIcons(NODE_TYPE.PACKAGE, this.icons.PKG);
-    this.codeService.mapIcons(NODE_TYPE.METHOD, this.icons.METH);
-    this.codeService.mapIcons(NODE_TYPE.FIELD, this.icons.FIELD);
-    this.codeService.mapIcons(NODE_TYPE.FILE, this.gIcons.BIN);
-    this.codeService.mapIcons('p-di', this.icons.PKG_INT);
-    this.codeService.mapIcons('p-mx', this.icons.PKG_MIXED);*/
+    this.codeService.mapIcons(NODE_TYPE.CLASS, this.icons['CLASS']);
+    this.codeService.mapIcons(NODE_TYPE.PACKAGE, this.icons['PKG']);
+    this.codeService.mapIcons(NODE_TYPE.METHOD, this.icons['METH']);
+    this.codeService.mapIcons(NODE_TYPE.FIELD, this.icons['FIELD']);
+    this.codeService.mapIcons(NODE_TYPE.FILE, this.gIcons['BIN']);
+    this.codeService.mapIcons('p-di', this.icons['PKG_INT']);
+    this.codeService.mapIcons('p-mx', this.icons['PKG_MIXED']);*/
 
 
 
-    this.codeService.mapIcons('c', this.icons.CLASS);
-    this.codeService.mapIcons('p', this.icons.PKG);
-    this.codeService.mapIcons('m', this.icons.METH);
-    this.codeService.mapIcons('f', this.icons.FIELD);
-    this.codeService.mapIcons('e', this.gIcons.BIN);
-    this.codeService.mapIcons('b', this.gIcons.BYTES);
-    this.codeService.mapIcons('p-di', this.icons.PKG_INT);
-    this.codeService.mapIcons('p-mx', this.icons.PKG_MIXED);
+    this.codeService.mapIcons('c', this.icons['CLASS']);
+    this.codeService.mapIcons('p', this.icons['PKG']);
+    this.codeService.mapIcons('m', this.icons['METH']);
+    this.codeService.mapIcons('f', this.icons['FIELD']);
+    this.codeService.mapIcons('e', this.gIcons['BIN']);
+    this.codeService.mapIcons('b', this.gIcons['BYTES']);
+    this.codeService.mapIcons('p-di', this.icons['PKG_INT']);
+    this.codeService.mapIcons('p-mx', this.icons['PKG_MIXED']);
 
 
   }
@@ -420,9 +420,9 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
                 if(vSelf._t=="p" && this.tags.INTERNAL.match(vSelf)){
                   if(this.tags.STATIC.match(vSelf)){
-                    vSelf._icon = this.icons.PKG_MIXED;
+                    vSelf._icon = this.icons['PKG_MIXED'];
                   }else{
-                    vSelf._icon = this.icons.PKG_INT;
+                    vSelf._icon = this.icons['PKG_INT'];
                   }
                 }
 
@@ -446,7 +446,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
               if(pObs.hasOwnProperty('data')==false || pObs.data==null) return;
 
-              pObs.data._icon = this.icons.CLASS;
+              pObs.data._icon = this.icons['CLASS'];
               pObs.data.fields.map( (vField)=>{
                 vField['_t'] = 'f';
 
@@ -455,7 +455,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                 else
                   vField['mod'] = vField.modifiers;
 
-                vField._icon = this.icons.FIELD;
+                vField._icon = this.icons['FIELD'];
                 //expandable
                 vField._e = false;
                 children.push(vField);
@@ -471,19 +471,19 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                 if(vMeth.mod.construct){
                   if(vMeth.mod.static) {
                     vMeth.mod._t = 'clinit';
-                    vMeth._icon = this.icons.STATICB;
+                    vMeth._icon = this.icons['STATICB'];
                   }else {
                     vMeth.mod._t = 'new';
-                    vMeth._icon = this.icons.NEW;
+                    vMeth._icon = this.icons['NEW'];
                   }
                 }else if(vMeth.mod.static){
-                  vMeth._icon = this.icons.STATIC;
+                  vMeth._icon = this.icons['STATIC'];
                 }else if(vMeth.mod.construct){
-                  vMeth._icon = this.icons.CONSTRUCT;
+                  vMeth._icon = this.icons['CONSTRUCT'];
                 }else if(vMeth.mod.native){
-                  vMeth._icon = this.icons.NATIVE;
+                  vMeth._icon = this.icons['NATIVE'];
                 }else{
-                  vMeth._icon = this.icons.METH;
+                  vMeth._icon = this.icons['METH'];
                 }
 
                 vMeth._e = false;
@@ -612,7 +612,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
                   if(pPkg._t=='c'){
                     // it happens when a class is not contaiend into a package
-                    pPkg._icon = this.icons.CLASS;
+                    pPkg._icon = this.icons['CLASS'];
                     this.packages[CODE_SUBVIEW.APP].push(pPkg);
                     p++;
 
@@ -620,14 +620,14 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                   }
 
                   c = [];
-                  pPkg._icon = this.icons.PKG;
+                  pPkg._icon = this.icons['PKG'];
 
                   pPkg.children.map( (vChild)=>{
                     if( this.tags.STATIC.match(vChild) || this.tags.DYNAMIC.match(vChild)){
                       if(vChild._t=='c'){
-                        vChild._icon = this.icons.CLASS;
+                        vChild._icon = this.icons['CLASS'];
                       }else{
-                        vChild._icon = this.icons.PKG;
+                        vChild._icon = this.icons['PKG'];
                       }
                       vChild._e = true;
                       c.push(vChild);
@@ -651,15 +651,15 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                 c = [];
                 pPkg.children.map( (vChild)=>{
                   if(pPkg._t=='c'){
-                    pPkg._icon = this.icons.CLASS;
+                    pPkg._icon = this.icons['CLASS'];
                   }else{
-                    pPkg._icon = this.icons.PKG_INT;
+                    pPkg._icon = this.icons['PKG_INT'];
                   }
                   if( this.tags.INTERNAL.match(vChild) ){
                     if(vChild._t=='c'){
-                      vChild._icon = this.icons.CLASS;
+                      vChild._icon = this.icons['CLASS'];
                     }else{
-                      vChild._icon = this.icons.PKG;
+                      vChild._icon = this.icons['PKG'];
                     }
                     vChild._e = true;
                     c.push(vChild);
@@ -692,7 +692,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   displayCtxMenu(pEvent:any, pType:string, pObject:any):void{
-    let type:string = null;
+    let type:Nullable<string> = null;
 
     console.log(pEvent);
     pEvent.preventDefault();

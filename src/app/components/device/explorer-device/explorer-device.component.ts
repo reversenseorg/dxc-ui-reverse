@@ -143,7 +143,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   tab: ExplorerTab = new ExplorerTab({
     offset: 0,
     label: 'Devices',
-    icon: GLOBAL_ICONS.DEVICE,
+    icon: GLOBAL_ICONS['DEVICE'],
     color: 'dxc-text-clear100'
   });
 
@@ -157,19 +157,19 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
             id: DEV_SUBVIEW.ALL,
             label: 'All',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.DEVICE
+            icon: GLOBAL_ICONS['DEVICE']
           }),
           new MenuItem<DeviceItem>({
             id: DEV_SUBVIEW.ANDROID,
             label: 'Android',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.ANDROID
+            icon: GLOBAL_ICONS['ANDROID']
           }),
           new MenuItem<DeviceItem>({
             id: DEV_SUBVIEW.APPLE,
             label: 'Apple',
             color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS.APPLE
+            icon: GLOBAL_ICONS['APPLE']
           })
         ]
       })
@@ -193,7 +193,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    * @field
    * @since 1.0.0
    */
-  progressTitle: string = null;
+  progressTitle:Nullable<string> = null;
   enrolling = false ;
 
 
@@ -307,7 +307,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       case 'app':
         data = this.dmService.getApplications(pItem.dev).pipe(
           map( (pObs: any) => {
-            // pObs.data._icon = this.icons.CLASS;
+            // pObs.data._icon = this.icons['CLASS'];
             console.log(pObs);
 
             if(pObs != null){
@@ -402,13 +402,13 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     switch (pType.t) {
       case 'XML':
-        return this.fIcons.XML;
+        return this.fIcons['XML'];
       case 'PNG':
-        return this.fIcons.PNG;
+        return this.fIcons['PNG'];
       case 'ELF':
-        return this.fIcons.BIN;
+        return this.fIcons['BIN'];
       default:
-        return this.fIcons.FILE;
+        return this.fIcons['FILE'];
     }
   }
 
@@ -590,7 +590,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   displayCtxMenu(pEvent: any, pType: string, pObject: any): void{
-    const type: string = null;
+    const type:Nullable<string> = null;
     pEvent.preventDefault();
 /*
     switch(pEvent.target._t){
@@ -624,7 +624,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   private _prepareDeviceRendering(pDevice:DeviceListItem):DeviceListItem {
-    pDevice._icon = this.gIcons.DEVICE;
+    pDevice._icon = this.gIcons['DEVICE'];
     pDevice._t = 'dev';
     pDevice.children = [];
 
@@ -638,7 +638,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     for (const bridge in pDevice.bridges){
       pDevice.children.push({
         _t: 'b',
-        _icon: ((pDevice.bridges[bridge].shortname.indexOf('usb') > -1) ? this.icons.USB : this.icons.WIFI),
+        _icon: ((pDevice.bridges[bridge].shortname.indexOf('usb') > -1) ? this.icons['USB'] : this.icons['WIFI']),
         shortname: pDevice.bridges[bridge].shortname,
         uid: pDevice.bridges[bridge].deviceID,
       });
@@ -689,7 +689,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
             this._prepareDeviceRendering(vChild);
             /*
-            vChild._icon = this.gIcons.DEVICE;
+            vChild._icon = this.gIcons['DEVICE'];
             vChild._t = 'dev';
             vChild.children = [];
 
@@ -703,7 +703,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
             for (const bridge in vChild.bridges){
               vChild.children.push({
                 _t: 'b',
-                _icon: ((vChild.bridges[bridge].shortname.indexOf('usb') > -1) ? this.icons.USB : this.icons.WIFI),
+                _icon: ((vChild.bridges[bridge].shortname.indexOf('usb') > -1) ? this.icons['USB'] : this.icons['WIFI']),
                 shortname: vChild.bridges[bridge].shortname,
                 uid: vChild.bridges[bridge].deviceID,
               });
@@ -1009,7 +1009,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   openShell(pDev: Device, pPrivileged:boolean) {
-    this.wsSvc.createDevShellSession(pDev, this.gIcons.DEVICE, pPrivileged);
+    this.wsSvc.createDevShellSession(pDev, this.gIcons['DEVICE'], pPrivileged);
   }
 
   openInfo(pDev: Device) {

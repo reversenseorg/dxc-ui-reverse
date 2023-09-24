@@ -44,7 +44,7 @@ export class ModalLogoutComponent extends AbstractKeyboardNavigable implements O
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
   @Input() message:Message = null;
 

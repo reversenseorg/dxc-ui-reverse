@@ -10,7 +10,7 @@ export class ExplorerView {
   color:string = "";
   ctn:string = "";
 */
-  id:string = null;
+  id:Nullable<string> = null;
 
   nav:NavbarSimpleView = null;
 

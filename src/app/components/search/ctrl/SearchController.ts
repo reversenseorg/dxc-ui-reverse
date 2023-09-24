@@ -16,7 +16,7 @@ export class SearchController implements IController {
    */
   name:string = 'search';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: SearchService = null;

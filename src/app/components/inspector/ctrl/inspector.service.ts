@@ -51,7 +51,7 @@ export class InspectorService extends DxcApiService {
     if(this.needRefresh){
       this._cache = [];
       return this
-        ._process(this.endpoints.inspector.list)
+        ._process(this.endpoints['inspector']['list'])
         .pipe(
           map((vObs)=>{
             console.log(vObs);
@@ -94,7 +94,7 @@ export class InspectorService extends DxcApiService {
   }
 
   getHooksFrom( pInsp:Inspector):Observable<AbstractHook[]>{
-    return this._process(this.endpoints.hook.byInspector,{
+    return this._process(this.endpoints['hook']['byInspector'],{
         uid: pInsp.id
     }).pipe(
         map((vObs)=>{

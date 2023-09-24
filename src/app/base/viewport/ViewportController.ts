@@ -7,7 +7,7 @@ export class ViewportController {
 
   // @ts-ignore
   parent: any;
-  id: string = null;
+  id:Nullable<string> = null;
 
   //tabTpl:
   views: ViewportView[] = [];

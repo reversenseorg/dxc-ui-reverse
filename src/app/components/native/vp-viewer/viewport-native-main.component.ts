@@ -35,7 +35,7 @@ export class ViewportNativeMainComponent implements OnInit, AfterViewInit, IView
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Lib',
-      icon: FILE_ICONS.BIN,
+      icon: FILE_ICONS['BIN'],
       color: 'dxc-text-clear100'
     })
   });

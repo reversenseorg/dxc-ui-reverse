@@ -74,9 +74,9 @@ export class ModalProgressComponent implements OnInit {
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
 
-  @Input() message:string = null;
+  @Input() message:Nullable<string> = null;
 
   @Input() cancel:any;
 

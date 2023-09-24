@@ -1,23 +1,23 @@
 <div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)" class="container-fluid viewport-editor">
   <app-subnavbar [type]="'navbar'" [parent]="this">
     <ng-container main>
-      <app-subnavbar-btn [icon]="gIcons.SEARCH" (click)="search()">Search</app-subnavbar-btn>
-      <app-subnavbar-btn *ngIf="editable || vEditable" [icon]="gIcons.FILE">Save</app-subnavbar-btn>
-      <app-subnavbar-btn *ngIf="patchable" icon]="gIcons.FILE">Patch</app-subnavbar-btn>
-      <app-subnavbar-btn *ngIf="editable" [icon]="gIcons.EDIT">Edit</app-subnavbar-btn>
-      <app-subnavbar-btn *ngIf="vEditable" [icon]="gIcons.EDIT">Virtual Edit</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.COPY">Copy</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.PASTE">Paste</app-subnavbar-btn>
-      <app-subnavbar-btn [icon]="gIcons.HELPER">Help</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['SEARCH']" (click)="search()">Search</app-subnavbar-btn>
+      <app-subnavbar-btn *ngIf="editable || vEditable" [icon]="gIcons['FILE']">Save</app-subnavbar-btn>
+      <app-subnavbar-btn *ngIf="patchable" icon]="gIcons['FILE']">Patch</app-subnavbar-btn>
+      <app-subnavbar-btn *ngIf="editable" [icon]="gIcons['EDIT']">Edit</app-subnavbar-btn>
+      <app-subnavbar-btn *ngIf="vEditable" [icon]="gIcons['EDIT']">Virtual Edit</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['COPY']">Copy</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['PASTE']">Paste</app-subnavbar-btn>
+      <app-subnavbar-btn [icon]="gIcons['HELPER']">Help</app-subnavbar-btn>
     </ng-container>
   </app-subnavbar>
 
   <div *ngIf="searchBar">
     <app-subnavbar [type]="'navbar'" [parent]="this">
       <ng-container main>
-        <app-subnavbar-btn [icon]="gIcons.SEARCH">Search</app-subnavbar-btn>
-        <app-subnavbar-btn [icon]="gIcons.UP">Prev</app-subnavbar-btn>
-        <app-subnavbar-btn [icon]="gIcons.DOWN">Next</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons['SEARCH']">Search</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons['UP']">Prev</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons['DOWN']">Next</app-subnavbar-btn>
       </ng-container>
     </app-subnavbar>
   </div>

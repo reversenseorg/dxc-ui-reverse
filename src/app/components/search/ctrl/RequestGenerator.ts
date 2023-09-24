@@ -74,91 +74,91 @@ export interface SearchScopeList {
 export const BASIC_NODE:SearchNodeList = {
   NAME: {
     label: 'name',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "name",
   },
   RAW: {
     label: 'Advanced request',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "__RAW__",
   },
 
   BYTEARRAY: {
     label: 'Byte Array',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "bytearray",
   },
   SNAME: {
     label: 'Simple name',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "sname",
   },
   ALIAS: {
     label: 'Alias',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "alias",
   },
   FQCN: {
     label: 'FQCN',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "name",
   },
   ARGS: {
     label: 'Arg type',
-    icon: CODE_ICONS.CLASS,
+    icon: CODE_ICONS['CLASS'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "args",
   },
   RET: {
     label: "Return type",
-    icon: CODE_ICONS.CLASS,
+    icon: CODE_ICONS['CLASS'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "ret",
   },
   XREF_TO: {
     label: 'XRef TO',
-    icon: CODE_ICONS.XREF_TO,
+    icon: CODE_ICONS['XREF_TO'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "caller",
     node: null
   },
   XREF_FROM: {
     label: "XRef FROM",
-    icon: CODE_ICONS.XREF_FROM,
+    icon: CODE_ICONS['XREF_FROM'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "calleed",
     node: null
   },
   READ: {
     label: 'Read',
-    icon: CODE_ICONS.XREF_TO,
+    icon: CODE_ICONS['XREF_TO'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "caller",
     node: null
   },
   WRITE: {
     label: "Write",
-    icon: CODE_ICONS.XREF_FROM,
+    icon: CODE_ICONS['XREF_FROM'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "calleed",
     node: null
   },
   NEW: {
     label: "New instance",
-    icon: CODE_ICONS.NEW,
+    icon: CODE_ICONS['NEW'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "new",
     node: null
   },
   STRING_TAGS: {
     label: "Tags",
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_TAGS,
     _f: "has",
     _tags: [
@@ -172,13 +172,13 @@ export const BASIC_NODE:SearchNodeList = {
   },
   TAG: {
     label: "Tag",
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "tags",
   },
   ACCESSFLAGS: {
     label: "Access flags",
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_NODE,
     _f: null,
     node: [
@@ -217,7 +217,7 @@ export const BASIC_NODE:SearchNodeList = {
   },
   STRING: {
     label: 'Strings',
-    icon: SEARCH_ICONS.RAW,
+    icon: SEARCH_ICONS['RAW'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "strings",
     _n: NodeInternalType.STRING,
@@ -238,70 +238,70 @@ export const BASIC_NODE:SearchNodeList = {
   },
   FIELD: {
     label: 'Field',
-    icon: CODE_ICONS.FIELD,
+    icon: CODE_ICONS['FIELD'],
     _f: 'field',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.FIELD
   },
   CLASS: {
     label: 'Class',
-    icon: CODE_ICONS.CLASS,
+    icon: CODE_ICONS['CLASS'],
     _f: 'class',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.CLASS
   },
   METH: {
     label: 'Method',
-    icon: CODE_ICONS.METH,
+    icon: CODE_ICONS['METH'],
     _f: 'method',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.METHOD,
   },
   CLZ_METH: {
     label: 'method',
-    icon: CODE_ICONS.METH,
+    icon: CODE_ICONS['METH'],
     _f: 'methods',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.METHOD
   },
   PKG: {
     label: 'Package',
-    icon: CODE_ICONS.PKG,
+    icon: CODE_ICONS['PKG'],
     _f: 'package',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.PACKAGE
   },
   FUNC: {
     label: 'Function',
-    icon: CODE_ICONS.PKG,
+    icon: CODE_ICONS['PKG'],
     _f: 'func',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.FUNC
   },
   SYSCALL: {
     label: 'Syscall',
-    icon: CODE_ICONS.PKG,
+    icon: CODE_ICONS['PKG'],
     _f: 'syscall',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.SYSCALL
   },
   INSTR: {
     label: 'Instruction',
-    icon: CODE_ICONS.PKG,
+    icon: CODE_ICONS['PKG'],
     _f: 'instr',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.INSTRUCTION
   },
   ACTIVITY: {
     label: 'Activity',
-    icon: GLOBAL_ICONS.ANDROID,
+    icon: GLOBAL_ICONS['ANDROID'],
     _f: 'activity',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.ANDROID_ACTIVITY
   },
   PERMISSION: {
     label: 'Android Permission',
-    icon: GLOBAL_ICONS.ANDROID,
+    icon: GLOBAL_ICONS['ANDROID'],
     _f: 'permission',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.ANDROID_PERM,
@@ -311,28 +311,28 @@ export const BASIC_NODE:SearchNodeList = {
   },
   PROVIDER: {
     label: 'Provider',
-    icon: GLOBAL_ICONS.ANDROID,
+    icon: GLOBAL_ICONS['ANDROID'],
     _f: 'provider',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.ANDROID_PROVIDER
   },
   RECEIVER: {
     label: 'Receiver',
-    icon: GLOBAL_ICONS.ANDROID,
+    icon: GLOBAL_ICONS['ANDROID'],
     _f: 'receiver',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.ANDROID_RECEIVER
   },
   SERVICE: {
     label: 'Service',
-    icon: GLOBAL_ICONS.ANDROID,
+    icon: GLOBAL_ICONS['ANDROID'],
     _f: 'service',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.ANDROID_SERVICE
   },
   FILE: {
     label: 'File',
-    icon: SEARCH_ICONS.FILE,
+    icon: SEARCH_ICONS['FILE'],
     _f: 'file',
     _t: RequestHelperTYPES.T_NODE,
     _n: NodeInternalType.FILE
@@ -359,13 +359,13 @@ BASIC_NODE.CLZ_METH.node  = BASIC_NODE.METH.node = [
   BASIC_NODE.ALIAS,
   {
     label: 'Param type',
-    icon: CODE_ICONS.CLASS,
+    icon: CODE_ICONS['CLASS'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "args",
     node: BASIC_NODE.CLASS.node
   },{
     label: "Return type",
-    icon: CODE_ICONS.CLASS,
+    icon: CODE_ICONS['CLASS'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "ret",
     node: BASIC_NODE.CLASS.node
@@ -379,7 +379,7 @@ BASIC_NODE.CLZ_METH.node  = BASIC_NODE.METH.node = [
 
 BASIC_NODE.CLASS.node.push({
   label: 'Methods',
-  icon: CODE_ICONS.METH,
+  icon: CODE_ICONS['METH'],
   _f: 'methods[]',
   _t: RequestHelperTYPES.T_NODE,
   node: BASIC_NODE.METH.node
@@ -387,7 +387,7 @@ BASIC_NODE.CLASS.node.push({
 
 BASIC_NODE.CLASS.node.push({
   label: 'Implements',
-  icon: CODE_ICONS.CLASS,
+  icon: CODE_ICONS['CLASS'],
   _f: 'implements',
   _t: RequestHelperTYPES.T_NODE,
   node: BASIC_NODE.CLASS.node
@@ -395,7 +395,7 @@ BASIC_NODE.CLASS.node.push({
 
 BASIC_NODE.CLASS.node.push({
   label: 'Extends',
-  icon: CODE_ICONS.CLASS,
+  icon: CODE_ICONS['CLASS'],
   _f: 'extends',
   _t: RequestHelperTYPES.T_NODE,
   node: BASIC_NODE.CLASS.node
@@ -429,7 +429,7 @@ BASIC_NODE.FIELD.node = [
 
 BASIC_NODE.CLASS.node.push({
   label: 'Fields',
-  icon: CODE_ICONS.FIELD,
+  icon: CODE_ICONS['FIELD'],
   _f: 'fields[]',
   _t: RequestHelperTYPES.T_NODE,
   node: BASIC_NODE.FIELD.node
@@ -476,22 +476,22 @@ export const BUILTIN_SEARCH:SearchNode[] = [
 export const BUILTIN_SCOPES = {
   ALL: {
     label: 'All',
-    icon: GLOBAL_ICONS.GLOBE,
+    icon: GLOBAL_ICONS['GLOBE'],
     _f: null
   },
   APP: {
     label: 'App',
-    icon: GLOBAL_ICONS.WINDOW,
+    icon: GLOBAL_ICONS['WINDOW'],
     _f: ['ds','ds']
   },
   PLATFORM: {
     label: 'Android',
-    icon: GLOBAL_ICONS.ANDROID,
+    icon: GLOBAL_ICONS['ANDROID'],
     _f: 'di'
   },
   DYN: {
     label: 'Dynamic',
-    icon: GLOBAL_ICONS.DYN,
+    icon: GLOBAL_ICONS['DYN'],
     _f: 'dd'
   }
 }
@@ -855,7 +855,7 @@ export class RequestHelper
         if(tpl.node==null) tpl.node = [];
         tpl.node.push({
           label: "Tags",
-          icon: SEARCH_ICONS.RAW,
+          icon: SEARCH_ICONS['RAW'],
           _t: RequestHelperTYPES.T_TAGS,
           _f: null,
           node: t

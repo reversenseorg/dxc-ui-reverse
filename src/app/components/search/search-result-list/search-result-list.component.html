@@ -10,9 +10,9 @@
           </ng-container>
         </div>
         <!--<div class="col-lg-1">
-          <dxc-icon *ngIf="e.name=='<clinit>'" [model]="cIcons.STATICB"></dxc-icon>
-          <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons.NEW"></dxc-icon>
-          <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons.NEW"></dxc-icon>
+          <dxc-icon *ngIf="e.name=='<clinit>'" [model]="cIcons['STATICB']"></dxc-icon>
+          <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons['NEW']"></dxc-icon>
+          <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons['NEW']"></dxc-icon>
         </div>-->
         <div class="col-lg-6" (dblclick)="openView(e)">
           <dxc-preview [length]="50" [data]="e.__callSignature__"></dxc-preview>
@@ -20,30 +20,30 @@
         <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;" [ngClass]="{ 'text-success': TAGS.INTERNAL&&TAGS.INTERNAL.match(e), 'text-warning': TAGS.DYNAMIC&&TAGS.DYNAMIC.match(e)}">
           {{ e.enclosingClass }}
           &nbsp;
-          <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons.ANDROID"></dxc-icon>
-          <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons.WINDOW"></dxc-icon>-->
+          <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons['ANDROID']"></dxc-icon>
+          <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons['WINDOW']"></dxc-icon>-->
         </div>
       </ng-container>
 
       <ng-container *ngIf="e.__==NODE_TYPES.CLASS">
         <div class="col-lg-7" (dblclick)="openView(e)">
-          <span class="text-nowrap"><dxc-icon [model]="cIcons.CLASS"></dxc-icon>&nbsp;{{ e.name }}</span>
+          <span class="text-nowrap"><dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;{{ e.name }}</span>
         </div>
         <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;" [ngClass]="{ 'text-success': TAGS.INTERNAL&&TAGS.INTERNAL.match(e), 'text-warning': TAGS.DYNAMIC&&TAGS.DYNAMIC.match(e)}">
           &nbsp;&nbsp;
-          <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons.ANDROID"></dxc-icon>
-          <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons.WINDOW"></dxc-icon>-->
+          <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons['ANDROID']"></dxc-icon>
+          <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons['WINDOW']"></dxc-icon>-->
         </div>
       </ng-container>
 
       <ng-container *ngIf="e.__==NODE_TYPES.FIELD">
         <div class="col-lg-7">
-          <dxc-icon [model]="cIcons.FIELD"></dxc-icon>&nbsp; {{ e.name }}
+          <dxc-icon [model]="cIcons['FIELD']"></dxc-icon>&nbsp; {{ e.name }}
         </div>
         <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;" [ngClass]="{ 'text-success': TAGS.INTERNAL&&TAGS.INTERNAL.match(e), 'text-warning': TAGS.DYNAMIC&&TAGS.DYNAMIC.match(e)}">
           &nbsp;&nbsp;
-          <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons.ANDROID"></dxc-icon>
-          <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons.WINDOW"></dxc-icon>-->
+          <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons['ANDROID']"></dxc-icon>
+          <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons['WINDOW']"></dxc-icon>-->
         </div>
       </ng-container>
 
@@ -63,7 +63,7 @@
 
       <ng-container *ngIf="e.__==NODE_TYPES.ANDROID_ACTIVITY">
         <div class="col-lg-12" (dblclick)="openView(e)">
-          <dxc-icon [model]="tIcons.ACTIVITY"></dxc-icon>&nbsp; {{ e.name }}
+          <dxc-icon [model]="tIcons['ACTIVITY']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
             <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
@@ -75,7 +75,7 @@
 
       <ng-container *ngIf="e.__==NODE_TYPES.ANDROID_RECEIVER">
         <div class="col-lg-12" (dblclick)="openView(e)">
-          <dxc-icon [model]="tIcons.RECEIVER"></dxc-icon>&nbsp; {{ e.name }}
+          <dxc-icon [model]="tIcons['RECEIVER']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
             <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
@@ -88,7 +88,7 @@
 
       <ng-container *ngIf="e.__==NODE_TYPES.ANDROID_SERVICE">
           <div class="col-lg-12" (dblclick)="openView(e)">
-            <dxc-icon [model]="tIcons.RECEIVER"></dxc-icon>&nbsp; {{ e.name }}
+            <dxc-icon [model]="tIcons['RECEIVER']"></dxc-icon>&nbsp; {{ e.name }}
 
             <ng-container *ngFor="let t of e.__tag">
               <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
@@ -100,7 +100,7 @@
 <!--
       <ng-container *ngIf="e._t=='tas'">
         <div class="col-lg-12" (dblclick)="openView(e)">
-          <dxc-icon [model]="tIcons.SERVICE"></dxc-icon>&nbsp; {{ e.name }}
+          <dxc-icon [model]="tIcons['SERVICE']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
             <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
@@ -112,7 +112,7 @@
 -->
       <ng-container *ngIf="e.__==NODE_TYPES.ANDROID_PROVIDER">
         <div class="col-lg-12" (dblclick)="openView(e)">
-          <dxc-icon [model]="tIcons.PROVIDER"></dxc-icon>&nbsp; {{ e.name }}
+          <dxc-icon [model]="tIcons['PROVIDER']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
             <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
@@ -129,8 +129,8 @@
             <span class="badge padge-pill badge-success" *ngIf="e.enabled">ON</span>
             <span class="badge padge-pill badge-danger" *ngIf="!e.enabled">OFF</span>
           </ng-container>
-          <dxc-icon *ngIf="e.name=='<clinit>'" [model]="cIcons.STATICB"></dxc-icon>
-          <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons.NEW"></dxc-icon>
+          <dxc-icon *ngIf="e.name=='<clinit>'" [model]="cIcons['STATICB']"></dxc-icon>
+          <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons['NEW']"></dxc-icon>
         </div>-->
         <div class="col-lg-6" (dblclick)="openView(e,0)">
           <dxc-preview [length]="80" [data]="e.caller"></dxc-preview>
@@ -146,7 +146,7 @@
   <ng-template #noResults>
     <div class="row results">
       <div class="col-lg-12 text-center text-warning">
-        <dxc-icon [model]="gIcons.CROSS"></dxc-icon>&nbsp;No results.
+        <dxc-icon [model]="gIcons['CROSS']"></dxc-icon>&nbsp;No results.
       </div>
     </div>
   </ng-template>
@@ -155,15 +155,15 @@
 
 <!--
 <app-subnavbar-btn [icon]="FILTERS.FIND" (click)="searchIn('*')">&nbsp;Any</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.METHOD" (click)="searchIn('method')">&nbsp;Method</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.CLASS" (click)="searchIn('class')">&nbsp;Class</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.FIELD">&nbsp;Field</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Xref to</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Xref from</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Read</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Write</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.BINARY">&nbsp;Memory address</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.HOOKS">&nbsp;Hooks</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.LIBS">&nbsp;Libraries</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.FILE"> File</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.PACKAGE">Package</app-subnavbar-btn>-->
+<app-subnavbar-btn [icon]="icons['METHOD']" (click)="searchIn('method')">&nbsp;Method</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['CLASS']" (click)="searchIn('class')">&nbsp;Class</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['FIELD']">&nbsp;Field</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Xref to</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Xref from</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Read</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Write</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['BINARY']">&nbsp;Memory address</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['HOOKS']">&nbsp;Hooks</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['LIBS']">&nbsp;Libraries</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['FILE']"> File</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['PACKAGE']">Package</app-subnavbar-btn>-->

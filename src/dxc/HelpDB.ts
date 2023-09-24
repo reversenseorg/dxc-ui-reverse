@@ -19,7 +19,7 @@ export class HelpDB {
 
   static FMT:HelpFormat = HelpFormat.HTML;
 
-  private _root:string = null;
+  private _root:Nullable<string> = null;
 
   constructor( pRoot:string ) {
     this._root = pRoot;

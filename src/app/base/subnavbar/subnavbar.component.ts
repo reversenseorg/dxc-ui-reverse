@@ -122,7 +122,7 @@ export class SubnavbarInputComponent implements AfterViewInit {
 export class SubnavbarButtonComponent implements AfterViewInit {
 
   _styles: string[] = [];
-  _trailIcon: IconModel = GLOBAL_ICONS.TRAIL;
+  _trailIcon: IconModel = GLOBAL_ICONS['TRAIL'];
   @Input() color: string;
   @Input() vert: boolean = false;
   @Input() active: boolean = false;
@@ -171,7 +171,7 @@ export class SubnavbarTabComponent  {
 
   @Input() id: string = '';
   @Input() item: any = null;
-  @Input() label: string = null;
+  @Input() label:Nullable<string> = null;
   @Input() color: string;
   @Input() icon: IconModel = null;
   @Input() closable: boolean = true;
@@ -224,8 +224,8 @@ export class SubnavbarMenuComponent implements OnInit, AfterViewInit{
 
   _style:string[] = [];
   _class:string[] = [];
-  _trailIcon:IconModel = GLOBAL_ICONS.TRAIL;
-  _trailIconNeg:IconModel = GLOBAL_ICONS.TRAIL_NEG;
+  _trailIcon:IconModel = GLOBAL_ICONS['TRAIL'];
+  _trailIconNeg:IconModel = GLOBAL_ICONS['TRAIL_NEG'];
 
   id:string = '';
 
@@ -289,7 +289,7 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
 
   @Input() parent:any = null;
 
-  //id:string = null;
+  //id:Nullable<string> = null;
 
   @Input() type: string = 'navbar';
   @Input() direction: string = 'row';

@@ -48,7 +48,7 @@ export class ModalNewSettingComponent extends AbstractKeyboardNavigable implemen
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
   @Input() message:Message = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;

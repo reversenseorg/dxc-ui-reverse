@@ -18,7 +18,7 @@ export class SearchService extends DxcApiService {
   //onSearchReady:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
   //onProjectOpening:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
 
-  constructor( private appmenuSvc:AppMenuService, protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService, protected override _http:HttpClient) {
     super(
       {
         find: {
@@ -34,7 +34,7 @@ export class SearchService extends DxcApiService {
     console.log("[SEARCH] Request : "+pRequest);
     return this._process(
 
-      this.endpoints.find.raw,{
+      this.endpoints['find']['raw'],{
         search: encodeURIComponent(btoa(encodeURIComponent(pRequest))),
         type: (pResultType!==null ? pResultType : '')
       }

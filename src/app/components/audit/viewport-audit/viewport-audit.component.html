@@ -5,9 +5,9 @@
       <ng-container nav-left>
         <app-subnavbar [type]="'navbar'"  [parent]="this">
           <ng-container main>
-            <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons.LIST" (click)="showDetail('rs')">Result</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons.INFO" (click)="showDetail('in')">Info</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='rl'"  [icon]="gIcons.LIST" (click)="showDetail('rl')">Rules</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Result</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['INFO']" (click)="showDetail('in')">Info</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='rl'"  [icon]="gIcons['LIST']" (click)="showDetail('rl')">Rules</app-subnavbar-btn>
           </ng-container>
         </app-subnavbar>
       </ng-container>
@@ -21,7 +21,7 @@
               <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat">
                 <div class="col-10 pl-2">{{ i.name }}</div>
                 <div class="col-2 text-center">
-                  <dxc-icon [model]="gIcons.SPINNER" [color1]="'#fff'"></dxc-icon>
+                  <dxc-icon [model]="gIcons['SPINNER']" [color1]="'#fff'"></dxc-icon>
                 </div>
               </div>
 
@@ -41,7 +41,7 @@
                 <ng-container  *ngFor="let y of f.assessments">
                   <div class="row no-gutters  dxc-row-table dxc-rules-ctrl2 m-0 p-0" (click)="showControlAssessm(y)">
                     <div class="col-1 text-center" >
-                      <dxc-icon [model]="gIcons.INFO"></dxc-icon>
+                      <dxc-icon [model]="gIcons['INFO']"></dxc-icon>
                     </div>
                     <div class="col-9 pl-2" >{{ y.name }}</div>
                     <div class="col-2 text-center" [ngStyle]="{'background-color': getScoreBg(y), 'color': getScoreColor(y)}">{{ y.rules.length }}</div>
@@ -51,7 +51,7 @@
                 <!--
                 <div class="row no-gutters dxc-text-std dxc-row-table">
                   <div class="col-1">
-                    <dxc-icon [model]="gIcons.INFO"></dxc-icon>
+                    <dxc-icon [model]="gIcons['INFO']"></dxc-icon>
                   </div>
                   <div class="col-11 p-0">
                     <ng-container  *ngFor="let y of f.assessments">
@@ -155,7 +155,7 @@
                     <div class="row no-gutters dxc-text-100 dxc-rule-req" style="padding:0"  (click)="dryRunRule(selectedData,r)">
                       <div class="col-11 dxc-text-75">{{ r.__stringified }}</div>
                       <div class="col-1 text-center" >
-                        <dxc-icon [model]="gIcons.PLAY"></dxc-icon>
+                        <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
                       </div>
                     </div>
                   </ng-container>

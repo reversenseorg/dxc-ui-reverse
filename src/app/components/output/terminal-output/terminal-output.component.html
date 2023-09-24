@@ -6,13 +6,13 @@
 
         <ng-container *ngIf="m.isNotInfo(); else infoTpl">
           <div class="col-lg-10 col-msg text-danger" *ngIf="m.isError()">
-            <dxc-icon [model]="gIcons.ERROR"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
+            <dxc-icon [model]="gIcons['ERROR']"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
           </div>
           <div class="col-lg-10 col-msg text-warning" *ngIf="m.isWarning()">
-            <dxc-icon [model]="gIcons.WARNING"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
+            <dxc-icon [model]="gIcons['WARNING']"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
           </div>
           <div class="col-lg-10 col-msg text-success" *ngIf="m.isSuccess()">
-            <dxc-icon [model]="gIcons.SUCCESS"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
+            <dxc-icon [model]="gIcons['SUCCESS']"></dxc-icon> &nbsp;&nbsp;<span>{{ m.msg }}</span>
           </div>
         </ng-container>
 

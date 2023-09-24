@@ -50,7 +50,7 @@
         <ng-container *ngFor="let proj of projects; let index = index">
           <div class="row no-gutters" [ngClass]="focusEl==index?'focus':''" (click)="selectProject(proj, index)">
             <div class="col-lg-10 offset-1">{{ proj.uid }}</div>
-            <div class="col-lg-1"><dxc-icon *ngIf="focusEl==index" [model]="gIcons.TRASH" (click)="removeProject(proj)"></dxc-icon></div>
+            <div class="col-lg-1"><dxc-icon *ngIf="focusEl==index" [model]="gIcons['TRASH']" (click)="removeProject(proj)"></dxc-icon></div>
           </div>
         </ng-container>
       </div>

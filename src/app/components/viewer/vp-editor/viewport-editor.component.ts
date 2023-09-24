@@ -52,7 +52,7 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'File',
-      icon: GLOBAL_ICONS.FILE,
+      icon: GLOBAL_ICONS['FILE'],
       color: 'dxc-text-clear100'
     })
   });
@@ -71,7 +71,7 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
 
   configure( pData:any):void {
     this.data = pData;
-    this.view.tab.icon = GLOBAL_ICONS.FILE;
+    this.view.tab.icon = GLOBAL_ICONS['FILE'];
 
     this.view.tab.label = (pData.n!=null ? pData.n : pData.name);
     this.view.tab.color = 'dxc-text-clear100';

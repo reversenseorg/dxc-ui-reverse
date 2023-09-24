@@ -51,8 +51,8 @@ export class DexcaliburServerProcess extends IpcDispatcher {
       __log( JSON.stringify(env) );
 
       env.ELECTRON_RUN_AS_NODE = 1;
-      env.DISPLAY = process.env.DISPLAY;
-      env.PATH = process.env.PATH;
+      env.DISPLAY = process.env['DISPLAY'];
+      env.PATH = process.env['PATH'];
 
       // Fork main process to simulate spawn (ELECTRON_RUN_AS_NODE)
       let ferr:number=-1, fout:number=-1;

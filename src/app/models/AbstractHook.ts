@@ -23,7 +23,7 @@ export const UID_POS_MAPPING = {
  */
 export class AbstractHook {
 
-    public name:string;
+    public name:Nullable<string>;
 
     public __:NodeInternalType;
 

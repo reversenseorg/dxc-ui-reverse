@@ -322,13 +322,18 @@ export default class ModelClass extends Savable
      * @param localReference
      * @param parentField
      */
-    addInheritedField(localReference:string|ModelFieldReference, parentField:ModelField):ModelField{
+    addInheritedField(localReference:string|ModelFieldReference, parentField:ModelField):Nullable<ModelField>{
 
-        let n:string=(localReference instanceof ModelFieldReference) ? localReference.getName() : localReference;
+        let n:Nullable<string>=(localReference instanceof ModelFieldReference) ? localReference.getName() : localReference;
 
-        this.fields[n] = parentField;
-        this.inherit[n] = parentField;
-        return this.fields[n];
+        if(n!=null){
+            this.fields[n] = parentField;
+            this.inherit[n] = parentField;
+            return this.fields[n];
+        }else{
+            return null;
+        }
+
     }
 
 

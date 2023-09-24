@@ -40,7 +40,7 @@
               <ng-container *ngFor="let insp of inspectors">
                 <li class="dxc-text-75 exp-item" >
                   <span (contextmenu)="displayCtxMenu($event,'inspector',insp)">
-                    <dxc-icon [model]="insp.running ? hIcons.UP : hIcons.DOWN"></dxc-icon>
+                    <dxc-icon [model]="insp.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
                     <span>{{ insp.name }}</span>
                     <span *ngIf="insp.hookset && insp.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
                     <span *ngIf="insp.listener.length>0" class="text-info">&nbsp;[rules]</span>
@@ -55,7 +55,7 @@
               <ng-template #expCodeItem let-itemObj="item" >
 
                 <span *ngIf="NODE_TYPES.INSPECTOR==itemObj.__" (contextmenu)="displayExtMenu($event,'inspector',itemObj)">
-                  <dxc-icon [model]="itemObj.running ? hIcons.UP : hIcons.DOWN"></dxc-icon>
+                  <dxc-icon [model]="itemObj.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
                   <span>{{ itemObj.name }}</span>
                   <span *ngIf="itemObj.hookset && itemObj.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
                   <span *ngIf="itemObj.listener.length>0" class="text-info">&nbsp;[rules]</span>

@@ -126,33 +126,33 @@
 
 
 <app-context-menu [name]="NODE_TYPES.ANDROID_ACTIVITY">
-  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show'" [icon]="gIcons['FIND']" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [separator]="true" [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Send intent'" [icon]="gIcons['FIND']" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 
 
 <app-context-menu [name]="NODE_TYPES.ANDROID_SERVICE">
-  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show'" [icon]="gIcons['FIND']" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Send intent'" [icon]="gIcons['FIND']" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 
 
 <app-context-menu [name]="NODE_TYPES.ANDROID_PROVIDER">
-  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show'" [icon]="gIcons['FIND']" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Send intent'" [icon]="gIcons['FIND']" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 
 
 <app-context-menu [name]="NODE_TYPES.ANDROID_RECEIVER">
-  <app-context-item [label]="'Show'" [icon]="gIcons.FIND" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Show'" [icon]="gIcons['FIND']" (itemclick)="controller.showDetails(ctxMenuState.subject)"></app-context-item>
   <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Send intent'" [icon]="gIcons.FIND" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Send intent'" [icon]="gIcons['FIND']" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <!--
@@ -171,7 +171,7 @@
       </div>
       <input type="text" class="form-control" name="alias" #renameInput>
       <div class="input-group-append">
-        <dxc-icon *ngIf="controller.error!=null" class="input-group-text" [model]="controller.gIcons.WARNING"></dxc-icon>
+        <dxc-icon *ngIf="controller.error!=null" class="input-group-text" [model]="controller.gIcons['WARNING']"></dxc-icon>
       </div>
   </div>
   <ng-container footer>

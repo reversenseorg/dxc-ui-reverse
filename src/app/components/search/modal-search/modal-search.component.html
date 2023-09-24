@@ -16,7 +16,7 @@
               </ng-container>
             </ng-container>
           </app-subnavbar-menu>
-          <!--<dxc-icon [model]="gIcons.TRAIL"></dxc-icon>-->
+          <!--<dxc-icon [model]="gIcons['TRAIL']"></dxc-icon>-->
         </ng-container>
 
         <!-- Root filter -->
@@ -48,9 +48,9 @@
 
         <!-- search -->
         <app-subnavbar-input [placeholder]="'Pattern...'" [width]="'400px'" (enter)="doSearch($event,'in')"></app-subnavbar-input>
-        <app-subnavbar-btn [icon]="gIcons.FIND" (click)="doSearch($event,'btn')">&nbsp;</app-subnavbar-btn>
-        <app-subnavbar-btn [icon]="gIcons.BOOKMARK" (click)="markRequest()">&nbsp;</app-subnavbar-btn>
-        <app-subnavbar-btn [icon]="gIcons.MOVE_TO_TERM" (click)="openInTab()">&nbsp;</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons['FIND']" (click)="doSearch($event,'btn')">&nbsp;</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons['BOOKMARK']" (click)="markRequest()">&nbsp;</app-subnavbar-btn>
+        <app-subnavbar-btn [icon]="gIcons['MOVE_TO_TERM']" (click)="openInTab()">&nbsp;</app-subnavbar-btn>
 
       </ng-container>
     </app-subnavbar>
@@ -68,15 +68,15 @@
 
 <!--
 <app-subnavbar-btn [icon]="FILTERS.FIND" (click)="searchIn('*')">&nbsp;Any</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.METHOD" (click)="searchIn('method')">&nbsp;Method</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.CLASS" (click)="searchIn('class')">&nbsp;Class</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.FIELD">&nbsp;Field</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Xref to</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Xref from</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Read</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.XREF">&nbsp;Write</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.BINARY">&nbsp;Memory address</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.HOOKS">&nbsp;Hooks</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.LIBS">&nbsp;Libraries</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="gIcons.FILE"> File</app-subnavbar-btn>
-<app-subnavbar-btn [icon]="icons.PACKAGE">Package</app-subnavbar-btn>-->
+<app-subnavbar-btn [icon]="icons['METHOD']" (click)="searchIn('method')">&nbsp;Method</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['CLASS']" (click)="searchIn('class')">&nbsp;Class</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['FIELD']">&nbsp;Field</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Xref to</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Xref from</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Read</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['XREF']">&nbsp;Write</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['BINARY']">&nbsp;Memory address</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['HOOKS']">&nbsp;Hooks</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['LIBS']">&nbsp;Libraries</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="gIcons['FILE']"> File</app-subnavbar-btn>
+<app-subnavbar-btn [icon]="icons['PACKAGE']">Package</app-subnavbar-btn>-->

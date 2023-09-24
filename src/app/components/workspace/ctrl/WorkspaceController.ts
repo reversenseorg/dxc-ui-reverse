@@ -19,7 +19,7 @@ export class WorkspaceController implements IController {
    */
   name:string = 'ws';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: WorkspaceService = null;

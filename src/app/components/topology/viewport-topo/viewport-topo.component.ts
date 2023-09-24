@@ -37,7 +37,7 @@ export class ViewportTopoComponent implements OnInit, AfterViewInit, IViewportCo
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Topology',
-      icon: GLOBAL_ICONS.GLOBE,
+      icon: GLOBAL_ICONS['GLOBE'],
       color: 'dxc-text-clear100'
     })
   });

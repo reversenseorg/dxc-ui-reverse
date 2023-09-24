@@ -10,7 +10,7 @@ import {ItemEvent} from "../expandable-list/expandable-item.component";
 export class ExplorerNavbarComponent implements OnInit, AfterViewInit {
 
   @Input() explorer:SubExplorerComponent<any>;
-  @Input() id:string = null;
+  @Input() id:Nullable<string> = null;
 
   @Output() menuItemClick: EventEmitter<any> = new EventEmitter<any>();
 

@@ -79,7 +79,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   view: ViewportView = new ViewportView({
     tab: new ViewportTab({
       label: 'Inspector',
-      icon: GLOBAL_ICONS.HOOKS,
+      icon: GLOBAL_ICONS['HOOKS'],
       color: 'dxc-text-clear100'
     })
   });

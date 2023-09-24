@@ -3,9 +3,11 @@ import {ComponentFactoryResolver} from "@angular/core";
 import {ViewportComponent} from "../viewport/viewport.component";
 import {AppComponent} from "../../app.component";
 import {StageComponent} from "../../components/stage/stage.component";
+import {Nullable} from "../Nullable";
 
 
 export interface ViewCmpMap {
+  main?:any,
   [name :string] :any;
 }
 
@@ -23,13 +25,13 @@ export interface IController {
    * Controller unique name
    * @type {string}
    */
-  name:string;
+  name:Nullable<string>;
 
-  id: string;
-  app: StageComponent; /* AppComponent */
+  id: Nullable<string>;
+  app: Nullable<StageComponent>; /* AppComponent */
 
   service: any;
-  componentFactoryResolver: ComponentFactoryResolver;
+  componentFactoryResolver: Nullable<ComponentFactoryResolver>;
 
   explorerCmp: any;
   viewCmp: ViewCmpMap;

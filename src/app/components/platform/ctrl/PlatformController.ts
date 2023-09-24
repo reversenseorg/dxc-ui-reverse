@@ -15,7 +15,7 @@ export class PlatformController implements IController {
    */
   name:string = 'platform';
 
-  id:string = null;
+  id:Nullable<string> = null;
   app: StageComponent = null;
 
   service: PlatformService = null;

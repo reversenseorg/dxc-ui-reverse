@@ -50,7 +50,7 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
    * @field
    * @type {string}
    */
-  @Input() title:string = null;
+  @Input() title:Nullable<string> = null;
   @Input() message:Message = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
@@ -59,7 +59,7 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
   icons:any = HOOK_ICONS;
   item: any = null;
   hook:any = null;
-  observed: string = null;
+  observed:Nullable<string> = null;
   currentKP:KeyPoint = null;
   selectedKP:KeyPoint = null;
   kpList:KeyPoint[] = [];

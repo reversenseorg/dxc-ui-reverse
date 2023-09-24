@@ -161,7 +161,7 @@ export class ProjectService extends DxcApiService {
         label: 'Dexcalibur',
         submenu: [{
           label: 'Check for updates',
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item: 'update', win: pBrowserWindow });
           }
         },{
@@ -170,7 +170,7 @@ export class ProjectService extends DxcApiService {
           type: 'separator'
         },{
           label: 'Preferences',
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item: 'gsettings', win: pBrowserWindow });
           }
         },{
@@ -200,7 +200,7 @@ export class ProjectService extends DxcApiService {
         submenu: [{
           label: 'Login',
           //accelerator: 'CommandOrControl+Shift+N',
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'login', win:pBrowserWindow });
           }
         },{
@@ -209,49 +209,49 @@ export class ProjectService extends DxcApiService {
             {
               label: 'Project',
               accelerator: 'CommandOrControl+Shift+N',
-              click: (pMenuItem, pBrowserWindow, pEvent) => {
+              click: (pMenuItem:any, pBrowserWindow:any ) => {
                 this.onMenuClick.next({ item:'new-project', win:pBrowserWindow });
               }
             },{
               type: 'separator'
             },{
               label: 'Custom hook',
-              click: (pMenuItem, pBrowserWindow, pEvent) => {
+              click: (pMenuItem:any, pBrowserWindow:any ) => {
                 this.onMenuClick.next({ item:'new-custom-hook', win:pBrowserWindow });
               }
             },{
               label: 'Hook scratchpad',
-              click: (pMenuItem, pBrowserWindow, pEvent) => {
+              click: (pMenuItem:any, pBrowserWindow:any ) => {
                 this.onMenuClick.next({ item:'new-scratch-hook', win:pBrowserWindow });
               }
             },{
               label: 'Script',
-              click: (pMenuItem, pBrowserWindow, pEvent) => {
+              click: (pMenuItem:any, pBrowserWindow:any ) => {
                 this.onMenuClick.next({ item:'new-script', win:pBrowserWindow });
               }
             }]
         },{
           label: 'Show active projects',
           enabled:true, //(this.hasMultipleActiveProject()),
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'active', win:pBrowserWindow });
           }
         },{
           label: 'Open project ...',
           accelerator: 'CommandOrControl+Shift+O',
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'open', win:pBrowserWindow });
           }
         },{
           label: 'Close Project',
           enabled:true, //(this.isProjectIsOpen()),
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'close-project', win:pBrowserWindow });
           }
         },{
           label: 'Save',
           enabled:true, //(this.isProjectIsOpen()),
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'save', win:pBrowserWindow });
           }
         },{
@@ -259,12 +259,12 @@ export class ProjectService extends DxcApiService {
         },{
           label: 'Project settings',
           enabled:true, //(this.isProjectIsOpen()),
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'settings', win:pBrowserWindow });
           }
         },{
           label: 'Update agent libraries',
-          click: (pMenuItem, pBrowserWindow, pEvent) => {
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'hook-update-libs', win:pBrowserWindow });
           }
         }]
@@ -305,7 +305,7 @@ export class ProjectService extends DxcApiService {
 
   listSupportedAbi():Observable<any> {
     return this._process(
-      this.endpoints.settings.list_abi
+      this.endpoints['settings']['list_abi']
     ).pipe(
       map((pEl:any)=>{
         if(pEl.success){
@@ -325,7 +325,7 @@ export class ProjectService extends DxcApiService {
    */
   listProjects():Observable<DexcaliburProject[]>{
     return this._process(
-      this.endpoints.workspace.list
+      this.endpoints['workspace']['list']
     ).pipe(
       map((pEl:any)=>{
         if(pEl.success){
@@ -353,7 +353,7 @@ export class ProjectService extends DxcApiService {
 
     this.outputSvc.print( new OutputMessage({ src:"Project Manager", msg:"Removing project ["+pProject.uid+"] ..." }));
     return this._process(
-      this.endpoints.workspace.delete,
+      this.endpoints['workspace']['delete'],
       { 'uid': pProject.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -403,7 +403,7 @@ export class ProjectService extends DxcApiService {
 
 
     return this._process(
-      this.endpoints.workspace.open,
+      this.endpoints['workspace']['open'],
       { 'uid': pProject.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -448,7 +448,7 @@ export class ProjectService extends DxcApiService {
 
     this.outputSvc.print( new OutputMessage({ src:"Project Manager", msg:"Closing project ["+pProject.package+"] ..." }));
     return this._process(
-      this.endpoints.project.close,
+      this.endpoints['project']['close'],
       { 'uid': pProject.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -536,7 +536,7 @@ export class ProjectService extends DxcApiService {
 
     this.startOpening(pOptions.name, true);
     return this._process(
-      this.endpoints.workspace.new, pOptions
+      this.endpoints['workspace']['new'], pOptions
     ).pipe(
       map((pEl:any)=>{
 
@@ -564,7 +564,7 @@ export class ProjectService extends DxcApiService {
 
   getProjectInfo( pProject:DexcaliburProject) :Observable<any> {
     return this._process(
-      this.endpoints.project.info,
+      this.endpoints['project']['info'],
       { 'uid': pProject.uid }
     ).pipe(
       map((pEl:any)=>{
@@ -585,7 +585,7 @@ export class ProjectService extends DxcApiService {
    */
   isAvailable( pPpt:string, pValue:string):Observable<boolean> {
     return this._process(
-      this.endpoints.workspace.test,{
+      this.endpoints['workspace']['test'],{
         field: pPpt,
         value: pValue
       }).pipe(
@@ -601,7 +601,7 @@ export class ProjectService extends DxcApiService {
    */
   getActiveProject():Observable<DexcaliburProject[]> {
     return this._process(
-      this.endpoints.project.active
+      this.endpoints['project']['active']
     ).pipe(
       map((pEl:any)=>{
         console.log('Project service > getActiveProject > ',pEl);
@@ -630,7 +630,7 @@ export class ProjectService extends DxcApiService {
 
   selectActiveProject(pProject:DexcaliburProject): Observable<any> {
     return this._process(
-      this.endpoints.project.set_active,
+      this.endpoints['project']['set_active'],
       {
         uid: pProject.uid
       }
@@ -701,7 +701,7 @@ export class ProjectService extends DxcApiService {
 
   validate( pValue:string, pType:string):Observable<any> {
     return this._process(
-      this.endpoints.validate.post,
+      this.endpoints['validate']['post'],
       {
           field: pType,
           val: pValue
@@ -730,7 +730,7 @@ export class ProjectService extends DxcApiService {
     pSettings.project = pProject.uid;
 
     return this._process(
-      this.endpoints.project.edit_settings,
+      this.endpoints['project']['edit_settings'],
       pSettings
     ).pipe(
       map(pRes => {
@@ -759,7 +759,7 @@ export class ProjectService extends DxcApiService {
 
   setDefaultDevice(pDevice: Device, pProject:DexcaliburProject=null) {
     return this._process(
-      this.endpoints.project.set_device,
+      this.endpoints['project']['set_device'],
       {
         device: pDevice.uid,
         project: (pProject!=null ? pProject.uid : "")

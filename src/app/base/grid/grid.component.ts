@@ -26,7 +26,7 @@ export class GridCellComponent implements OnInit {
   @Input() editable: boolean = false;
   @Input() opts: any = null;
   @Input() data: any = null;;
-  @Input() name: string = null;
+  @Input() name:Nullable<string> = null;
   @Input() rowid: number = null;
   @Input() cellid: number = null;
 
@@ -131,7 +131,7 @@ export class GridRowComponent implements OnInit {
 
   @Input() colsize: number[] = null;
 
-  @Input() name: string = null;
+  @Input() name:Nullable<string> = null;
   @Input() data: any = null;
 
   @Input() rowid: number;
@@ -185,7 +185,7 @@ export class GridRowComponent implements OnInit {
 export class GridComponent implements OnInit {
 
   @Input() size: number = -1;
-  @Input() name: string = null;
+  @Input() name:Nullable<string> = null;
   @Input() data: any = null;
   @Input() header: boolean = false;
 

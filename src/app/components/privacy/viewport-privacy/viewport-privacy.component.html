@@ -6,7 +6,7 @@
         <ng-container nav-top>
           <app-subnavbar>
             <ng-container main>
-              <app-subnavbar-btn (click)="startScan()"><dxc-icon [model]="gIcons.PLAY"></dxc-icon></app-subnavbar-btn>
+              <app-subnavbar-btn (click)="startScan()"><dxc-icon [model]="gIcons['PLAY']"></dxc-icon></app-subnavbar-btn>
               <app-subnavbar-btn [active]="activeTL==TOPIC.WPTHR"  (click)="showInfo(TOPIC.WPTHR)">Threats</app-subnavbar-btn>
               <app-subnavbar-btn [active]="activeTL==TOPIC.WPPII"  (click)="showInfo(TOPIC.WPPII)">PII</app-subnavbar-btn>
             </ng-container>

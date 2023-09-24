@@ -32,8 +32,8 @@
                 <ng-container *ngFor="let dev of devices; let i = index;">
                   <div class="row device" (click)="selectDevice(dev)">
                     <div class="col-2">
-                      <dxc-icon *ngIf="dev.bridge.shortname.indexOf('usb')>-1" [model]="icons.USB"></dxc-icon>
-                      <dxc-icon *ngIf="dev.bridge.shortname.indexOf('usb')==-1" [model]="icons.WIFI"></dxc-icon>
+                      <dxc-icon *ngIf="dev.bridge.shortname.indexOf('usb')>-1" [model]="icons['USB']"></dxc-icon>
+                      <dxc-icon *ngIf="dev.bridge.shortname.indexOf('usb')==-1" [model]="icons['WIFI']"></dxc-icon>
                     </div>
                     <div class="col-10 label">
                       <h4>{{ dev.uid }}</h4>
@@ -65,8 +65,8 @@
     </div>
 
     <!--<div class="input-group-append">
-      <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="gIcons.CHECK" (click)="submit()"></dxc-icon>
-      <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="gIcons.WARNING"></dxc-icon>
+      <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="gIcons['CHECK']" (click)="submit()"></dxc-icon>
+      <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="gIcons['WARNING']"></dxc-icon>
     </div>-->
 
 

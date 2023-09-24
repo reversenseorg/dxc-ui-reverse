@@ -51,7 +51,7 @@ export class TagService extends DxcApiService {
   }
 
   listCategories():Observable<TagCategory[]> {
-    return this._process( this.endpoints.category.list, {})
+    return this._process( this.endpoints['category']['list'], {})
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Tags"}));
@@ -78,7 +78,7 @@ export class TagService extends DxcApiService {
     if(!pRefresh && this.cache.tags.length>0){
       return from([ this.cache.tags ]);
     }else{
-      return this._process( this.endpoints.tag.list, {})
+      return this._process( this.endpoints['tag']['list'], {})
         .pipe(map( pRes => {
           if(!pRes.success){
             this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Tags"}));
