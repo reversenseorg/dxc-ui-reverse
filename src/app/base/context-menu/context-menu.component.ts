@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import {MenuView} from "../../cmp/MenuView";
 import {ContextItemComponent} from "./context-item.component";
+import {Nullable} from "../Nullable";
 
 
 export interface ContextMenuList {
@@ -42,7 +43,7 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
 
   @Input() width: number = 160;
 
-  @Input() menu: MenuView = null;
+  @Input() menu: Nullable<MenuView> = null;
   @ViewChild('menu', {read: ElementRef}) menuEl:ElementRef;
   @ContentChildren(ContextItemComponent) itemList:QueryList<ContextItemComponent>;
 
@@ -68,7 +69,7 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
     let children:ContextItemComponent[] = this.itemList.toArray();
 
 
-    children.map( vItem => {
+    children.map( (vItem:ContextItemComponent) => {
     //  console.log(vItem, this);
       vItem.target = this.subject;
       vItem.parent = this;

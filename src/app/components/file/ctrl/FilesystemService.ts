@@ -8,6 +8,7 @@ import ModelFile from "../../../models/ModelFile";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {ContextMenuEvent} from "../../code/ctrl/code-controller.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 /**
@@ -45,7 +46,7 @@ export class FilesystemService extends DxcApiService{
   private _createFileList(pData:any):ModelFile[] {
     const list:ModelFile[] = [];
 
-    pData.map( (vData)=>{
+    pData.map( (vData:any)=>{
       list.push(new ModelFile(vData));
     });
 
@@ -67,7 +68,7 @@ export class FilesystemService extends DxcApiService{
     this.displayCtxMenu$.next({event: pEvent, type: pType, obj: pObject});
   }
 
-  listDevicePath( pOptions = null):Observable<any[]> {
+  listDevicePath( pOptions:any = {}):Observable<any[]> {
     return this._process(
       (pOptions.app!=null ? this.endpoints['list']['devData'] : this.endpoints['list']['dev']),
       pOptions
@@ -77,7 +78,7 @@ export class FilesystemService extends DxcApiService{
           return this._createFileList(pObs.data);
         }else{
           this.outputSvc.print( OutputMessage.newError({msg:pObs.msg}))
-          return null;
+          return [];
         }
       })
     );
@@ -101,7 +102,7 @@ export class FilesystemService extends DxcApiService{
   }
   */
 
-  listWorkspace( pPath:string = null, pOptions = null):Observable<any[]> {
+  listWorkspace( pPath:string = "", pOptions = null):Observable<any[]> {
     return this._process(
       this.endpoints['list']['ws'],
       {
@@ -119,7 +120,7 @@ export class FilesystemService extends DxcApiService{
     );
   }
 
-  listPackageContent( pPath:string = null, pOptions = null):Observable<any[]> {
+  listPackageContent( pPath:string = "", pOptions = null):Observable<any[]> {
     return this._process(
       this.endpoints['list']['pkg'],
       {
@@ -138,7 +139,7 @@ export class FilesystemService extends DxcApiService{
   }
 
 
-  viewNativeFileContent( pRpath:string, pScope:string):Observable<ModelFile> {
+  viewNativeFileContent( pRpath:string, pScope:string):Observable<Nullable<ModelFile>> {
     return this._process(
       this.endpoints['view']['file'],
       {
@@ -158,7 +159,7 @@ export class FilesystemService extends DxcApiService{
     );
   }
 
-  viewFileContent( pUID:string, pOptions = null):Observable<ModelFile> {
+  viewFileContent( pUID:string, pOptions = null):Observable<Nullable<ModelFile>> {
     return this._process(
       this.endpoints['view']['file'],
       {

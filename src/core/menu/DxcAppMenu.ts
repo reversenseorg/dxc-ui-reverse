@@ -1,5 +1,5 @@
 
-import {Menu} from 'electron';
+
 
 export class DxcAppMenu {
 
@@ -8,7 +8,7 @@ export class DxcAppMenu {
 
   }
 
-  buildMenu():Menu {
+  buildMenu():any {
     return null;
   }
 }

@@ -19,6 +19,7 @@ import Hook from "../../../models/Hook";
 import * as ace from "ace-builds";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
 import {AbstractHook} from "../../../models/AbstractHook";
+import {Nullable} from "../../../base/Nullable";
 
 
 @Component({
@@ -39,7 +40,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
 
 
-  activeLeft:string =  null;
+  activeLeft:string =  "";
   activeWidth: number = 70;
 
 
@@ -114,9 +115,11 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('data')){
-      this.codeSvc.getCompleteClass((changes as any).data.currentValue.name).subscribe( (pClass:ModelClass)=>{
-        this.data = pClass;
-        this.showContents();
+      this.codeSvc.getCompleteClass((changes as any).data.currentValue.name).subscribe( (pClass:Nullable<ModelClass>)=>{
+        if(pClass!=null){
+          this.data = pClass;
+          this.showContents();
+        }
       })
     }
   }
@@ -178,19 +181,15 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
     //this.activeWidth = pWidth;
   }
 
-  switchProbe(pMeth: ModelMethod, pStatus) {
-    //this.hookSvc.enableHook(pMeth.hook)
-  }
-
 
   setProbe(pMeth: ModelMethod) {
     if(pMeth.probing){
       // ..
-      this.hookSvc.probe(pMeth).subscribe( (pHook:AbstractHook)=>{
+      this.hookSvc.probe(pMeth).subscribe( (pHook:Nullable<AbstractHook>)=>{
         pMeth.probing = true;
       });
     }else{
-      this.hookSvc.probe(pMeth).subscribe( (pHook:AbstractHook)=>{
+      this.hookSvc.probe(pMeth).subscribe( (pHook:Nullable<AbstractHook>)=>{
         pMeth.probing = true;
       });
     }

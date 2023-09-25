@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExplorerFileComponent } from './explorer-file.component';
+import { ExplorerAuditComponent } from './explorer-audit.component';
 
-describe('ExplorerFileComponent', () => {
-  let component: ExplorerFileComponent;
-  let fixture: ComponentFixture<ExplorerFileComponent>;
+describe('ExplorerAuditComponent', () => {
+  let component: ExplorerAuditComponent;
+  let fixture: ComponentFixture<ExplorerAuditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExplorerFileComponent ]
+      declarations: [ ExplorerAuditComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ExplorerFileComponent);
+    fixture = TestBed.createComponent(ExplorerAuditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -17,6 +17,8 @@ import {SubnavbarComponent} from "../../../base/subnavbar/subnavbar.component";
 import {CODE_ICONS} from "../../code/icons";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {TagService} from "../../tag/ctrl/tag.service";
+import {UIException} from "../../../base/error/UIException";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface SelectedMessage {
@@ -66,7 +68,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   //NODE_TYPE:any = NODE_TYPE;
 
   _selected:SelectedMessage = {};
-  _current:HookSession = null;
+  _current:Nullable<HookSession> = null;
   _current_selected:number = -1;
   _sessions:HookSession[] = [];
   activeTerm: any = null;
@@ -95,7 +97,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
         this._current.active = false;
 
       this._current = pSession;
-      this._current.active = true;
+      (this._current as HookSession).active = true;
 
       this.parent.selectTab(this);
     });
@@ -150,8 +152,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
 
       // remove sessions
       let sess:any = [];
-      this._sessions.map( x => {
-        if(x.uid != pItem.uid) sess.push(x);
+      this._sessions.map((x:any) => {       if(x.uid != pItem.uid) sess.push(x);
       })
       this._sessions = sess;
 
@@ -179,20 +180,29 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
    * @param {HookSession} pSession
    */
   switchSession(pSession: HookSession) {
-    this._current.active = false;
-    pSession.active = true;
-    this._current = pSession;
-    console.log("[HOOK][TERMINAL] Switch to session : ",pSession);
-    if(this._selected.hasOwnProperty(pSession.getUID())){
-      this._current_selected = this._selected[pSession.getUID()];
-    }else{
-      this._current_selected = -1;
+
+    if(this._current!=null){
+      this._current.active = false;
+      pSession.active = true;
+      this._current = pSession;
+      console.log("[HOOK][TERMINAL] Switch to session : ",pSession);
+      if(this._selected.hasOwnProperty(pSession.getUID())){
+        this._current_selected = this._selected[pSession.getUID()];
+      }else{
+        this._current_selected = -1;
+      }
     }
+
+
   }
 
   newSession() {
 
     console.log(this.prjSvc.getSelectedProject());
+
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
 
     // TODO replace default Options by Hook settings
     let session:HookSession = this.hookSvc.startWebsocketHookSession(
@@ -205,11 +215,17 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   }
 
   hookMsgFocus(index: number) {
-    this._selected[this._current.getUID()] = index;
-    this._current_selected = index;
+    if(this._current!=null){
+      this._selected[this._current.getUID()] = index;
+      this._current_selected = index;
+    }
   }
 
   open(d: any, pNodeType:number) {
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
     console.log("[HOOK MESSAGE] open ",d,pNodeType);
       switch(pNodeType){
         case NodeInternalType.METHOD:

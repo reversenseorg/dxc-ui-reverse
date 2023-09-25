@@ -4,7 +4,6 @@ import * as _os_ from "os";
 
 import {DEFAULT_DXC_CONFIG_FILE, DEFAULT_DXC_CONN_FILE, DEFAULT_DXC_FOLDER} from "./const";
 
-import {ConnectionManager} from "./ConnectionManager";
 
 /**
  * To load configuration files required by clientto configure it and
@@ -62,7 +61,7 @@ export class ConfigurationManager {
    * @return ConnectionManager
    * @method
    */
-  getConnectionMgr():ConnectionManager {
+  /*getConnectionMgr():ConnectionManager {
     if(this._connMgr==null){
       // load client connections file
       const conn = _path_.join(this._userData, DEFAULT_DXC_CONN_FILE);
@@ -71,7 +70,7 @@ export class ConfigurationManager {
       this._connMgr = new ConnectionManager(conn);
     }
     return this._connMgr;
-  }
+  }*/
 
   /**
    * To get local Dexcalibur's server configuration (port, ipc, ...)

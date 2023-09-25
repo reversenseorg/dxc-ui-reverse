@@ -10,6 +10,7 @@ import {HelperController} from "../ctrl/HelperController";
 import {HelpDoc, HelperService} from "../ctrl/HelperService";
 import {IconModel} from "../../../base/icon/IconModel";
 import DexcaliburProject from "../../../models/DexcaliburProject";
+import {Nullable} from "../../../base/Nullable";
 
 export class HelperTab  {
   uid:Nullable<string> = null;
@@ -20,7 +21,7 @@ export class HelperTab  {
   closable:boolean = true;
   iconColor:string = 'dxc-text-clear100';
   color:string = 'dxc-text-clear100';
-  doc:HelpDoc = null;
+  doc:Nullable<HelpDoc> = null;
 
   constructor(pLabel:string, pDoc:HelpDoc) {
     this.label = pLabel;
@@ -73,7 +74,7 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
 
   viewsMap: HelperTabMap = {}
   views: any = [];
-  _current:HelperTab = null;
+  _current:Nullable<HelperTab> = null;
 
 
   @ViewChild('termHelp', { static: true, read:ElementRef  }) termHelp: ElementRef;

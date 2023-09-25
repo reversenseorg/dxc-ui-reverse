@@ -28,7 +28,7 @@ export class WebApiWindowing {
     return this.start;
   }
 
-  and( pOptions):WebApiWindowing {
+  and( pOptions:any):WebApiWindowing {
     return new WebApiWindowing(
       (pOptions.start ? this.start+pOptions.start : this.start),
       (pOptions.length ? this.length+pOptions.length : this.length)

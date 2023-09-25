@@ -26,6 +26,10 @@ import HookSet from "../../../models/HookSet";
 import HookMessage from "../../../models/HookMessage";
 import {WebApiWindowing} from "../../../base/WebApiWindowing";
 import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
+import {AppMenu} from "../../../base/menu/AppMenu";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {UIException} from "../../../base/error/UIException";
 
 export interface HookTree {
   [parent:string] :Hook[]
@@ -148,7 +152,7 @@ export class HookService extends DxcApiService {
   constructor( private appmenuSvc:AppMenuService,
                public outputSvc:OutputService,
                private projectSvc:ProjectService,
-               protected _http:HttpClient) {
+               protected override _http:HttpClient) {
     super(
       {
           hook: {
@@ -384,7 +388,10 @@ export class HookService extends DxcApiService {
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.startServer().subscribe( (pRes:any)=>{
             pMenuItem.enabled = !this.serverRunning;
-            this.appmenuSvc.getMenu().getMenuItemById('hook-server-stop').enabled = this.serverRunning;
+            const itm = AppMenu.getInstance().getMenuItemById('hook-server-stop');
+            if(itm!=null){
+              itm.setEnable(this.serverRunning);
+            }
           });
         }
       },{
@@ -393,9 +400,11 @@ export class HookService extends DxcApiService {
         enabled:(this.getServerStatus()),
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.stopServer().subscribe( (pRes:any)=>{
-            console.log(pRes);
             pMenuItem.enabled = this.serverRunning;
-            this.appmenuSvc.getMenu().getMenuItemById('hook-server-start').enabled = !this.serverRunning;
+            const itm = AppMenu.getInstance().getMenuItemById('hook-server-start');
+            if(itm!=null){
+              itm.setEnable(!this.serverRunning);
+            }
           });
         }
       }]
@@ -529,14 +538,13 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
         if(!pEl.success){
           this.outputSvc.print(OutputMessage.newError({ msf:"Hook sessions cannot be lister : "+pEl.msg, src:"Hook Manager" }));
-          return ;
+          return [];
 
         }
 
         const data:HookSession[] = []
 
-        pEl.data.sess.map( x=>{
-          x.__ = NodeInternalType.HOOK_SESSION;
+        pEl.data.sess.map((x:any) => {         x.__ = NodeInternalType.HOOK_SESSION;
           x.date = new Date(x.time);
           data.push(x);
         })
@@ -558,7 +566,7 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
           if(!pEl.success){
             this.outputSvc.print(OutputMessage.newError({ msf:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
-            return ;
+            return [] ;
           }
 
           const data:RuntimeEvent<any>[] = []
@@ -588,7 +596,7 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
           if(!pEl.success){
             this.outputSvc.print(OutputMessage.newError({ msf:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
-            return ;
+            return [];
           }
 
           const data:HookMessage[] = []
@@ -610,8 +618,7 @@ export class HookService extends DxcApiService {
           console.log(pEl);
           if(pEl.data != null){
             const o:any = {load:[], unload:[]};
-            pEl.data.load.map( x => {
-              console.log(x);
+            pEl.data.load.map((x:any) => {             console.log(x);
               if(x.hasOwnProperty('method')){
                 o.load.push( this._hooks[x.id] = new JavaMethodHook(x));
               }else{
@@ -619,8 +626,7 @@ export class HookService extends DxcApiService {
                 this._hooks[x.id].symbol = this._hooks[x.id].func.substr(this._hooks[x.id].func.lastIndexOf(':')+1);
               }
             });
-            pEl.data.unload.map( x => {
-              if(x.hasOwnProperty('method')){
+            pEl.data.unload.map((x:any) => {             if(x.hasOwnProperty('method')){
                 o.unload.push( this._hooks[x.id] = new JavaMethodHook(x));
               }else{
                 o.unload.push( this._hooks[x.id] = new NativeFunctionHook(x));
@@ -642,7 +648,7 @@ export class HookService extends DxcApiService {
     );
   }
 
-  listInspectors(pScope:string = null):Observable<any>{
+  listInspectors():Observable<any>{
     return this._process(
       this.endpoints['inspector']['list']
     ).pipe(
@@ -659,7 +665,7 @@ export class HookService extends DxcApiService {
   }
 
 
-  listHooks(pScope:string = null, pOptions:any={}):Observable<any>{
+  listHooks(pScope:Nullable<string> = null, pOptions:any={}):Observable<any>{
     return this._process(
       this.endpoints['hook']['list'],
       pOptions
@@ -668,6 +674,7 @@ export class HookService extends DxcApiService {
 
         if(!pEl.success){
           this.outputSvc.print(OutputMessage.newError({ type:"Hook Manager", msg:pEl.msg}));
+          return null;
         }else{
           return pEl.data;
         }
@@ -712,7 +719,7 @@ export class HookService extends DxcApiService {
       privileged: 'true'
     };
 
-    for(const i in pOptions) opts[i] = pOptions[i];
+    for(const i in pOptions) (opts as IStringIndex<any>)[i] = pOptions[i];
 
     return this._process(
       this.endpoints['server']['start'],opts
@@ -842,7 +849,7 @@ export class HookService extends DxcApiService {
       'frag_uid': pFragUID
     };
 
-    for(const i in pOpts) data[i] = pOpts[i];
+    for(const i in pOpts) (data as IStringIndex<any>)[i] = pOpts[i];
 
     if(data.hasOwnProperty('code') != null){
 
@@ -879,8 +886,8 @@ export class HookService extends DxcApiService {
           this.outputSvc.print(OutputMessage.newSuccess({ msg:"Hook fragment has been deleted successfully", src:"Hook Manager" }));
 
           // udpates fragments
-          ['_before','_after','_replace'].map( i => {
-            pHook[i] = pHook[i].filter(  (vFrag:HookTemplateFragment) => { return (vFrag._uid!==pFrag._uid); });
+          ['_before','_after','_replace'].map( (i:string) => {
+            (pHook as IStringIndex<any>)[i] = (pHook as IStringIndex<any>)[i].filter(  (vFrag:HookTemplateFragment) => { return (vFrag._uid!==pFrag._uid); });
           });
 
           this.onFragmentUpdate.next({ hook:pHook, frag:pFrag, pos:pPos });
@@ -932,7 +939,7 @@ export class HookService extends DxcApiService {
     );
   }
 
-  probe( pMethod:ModelMethod|ModelFunction, pOptions:any={}):Observable<AbstractHook> {
+  probe( pMethod:ModelMethod|ModelFunction, pOptions:any={}):Observable<Nullable<AbstractHook>> {
 
     let opts:any = pOptions;
     if(opts==null) opts={};
@@ -968,6 +975,7 @@ export class HookService extends DxcApiService {
           return h;
         }else{
           this.outputSvc.print(OutputMessage.newError({ src:'Hook manager', msg: pEl.msg}));
+          return null;
         }
       })
     );
@@ -1008,7 +1016,8 @@ export class HookService extends DxcApiService {
 
   startHookSession( pOptions:any, pSocketChannel:any = null):Observable<any> {
     if(pSocketChannel!=null){
-
+      // todo
+      return from([]);
     }else{
       return this._process(
         this.endpoints['hook']['start'],
@@ -1028,7 +1037,8 @@ export class HookService extends DxcApiService {
             this.outputSvc.print( OutputMessage.newError({
               src: "Hook Manager",
               msg: pEl.msg
-            }))
+            }));
+            return null;
           }
         })
       );
@@ -1070,7 +1080,7 @@ export class HookService extends DxcApiService {
    */
   updateHookConfiguration( pOptName:string, pOptValue:any):Observable<any> {
 
-    const opt = {};
+    const opt:IStringIndex<any> = {};
     opt[pOptName] = pOptValue;
 
     return this._process(
@@ -1202,6 +1212,11 @@ export class HookService extends DxcApiService {
 
     const sess: HookSession = new HookSession(localID, GLOBAL_ICONS['HOOKS'], localID, pProject);
 
+
+    if(sess.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("TerminalSession","getUID");
+    }
+
     sess.setHookErrorObservable(this.onHookError);
     pWebsocketClient.registerChannel(sess.channel);
 
@@ -1234,7 +1249,11 @@ export class HookService extends DxcApiService {
           if(pRes.data.hasOwnProperty('enable')) {
             pHook._enabled = pRes.data.enable;
             return pHook._enabled; //(pRes.data.enable === pStatus);
+          }else{
+            return null;
           }
+        }else{
+          return null;
         }
       })
     );
@@ -1295,8 +1314,7 @@ export class HookService extends DxcApiService {
 
           vHookSet._t = 'i';
           vHookSet.children = [];
-          vHookSet.hooks.map( vHook => {
-            vHookSet.children.push( this._hooks[vHook.id] = new Hook(vHook));
+          vHookSet.hooks.map((vHook:any) => {           vHookSet.children.push( this._hooks[vHook.id] = new Hook(vHook));
           });
           hook.push(vHookSet);
         });
@@ -1393,10 +1411,9 @@ export class HookService extends DxcApiService {
 
 
   getKeyPointsFor( pNode:any, pKeyPoints:KeyPoint[]):KeyPoint[] {
-      const kps = [];
+      const kps:KeyPoint[] = [];
       pKeyPoints.map( (vKP:any) => {
-        vKP.node.map( n => {
-          if( (n.__ === pNode.__) &&  (n.uid === pNode.uid)) kps.push(vKP);
+        vKP.node.map((n:any) => {         if( (n.__ === pNode.__) &&  (n.uid === pNode.uid)) kps.push(vKP);
         });
       })
       return kps;
@@ -1404,9 +1421,10 @@ export class HookService extends DxcApiService {
 
   getKeyPointsOn( pSubject:any):Observable<KeyPoint[]> {
     if(this._hook_kp.length == 0){
-      this.listKeyPoints(true).subscribe( x => {
+      // TOIDO
+      return this.listKeyPoints(true).pipe( map((x:KeyPoint[]) => {
         return this.getKeyPointsFor( pSubject, this._hook_kp);
-      });
+      }));
     }else{
        return from([this.getKeyPointsFor( pSubject, this._hook_kp)]);
     }
@@ -1427,8 +1445,7 @@ export class HookService extends DxcApiService {
         if( pEl.success){
           if(pEl.data != null){
             const o:KeyPoint[] = [];
-            pEl.data.map( x => {
-              o.push(new KeyPoint(x));
+            pEl.data.map((x:any) => {             o.push(new KeyPoint(x));
             });
 
             // update cache

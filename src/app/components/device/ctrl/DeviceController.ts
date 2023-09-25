@@ -1,4 +1,4 @@
-import {IController} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
 import {Subject} from "rxjs";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ComponentFactoryResolver} from "@angular/core";
@@ -10,6 +10,9 @@ import {WorkspaceController} from "../../workspace/ctrl/WorkspaceController";
 import {IconModel} from "../../../base/icon/IconModel";
 import {UiController} from "../../../base/controllers/UiController";
 import {DEVICE_PANEL, ViewportDeviceComponent} from "../viewport-device/viewport-device.component";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {DeviceManagerService} from "./device-manager.service";
 
 
 export class DeviceController extends UiController  implements IController {
@@ -19,36 +22,13 @@ export class DeviceController extends UiController  implements IController {
    * @type {string}
    */
   name:string = 'device';
-
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
+  service: DeviceManagerService;
 
-  service: any = null;
-
-  views:ViewportView[] = [];
-
-  componentFactoryResolver:ComponentFactoryResolver = null;
-
-
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     super();
     this.configure(pConfig);
-  }
-
-  configure( pConfig:any=null):void {
-    if(pConfig==null) return;
-
-    for(let i in pConfig){
-      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
-    }
-  }
-
-  getExplorerCmp():any {
-    return this.explorerCmp.main;
-  }
-
-  getViews():ViewportView[]{
-    return this.views;
   }
 
   close(pItem: any, pSrc:any): any {

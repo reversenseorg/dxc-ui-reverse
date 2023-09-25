@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewportTopoComponent } from './viewport-hook.component';
+import { ViewportTopoComponent } from './viewport-topo.component';
 
-describe('ViewportHookComponent', () => {
+describe('ViewportTopoComponent', () => {
   let component: ViewportTopoComponent;
   let fixture: ComponentFixture<ViewportTopoComponent>;
 

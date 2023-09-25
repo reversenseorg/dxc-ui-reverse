@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextInputComponent } from './breadcrumb.component';
+import { TextInputComponent } from './text-input.component';
 
-describe('BreadcrumbComponent', () => {
+describe('TextInputComponent', () => {
   let component: TextInputComponent;
   let fixture: ComponentFixture<TextInputComponent>;
 

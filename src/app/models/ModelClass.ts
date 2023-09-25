@@ -105,6 +105,8 @@ export default class ModelClass extends Savable
     __pretty_signature__:Nullable<string> = null;
     __aliasedCallSignature__:Nullable<string> = null;
 
+    children:any[] = [];
+
     constructor(pConfig:any=null){
         super(STUB_TYPE.CLASS);
 
@@ -306,35 +308,6 @@ export default class ModelClass extends Savable
     }
 
 
-    /**
-     * To add inherited method which are not overrided
-     */
-    addInheritedMethod(methodRef:string|ModelMethodReference, parentMethod:ModelMethod):ModelMethod{
-        let n:string=(methodRef instanceof ModelMethodReference) ? methodRef.getName() : methodRef;
-
-        this.methods[n] = parentMethod;
-        this.inherit[n] = parentMethod;
-        return this.methods[n];
-    }
-
-    /**
-     *
-     * @param localReference
-     * @param parentField
-     */
-    addInheritedField(localReference:string|ModelFieldReference, parentField:ModelField):Nullable<ModelField>{
-
-        let n:Nullable<string>=(localReference instanceof ModelFieldReference) ? localReference.getName() : localReference;
-
-        if(n!=null){
-            this.fields[n] = parentField;
-            this.inherit[n] = parentField;
-            return this.fields[n];
-        }else{
-            return null;
-        }
-
-    }
 
 
     toJsonObject():any{

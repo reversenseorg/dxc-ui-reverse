@@ -4,6 +4,7 @@ import {PlatformService} from "../platform/ctrl/platform.service";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {DeviceManagerService} from "./ctrl/device-manager.service";
 import { Device } from "../../models/Device";
+import {Nullable} from "../../base/Nullable";
 
 
 @Component({
@@ -63,7 +64,7 @@ export class DeviceListComponent implements OnInit{
   }
 
   change(pEvent: string) {
-    let dev:Device = null;
+    let dev:Nullable<Device> = null;
     for(let i=0; i<this.devices.length; i++){
       if(this.devices[i].uid===pEvent){
         dev = this.devices[i];

@@ -13,6 +13,7 @@ import {AuthenticationEvent, AuthenticationEventType} from "../../auth/Authentic
 import {DxcApiToken} from "../../../base/DxcApiToken";
 import {DeviceCacheFlavor, DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {TagService} from "../../tag/ctrl/tag.service";
+import {Nullable} from "../../../base/Nullable";
 
 export interface ProjectMenuEvent extends MenuEvent {
   win?:any
@@ -59,7 +60,7 @@ export class ProjectService extends DxcApiService {
    * @type {DexcaliburProject}
    * @field
    */
-  selected:DexcaliburProject = null;
+  selected:Nullable<DexcaliburProject> = null;
 
   /**
    * Event stream.
@@ -124,7 +125,7 @@ export class ProjectService extends DxcApiService {
                private devSvc:DeviceManagerService,
                private tagSvc:TagService,
                private outputSvc:OutputService,
-               protected _http:HttpClient) {
+               protected override _http:HttpClient) {
     super(
       {
         workspace: {
@@ -312,6 +313,7 @@ export class ProjectService extends DxcApiService {
           return Object.values(pEl.data);
         }else{
           this.outputSvc.print( OutputMessage.newError({ msg:"List of projects cannot be retrieved" }));
+          return null;
         }
       })
     );
@@ -331,10 +333,11 @@ export class ProjectService extends DxcApiService {
         if(pEl.success){
           const proj:DexcaliburProject[] = [];
           const p = pEl.data.projects;
-          p.map( x => proj.push( new DexcaliburProject( null, x)));
+          p.map( (x:string) => proj.push( new DexcaliburProject( null, x)));
           return proj;
         }else{
           this.outputSvc.print( OutputMessage.newError({ msg:"List of projects cannot be retrieved" }));
+          return [];
         }
       })
     );
@@ -434,10 +437,13 @@ export class ProjectService extends DxcApiService {
   }
 
   private _refreshSelectedProject():any {
-    this.getProjectInfo(this.selected).subscribe((pEvent)=>{
-      this._refreshDefaultDeviceFor(pEvent);
-      this.selected = pEvent;
-    });
+    if(this.selected!=null){
+      this.getProjectInfo(this.selected).subscribe((pEvent)=>{
+        this._refreshDefaultDeviceFor(pEvent);
+        this.selected = pEvent;
+      });
+    }
+
   }
 
   /**
@@ -457,7 +463,7 @@ export class ProjectService extends DxcApiService {
           this.outputSvc.print( new OutputMessage({ src:"Project Manager", msg:"Project ["+pProject.package+"] has been closed." }));
           this.onProjectClose.next( pProject);
           this.appmenuSvc.onProjectClose();
-          if(pProject.uid===DxcApiToken.getInstance('puid').getToken()){
+          if(pProject.uid===(DxcApiToken.getInstance('puid') as DxcApiToken).getToken()){
             DxcApiToken.remove('puid');
           }
 
@@ -491,7 +497,7 @@ export class ProjectService extends DxcApiService {
    *
    *
    */
-  tryUnlock(pFailureCallback):void {
+  tryUnlock(pFailureCallback:(()=>void)):void {
     return ;
   }
 
@@ -678,7 +684,7 @@ export class ProjectService extends DxcApiService {
     return pProject.device;
   }
 
-  getSelectedProject():DexcaliburProject{
+  getSelectedProject():Nullable<DexcaliburProject>{
     return this.selected;
   }
 
@@ -691,7 +697,7 @@ export class ProjectService extends DxcApiService {
     this.onProjectHaltOpening.next({});
   }
 
-  getPackageID( pActiveProject = 0):string{
+  getPackageID( pActiveProject = 0):Nullable<string>{
     if(this.activeProject.length > 0 && this.activeProject[pActiveProject]!=null){
       return this.activeProject[pActiveProject].package;
     }else{
@@ -757,7 +763,7 @@ export class ProjectService extends DxcApiService {
     )
   }
 
-  setDefaultDevice(pDevice: Device, pProject:DexcaliburProject=null) {
+  setDefaultDevice(pDevice: Device, pProject:Nullable<DexcaliburProject>=null) {
     return this._process(
       this.endpoints['project']['set_device'],
       {

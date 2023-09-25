@@ -41,6 +41,7 @@ export class PlatformService extends DxcApiService{
     ).pipe(map((pRes:any) => {
       if(!pRes.success){
         this.outputSvc.print( OutputMessage.newError({ msg:pRes.msg, src:"Platform Manager" }));
+        return [];
       }else{
         this._cache = []
         for(const i in pRes.data.platforms){

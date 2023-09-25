@@ -45,7 +45,7 @@ export class TerminalExecComponent implements OnInit, AfterViewInit, ITerminalCo
   });
 
   views: TerminalView[] = [];
-  activeTerm: TerminalView = null;
+  //activeTerm: TerminalView = null;
 
   gIcons: any = GLOBAL_ICONS;
 
@@ -65,7 +65,7 @@ export class TerminalExecComponent implements OnInit, AfterViewInit, ITerminalCo
   }
 
   ngOnInit(): void {
-    return null;
+    //return null;
   }
 
 

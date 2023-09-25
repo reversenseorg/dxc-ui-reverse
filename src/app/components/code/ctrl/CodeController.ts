@@ -1,6 +1,6 @@
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ExplorerCodeComponent} from "../explorer-code/explorer-code.component";
-import {IController, ViewCmpMap} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
 import {Observable, Subject} from "rxjs";
 import {CodeItem} from "../explorer-code/CodeItem";
 import {ViewportCodeComponent} from "../viewport-code/viewport-code.component";
@@ -17,6 +17,7 @@ import ModelFile from "../../../models/ModelFile";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import ModelInstruction from "../../../models/ModelInstruction";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -29,40 +30,35 @@ export class CodeController extends UiController implements IController {
   name :string = 'code-main';
 
   id:string = '';
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
   lIcons: any = CODE_ICONS;
   gIcons: any = GLOBAL_ICONS;
 
-  service: CodeControllerService = null;
+  service: CodeControllerService;
 
 
 
-
-  componentFactoryResolver:ComponentFactoryResolver = null;
-
-  views:ViewportView[] = [];
-  explorer:ExplorerCodeComponent = null;
+  override views:ViewportView[] = [];
+  explorer:ExplorerCodeComponent;
   rendered:any = [];
 
-  error: Error = null;
+  error: Nullable<Error> = null;
 
   //viewComp: ViewportCodeComponent = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     super();
     this.configure(pConfig);
   }
 
-
-
-  getViews():ViewportView[]{
+  override getViews():ViewportView[]{
     return this.views;
   }
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter( (vItem:any) => {
       return (vItem.__signature__ !== pItem.__signature__);
     });
 
@@ -74,7 +70,7 @@ export class CodeController extends UiController implements IController {
     let f:any=null;
 
    //console.log("[HOOK CONTROLLER][isRendered?] ",pItem)
-    this.rendered.map( vItem => {
+    this.rendered.map((vItem:any):void => {
       if(vItem.item == null){
         //console.log(vItem);
         return;
@@ -82,7 +78,7 @@ export class CodeController extends UiController implements IController {
       //console.log("[CODE CONTROLLER][isRendered?] ",pItem.__,vItem.item);
 
       //if(vItem.item._t !== pItem._t) return null;
-      if(pItem!=null && (vItem.item.__ != pItem.__)) return null;
+      if(pItem!=null && (vItem.item.__ != pItem.__)) return;
       switch(vItem.item._t){
         case 'p':
         case 'c':
@@ -98,13 +94,14 @@ export class CodeController extends UiController implements IController {
             f = vItem;
           }
           break;
+        default:
+          return;
       }
     });
 
     return f;
   }
 
-  private _
 
   /**
    * To open a method and focus a region
@@ -113,13 +110,17 @@ export class CodeController extends UiController implements IController {
    * @param pInstruction
    * @param pOptions
    */
-  openMethodAt( pMethod:ModelMethod|string, pInstruction:ModelInstruction = null, pOptions:any = null){
+  openMethodAt( pMethod:ModelMethod|string, pInstruction:Nullable<ModelInstruction> = null, pOptions:any = null){
     let target:ModelMethod;
 
     if(typeof (pMethod)=='string'){
       target = new ModelMethod({ __signature__: pMethod, _icon: this.gIcons['METHOD'] });
     }else{
       target = pMethod;
+    }
+
+    if(target==null || target.__signature__==null){
+      throw new Error("openMethodAt() failed");
     }
 
     this.service.getMethod(target.__signature__,true).subscribe( (pObs:any)=>{
@@ -132,12 +133,10 @@ export class CodeController extends UiController implements IController {
       }
 
 
-      this.service.disassMethod(target.__signature__).subscribe( (pCode:any)=>{
+      this.service.disassMethod(target.__signature__ as string).subscribe( (pCode:any)=>{
         let code = '';
 
-        pCode.disass.map( pBB => {
-          pBB.instr.map( pInstr => {
-            code += pInstr.value+`
+        pCode.disass.map((pBB:any) => {         pBB.instr.map((pInstr:any) => {           code += pInstr.value+`
 `;
           })
           code += `
@@ -163,7 +162,7 @@ export class CodeController extends UiController implements IController {
    * @method
    * @since 1.0.0
    */
-  open(pItem: any, pSrc:any = 'vp', pInstruction:ModelInstruction = null): void{
+  open(pItem: any, pSrc:any = 'vp', pInstruction:Nullable<ModelInstruction> = null): void{
 
     let existingRef = this.isAlreadyRendered(pItem);
     let vid: string = this.id+':v'+this.rendered.length;
@@ -171,7 +170,7 @@ export class CodeController extends UiController implements IController {
     if(existingRef != null){
       console.log('item is already rendered>', existingRef,pItem,existingRef.uid);
       //this.focusView.next( existingRef.uid);
-      this.app.focusView(existingRef.uid);
+      this.app?.focusView(existingRef.uid);
       return;
     }else{
       console.log('rendering > ',pItem,vid);
@@ -213,7 +212,7 @@ export class CodeController extends UiController implements IController {
 
   renameItem( pObj:any ):void{
     console.log(pObj);
-    this.app.showModal('rename-item', pObj);
+    this.app?.showModal('rename-item', pObj);
   }
 
 
@@ -222,10 +221,10 @@ export class CodeController extends UiController implements IController {
     console.log('show item>', pObj);
     switch(pObj.__){
       case NodeInternalType.FILE:
-        this.app.getController('ctrl:native-main').open(pObj,'code');
+        this.app?.getController('ctrl:native-main').open(pObj,'code');
         break;
       case NodeInternalType.FUNC:
-        this.app.getController('ctrl:native-main').open(pObj,'code');
+        this.app?.getController('ctrl:native-main').open(pObj,'code');
         break;
       default:
         this.open( pObj, 'ctxm');
@@ -261,16 +260,16 @@ export class CodeController extends UiController implements IController {
       switch(pSubject._t){
         case 'f':
           if(pOptions.type==='read'){
-            this.app.doSearch(`byID().field('${pSubject.__signature__}').select('_getters')`,'m');
+            this.app?.doSearch(`byID().field('${pSubject.__signature__}').select('_getters')`,'m');
           }else if(pOptions.type==='write'){
-            this.app.doSearch(`byID().field('${pSubject.__signature__}').select('_setters')`,'m');
+            this.app?.doSearch(`byID().field('${pSubject.__signature__}').select('_setters')`,'m');
           }
           break;
         case 'm':
           if(pOptions.type==='to'){
-            this.app.doSearch(`byID().method('${pSubject.__signature__}').select('_callers')`,'m');
+            this.app?.doSearch(`byID().method('${pSubject.__signature__}').select('_callers')`,'m');
           }else if(pOptions.type==='from'){
-            this.app.doSearch(`call('callers.__signature__:${pSubject.__signature__}')`,'m');
+            this.app?.doSearch(`call('callers.__signature__:${pSubject.__signature__}')`,'m');
           }
           break;
         case 'c':
@@ -307,6 +306,7 @@ export class CodeController extends UiController implements IController {
       case 'm': return NodeInternalType.METHOD;
       case 'f': return NodeInternalType.FIELD;
       case 'p': return NodeInternalType.PACKAGE;
+      default: return -1;
     }
   }
 

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewportTopoComponent } from './viewport-hook.component';
+import { ViewportPrivacyDashboardComponent } from './viewport-privacy.component';
 
-describe('ViewportHookComponent', () => {
-  let component: ViewportTopoComponent;
-  let fixture: ComponentFixture<ViewportTopoComponent>;
+describe('ViewportPrivacyDashboardComponent', () => {
+  let component: ViewportPrivacyDashboardComponent;
+  let fixture: ComponentFixture<ViewportPrivacyDashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewportTopoComponent ]
+      declarations: [ ViewportPrivacyDashboardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewportTopoComponent);
+    fixture = TestBed.createComponent(ViewportPrivacyDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

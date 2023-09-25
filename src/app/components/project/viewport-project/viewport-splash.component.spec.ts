@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewportInspectorComponent } from './viewport-splash.component';
+import { ViewportSplashComponent } from './viewport-splash.component';
 
-describe('ViewportInspectorComponent', () => {
-  let component: ViewportInspectorComponent;
-  let fixture: ComponentFixture<ViewportInspectorComponent>;
+describe('ViewportSplashComponent', () => {
+  let component: ViewportSplashComponent;
+  let fixture: ComponentFixture<ViewportSplashComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewportInspectorComponent ]
+      declarations: [ ViewportSplashComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewportInspectorComponent);
+    fixture = TestBed.createComponent(ViewportSplashComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

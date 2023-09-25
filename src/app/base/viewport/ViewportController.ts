@@ -1,8 +1,16 @@
 
 import {ViewportView} from "../../cmp/ViewportView";
 import {ViewportComponent} from "./viewport.component";
+import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
+import {IControllerOptions} from "../controllers/IController.interface";
 
 
+export interface ViewportControllerOptions extends IStringIndex<any> {
+  parent?:any;
+  id?:string;
+  vp?: ViewportComponent;
+}
 export class ViewportController {
 
   // @ts-ignore
@@ -13,11 +21,11 @@ export class ViewportController {
   views: ViewportView[] = [];
   vp: ViewportComponent;
 
-  constructor(pConfig:any = null) {
+  constructor(pConfig:ViewportControllerOptions) {
     this.configure(pConfig);
   }
 
-  configure( pConfig:any):void {
+  configure( pConfig:ViewportControllerOptions):void {
     for(let i in pConfig){
       if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
     }

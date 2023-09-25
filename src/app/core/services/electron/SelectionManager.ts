@@ -1,3 +1,4 @@
+import {Nullable} from "../../../base/Nullable";
 
 
 export enum DxcSelectionType {
@@ -82,6 +83,10 @@ export class SelectionManager {
 
     this._latest = pDomSelection;
 
+    if(pDomSelection.anchorNode==null){
+      return ;
+    }
+
     switch (pDomSelection.anchorNode.nodeType){
       case Node.TEXT_NODE:
         this.selectText( pDomSelection.toString());
@@ -98,7 +103,7 @@ export class SelectionManager {
               break;
             default:
               const nestedInput = this.getPasteLocationFromFocus(true);
-              if(nestedInput != null && (nestedInput.end > nestedInput.start)){
+              if((nestedInput != null)&& (nestedInput.end!=null) && (nestedInput.start!=null) && (nestedInput.end > nestedInput.start)){
                 this.selectText( nestedInput.el.value.substring(nestedInput.start,nestedInput.end));
               }else{
                 this.selectNode( pDomSelection.anchorNode);
@@ -117,7 +122,7 @@ export class SelectionManager {
    * @param {any} pComponent
    * @method
    */
-  selectNode( pComponent:any, pShortVal:string = null){
+  selectNode( pComponent:any, pShortVal:string=""){
 
     this.flush();
     this.appendNode(pComponent,pShortVal);
@@ -144,7 +149,7 @@ export class SelectionManager {
    * @param pComponent
    * @method
    */
-  appendNode( pComponent:any, pShortVal:string = null){
+  appendNode( pComponent:any, pShortVal:string){
     this.current.push({ type:DxcSelectionType.NODE, el:pComponent, short:pShortVal });
   }
 
@@ -187,7 +192,7 @@ export class SelectionManager {
    *
    * @method
    */
-  getPasteLocationFromFocus( pIncludeDisabled = false):PasteLocation{
+  getPasteLocationFromFocus( pIncludeDisabled = false):Nullable<PasteLocation>{
     const anchor = this._latest.anchorNode;
     let siblingEl:any = null;
 

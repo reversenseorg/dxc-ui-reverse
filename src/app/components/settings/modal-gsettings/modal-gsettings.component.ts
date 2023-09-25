@@ -35,6 +35,8 @@ import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboard
 import {AuthService} from "../../auth/ctrl/auth.service";
 import {AuthenticationEvent, AuthenticationEventType} from "../../auth/AuthenticationEvent";
 import {ElectronService} from "../../../core/services";
+import {UIException} from "../../../base/error/UIException";
+import {Nullable} from "../../../base/Nullable";
 
 interface EventSources {
   drag: Observable<any>,
@@ -85,7 +87,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
 
 
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
 
   gIcons:any = GLOBAL_ICONS;
@@ -179,7 +181,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
+    this.ctxMenuChildren.toArray().map((vMenu:ContextMenuComponent) => {
       this.ctxMenu[vMenu.name] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });
@@ -312,6 +314,10 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
   }
 
   hideCtxMenu():void{
+
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("modal-gsettings","hideCtxMenu");
+    }
     this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 

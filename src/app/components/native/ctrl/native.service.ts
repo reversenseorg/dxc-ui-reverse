@@ -12,6 +12,7 @@ import {OutputService} from "../../output/ctrl/output.service";
 import ModelFile from "../../../models/ModelFile";
 import {ModelFunction} from "../../../models/ModelFunction";
 import {OutputMessage} from "../../../cmp/OutputMessage";
+import {Nullable} from "../../../base/Nullable";
 
 
 // @ts-ignore
@@ -28,7 +29,7 @@ export class NativeService extends DxcApiService {
 
   constructor( private appmenuSvc:AppMenuService,
                private outputSvc:OutputService,
-               protected _http:HttpClient) {
+               protected override _http:HttpClient) {
     super(
       {
           list: {
@@ -108,7 +109,7 @@ export class NativeService extends DxcApiService {
    *
    * @param pFile
    */
-  startFileAnalysis(pFile:ModelFile, pCommands:string=null):Observable<any> {
+  startFileAnalysis(pFile:ModelFile, pCommands:Nullable<string>=null):Observable<any> {
 
     const cmd = pCommands==null? this.commands.discover_lib : pCommands;
 

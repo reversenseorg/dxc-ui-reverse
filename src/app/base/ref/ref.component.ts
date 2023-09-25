@@ -3,6 +3,8 @@
 
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {DxcComponent} from "../DxcComponent";
+import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
 
 
 let i = 0;
@@ -19,7 +21,7 @@ let i = 0;
 })
 export class RefComponent extends DxcComponent implements OnInit {
 
-  @Input() style:Nullable<string> = null;
+  @Input() style:IStringIndex<any> = {};
 
   uid = -1;
 
@@ -35,7 +37,9 @@ export class RefComponent extends DxcComponent implements OnInit {
   //@HostListener('keydown.meta.c',['$event'])
   //@HostListener('keydown.control.c',['$event'])
   onCopy():any {
-    alert(this.uid+" : "+window.getSelection().toString());
+    const sel = window.getSelection();
+
+    alert(this.uid+" : "+(sel!=null ? sel.toString() : "NULL"));
   }
 }
 

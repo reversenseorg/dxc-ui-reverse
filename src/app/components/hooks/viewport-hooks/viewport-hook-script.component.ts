@@ -17,6 +17,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
 import {HookSession} from "../ctrl/HookSession";
 import {ProjectService} from "../../project/ctrl/project.service";
+import {UIException} from "../../../base/error/UIException";
 
 
 const FRAG_TYPE = {
@@ -209,6 +210,10 @@ export class ViewportHookScriptComponent implements OnInit, AfterViewInit, IView
    */
   startHooking() {
     //console.log(this.prjSvc.getSelectedProject(),this.codeEditor.value);
+
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
 
     let session:HookSession = this.hookSvc.startWebsocketHookSession(
       this.controller.app.ws,

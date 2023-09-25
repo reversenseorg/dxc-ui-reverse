@@ -21,6 +21,7 @@ import {ModalOpenProjectComponent} from "../modal-open-project/modal-open-projec
 import {ModalProjectSettingsComponent} from "../modal-project-settings/modal-project-settings.component";
 import {AuthService} from "../../auth/ctrl/auth.service";
 import {ModalProjectAnalConfigComponent} from "../modal-project-anal-config/modal-project-anal-config.component";
+import {Nullable} from "../../../base/Nullable";
 
 @Component({
   selector: 'app-viewport-splash',
@@ -114,7 +115,7 @@ export class ViewportSplashComponent implements OnInit, AfterViewInit, IViewport
 
   }
 
-  openGlobalSettings( pSubmenu:string = null):void {
+  openGlobalSettings( pSubmenu:string):void {
     //this.
   }
 }

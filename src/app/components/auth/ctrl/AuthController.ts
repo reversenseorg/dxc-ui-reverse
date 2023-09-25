@@ -1,5 +1,5 @@
 import {ViewportView} from "../../../cmp/ViewportView";
-import {IController} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
 import {Subject} from "rxjs";
 import {ComponentFactoryResolver} from "@angular/core";
 import {StageComponent} from "../../stage/stage.component";
@@ -18,9 +18,9 @@ export class AuthController implements IController {
   name:string = 'auth';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: AuthService = null;
+  service: AuthService;
 
   explorerCmp: any = null;
   viewCmp: any = null;
@@ -29,16 +29,15 @@ export class AuthController implements IController {
 
   views:ViewportView[] = [];
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   openView: Subject<any> = new Subject<any>();
   closeView: Subject<any> = new Subject<any>();
   focusView: Subject<any> = new Subject<any>();
 
-  viewer: ViewerController = null;
-  //viewComp: ViewportCodeComponent = null;
+  //viewer: Nullable<ViewerController> = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 

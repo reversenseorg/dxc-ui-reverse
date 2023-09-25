@@ -18,6 +18,7 @@ import {
 import {IconModelCollection} from "../../../base/icon/IconModel";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 @Component({
@@ -54,14 +55,14 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
   // contextuak menu
   @ViewChildren(ContextMenuComponent) ctxMenuChildren: QueryList<ContextMenuComponent>;
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
   /**
    * Active project
    * @type {DexcaliburProject}
    * @field
    */
-  project:DexcaliburProject = null;
+  project:Nullable<DexcaliburProject> = null;
   projects:DexcaliburProject[] = [];
 
   msg: any = {
@@ -108,8 +109,8 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map( (vMenu:ContextMenuComponent) => {
+      if(vMenu.name!=null) this.ctxMenu[vMenu.name] = vMenu;
     });
 
 
@@ -160,7 +161,7 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
         //if(this.projects.length-1>1){
           this.projectSvc.getActiveProject().subscribe( (pProjects:DexcaliburProject[]) => {
             if(pProjects.length<2) {
-              this.projects = null;
+              this.projects = [];
               if(pProjects.length==1)
                 this.projectSvc.switchTo(pProjects[0]);
 

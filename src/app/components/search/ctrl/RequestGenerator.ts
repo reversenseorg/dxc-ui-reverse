@@ -4,10 +4,13 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {CODE_ICONS} from "../../code/icons";
 import {SEARCH_ICONS} from "../icons";
 import {Observable} from "rxjs";
-import {map, retry} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {TagCache, TagService} from "../../tag/ctrl/tag.service";
 import {Tag} from "../../../models/tags/Tag";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {UIException} from "../../../base/error/UIException";
 
 
 export interface RequestNode {
@@ -45,11 +48,11 @@ const RequestHelperOPMODE =  {
 
 export interface SearchNode {
   label: string;
-  icon?: IconModel;
+  icon?: Nullable<IconModel>;
   model?: any;
   _t: any;
   node?: SearchNode[];
-  _f: string;
+  _f: Nullable<string>;
   _d?: number;
   _n?:NodeInternalType;
   _tags?: string[];
@@ -58,7 +61,7 @@ export interface SearchNode {
 export interface SearchScope {
   label: string;
   icon: IconModel;
-  _f: string|string[];
+  _f: Nullable<string|string[]>;
 }
 
 export interface SearchNodeList {
@@ -126,35 +129,35 @@ export const BASIC_NODE:SearchNodeList = {
     icon: CODE_ICONS['XREF_TO'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "caller",
-    node: null
+    node: []
   },
   XREF_FROM: {
     label: "XRef FROM",
     icon: CODE_ICONS['XREF_FROM'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "calleed",
-    node: null
+    node: []
   },
   READ: {
     label: 'Read',
     icon: CODE_ICONS['XREF_TO'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "caller",
-    node: null
+    node: []
   },
   WRITE: {
     label: "Write",
     icon: CODE_ICONS['XREF_FROM'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "calleed",
-    node: null
+    node: []
   },
   NEW: {
     label: "New instance",
     icon: CODE_ICONS['NEW'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "new",
-    node: null
+    node: []
   },
   STRING_TAGS: {
     label: "Tags",
@@ -340,68 +343,68 @@ export const BASIC_NODE:SearchNodeList = {
 };
 
 
-BASIC_NODE.CLASS.node = [
-    BASIC_NODE.NAME,
-    BASIC_NODE.ALIAS,
-    BASIC_NODE.FQCN,
-    BASIC_NODE.ACCESSFLAGS,
-    BASIC_NODE.NEW
+BASIC_NODE['CLASS'].node = [
+    BASIC_NODE['NAME'],
+    BASIC_NODE['ALIAS'],
+    BASIC_NODE['FQCN'],
+    BASIC_NODE['ACCESSFLAGS'],
+    BASIC_NODE['NEW']
   ];
 
 
 
 
-BASIC_NODE.FILE.node  = [
-  BASIC_NODE.NAME];
+BASIC_NODE['FILE'].node  = [
+  BASIC_NODE['NAME']];
 
-BASIC_NODE.CLZ_METH.node  = BASIC_NODE.METH.node = [
-  BASIC_NODE.NAME,
-  BASIC_NODE.ALIAS,
+BASIC_NODE['CLZ_METH'].node  = BASIC_NODE['METH'].node = [
+  BASIC_NODE['NAME'],
+  BASIC_NODE['ALIAS'],
   {
     label: 'Param type',
     icon: CODE_ICONS['CLASS'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "args",
-    node: BASIC_NODE.CLASS.node
+    node: BASIC_NODE['CLASS'].node
   },{
     label: "Return type",
     icon: CODE_ICONS['CLASS'],
     _t: RequestHelperTYPES.T_NODE,
     _f: "ret",
-    node: BASIC_NODE.CLASS.node
+    node: BASIC_NODE['CLASS'].node
   },
-  BASIC_NODE.TAG,
-  BASIC_NODE.ACCESSFLAGS,
-  BASIC_NODE.XREF_TO,
-  BASIC_NODE.XREF_FROM,
+  BASIC_NODE['TAG'],
+  BASIC_NODE['ACCESSFLAGS'],
+  BASIC_NODE['XREF_TO'],
+  BASIC_NODE['XREF_FROM'],
 ];
 
 
-BASIC_NODE.CLASS.node.push({
+BASIC_NODE['CLASS'].node.push({
   label: 'Methods',
   icon: CODE_ICONS['METH'],
   _f: 'methods[]',
   _t: RequestHelperTYPES.T_NODE,
-  node: BASIC_NODE.METH.node
+  node: BASIC_NODE['METH'].node
 });
 
-BASIC_NODE.CLASS.node.push({
+BASIC_NODE['CLASS'].node.push({
   label: 'Implements',
   icon: CODE_ICONS['CLASS'],
   _f: 'implements',
   _t: RequestHelperTYPES.T_NODE,
-  node: BASIC_NODE.CLASS.node
+  node: BASIC_NODE['CLASS'].node
 });
 
-BASIC_NODE.CLASS.node.push({
+BASIC_NODE['CLASS'].node.push({
   label: 'Extends',
   icon: CODE_ICONS['CLASS'],
   _f: 'extends',
   _t: RequestHelperTYPES.T_NODE,
-  node: BASIC_NODE.CLASS.node
+  node: BASIC_NODE['CLASS'].node
 });
 
-BASIC_NODE.TAGS = {
+BASIC_NODE['TAGS'] = {
   label: "Tags",
   icon: null,
   _t: RequestHelperTYPES.T_TAGS,
@@ -409,71 +412,75 @@ BASIC_NODE.TAGS = {
   node: []
 };
 
-BASIC_NODE.FIELD.node = [
-    BASIC_NODE.NAME,
-    BASIC_NODE.ALIAS,
-    BASIC_NODE.FQCN,
-    BASIC_NODE.ACCESSFLAGS,
-    BASIC_NODE.READ,
-    BASIC_NODE.WRITE,
-    BASIC_NODE.TAGS,
+BASIC_NODE['FIELD'].node = [
+    BASIC_NODE['NAME'],
+    BASIC_NODE['ALIAS'],
+    BASIC_NODE['FQCN'],
+    BASIC_NODE['ACCESSFLAGS'],
+    BASIC_NODE['READ'],
+    BASIC_NODE['WRITE'],
+    BASIC_NODE['TAGS'],
     {
       label: "enclosing class",
       icon: null,
       _t: RequestHelperTYPES.T_MODIFIER,
       _f: "is.static",
-      node: BASIC_NODE.CLASS.node
+      node: BASIC_NODE['CLASS'].node
     }
   ];
 
 
-BASIC_NODE.CLASS.node.push({
+BASIC_NODE['CLASS'].node.push({
   label: 'Fields',
   icon: CODE_ICONS['FIELD'],
   _f: 'fields[]',
   _t: RequestHelperTYPES.T_NODE,
-  node: BASIC_NODE.FIELD.node
+  node: BASIC_NODE['FIELD'].node
 });
 
-BASIC_NODE.PKG.node = [
-    BASIC_NODE.NAME,
-    BASIC_NODE.ALIAS,
+BASIC_NODE['PKG'].node = [
+    BASIC_NODE['NAME'],
+    BASIC_NODE['ALIAS'],
   ];
 
-BASIC_NODE.ARGS.node = BASIC_NODE.CLASS.node;
-BASIC_NODE.RET.node = BASIC_NODE.CLASS.node;
+BASIC_NODE['ARGS'].node = BASIC_NODE['CLASS'].node;
+BASIC_NODE['RET'].node = BASIC_NODE['CLASS'].node;
 
-BASIC_NODE.STRING.node.push({
+
+
+
+// @ts-ignore
+BASIC_NODE['STRING'].node.push({
   label: "location",
   icon: null,
   _t: RequestHelperTYPES.T_NODE,
   _f: "src",
-  node: BASIC_NODE.METH.node
+  node: BASIC_NODE['METH'].node
 });
-//BASIC_NODE.STRING.node.push(BASIC_NODE.STRING_TAGS);
+//BASIC_NODE['STRING'].node.push(BASIC_NODE['STRING_TAGS']);
 
 export const BUILTIN_SEARCH:SearchNode[] = [
-  BASIC_NODE.METH,
-  BASIC_NODE.CLASS,
-  BASIC_NODE.FIELD,
-  BASIC_NODE.FUNC,
-  BASIC_NODE.SYSCALL,
-  BASIC_NODE.INSTR,
-  BASIC_NODE.TAG,
-  BASIC_NODE.PKG,
-  BASIC_NODE.STRING,
-  BASIC_NODE.BYTEARRAY,
-  BASIC_NODE.FILE,
-  BASIC_NODE.ACTIVITY,
-  BASIC_NODE.SERVICE,
-  BASIC_NODE.PROVIDER,
-  BASIC_NODE.RECEIVER,
-  BASIC_NODE.PERMISSION,
-  BASIC_NODE.RAW
+  BASIC_NODE['METH'],
+  BASIC_NODE['CLASS'],
+  BASIC_NODE['FIELD'],
+  BASIC_NODE['FUNC'],
+  BASIC_NODE['SYSCALL'],
+  BASIC_NODE['INSTR'],
+  BASIC_NODE['TAG'],
+  BASIC_NODE['PKG'],
+  BASIC_NODE['STRING'],
+  BASIC_NODE['BYTEARRAY'],
+  BASIC_NODE['FILE'],
+  BASIC_NODE['ACTIVITY'],
+  BASIC_NODE['SERVICE'],
+  BASIC_NODE['PROVIDER'],
+  BASIC_NODE['RECEIVER'],
+  BASIC_NODE['PERMISSION'],
+  BASIC_NODE['RAW']
 ];
 
 
-export const BUILTIN_SCOPES = {
+export const BUILTIN_SCOPES:SearchScopeList = {
   ALL: {
     label: 'All',
     icon: GLOBAL_ICONS['GLOBE'],
@@ -789,14 +796,14 @@ export class RequestHelper
   state:RequestStep[] = []
 
   _stack: RequestNode[] = [];
-  _currSet:RequestNode = null;
-  _curr:RequestNode = null;
+  _currSet:Nullable<RequestNode> = null;
+  _curr:Nullable<RequestNode> = null;
 
   _searchSvc:SearchService;
   _tagSvc:TagService;
 
 
-  activeScope: SearchScope = null;
+  activeScope: Nullable<SearchScope> = null;
 
   constructor( pSearchService:SearchService, pTagService:TagService){
     this._searchSvc = pSearchService;
@@ -836,7 +843,7 @@ export class RequestHelper
       );
     });
 
-    BASIC_NODE.TAGS.node = allTags;
+    BASIC_NODE['TAGS'].node = allTags;
 
     for(const name in BASIC_NODE){
       tpl = BASIC_NODE[name];
@@ -863,7 +870,7 @@ export class RequestHelper
       }
       else if (tpl._t===RequestHelperTYPES.T_NODE) {
         if(tpl.node==null) tpl.node = [];
-        tpl.node.push(BASIC_NODE.TAGS);
+        tpl.node.push(BASIC_NODE['TAGS']);
       }
     }
 
@@ -890,11 +897,11 @@ export class RequestHelper
 
     req = req.substr(0,req.indexOf('('));
 
-    return TOKEN_TYPES_MAPPING[req];
+    return (TOKEN_TYPES_MAPPING as IStringIndex<any>)[req];
   }
 
 
-  static appendNode( pCmd:string, pNode:RequestNode, pPattern:string=null):string {
+  static appendNode( pCmd:string, pNode:RequestNode, pPattern:Nullable<string>=null):string {
     const n:SearchNode = pNode.opts[pNode.selected];
     switch(n._t)
     {
@@ -925,8 +932,17 @@ export class RequestHelper
    * @param pOptions
    */
   compile(pPattern:string, pOptions:any):SearchApiRequest {
+
+      if(this._curr==null){
+        throw new UIException("request-generator : current request is null");
+      }
       let cmd="";
       const nodes:RequestNode[] = this._stack;
+
+      /*if(this._curr==null){
+        throw UIException.
+      }*/
+
 
       if(nodes.length==0){
         cmd = pPattern;
@@ -975,9 +991,9 @@ export class RequestHelper
       if(nodes.length>1) cmd += ".";
       cmd = RequestHelper.appendNode(cmd, this._curr, pPattern);
 
-      const req = {
+      const req:SearchApiRequest = {
         req: `${pOptions.nocase ? "nocase()." : ""}${nodes[0].opts[nodes[0].selected]._f}("${cmd}")${pOptions.apponly ? '.filter("tags:ds")' : ""}`,
-        type: nodes[0].opts[nodes[0].selected]._n
+        type: nodes[0].opts[nodes[0].selected]._n==null ? nodes[0].opts[nodes[0].selected]._n as NodeInternalType : NodeInternalType.CLASS
       };
 
       //nodes.pop();
@@ -1027,12 +1043,17 @@ export class RequestHelper
 
 
 
-  applyScope(pScopeName){
+  applyScope(pScopeName:string){
     this.activeScope = BUILTIN_SCOPES[pScopeName];
   }
 
 
-  selectNode(pOffset = -1):RequestNode {
+  selectNode(pOffset = -1):Nullable<RequestNode> {
+
+    if(this._curr==null){
+      throw UIException.SOMETHING_IS_WRONG_WITH_REQUEST("request-generator : current request is null");
+    }
+
     if(this._curr.opts[pOffset] != null){
       this._curr.selected = pOffset;
 
@@ -1040,7 +1061,7 @@ export class RequestHelper
         this._stack.push( this._curr);
         this._curr = {
           selected: 0,
-          opts: this._curr.opts[pOffset].node
+          opts: this._curr.opts[pOffset].node!=null ? this._curr.opts[pOffset].node as SearchNode[] : []
         };
         return this._curr;
       }else{
@@ -1056,7 +1077,7 @@ export class RequestHelper
    * @param {number} pStackOffset Node offset into current stack
    * @param {number} pOffset Choice offset into option list of the current node
    */
-  changePickedFilter(pNode:any, pStackOffset:number, pOffset:number):RequestNode {
+  changePickedFilter(pNode:any, pStackOffset:number, pOffset:number):Nullable<RequestNode> {
     // not null or undefined
     let oldStack:RequestNode[] = [];
 
@@ -1071,7 +1092,7 @@ export class RequestHelper
         });
         this._curr = {
           selected: 0,
-          opts: this._stack[pStackOffset].opts[pOffset].node
+          opts: this._stack[pStackOffset].opts[pOffset].node!=null ? this._stack[pStackOffset].opts[pOffset].node as SearchNode[] : []
         };
       }else{
 
@@ -1091,12 +1112,12 @@ export class RequestHelper
           }];
           this._curr = {
             selected: 1,
-            opts: this._stack[0].opts[pOffset].node
+            opts: (this._stack[0].opts[pOffset].node!=null? this._stack[0].opts[pOffset].node as SearchNode[] : [])
           };
         }
       }
 
-      oldStack = null;
+      oldStack = [];
 
       return this._curr;
     }else{
@@ -1104,7 +1125,7 @@ export class RequestHelper
     }
   }
 
-  getCurrentNode():RequestNode{
+  getCurrentNode():Nullable<RequestNode>{
     return this._curr;
   }
 
@@ -1116,6 +1137,6 @@ export class RequestHelper
     return BUILTIN_SCOPES;
   }
   getDefaultScope():SearchScope {
-    return BUILTIN_SCOPES.ALL;
+    return BUILTIN_SCOPES['ALL'];
   }
 }

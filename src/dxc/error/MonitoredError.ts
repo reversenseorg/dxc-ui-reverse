@@ -17,7 +17,7 @@ export class MonitoredError extends Error {
     code:number;
     extra:any;
 
-    constructor( pCmp:string, pMsg:string, pCode:number = null, pExtra:any = null) {
+    constructor( pCmp:string, pMsg:string, pCode:number = -1, pExtra:any = null) {
         super(pMsg);
         this.cmp = pCmp;
         this.code = pCode;
@@ -33,7 +33,7 @@ export class MonitoredError extends Error {
         return this.extra;
     }
 
-    toString():string {
+    override toString():string {
         return `[${this.cmp}] [#${this.code!=null ? this.code : "<null>"} ${this.message}`;
     }
 

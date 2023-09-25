@@ -99,11 +99,11 @@ export class SplashComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('height')){
-      this.screenEl.nativeElement.style.height = changes.height.currentValue+"px";
-      this.bodyEl.nativeElement.style.height = (changes.height.currentValue - this.bannerEl.nativeElement.offsetHeight)+"px";
+      this.screenEl.nativeElement.style.height = changes['height'].currentValue+"px";
+      this.bodyEl.nativeElement.style.height = (changes['height'].currentValue - this.bannerEl.nativeElement.offsetHeight)+"px";
     }
     if(changes.hasOwnProperty('width')){
-      this.screenEl.nativeElement.style.width = changes.width.currentValue+"px";
+      this.screenEl.nativeElement.style.width = changes['width'].currentValue+"px";
     }
   }
 
@@ -116,19 +116,15 @@ export class SplashComponent implements OnInit,OnChanges {
    */
   private initializeIpcRenderer() {
 
-    if (this.electronService.ipcRenderer) {
       try {
-        this.ipcRenderer = this.electronService.ipcRenderer;
-        this.ipcRenderer.on('dxc-started', (pEvent)=>{
+        /*this.ipcRenderer = this.electronService.ipcRenderer;
+        this.ipcRenderer.on('dxc-started', ()=>{
           this.dxcStatus = true;
-        });
-
+        });*/
+        this.dxcStatus = true;
       } catch (e) {
         throw e;
       }
-    } else {
-      console.warn('Electron\'s IPC was not loaded');
-    }
   }
 
   ngOnInit() {

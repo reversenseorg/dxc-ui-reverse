@@ -16,6 +16,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {ElectronService} from "../../../core/services";
 import {HookService} from "../../hooks/ctrl/hook.service";
 import Application from '../../../models/Application';
+import {Nullable} from "../../../base/Nullable";
 
 enum INFO_TYPE {
   APP,
@@ -65,14 +66,14 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
   gIcons:any = GLOBAL_ICONS;
   hIcons:any = HOOK_ICONS;
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
   resize$: Subject<any> = new Subject<any>();
 
 
   data: any;
   inspectors:Inspector[] = [];
-  app: Application = null;
-  project: DexcaliburProject = null;
+  app: Nullable<Application> = null;
+  project: Nullable<DexcaliburProject> = null;
 
   activeTR: number = INFO_TYPE.TOP;
   activeTL: number = INFO_TYPE.APP;

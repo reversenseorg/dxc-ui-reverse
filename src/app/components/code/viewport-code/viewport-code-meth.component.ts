@@ -21,17 +21,18 @@ import {DeobfuscationService} from "../../deobfuscation/ctrl/deobfuscation.servi
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
-import {Observable} from "rxjs";
+import {from, Observable} from "rxjs";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {Tag} from "../../../models/tags/Tag";
 import {TagService} from "../../tag/ctrl/tag.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface DxcVM_Result {
   events: any[],
   instr: string[],
   tags: string[],
-  error: string
+  error: Nullable<string>
 }
 
 
@@ -154,9 +155,8 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
         this.data.enclosingClass = vClass.data;
         // mark arguments as class
 
-        const tags = [];
-        this.data.tags.map( uuid => {
-          tags.push(this.tagSvc.getTagByUUID(uuid));
+        const tags:Tag[] = [];
+        this.data.tags.map((uuid:any) => {         tags.push(this.tagSvc.getTagByUUID(uuid));
         });
         this.tags = tags;
 
@@ -368,7 +368,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   switchHook(pHook: AbstractHook) {
-    this.hookSvc.enableHook( pHook, (pHook.enable ? false : true)).subscribe( (pSuccess:any)=>{
+    this.hookSvc.enableHook( pHook, pHook.isEnable()).subscribe( (pSuccess:any)=>{
       //pHook.enable = pHook.enabled
     });
   }
@@ -479,7 +479,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   open(pItem: any): Observable<any> {
-    return undefined;
+    return from([]);
   }
 
   prepareDDVMOptions():any {
@@ -487,18 +487,14 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
     };
 
-    this.ddvmOpts[1].children.map( vPar => {
-      ops[vPar.name] = vPar.v;
+    this.ddvmOpts[1].children.map((vPar:any) => {     ops[vPar.name] = vPar.v;
     });
 
-    this.ddvmOpts[2].children.map( vPar => {
-      ops[vPar.name] = vPar.v;
+    this.ddvmOpts[2].children.map((vPar:any) => {     ops[vPar.name] = vPar.v;
     });
 
     ops.params = [];
-    this.ddvmOpts[0].children.map( vPar => {
-
-      console.log(vPar);
+    this.ddvmOpts[0].children.map((vPar:any) => {      console.log(vPar);
 
       ops.params.push({
         notset: vPar.sym,

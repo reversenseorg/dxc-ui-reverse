@@ -1,10 +1,11 @@
 import {ViewportView} from "../../../cmp/ViewportView";
-import {IController} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
 import {Subject} from "rxjs";
 import {ComponentFactoryResolver} from "@angular/core";
 import {StageComponent} from "../../stage/stage.component";
-import {ViewerController} from "../../viewer/ctrl/ViewerController";
 import {TeamService} from "./team.service";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 export class TeamController implements IController {
@@ -16,9 +17,9 @@ export class TeamController implements IController {
   name:string = 'team';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: TeamService = null;
+  service: TeamService;
 
   explorerCmp: any = null;
   viewCmp: any = null;
@@ -27,20 +28,18 @@ export class TeamController implements IController {
 
   views:ViewportView[] = [];
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   openView: Subject<any> = new Subject<any>();
   closeView: Subject<any> = new Subject<any>();
   focusView: Subject<any> = new Subject<any>();
 
-  viewer: ViewerController = null;
-  //viewComp: ViewportCodeComponent = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 
-  configure( pConfig:any=null):void {
+  configure( pConfig:IControllerOptions):void {
     if(pConfig==null) return;
 
     for(let i in pConfig){

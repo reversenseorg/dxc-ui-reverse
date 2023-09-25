@@ -16,6 +16,7 @@ import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import AndroidComponent from "../../../models/android/AndroidComponent";
+import {UIException} from "../../../base/error/UIException";
 
 
 export interface TopologyMenuEvent {
@@ -50,7 +51,7 @@ export class TopologyService extends DxcApiService {
   constructor( private appmenuSvc:AppMenuService,
                private searchSvc:SearchService,
                private outputSvc:OutputService,
-               protected _http:HttpClient) {
+               protected override _http:HttpClient) {
     super(
       {
         app: {
@@ -335,7 +336,7 @@ export class TopologyService extends DxcApiService {
         return merge(
           this.searchSvc.executeRaw('file("name:\.dex$")').pipe( map( (pData)=>{
             let f:ModelFile[] = [];
-            pData.data.map( vFile => { f.push(new ModelFile(vFile)); });
+            pData.data.map((vFile:any) => { f.push(new ModelFile(vFile)); });
             return f;
           })),
           this._process(
@@ -354,27 +355,29 @@ export class TopologyService extends DxcApiService {
       case 'libs':
         obs = this.searchSvc.executeRaw('file("type:ELF")');
         break;
+      default:
+        throw new Error("TODO EXC");
     }
 
-    return obs.pipe( map( (pData)=>{
-
+    return obs.pipe( map( (pData:any)=>{
 
       if(pData.success){
         let f:ModelFile[] = [];
-        pData.data.map( vFile => { f.push(new ModelFile(vFile)); });
+        pData.data.map((vFile:any) => {f.push(new ModelFile(vFile)); });
         return f;
       }else{
         this.outputSvc.print(OutputMessage.newError({
           src: "Topology",
           msg: pData.msg
         }));
+        return [];
       }
 
     }));
   }
 
-  sendIntent(pConfig: any) {
-    return null;
+  sendIntent():void {
+
   }
 }
 

@@ -11,6 +11,7 @@ import {IntentFilter} from "../../../models/android/IntentFilter";
 import AndroidComponent from "../../../models/android/AndroidComponent";
 import {IntentDataCriteria} from "../../../models/android/Intent";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -23,12 +24,9 @@ export class TopologyController extends UiController implements IController {
   name:string = 'topo';
 
   id:string = '';
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: TopologyService = null;
-
-
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  service: TopologyService;
 
   //explorer:ExplorerCodeComponent = null;
   rendered:any = [];
@@ -43,7 +41,7 @@ export class TopologyController extends UiController implements IController {
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter( (vItem:any) => {
       return (vItem.__signature__ !== pItem.__signature__);
     });
 
@@ -54,8 +52,7 @@ export class TopologyController extends UiController implements IController {
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
 
-    this.rendered.map( pView => {
-      if((pView.item.__ === pItem.__) && (pView.item.name === pItem.name)){
+    this.rendered.map((pView:any) => {     if((pView.item.__ === pItem.__) && (pView.item.name === pItem.name)){
         f = pView;
       }
     });

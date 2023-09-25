@@ -16,6 +16,8 @@ import AndroidActivity from "../../../models/android/AndroidActivity";
 import {TopologyService} from "../ctrl/topology.service";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {from, Observable} from "rxjs";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 @Component({
@@ -129,7 +131,7 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
   }
 
 
-  sendIntent(pComponent: AndroidComponent, pIntentFilter:IntentFilter, pCriteria: IntentDataCriteria = null, pEvent:any = null) {
+  sendIntent(pComponent: AndroidComponent, pIntentFilter:IntentFilter, pCriteria: Nullable<IntentDataCriteria> = null, pEvent:any = null) {
     // prepare generic intent
     if(pIntentFilter.hasMultipleActions() || pIntentFilter.hasMultipleCategories()) {
       this.parent.prepareIntent(pComponent, pIntentFilter, pCriteria);
@@ -247,18 +249,28 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
     return pItem.children;
   }
 
-  open(pItem: any): Observable<any> {
+  open(pItem: any): Observable<boolean> {
+
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+    let success:boolean;
     switch (pItem.__){
       case NodeInternalType.CLASS:
       case NodeInternalType.METHOD:
         this.controller.app.getController('ctrl:code-main').openNode(pItem.uid, pItem.__);
+        success = true;
         break;
       default:
         if(pItem.hasOwnProperty('parent')){
           this.controller.app.getController('ctrl:code-main').openNode(pItem.parent, NodeInternalType.METHOD);
+          success = true;
+        }else{
+          success = false;
         }
         break;
     }
-    return null;
+
+    return from([success]);
   }
 }

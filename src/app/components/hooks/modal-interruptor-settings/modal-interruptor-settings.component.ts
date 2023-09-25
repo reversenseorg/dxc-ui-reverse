@@ -21,6 +21,7 @@ import {HOOK_ICONS} from "../icons";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {
@@ -50,7 +51,7 @@ export class ModalInterruptorSettingsComponent extends AbstractKeyboardNavigable
    * @type {string}
    */
   @Input() title:Nullable<string> = null;
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -59,8 +60,8 @@ export class ModalInterruptorSettingsComponent extends AbstractKeyboardNavigable
   item: any = null;
   target:any = null;
   observed:Nullable<string> = null;
-  currentKP:KeyPoint = null;
-  selectedKP:KeyPoint = null;
+  currentKP:Nullable<KeyPoint> = null;
+  selectedKP:Nullable<KeyPoint> = null;
   kpList:KeyPoint[] = [];
 
   constructor( private changeDetectorRef: ChangeDetectorRef,

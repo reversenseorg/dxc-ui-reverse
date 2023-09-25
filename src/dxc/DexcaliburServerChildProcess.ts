@@ -1,6 +1,7 @@
 
 import * as assert from "assert";
 import DexcaliburEngine from "../app/models/DexcaliburEngine";
+import {Nullable} from "../app/base/Nullable";
 
 export interface IpcMessage {
   cmd: string;

@@ -46,6 +46,10 @@ import {TagService} from "../../tag/ctrl/tag.service";
 import {SelectionUtils} from "../../../core/services/dexcalibur/SelectionUtils";
 import {DxcSelectionType} from "../../../core/services/electron/SelectionManager";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
+import {UIException} from "../../../base/error/UIException";
+import {Nullable} from "../../../base/Nullable";
+import {IconModelCollection} from "../../../base/icon/IconModel";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -78,13 +82,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   NODE_TYPES:any = NodeInternalType;
 
-  /**
-   * Context
-   *
-   * @type {AppComponent}
-   * @field
-   */
-  app:any = null;
 
   /**
    * The default controller associated to this UI component
@@ -92,7 +89,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
    * @type {CodeController}
    * @field
    */
-  @Input() controller: CodeController;
+  @Input() override controller: CodeController;
 
   /**
    * This field holds the parent component, here the main explorer component.
@@ -100,7 +97,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
    * @type {ExplorerComponent}
    * @field
    */
-  @Input() parent:any;
+  @Input() override parent:any;
 
   /**
    * The reference to the DOM element containing this component
@@ -131,66 +128,20 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   protected _cuid:number = -1;
   onKeyboardEvent:Subject<any> = new Subject<any>();
 
-  id:string = "explorerCode";
+  override id = "explorerCode";
 
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
   selected:CODE_SUBVIEW = CODE_SUBVIEW.ALL;
   activeItem: any = null;
 
-  icons:  any = CODE_ICONS;
-  gIcons: any = GLOBAL_ICONS;
+  override icons:IconModelCollection = CODE_ICONS;
+  override gIcons:IconModelCollection = GLOBAL_ICONS;
 
-  offset:number = 0;
+  override offset:number = 0;
 
-  tab:ExplorerTab = new ExplorerTab({
-    offset: 0,
-    label: 'Code',
-    icon: GLOBAL_ICONS['CODE'],
-    color: 'dxc-text-clear100'
-  });
 
-  view:ExplorerView = new ExplorerView({
-    nav: new NavbarSimpleView({
-      selected: this.selected,
-      menu: new MenuView({
-        items: [
-          new MenuItem<CodeItem>({
-            id:CODE_SUBVIEW.APP,
-            label:'Application',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['WINDOW']
-          }),
-          new MenuItem<CodeItem>({
-            id:CODE_SUBVIEW.ANDROID_API,
-            label:'Android API',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['ANDROID']
-          }),
-          new MenuItem<CodeItem>({
-            id:CODE_SUBVIEW.ANDROID_FWK,
-            label:'Android Internals',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['ANDROID']
-          }),
-          new MenuItem<CodeItem>({
-            id:CODE_SUBVIEW.VENDOR,
-            label:'Vendor-specific',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['INTERNAL']
-          }),
-
-          new MenuItem<CodeItem>({
-            id:CODE_SUBVIEW.ALL,
-            label:'All',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['GLOBE']
-          }),
-        ]
-      })
-    })
-  });
 
   tags:any;
 
@@ -211,6 +162,54 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
+
+    this.tab = new ExplorerTab({
+      offset: 0,
+      label: 'Code',
+      icon: GLOBAL_ICONS['CODE'],
+      color: 'dxc-text-clear100'
+    });
+
+    this.view = new ExplorerView({
+      nav: new NavbarSimpleView({
+        selected: this.selected,
+        menu: new MenuView({
+          items: [
+            new MenuItem<CodeItem>({
+              id:CODE_SUBVIEW.APP,
+              label:'Application',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['WINDOW']
+            }),
+            new MenuItem<CodeItem>({
+              id:CODE_SUBVIEW.ANDROID_API,
+              label:'Android API',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['ANDROID']
+            }),
+            new MenuItem<CodeItem>({
+              id:CODE_SUBVIEW.ANDROID_FWK,
+              label:'Android Internals',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['ANDROID']
+            }),
+            new MenuItem<CodeItem>({
+              id:CODE_SUBVIEW.VENDOR,
+              label:'Vendor-specific',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['INTERNAL']
+            }),
+
+            new MenuItem<CodeItem>({
+              id:CODE_SUBVIEW.ALL,
+              label:'All',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['GLOBE']
+            }),
+          ]
+        })
+      })
+    });
 
     this._cuid = nextCUID();
 
@@ -310,10 +309,11 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
         if(typeof  pMethod ==='string'){
           this.codeService.getModelMethod(pMethod)
-            .subscribe((vMeth:ModelMethod)=> {
+            .subscribe((vMeth:Nullable<ModelMethod>)=> {
 
+              if(vMeth==null) return;
 
-                this.codeService.disassMethod(vMeth.__signature__).subscribe((pCode: any) => {
+                this.codeService.disassMethod(vMeth.__signature__ as string).subscribe((pCode: any) => {
                   //console.log(pCode);
        /*           let code: string = '';
 
@@ -338,7 +338,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               });
 
         }else if(pMethod.__view_code==undefined){
-          this.codeService.disassMethod(pMethod.__signature__).subscribe( (pCode:string)=>{
+          this.codeService.disassMethod(pMethod.__signature__ as string).subscribe( (pCode:Nullable<string>)=>{
             pMethod.__view_code = pCode;
             //this.modalMethod.open(pMethod);
           })
@@ -360,10 +360,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     }
   }
 
-  beforeHide():void{
-    //this.changeDetectorRef.reattach();
-  }
-
 
   ngAfterViewInit() {
 
@@ -375,8 +371,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {     this.ctxMenu[vMenu.name] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });
 
@@ -387,7 +382,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
     const el = this.explCodeRef.nativeElement; //document.getElementById('explorerCode');
     const ctn = this.explCodeCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
-    const navHeight:number = this.view.nav.size.height;
+    const navHeight:number = (this.view as any).nav.size.height;
 
     el.style.width = pSize.width+'px';
     el.style.maxWidth = pSize.width+'px';
@@ -414,8 +409,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           .listPackages( this.selected, '^'+pItem.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+'$')
           .pipe(
             map( (pObs:any)=>{
-              pObs[0].children.map( vSelf => {
-                vSelf._icon = this.codeService.getIconOf(vSelf._t);
+              pObs[0].children.map((vSelf:any) => {               vSelf._icon = this.codeService.getIconOf(vSelf._t);
 
 
                 if(vSelf._t=="p" && this.tags.INTERNAL.match(vSelf)){
@@ -447,7 +441,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               if(pObs.hasOwnProperty('data')==false || pObs.data==null) return;
 
               pObs.data._icon = this.icons['CLASS'];
-              pObs.data.fields.map( (vField)=>{
+              pObs.data.fields.map( (vField:any)=>{
                 vField['_t'] = 'f';
 
                 if(typeof vField.modifiers === 'number')
@@ -461,7 +455,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                 children.push(vField);
               });
 
-              pObs.data.methods.map( (vMeth)=>{
+              pObs.data.methods.map( (vMeth:any)=>{
                 vMeth['_t'] = 'm';
                 if(typeof vMeth.modifiers === 'number')
                   vMeth['mod'] = ModifierFormat.toJsonObject(vMeth.modifiers);
@@ -514,8 +508,11 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   sortPkg( pData:ModelPackage[]):any {
-    let pkgTree = {}, rest = [];
+    let pkgTree:IStringIndex<ModelPackage> = {}, rest = [];
     pData.map( (pPkg)=>{
+
+      if(pPkg.name==null) return;
+
       let fqn = pPkg.name.split('.');
 
       if(fqn.length==1){
@@ -537,10 +534,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
     if(pKey[0]=='['){
       field = pKey.substr(1);
-      cmpFn = ((aVal) => { return (aVal.indexOf(pValue)>-1); });
+      cmpFn = ((aVal:CodeItem) => { return (aVal.indexOf(pValue)>-1); });
     }else{
       field = pKey;
-      cmpFn = ((aVal) => { return (aVal === pValue); });
+      cmpFn = ((aVal:CodeItem) => { return (aVal === pValue); });
     }
 
     pData.map( (aPkg:CodeItem) => {
@@ -705,6 +702,11 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   hideCtxMenu():void{
+
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("explorer-code","hideCtxMenu");
+    }
+
     this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 

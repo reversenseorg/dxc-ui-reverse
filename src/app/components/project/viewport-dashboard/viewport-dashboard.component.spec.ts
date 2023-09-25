@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewportTopoComponent } from './viewport-hook.component';
+import { ViewportProjectDashboardComponent } from './viewport-dashboard.component';
 
-describe('ViewportHookComponent', () => {
-  let component: ViewportTopoComponent;
-  let fixture: ComponentFixture<ViewportTopoComponent>;
+describe('ViewportProjectDashboardComponent', () => {
+  let component: ViewportProjectDashboardComponent;
+  let fixture: ComponentFixture<ViewportProjectDashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewportTopoComponent ]
+      declarations: [ ViewportProjectDashboardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewportTopoComponent);
+    fixture = TestBed.createComponent(ViewportProjectDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

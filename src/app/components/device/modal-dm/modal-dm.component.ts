@@ -16,6 +16,7 @@ import {IconModel} from "../../../base/icon/IconModel";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {DEV_ICONS} from "../icons";
 import {Device} from "../../../models/Device";
+import {Nullable} from "../../../base/Nullable";
 
 
 const BINDING = {

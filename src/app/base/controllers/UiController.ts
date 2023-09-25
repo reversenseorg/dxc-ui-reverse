@@ -1,6 +1,9 @@
-import {ViewCmpMap} from "./IController.interface";
+import {IControllerOptions, ViewCmpMap} from "./IController.interface";
 import {Subject} from "rxjs";
 import {ViewportView} from "../../cmp/ViewportView";
+import {IStringIndex} from "../IStringIndex";
+import {ComponentFactoryResolver} from "@angular/core";
+import {Nullable} from "../Nullable";
 
 
 export class UiController {
@@ -12,6 +15,8 @@ export class UiController {
   modalCmp: any = null;
 
 
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
+
   openView: Subject<any> = new Subject<any>();
   closeView: Subject<any> = new Subject<any>();
   focusView: Subject<any> = new Subject<any>();
@@ -19,7 +24,7 @@ export class UiController {
 
   views:ViewportView[] = [];
 
-  configure( pConfig:any=null):void {
+  configure( pConfig:IControllerOptions):void {
     if(pConfig==null) return;
 
     for(let i in pConfig){

@@ -1,3 +1,4 @@
+import {Nullable} from "../../base/Nullable";
 
 export class AuthToken {
 

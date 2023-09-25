@@ -17,6 +17,7 @@ import {IConfigurableModal} from "../../../base/modal-base/IConfigurableModal";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {HelperService} from "../../helper/ctrl/HelperService";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 interface EventSources {
@@ -30,7 +31,7 @@ export interface AlertControl {
   handler: any
 }
 
-export interface AlertOptions {
+export interface AlertOptions extends IStringIndex<any>{
   controls?: AlertControl[],
   title?: string,
   helpDocID?:string

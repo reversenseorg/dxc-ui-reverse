@@ -1,5 +1,5 @@
 import {ViewportView} from "../../../cmp/ViewportView";
-import {IController, ViewCmpMap} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
 import {Observable, Subject} from "rxjs";
 import {ComponentFactoryResolver} from "@angular/core";
 import {AppComponent} from "../../../app.component";
@@ -8,6 +8,9 @@ import {Inspector} from "../../../models/Inspector";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {StageComponent} from "../../stage/stage.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {UIException} from "../../../base/error/UIException";
 
 
 
@@ -19,17 +22,24 @@ export class InspectorController implements IController {
    */
   name:string = 'inspector';
 
+  /**
+   * unique id
+   */
   id:Nullable<string> = null;
-  app: StageComponent = null;
 
-  service: InspectorService = null;
+  /**
+   * Main stage
+   */
+  app: Nullable<StageComponent> = null;
+
+  service: InspectorService;
 
   explorerCmp: any = null;
   viewCmp: ViewCmpMap = {};
   terminalCmp: any = null;
   modalCmp: any = null;
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   views:ViewportView[] = [];
   explorer:any = null;
@@ -41,11 +51,11 @@ export class InspectorController implements IController {
   //viewComp: ViewportCodeComponent = null;
 
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 
-  configure( pConfig:any=null):void {
+  configure( pConfig:IControllerOptions):void {
     if(pConfig==null) return;
 
     for(let i in pConfig){
@@ -63,7 +73,7 @@ export class InspectorController implements IController {
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter( (vItem:any) => {
       return (vItem.__signature__ !== pItem.__signature__);
     });
 
@@ -74,9 +84,7 @@ export class InspectorController implements IController {
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
 
-    this.rendered.map( pView => {
-
-      console.log(pView, pItem, pView.item.name === pItem.name);
+    this.rendered.map((pView:any) => {      console.log(pView, pItem, pView.item.name === pItem.name);
       if(pView.item.name === pItem.name){
         f = pView;
       }
@@ -87,6 +95,11 @@ export class InspectorController implements IController {
 
 
   _show( pItem:Inspector):void {
+
+
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
 
     const existingRef = this.isAlreadyRendered(pItem);
     const vid: string = this.id+':v'+this.rendered.length;
@@ -99,10 +112,15 @@ export class InspectorController implements IController {
 
     console.log('getting inspector > ', pItem.name);
 
-    this.service.getInspectorByID(pItem.id).subscribe( (pInspector:any)=>{
+    if(pItem.id == null){
+      throw new UIException("Inspector ID is null",-1);
+    }
+
+
+    this.service.getInspectorByID(pItem.id as string).subscribe( (pInspector:any)=>{
       console.log(pInspector);
       pInspector._icon = GLOBAL_ICONS['FIND'];
-      pInspector = this.app.getController('ctrl:hook-main').bindInspector(pInspector);
+      pInspector = (this.app as any).getController('ctrl:hook-main').bindInspector(pInspector);
       this.rendered.push({ item:pItem, uid:vid });
       this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pInspector, uid:vid });
     });
@@ -116,10 +134,11 @@ export class InspectorController implements IController {
     this._show({ name: pName} as Inspector);
   }
 
-  show( pInspector:Inspector){
+  show( pInspector:Inspector):void{
     if(pInspector.__!==NodeInternalType.INSPECTOR){
-      return null;
+        throw new UIException("Inspector cannot be displayec : this is not an inspector",-1);
+    }else{
+      this._show(pInspector);
     }
-    this._show(pInspector);
   }
 }

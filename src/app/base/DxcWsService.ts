@@ -5,6 +5,7 @@ import {Utils} from "../cmp/Utils";
 import {Injectable} from "@angular/core";
 import {w3cwebsocket as W3CWebSocket} from "websocket" ;
 import {EndpointMap} from "./DxcApiService";
+import {Nullable} from "./Nullable";
 
 
 // @ts-ignore
@@ -17,7 +18,7 @@ import {EndpointMap} from "./DxcApiService";
  */
 export class DxcWsService {
 
-  protected _client:W3CWebSocket = null;
+  public _client:W3CWebSocket;
 
   endpoints: EndpointMap;
 
@@ -29,17 +30,26 @@ export class DxcWsService {
       console.log('Connection Error');
     };
 
-    this._client.onopen = function() {
+    this._client.onopen = ()=> {
       console.log('WebSocket Client Connected');
 
       // TODO : improve performand with $timeout
-      function sendNumber() {
+      /*function sendNumber() {
         if ( this._client.readyState ===  this._client.OPEN) {
           let n:number = Math.round(Math.random() * 0xFFFFFF);
           this._client.send(n.toString());
           setTimeout(sendNumber, 1000);
         }
-      }
+      }*/
+
+      const sendNumber = (()=>{
+        const cli= this._client;
+        if (cli.readyState ===  cli.OPEN) {
+          let n:number = Math.round(Math.random() * 0xFFFFFF);
+          cli.send(n.toString());
+          setTimeout(sendNumber, 1000);
+        }
+      });
 
 
       sendNumber();

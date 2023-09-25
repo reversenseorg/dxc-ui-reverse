@@ -21,6 +21,7 @@ import {HOOK_ICONS} from "../icons";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {

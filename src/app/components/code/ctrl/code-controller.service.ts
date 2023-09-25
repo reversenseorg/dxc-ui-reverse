@@ -19,6 +19,8 @@ import ModelFile from "../../../models/ModelFile";
 import {TagService} from "../../tag/ctrl/tag.service";
 import ModelPackage from "../../../models/ModelPackage";
 import {InfiniteScrollOpts} from "../../../cmp/InfiniteScrollOpts";
+import {Nullable} from "../../../base/Nullable";
+import ModelBasicBlock from "../../../models/ModelBasicBlock";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -270,7 +272,7 @@ export class CodeControllerService extends DxcApiService{
    * @param pName {string} pattern
    *
    */
-  listPackages( pName:CODE_SUBVIEW = null, pFilter:string = null, pOptions:InfiniteScrollOpts={}): Observable<CodeItem[]> {
+  listPackages( pName:Nullable<CODE_SUBVIEW> = null, pFilter:Nullable<string> = null, pOptions:InfiniteScrollOpts={}): Observable<CodeItem[]> {
     let endpoint:EndpointInfo;
     let options:any = {};
 
@@ -305,7 +307,7 @@ export class CodeControllerService extends DxcApiService{
 
           let notReady = 0;
           let data:any[] = [];
-          pObs.data.map( vChild => {
+          pObs.data.map( (vChild:any) => {
 
 
             switch(vChild.__){
@@ -320,7 +322,7 @@ export class CodeControllerService extends DxcApiService{
                   vChild._icon = this.getIconOf(vChild._t);
                 }
 
-                vChild.children.map( vSelf => {
+                vChild.children.map( (vSelf:any) => {
 
                   vSelf._icon = this.getIconOf(vSelf._t)
 
@@ -351,7 +353,7 @@ export class CodeControllerService extends DxcApiService{
                   vChild.$r = false;
                 }else{
                   vChild.children = Object.values(vChild.__p.f_list);
-                  vChild.children.map( vSelf => {
+                  vChild.children.map((vSelf:any) => {
                     vSelf._icon = this.getIconOf('m');
                     vSelf.__ = NodeInternalType.FUNC;
                     vSelf._e = true;
@@ -389,6 +391,7 @@ export class CodeControllerService extends DxcApiService{
           return data;
         }else{
           this.outputSvc.print( OutputMessage.newError(pObs.msg))
+          return [];
         }
       })
     );
@@ -436,7 +439,7 @@ export class CodeControllerService extends DxcApiService{
     }
   }
 
-  getCompleteClass( pQuery:string):Observable<ModelClass> {
+  getCompleteClass( pQuery:string):Observable<Nullable<ModelClass>> {
 
       return this._process(
         this.endpoints['class']['info'],
@@ -446,6 +449,7 @@ export class CodeControllerService extends DxcApiService{
       ).pipe(map((pRes:any)=>{
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({ msg:pRes.err, src:"Bytecode Analyzer"  }));
+          return null;
         }else{
           // add localstorage cache
           const c:ModelClass = new ModelClass(pRes.data);
@@ -506,12 +510,13 @@ export class CodeControllerService extends DxcApiService{
     }));
   }
 
-  getModelMethod( pSignature:string):Observable<ModelMethod> {
+  getModelMethod( pSignature:string):Observable<Nullable<ModelMethod>> {
     return this.getMethod(pSignature).pipe( map((pObs:any) => {
         if(pObs.data != undefined && Object.keys(pObs.data).length>0){
           return new ModelMethod(pObs.data);
         }else{
           console.log("Error : invalid method data for "+pSignature);
+          return null;
         }
     }));
   }
@@ -525,7 +530,7 @@ export class CodeControllerService extends DxcApiService{
     );
   }
 
-  getCompleteField( pQuery:string):Observable<ModelField> {
+  getCompleteField( pQuery:string):Observable<Nullable<ModelField>> {
 
     return this._process(
       this.endpoints['field']['info'],
@@ -535,6 +540,7 @@ export class CodeControllerService extends DxcApiService{
     ).pipe(map((pRes:any)=>{
       if(!pRes.success){
         this.outputSvc.print(OutputMessage.newError({ msg:pRes.err, src:"Bytecode Analyzer"  }));
+        return null;
       }else{
         // add localstorage cache
         return new ModelField(pRes.data);
@@ -551,7 +557,7 @@ export class CodeControllerService extends DxcApiService{
     );
   }
 
-  disassMethod( pRef:string):Observable<string> {
+  disassMethod( pRef:string):Observable<Nullable<string>> {
     return this._process(
       this.endpoints['method']['disass'],
       {
@@ -560,13 +566,14 @@ export class CodeControllerService extends DxcApiService{
     ).pipe(map( pRes => {
       if(!pRes.success){
         this.outputSvc.print(OutputMessage.newError({ msg:pRes.msg, src:"Bytecode Analyzer" }));
+        return null;
       }else{
         let code = '';
 
         pRes.data.smali = "";
 
-        pRes.data.disass.map(pBB => {
-          pBB.instr.map(pInstr => {
+        pRes.data.disass.map((pBB:any) => {
+          pBB.instr.map((pInstr:any) => {
             code += pInstr.value + `
 `;
           })
@@ -599,7 +606,7 @@ export class CodeControllerService extends DxcApiService{
   rename( pType:string, pRef:string, pAlias:string): Observable<Message>{
 
     return this._process(
-      this.endpoints[pType].edit,
+      this.endpoints[pType]['edit'],
       {
         alias: pAlias,
         'id': pRef

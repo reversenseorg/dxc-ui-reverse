@@ -70,14 +70,12 @@ export default class ControlAssessment {
             switch (i){
                 case "matches":
                     o.matches = [];
-                    this.matches.map( x => {
-                        o.matches.push( x.toJsonObject());
+                    this.matches.map((x:any) => {                       o.matches.push( x.toJsonObject());
                     });
                     break;
                 case "rules":
                     o.rules = [];
-                    this.rules.map( x => {
-                       o.rules.push( x.toJsonObject());
+                    this.rules.map((x:any) => {                      o.rules.push( x.toJsonObject());
                     });
                     break;
                 default:

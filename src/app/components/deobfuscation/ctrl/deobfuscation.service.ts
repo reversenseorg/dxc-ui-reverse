@@ -11,6 +11,7 @@ import {OutputService} from "../../output/ctrl/output.service";
 import ModelMethod from "../../../models/ModelMethod";
 import {Utils} from "../../../cmp/Utils";
 import {OutputMessage} from "../../../cmp/OutputMessage";
+import {Nullable} from "../../../base/Nullable";
 
 
 // @ts-ignore
@@ -39,14 +40,14 @@ export class DeobfuscationService extends DxcApiService {
 
 
 
-  doNOPCount( pMethod:ModelMethod|string = null):Observable<any> {
+  doNOPCount( pMethod:Nullable<ModelMethod|string> = null):Observable<any> {
     let opts:any = {};
 
     // iff mot null or undefined
     if(pMethod!=null){
       if(typeof pMethod==='string')
         opts.meth = Utils.dxc_encodeURIparam(pMethod);
-      else
+      else if(pMethod.__signature__!=null)
         opts.meth = Utils.dxc_encodeURIparam(pMethod.__signature__);
     }
 
@@ -62,7 +63,7 @@ export class DeobfuscationService extends DxcApiService {
       }));
   }
 
-  doNOPClean( pMethod:ModelMethod|string = null):Observable<any> {
+  doNOPClean( pMethod:Nullable<ModelMethod|string> = null):Observable<any> {
     let opts:any = {};
 
     // iff mot null or undefined
@@ -85,7 +86,7 @@ export class DeobfuscationService extends DxcApiService {
   }
 
 
-  doAutoRename( pMethod:ModelMethod|string = null):Observable<any> {
+  doAutoRename( pMethod:Nullable<ModelMethod|string> = null):Observable<any> {
     let opts:any = {};
 
     // iff mot null or undefined

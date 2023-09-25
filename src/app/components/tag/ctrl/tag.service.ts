@@ -37,7 +37,7 @@ export class TagService extends DxcApiService {
   _uuidMap:any = {};
   _nameMap:any = {};
 
-  constructor( private appmenuSvc:AppMenuService,  private outputSvc:OutputService,  protected _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService,  private outputSvc:OutputService,  protected override _http:HttpClient) {
     super(
       {
         category: {
@@ -55,10 +55,10 @@ export class TagService extends DxcApiService {
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Tags"}));
+          return [];
         }else{
           this.cache.categories = [];
-          pRes.data.map( x => {
-            const c = new TagCategory(x);
+          pRes.data.map((x:any) => {           const c = new TagCategory(x);
             /*c._tags.map( (v,i)=>{
               const t = new Tag(v);
               c._tags[i] = t;
@@ -79,13 +79,13 @@ export class TagService extends DxcApiService {
       return from([ this.cache.tags ]);
     }else{
       return this._process( this.endpoints['tag']['list'], {})
-        .pipe(map( pRes => {
+        .pipe(map( (pRes:any) => {
           if(!pRes.success){
             this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Tags"}));
+            return [];
           }else{
             this.cache.tags = [];
-            pRes.data.map( x => {
-              const c = new Tag(x);
+            pRes.data.map((x:any) => {             const c = new Tag(x);
               this._uuidMap[c.getUUID()] = c;
               this._nameMap[c.getUID()] = c;
               this.cache.tags.push(c);
@@ -117,8 +117,7 @@ export class TagService extends DxcApiService {
     const tags:Tag[] = [];
     const pattern = new RegExp(vPattern);
 
-    this.cache.tags.map( vTag => {
-      if(pattern.test(vTag.getUID())){
+    this.cache.tags.map((vTag:any) => {     if(pattern.test(vTag.getUID())){
         tags.push(vTag);
       }
     });

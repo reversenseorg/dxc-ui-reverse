@@ -7,6 +7,8 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import HookMessage from "../../../models/HookMessage";
 import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 export interface HookErrorMessage {
   msg:any,
@@ -28,23 +30,23 @@ export enum HOOK_SESSION_CMD {
 export class HookSession {
 
   uid:Nullable<string> = null;
-  icon:IconModel = null;
+  icon:Nullable<IconModel> = null;
   label:string = 'Session';
   active: boolean = false;
   exited:boolean = false;
   closable:boolean = true;
   iconColor:string = 'dxc-text-clear100';
   color:string = 'dxc-text-clear100';
-  prj:DexcaliburProject = null;
+  prj:Nullable<DexcaliburProject> = null;
 
-  channel:WebsocketChannel = null;
+  channel:Nullable<WebsocketChannel> = null;
 
   messages:RuntimeEvent<any>[] = [];
 
   info: Subject<any> = new Subject<any>();
   msg: Subject<any> = new Subject<any>();
 
-  hookError$:Subject<any> = null;
+  hookError$:Subject<any> = new Subject<any>();
 
 //  oob:Subject<any> = new Subject<any>();
 
@@ -102,6 +104,14 @@ export class HookSession {
         switch(pMsg.action){
           case HOOK_SESSION_CMD.INIT:
             console.log(pMsg);
+
+            if(self.channel==null){
+              throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","processMessage");
+            }
+            if(self.prj==null){
+              throw UIException.PROJECT_IS_NOT_READY("HookSession","processMessage");
+            }
+
             self.channel.sessid = pMsg.data.sessid;
             self.channel.send({ action:HOOK_SESSION_CMD.NEW, svc:"hookm", prj:self.prj.uid, data: {} });
             break;
@@ -172,7 +182,10 @@ export class HookSession {
    * @method
    */
   getUID():string{
-    return this.channel.sessid;
+    if(this.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","getUID");
+    }
+    return this.channel.getSessID();
   }
 
   /**
@@ -185,6 +198,9 @@ export class HookSession {
    * @since 1.0.0
    */
   start( pType =''){
+    if(this.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","start");
+    }
     this.channel.sendRaw({ action:HOOK_SESSION_CMD.NEW, svc:'hookm', prj:this.prj, data: {}});
   }
   /**
@@ -196,6 +212,9 @@ export class HookSession {
    * @since 1.0.0
    */
   exit():void{
+    if(this.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","exit");
+    }
     this.channel.send({ action:HOOK_SESSION_CMD.EXIT, svc:'hookm', prj:this.prj, data: { }});
   }
 }

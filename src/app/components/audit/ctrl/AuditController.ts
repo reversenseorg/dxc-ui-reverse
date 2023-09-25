@@ -1,4 +1,4 @@
-import {IController, ViewCmpMap} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
 import {Subject} from "rxjs";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ComponentFactoryResolver} from "@angular/core";
@@ -37,7 +37,7 @@ export class AuditController implements IController {
   closeView: Subject<any> = new Subject<any>();
   focusView: Subject<any> = new Subject<any>();
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 

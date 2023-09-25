@@ -68,6 +68,8 @@ import {AuditService} from "./components/audit/ctrl/audit.service";
 import {AuditController} from "./components/audit/ctrl/AuditController";
 import {ExplorerAuditComponent} from "./components/audit/explorer-audit/explorer-audit.component";
 import {ViewportAuditComponent} from "./components/audit/viewport-audit/viewport-audit.component";
+import {Nullable} from "./base/Nullable";
+import {UIException} from "./base/error/UIException";
 
 
 interface StageSet {
@@ -81,7 +83,7 @@ interface StageSet {
 })
 export class ControllerService {
 
-  helper: HelperController = null;
+  helper: Nullable<HelperController> = null;
   private _s:StageSet = {};
 
   constructor(
@@ -115,11 +117,14 @@ export class ControllerService {
     this._s[pName] = pApp;
   }
 
-  getStage(pName):StageComponent {
+  getStage(pName:string):StageComponent {
     return this._s[pName];
   }
 
   getHelper(): HelperController {
+    if(this.helper==null){
+      throw UIException.CONTROLLER_NOT_READY("helper");
+    }
     return this.helper;
   }
 

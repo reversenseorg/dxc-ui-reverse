@@ -1,4 +1,5 @@
 import {DxcSelection} from "./SelectionManager";
+import {Nullable} from "../../../base/Nullable";
 
 export class ClipBoard {
   
@@ -29,7 +30,7 @@ export class ClipBoard {
   /**
    * To get clipped value from external
    */
-  lastExternal():string {
+  lastExternal():Nullable<string> {
     const v = this.last();
     if( (v !== null) && (typeof (v) == "object")) {
       return v.el;

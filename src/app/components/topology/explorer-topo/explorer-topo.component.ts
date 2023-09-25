@@ -37,6 +37,8 @@ import {Device} from "../../../models/Device";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {UIException} from "../../../base/error/UIException";
 
 
 
@@ -137,93 +139,11 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   selected:number = this.SUBVIEW.ALL;
   activeItem: any = null;
 
-  overrideicons:  any = TOPO_ICONS;
-  gIcons: any = GLOBAL_ICONS;
-
-  offset:number = 5;
-
-
-  tab:ExplorerTab = new ExplorerTab({
-    offset: 0,
-    label: 'Application',
-    icon: GLOBAL_ICONS['GLOBE'],
-    color: 'dxc-icon-window'
-  });
-
-  view:ExplorerView = new ExplorerView({
-    nav: new NavbarSimpleView({
-      selected: this.selected,
-      menu: new MenuView({
-        items: [
-          new MenuItem<any>({
-            id:this.SUBVIEW.ALL,
-            label:'All',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['WINDOW']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.ACT,
-            label:'Activities',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['ACTIVITY']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.PROV,
-            label:'Providers',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['PROVIDER']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.SRV,
-            label:'Services',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['SERVICE']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.RECV,
-            label:'Receiver',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['RECEIVER']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.PERM,
-            label:'Permissions',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['PERM']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.DATA,
-            label:'Data',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['DB']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.KS,
-            label:'Key Store',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['KS']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.DEX,
-            label:'Dex files',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['DEX']
-          }),
-          new MenuItem<any>({
-            id:this.SUBVIEW.LIB,
-            label:'Libraries',
-            color: 'dxc-text-clear75',
-            icon: TOPO_ICONS['LIBS']
-          })
-        ]
-      })
-    })
-  });
 
 
 
 
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
 
   data:any = {};
@@ -243,6 +163,87 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
     this._cuid = nextCUID();
     this.view.id = this.id;
+
+    this.offset = 5;
+
+
+    this.tab = new ExplorerTab({
+      offset: 0,
+      label: 'Application',
+      icon: GLOBAL_ICONS['GLOBE'],
+      color: 'dxc-icon-window'
+    });
+
+    this.view = new ExplorerView({
+      nav: new NavbarSimpleView({
+        selected: this.selected,
+        menu: new MenuView({
+          items: [
+            new MenuItem<any>({
+              id:this.SUBVIEW.ALL,
+              label:'All',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['WINDOW']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.ACT,
+              label:'Activities',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['ACTIVITY']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.PROV,
+              label:'Providers',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['PROVIDER']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.SRV,
+              label:'Services',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['SERVICE']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.RECV,
+              label:'Receiver',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['RECEIVER']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.PERM,
+              label:'Permissions',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['PERM']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.DATA,
+              label:'Data',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['DB']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.KS,
+              label:'Key Store',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['KS']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.DEX,
+              label:'Dex files',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['DEX']
+            }),
+            new MenuItem<any>({
+              id:this.SUBVIEW.LIB,
+              label:'Libraries',
+              color: 'dxc-text-clear75',
+              icon: TOPO_ICONS['LIBS']
+            })
+          ]
+        })
+      })
+    });
+
 
     this.data[this.SUBVIEW.ACT] = { _t: 'f', _s:0, children: [], name: 'Activities', _c: NodeInternalType.ANDROID_ACTIVITY, _icon: TOPO_ICONS['ACTIVITIES'] };
     this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _c: NodeInternalType.ANDROID_PROVIDER, _icon: TOPO_ICONS['PROVIDER'] };
@@ -273,7 +274,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
             this.expandItem(pEvent.item);
             break;
           case NodeInternalType.FILE:
-            let itm:ExpandableItemComponent<any> = null;
+            let itm:Nullable<ExpandableItemComponent<any>> = null;
             switch (pEvent.type){
               case 'ks':
                 this.parent.selectTab(this.offset);
@@ -313,8 +314,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
         .getManifest()
         .subscribe((pActs:AndroidManifest) => {
 
-          pActs.map( vChild => {
-            vChild._t = NodeType.ACTIVITY;
+          pActs.map((vChild:any) => {           vChild._t = NodeType.ACTIVITY;
             vChild._icon = this.icons['ACTIVITY'];
             // TODO : add intent filter as children
           });
@@ -356,15 +356,15 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     });
   }
 
-   private _getItem( pName:string, pValue:any, pNested = false): ExpandableItemComponent<any> {
-     let ret:ExpandableItemComponent<any> = null;
+   private _getItem( pName:string, pValue:any, pNested = false): Nullable<ExpandableItemComponent<any>> {
+     let ret:Nullable<ExpandableItemComponent<any>> = null;
 
      const items = this.expandableItems.toArray();
 
      for(let i=0; i<items.length; i++){
        if(!pNested){
          console.log(this.expandableItems);
-         if(items[i][pName] === pValue){
+         if((items[i] as IStringIndex<any>)[pName] === pValue){
            ret = items[i];
            break;
          }
@@ -400,8 +400,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getActivities()
       .subscribe((pActs:AndroidActivity[]) => {
 
-        pActs.map( vChild => {
-          vChild.__ = NodeInternalType.ANDROID_ACTIVITY;
+        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_ACTIVITY;
           vChild._icon = this.icons['ACTIVITY'];
           // TODO : add intent filter as children
         });
@@ -416,8 +415,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getProviders()
       .subscribe((pActs:AndroidProvider[]) => {
 
-        pActs.map( vChild => {
-          vChild.__ = NodeInternalType.ANDROID_PROVIDER;
+        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_PROVIDER;
           vChild._icon = this.icons['PROVIDER'];
           // TODO : add intent filter as children
         });
@@ -433,8 +431,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getServices()
       .subscribe((pActs:AndroidService[]) => {
 
-        pActs.map( vChild => {
-          vChild.__ = NodeInternalType.ANDROID_SERVICE;
+        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_SERVICE;
           vChild._icon = this.icons['SERVICE'];
           // TODO : add intent filter as children
         });
@@ -450,8 +447,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getReceivers()
       .subscribe((pActs:AndroidReceiver[]) => {
 
-        pActs.map( vChild => {
-          vChild.__ = NodeInternalType.ANDROID_RECEIVER;
+        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_RECEIVER;
         });
 
         this.data[this.SUBVIEW.RECV].children = pActs;
@@ -464,8 +460,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getPermissions()
       .subscribe((pActs:any[]) => {
 
-        pActs.map( vChild => {
-          vChild.__ = NodeInternalType.ANDROID_PERM;
+        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_PERM;
           vChild._icon = this.icons['PERM'];
           // TODO : add intent filter as children
         });
@@ -533,8 +528,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {     this.ctxMenu[vMenu.name] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });
   }
@@ -543,7 +537,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
     const el = this.explCtnRef.nativeElement; //document.getElementById('explorerCode');
     const ctn = this.explCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
-    const navHeight:number = this.view.nav.size.height;
+    const navHeight:number = (this.view as any).nav.size.height;
 
     el.style.width = pSize.width+'px';
     el.style.maxWidth = pSize.width+'px';
@@ -573,8 +567,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
             map( (pObs:any)=>{
               //pObs.data._icon = this.icons['CLASS'];
 
-              pObs.data[0].children.map( vSelf => {
-                if(vSelf._t=='c'){
+              pObs.data[0].children.map((vSelf:any) => {               if(vSelf._t=='c'){
                   vSelf._icon = this.icons['CLASS'];
                 }else{
                   vSelf._icon = this.icons['PKG'];
@@ -709,6 +702,10 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   }
 
   hideCtxMenu():void{
+
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("explorer-topo","hideCtxMenu");
+    }
     this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 

@@ -8,6 +8,7 @@ import {NativeController} from "../ctrl/NativeController";
 import {FILE_ICONS} from "../../file/icons";
 import ModelFile from "../../../models/ModelFile";
 import {ViewportNativeComponent} from "./viewport-native.component";
+import {Nullable} from "../../../base/Nullable";
 
 @Component({
   selector: 'app-viewport-native',
@@ -44,7 +45,7 @@ export class ViewportNativeMainComponent implements OnInit, AfterViewInit, IView
   resize$: Subject<any> = new Subject<any>();
 
 
-  data: ModelFile = null;
+  data: Nullable<ModelFile> = null;
 
   constructor() { }
 

@@ -17,6 +17,8 @@ import {TerminalItem} from "../../cmp/TerminalItem";
 import {ExplorerItem} from "../../cmp/ExplorerItem";
 import {StageComponent} from "../../components/stage/stage.component";
 import {Subject} from "rxjs";
+import {Nullable} from "../Nullable";
+import {TerminalTab} from "../../cmp/TerminalTab";
 
 @Component({
   selector: 'app-terminal',
@@ -51,7 +53,7 @@ export class TerminalComponent implements OnInit, OnChanges {
   viewSize: any = null;
 
   views: ITerminalContainer[] = [];
-  activeCtn: ITerminalContainer = null;
+  activeCtn: Nullable<ITerminalContainer> = null;
   idCTR:number = -1;
   ctnHeight:number = -1;
 
@@ -134,7 +136,7 @@ export class TerminalComponent implements OnInit, OnChanges {
     ctn.style.minHeight = this.ctnHeight+'px';
 
     this.viewSize = { height: this.ctnHeight, width:el.offsetWidth };
-    this.views.map( vView => {
+    this.views.map( (vView:ITerminalContainer) => {
       vView.resize({ height: this.ctnHeight, width:el.offsetWidth });
     });
   }
@@ -170,7 +172,7 @@ export class TerminalComponent implements OnInit, OnChanges {
    */
   selectTabByLabel( pLabel:string):void {
     for(let i=0; i<this.views.length; i++){
-      if(this.views[i].tab.label===pLabel){
+      if((this.views[i].tab!=null) && ((this.views[i].tab as TerminalTab).label===pLabel)){
         this.selectTab(this.views[i]);
         break;
       }
@@ -186,7 +188,7 @@ export class TerminalComponent implements OnInit, OnChanges {
    * @method
    */
   isTabActive( pView:ITerminalContainer):boolean {
-    return (pView.id === this.activeCtn.id);
+    return (this.activeCtn!=null) && (pView.id === this.activeCtn.id);
   }
 
   onDragToResize(pEvent: any): void {

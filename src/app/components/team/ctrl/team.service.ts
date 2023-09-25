@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {AuthService} from "../../auth/ctrl/auth.service";
 import {DxcApiToken} from "../../../base/DxcApiToken";
+import {UIException} from "../../../base/error/UIException";
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +48,13 @@ export class TeamService extends DxcApiService{
         label: 'Logout ...',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           if(DxcApiToken.count()==1){
-            this.authSvc.logout(DxcApiToken.getInstance(null).getName())
+            const t = DxcApiToken.getInstance(null);
+
+            if(t==null){
+              throw UIException.AUTH_ERROR("Cannot logout, token is missing");
+            }
+
+            this.authSvc.logout(t.getName())
               .subscribe(function(vSuccess){
                 console.log(vSuccess);
               })

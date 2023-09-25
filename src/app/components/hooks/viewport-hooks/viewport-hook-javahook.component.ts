@@ -16,14 +16,16 @@ import {AbstractHook} from "../../../models/AbstractHook";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
 import {ElectronService} from "../../../core/services";
+import {UIException} from "../../../base/error/UIException";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
-const FRAG_TYPE = {
+const FRAG_TYPE:IStringIndex<string> = {
   a: 'AFTER',
   b: 'BEFORE',
   r: 'REPLACE',
 };
-const FRAG_CSS = {
+const FRAG_CSS:IStringIndex<string> = {
   a: 'dxc-herb',
   b: 'dxc-salmon',
   r: 'dxc-azue',
@@ -97,8 +99,9 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     this.hookSvc.onFragmentUpdate.subscribe( (pOptions:any)=>{
       const uid = (pOptions.hook as JavaMethodHook).getGUID();
 
-      if(this.data.getGUID() === uid){
-        this.hookSvc.getHook((pOptions.hook as JavaMethodHook).getGUID()).subscribe((vHook:any)=>{
+      if((uid!=null) && (this.data.getGUID() === uid)){
+
+        this.hookSvc.getHook(uid).subscribe((vHook:any)=>{
           this.data.setBefore(vHook._before);
           this.data.setAfter(vHook._after);
           this.data.setReplace(vHook._replace);
@@ -251,6 +254,10 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
    * @param pMethod
    */
   openMethod(pHook: any) {
+
+    if(this.controller.app==null){
+      throw UIException.APP_NOT_INITIALIZED;
+    }
     // ask to Code module to display Method bytecode into a modal
     if(this.data.__ == NodeInternalType.HOOK_JAVA){
       this.controller.app.getController('ctrl:code-main').open( pHook.method, 'vp');

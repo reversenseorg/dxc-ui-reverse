@@ -2,6 +2,9 @@ import {EndpointMap} from "./DxcApiService";
 import {w3cwebsocket as W3CWebSocket} from "websocket" ;
 import {Subject} from "rxjs";
 import {Nullable} from "./Nullable";
+import {UIException} from "./error/UIException";
+import {WebsocketClientException} from "./error/WebsocketClientException";
+import {IStringIndex} from "./IStringIndex";
 
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
@@ -33,7 +36,7 @@ export abstract class WebsocketChannel {
 
     for(let i in pConfig)
       if(this.hasOwnProperty(i))
-        this[i]=pConfig[i];
+        (this as IStringIndex<any>)[i]=pConfig[i];
 
     this.out.subscribe( pObs => {
       this.onMessage(pObs);
@@ -62,6 +65,13 @@ export abstract class WebsocketChannel {
     pData.data.localid = this.localid;
     this.in.next(pData);
   }
+
+  getSessID():string {
+    if(this.sessid==null){
+      throw WebsocketClientException.SESSID_IS_NOT_DEFINED();
+    }
+    return this.sessid;
+  }
 }
 
 
@@ -83,7 +93,7 @@ export class WebsocketClient
   protected _channels:ChannelIndex = {};
 
   protected _pingTimer:any = null;
-  protected _ping:WebsocketChannel = null;
+  protected _ping:Nullable<WebsocketChannel> = null;
 
   _recv:Subject<any> = new Subject<any>();
   _err:Subject<any> = new Subject<any>();
@@ -91,7 +101,7 @@ export class WebsocketClient
   _send:Subject<any> = new Subject<any>();
 
 
-  readonly endpoints: EndpointMap;
+  readonly endpoints: Nullable<EndpointMap>;
   readonly host: string;
 
   ready:boolean = false;
@@ -178,8 +188,8 @@ export class WebsocketClient
       this._ping.send({ action:"_", svc:"_ping", data: {} });
 
       // todo : replace by worker
-      this._pingTimer = setInterval( ()=>{;
-        this._ping.send({ action:"_", svc:"_ping", data: {} });
+      this._pingTimer = setInterval( ()=>{
+        (this._ping as any).send({ action:"_", svc:"_ping", data: {} });
       }, pDelay);
     }
   }

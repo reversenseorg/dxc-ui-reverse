@@ -1,3 +1,4 @@
+import {IStringIndex} from "./IStringIndex";
 
 export class DxcComponent {
 

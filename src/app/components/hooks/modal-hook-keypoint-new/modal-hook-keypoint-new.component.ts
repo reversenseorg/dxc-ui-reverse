@@ -24,6 +24,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import KeyPoint from '../../../models/KeyPoint';
 import {IconModel} from "../../../base/icon/IconModel";
 import {AbstractHook} from "../../../models/AbstractHook";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {
@@ -58,7 +59,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -72,8 +73,8 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
 
   private onStart:any = null;
 
-  parentKP:KeyPoint = null;
-  type:number = null;
+  parentKP:Nullable<KeyPoint> = null;
+  type:number = -1;
   targetName:string;
   htype:string = HOOK_TARGET_TYPE.METHOD;
   target:any = null;
@@ -173,7 +174,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
    * @param pNextStep {string} Default: null. Name of the next step after key point creation
    * @method
    */
-  create( pNextStep:string = null):void {
+  create():void {
     const opts:any = {
       condition:this.condition,
       weight:this.weight,

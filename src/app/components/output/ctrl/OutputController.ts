@@ -1,10 +1,12 @@
-import {IController, ViewCmpMap} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
 import {Subject} from "rxjs";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ComponentFactoryResolver} from "@angular/core";
 import {ExplorerCodeComponent} from "../../code/explorer-code/explorer-code.component";
 import {OutputService} from "./output.service";
 import {StageComponent} from "../../stage/stage.component";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 export class OutputController implements IController {
@@ -16,19 +18,19 @@ export class OutputController implements IController {
   name:string = 'out';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: OutputService = null;
+  service: OutputService;
 
   explorerCmp: any = null;
   viewCmp: ViewCmpMap = {};
   terminalCmp: any = null;
   modalCmp: any = null;
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   views:ViewportView[] = [];
-  explorer:ExplorerCodeComponent = null;
+  explorer:Nullable<ExplorerCodeComponent> = null;
   rendered:any = [];
 
 
@@ -36,11 +38,11 @@ export class OutputController implements IController {
   closeView: Subject<any> = new Subject<any>();
   focusView: Subject<any> = new Subject<any>();
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 
-  configure( pConfig:any=null):void {
+  configure( pConfig:IControllerOptions):void {
     if(pConfig==null) return;
 
     for(let i in pConfig){
@@ -58,7 +60,7 @@ export class OutputController implements IController {
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter( (vItem:any) => {
       return (vItem.__signature__ !== pItem.__signature__);
     });
 
@@ -69,8 +71,7 @@ export class OutputController implements IController {
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
 
-    this.rendered.map( pView => {
-      console.log(pView);
+    this.rendered.map((pView:any) => {     console.log(pView);
       if(pView.__signature__ === pItem.__signature__){
         f = pView;
       }

@@ -92,9 +92,9 @@ export class IntentFilter
         let o:any = {action:[], category:[], data:[]};
 
 
-        this.action.map( v => { o.action.push(v.toXmlObject()) });
-        this.category.map( v => { o.category.push(v.toXmlObject()) });
-        this.data.map( v => { o.data.push(v.toXmlObject()) });
+        this.action.map((v:any) => { o.action.push(v.toXmlObject()) });
+        this.category.map((v:any) => { o.category.push(v.toXmlObject()) });
+        this.data.map((v:any) => { o.data.push(v.toXmlObject()) });
         /*
         for(let i in this){
             for(let j=0; j<this[i].length; j++){

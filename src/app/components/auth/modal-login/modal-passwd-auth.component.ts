@@ -16,6 +16,7 @@ import {AuthenticationEvent, AuthenticationEventType} from "../AuthenticationEve
 import {ModalAlertComponent} from "../../output/modal-alert/modal-alert.component";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {DexcaliburConnectionParams} from "../../../models/remote/DexcaliburConnectionParams";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {

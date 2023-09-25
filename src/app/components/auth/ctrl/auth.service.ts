@@ -181,9 +181,9 @@ export class AuthService extends DxcApiService{
 
 
       this.restore().subscribe( (pInfo:any)=>{
-        if(pInfo.restored){
+        if(pInfo.restored && this.token!=null && this.account!=null){
           this.account = pInfo.user;
-          this.onAuthentication.next(AuthenticationEvent.newSuccess( this.token, this.account));
+          this.onAuthentication.next(AuthenticationEvent.newSuccess( this.token, this.account as UserAccount));
         }else{
           DxcApiToken.remove(pConnName);
           this.token = null;
@@ -217,9 +217,11 @@ export class AuthService extends DxcApiService{
           DxcApiToken.remove("local");
           this.token = DxcApiToken.create("local", pEl.data.token);
 
-          this.getUserInfo().subscribe( (pUA:UserAccount)=>{
-            this.account = pUA;
-            this.onAuthentication.next(AuthenticationEvent.newSuccess( this.token, this.account));
+          this.getUserInfo().subscribe( (pUA:Nullable<UserAccount>)=>{
+            if(pUA!=null && this.token!=null && this.account!=null){
+              this.account = pUA;
+              this.onAuthentication.next(AuthenticationEvent.newSuccess( this.token, this.account));
+            }
           });
 
 
@@ -257,7 +259,7 @@ export class AuthService extends DxcApiService{
 
         const data:DexcaliburConnectionParams[] = [];
         if(pEl.data.conn.all != null){
-          pEl.data.conn.all.map( o => {
+          pEl.data.conn.all.map( (o:any) => {
             data.push(DexcaliburConnectionParams.fromPoorObject(o));
           })
         }
@@ -312,7 +314,7 @@ export class AuthService extends DxcApiService{
     return DexcaliburConnectionParams.fromPoorObject(
       JSON.parse(
         atob(
-          url.searchParams.get("auth")
+          url.searchParams.get("auth") as string
         )
       )
     );

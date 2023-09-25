@@ -24,6 +24,7 @@ import {ControllerService} from "../../../controller.service";
 import {AppIcon} from "../../../models/AppIcon";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {

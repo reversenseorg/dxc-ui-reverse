@@ -30,8 +30,8 @@ export class StatebarComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('height')){
-      this.bar.nativeElement.style.height = changes.height.currentValue+'px';
-      this.bar.nativeElement.style.maxHeight = changes.height.currentValue+'px';
+      this.bar.nativeElement.style.height = changes['height'].currentValue+'px';
+      this.bar.nativeElement.style.maxHeight = changes['height'].currentValue+'px';
     }
   }
 

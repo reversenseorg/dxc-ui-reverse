@@ -1,7 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {ElectronService} from "../../core/services";
-import {IpcRenderer} from "electron";
 import {DexcaliburServerService} from "../../core/services/dexcalibur/dxc.service";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";

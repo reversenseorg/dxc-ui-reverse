@@ -3,6 +3,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {ElectronService} from "../../core/services";
+import {IStringIndex} from "../IStringIndex";
 
 /**
  *

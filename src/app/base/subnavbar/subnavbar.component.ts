@@ -21,6 +21,8 @@ import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {IconModel} from "../icon/IconModel";
 import {Subject} from "rxjs";
 import {ElectronService} from "../../core/services";
+import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
 
 
 //  class="btn-label"
@@ -34,7 +36,7 @@ import {ElectronService} from "../../core/services";
 export class SubnavbarInputComponent implements AfterViewInit {
 
   @Input() color: string;
-  @Input() icon: IconModel = null;
+  @Input() icon: Nullable<IconModel> = null;
   @Input() width: string = '50px';
   @Input() placeholder:string = "";
   @Input() value:string = "";
@@ -45,7 +47,6 @@ export class SubnavbarInputComponent implements AfterViewInit {
 
   @ViewChild('navInput', {read:ElementRef, static:false}) inputEl:ElementRef;
 
-  iconView: IconView = null;
 
 
   constructor( private electronSvc:ElectronService) {
@@ -69,7 +70,9 @@ export class SubnavbarInputComponent implements AfterViewInit {
    * @since 1.0.0
    */
   onPaste():void {
-    this.value = this.electronSvc.readFromClipboard({ format:'txt' });
+    this.electronSvc.readFromClipboard({ format:'txt' }).then((pClipCtn:string)=>{
+      this.value = pClipCtn;
+    });
   }
 
   focus(){
@@ -121,12 +124,11 @@ export class SubnavbarInputComponent implements AfterViewInit {
 })
 export class SubnavbarButtonComponent implements AfterViewInit {
 
-  _styles: string[] = [];
   _trailIcon: IconModel = GLOBAL_ICONS['TRAIL'];
   @Input() color: string;
   @Input() vert: boolean = false;
   @Input() active: boolean = false;
-  @Input() icon: IconModel = null;
+  @Input() icon: Nullable<IconModel> = null;
   @Input() position: string = 'left';
   @Input() separator: boolean = false;
   @Input() disable: boolean = false;
@@ -136,7 +138,6 @@ export class SubnavbarButtonComponent implements AfterViewInit {
 
   @ViewChild('btn', {read:ElementRef, static:true}) btnEl:ElementRef;
 
-  iconView: IconView = null;
 
 
   constructor() {
@@ -173,15 +174,14 @@ export class SubnavbarTabComponent  {
   @Input() item: any = null;
   @Input() label:Nullable<string> = null;
   @Input() color: string;
-  @Input() icon: IconModel = null;
+  @Input() icon: Nullable<IconModel> = null;
   @Input() closable: boolean = true;
-  @Input() offset: number = null;
-  @Input() active:boolean = null;
+  @Input() offset: number = -1;
+  @Input() active:boolean = false;
 
   @Output() focusTab: EventEmitter<any> = new EventEmitter<any>();
   @Output() closeTab: EventEmitter<any> = new EventEmitter<any>();
 
-  iconView: IconView = null;
 
 
   constructor( public parent: SubnavbarComponent) {
@@ -222,7 +222,7 @@ export class SubnavbarTabComponent  {
 })
 export class SubnavbarMenuComponent implements OnInit, AfterViewInit{
 
-  _style:string[] = [];
+  _style:IStringIndex<string> = {};
   _class:string[] = [];
   _trailIcon:IconModel = GLOBAL_ICONS['TRAIL'];
   _trailIconNeg:IconModel = GLOBAL_ICONS['TRAIL_NEG'];
@@ -230,17 +230,13 @@ export class SubnavbarMenuComponent implements OnInit, AfterViewInit{
   id:string = '';
 
   @Input() color: string;
-  @Input() icon: IconModel = null;
+  @Input() icon: Nullable<IconModel> = null;
   @Input() labelIcon: string;
   @Input() label: string;
 
   @Input() closeWhen$: Subject<boolean>;
 
   @Input() trail: any = null;
-  /*@Input() dxcStyle: any = null;
-  @Input() dxcClass: any = null;*/
-
-  iconView: IconView = null;
 
   @ViewChild('ddEl',{read:ElementRef, static:false}) ddEl:ElementRef;
   @ViewChild(NgbDropdown) menuDD:NgbDropdown;
@@ -275,8 +271,7 @@ export class SubnavbarMenuComponent implements OnInit, AfterViewInit{
   }
 
   openMenu() {
-//    this.menuDD
-//   this.ddEl.nativeElement.style.display = "inline-block";
+
   }
 }
 
@@ -296,13 +291,13 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
   @Input() style: string = '';
   @Input() height: number = -1;
 
-  @Input() navbar: NavbarSimpleView = null;
-  @Input() navtab: NavbarTabView = null;
+  @Input() navbar: Nullable<NavbarSimpleView> = null;
+  @Input() navtab: Nullable<NavbarTabView> = null;
 
   @Input() opts: boolean = false;
 
 
-  @Input() icon: IconModel = null
+  @Input() icon: Nullable<IconModel> = null
   @Input() label:string = "label";
   @Input() labelColor:string = "#ccc";
 

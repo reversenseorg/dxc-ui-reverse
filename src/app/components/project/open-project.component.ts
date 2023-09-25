@@ -9,6 +9,7 @@ import {AppIcon} from "../../models/AppIcon";
 import {AuthService} from "../auth/ctrl/auth.service";
 import {AuthenticationEvent, AuthenticationEventType} from "../auth/AuthenticationEvent";
 import {Observable, Subscription} from "rxjs";
+import {Nullable} from "../../base/Nullable";
 
 
 @Component({

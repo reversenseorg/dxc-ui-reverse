@@ -3,7 +3,6 @@ import {Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
 import {DexcaliburServerService, ElectronService} from "../../../core/services";
-import {IpcRenderer} from "electron";
 
 
 export interface HelpDoc {
@@ -45,7 +44,11 @@ export class HelperService {
    */
   private _ipcReady = false;
 
-  private _ipc:IpcRenderer = null;
+  /**
+   * @deprecated
+   * @private
+   */
+  private _ipc:any = null;
 
   private _protocol:HelpDbProtocol = HelpDbProtocol.IPC;
 
@@ -85,6 +88,7 @@ export class HelperService {
   private _initIpcHandler(){
     if(this._ipcReady) return;
 
+// TODO : replace by help service
     this.eSvc.ipcRenderer.on('help:get-doc', ( pEvent:any, pArgs:any[])=>{
       console.log('[HELPER SERVICE] (help:get-doc) : ',pEvent,pArgs);
 
@@ -125,10 +129,6 @@ export class HelperService {
       pData['_t'] = Date.now();
       return pData;
     }
-  }
-
-  getHelpFor(pName: string):Observable<any> {
-    return null;
   }
 
   /**

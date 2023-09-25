@@ -19,6 +19,7 @@ import AndroidComponent from "../../../models/android/AndroidComponent";
 import {IntentDataCriteria} from "../../../models/android/Intent";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {
@@ -41,7 +42,7 @@ export class ModalSendIntentComponent  extends AbstractKeyboardNavigable impleme
 
   @Input() comp:AndroidComponent;
   @Input() filter:IntentFilter;
-  @Input() criteria:IntentDataCriteria;
+  @Input() criteria:Nullable<IntentDataCriteria>;
 
   /**
    * Modal title
@@ -53,7 +54,7 @@ export class ModalSendIntentComponent  extends AbstractKeyboardNavigable impleme
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -100,10 +101,11 @@ export class ModalSendIntentComponent  extends AbstractKeyboardNavigable impleme
 
   sendIntent(pConfig: any, pIndex:number = -1):void {
       this.focusEl = pIndex;
-      this.topoSvc.sendIntent(pConfig).subscribe( (pEvent)=>{
+      throw new Error("sendIntent is not implemented")
+      /*this.topoSvc.sendIntent().subscribe( (pEvent)=>{
         //this.selected = pEvent;
         //this.selected.icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
-      });
+      });*/
   }
 
 

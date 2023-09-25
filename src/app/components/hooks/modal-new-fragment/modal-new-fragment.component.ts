@@ -23,6 +23,8 @@ import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
 import JavaMethodHook from "../../../models/JavaMethodHook";
 import {AbstractHook} from "../../../models/AbstractHook";
+import {Nullable} from "../../../base/Nullable";
+import {IconModelCollection} from "../../../base/icon/IconModel";
 
 
 interface EventSources {
@@ -59,10 +61,10 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
 
   mode = "Add";
 
-  gIcons:any = GLOBAL_ICONS;
-  icons:any = HOOK_ICONS;
+  gIcons:IconModelCollection = GLOBAL_ICONS;
+  icons:IconModelCollection = HOOK_ICONS;
   item: any = null;
-  hook:AbstractHook = null;
+  hook:Nullable<AbstractHook> = null;
   observed:Nullable<string> = null;
 
   uid = '';

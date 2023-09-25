@@ -1,7 +1,7 @@
 
 import * as _fs_ from 'fs'
 import * as _path_ from 'path'
-import {IpcMainEvent} from "electron";
+import {Nullable} from "../app/base/Nullable";
 
 export interface HelpDoc {
   id:string,
@@ -19,7 +19,7 @@ export class HelpDB {
 
   static FMT:HelpFormat = HelpFormat.HTML;
 
-  private _root:Nullable<string> = null;
+  private _root;
 
   constructor( pRoot:string ) {
     this._root = pRoot;
@@ -32,11 +32,13 @@ export class HelpDB {
    * @param pData
    * @param pIpcEvent
    */
-  exec( pCommand:string, pData:any, pIpcEvent:IpcMainEvent = null){
+  exec( pCommand:string, pData:any, pIpcEvent:any = null){
     switch (pCommand){
       case 'get-doc':
         this.read(pData.id, (vDoc:HelpDoc)=>{
           if(pIpcEvent!=null){
+
+            // TODO : replace by help service to download help sheet
             pIpcEvent.reply('help:get-doc', [JSON.stringify(vDoc)]);
           }
         })

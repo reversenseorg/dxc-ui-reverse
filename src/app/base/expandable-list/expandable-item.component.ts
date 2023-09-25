@@ -20,6 +20,7 @@ import {ExplorerItem} from "../../cmp/ExplorerItem";
 import {ExplorerDirective} from "../explorer/explorer.directive";
 import {ExpandableDirective} from "./expandable.directive";
 import {ExpandableProvider} from "./expandable-provider";
+import {IStringIndex} from "../IStringIndex";
 
 
 enum ITEM_STATE {
@@ -69,7 +70,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
   @Input() provider:ExpandableProvider;
   //@Input() expandable:boolean;
-  @Input() expandableFn:Function = null;
+  @Input() expandableFn:Function = (()=>{});
 
   @Output() expand:EventEmitter<ItemEvent<T>> = new EventEmitter<ItemEvent<T>>();
   @Output() collapse:EventEmitter<ItemEvent<T>> = new EventEmitter<ItemEvent<T>>();
@@ -126,7 +127,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
     if(this.state == ITEM_STATE.EXPANDED)
       this.arrowIcon.rotate = 90;
     else{
-      this.arrowIcon.rotate = null;
+      this.arrowIcon.rotate = 270;
     }
 
     this.arrowIcon.render();
@@ -140,7 +141,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    * @param {()=>boolean} pCondition
    */
   filterChildren( pCondition:any):void {
-    const filt = {};
+    const filt:IStringIndex<((val:any)=>boolean)> = {};
 
     for(const p in pCondition){
       if(Array.isArray(pCondition[p])){
@@ -152,13 +153,13 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
 
     this.children.map( (vChild:any) => {
-      let success = 1;
+      let success = true;
 
       for(const ppt in filt){
         //console.log(vChild,vChild.instance.item.hasOwnProperty(ppt),(filt[ppt])(vChild.instance.item[ppt]));
-        success &= vChild.instance.item.hasOwnProperty(ppt);
+        success = success && vChild.instance.item.hasOwnProperty(ppt);
         if(!success) break;
-        success &= (filt[ppt])(vChild.instance.item[ppt]);
+        success = success && (filt[ppt])(vChild.instance.item[ppt]);
         if(!success) break;
       }
 
@@ -256,7 +257,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
     }
 
     console.log('render list items (after)>', (new Date()).getTime()-t, 'ms');
-    //t2.map( vT => { t3 += vT; });
+    //t2.map((vT:any) => {3 += vT; });
     console.log('create item avg>',  t3 /*t3/t2.length*/, 'ms');
 
     if((this.provider as any).changeDetectorRef!=null){
@@ -319,7 +320,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    * @method
    */
   onCollapse( pItemEv:ItemEvent<T>):void {
-    this.children.map( vEl => {
+    this.children.map( (vEl:ComponentRef<any>) => {
       vEl.destroy();
     });
     if(this.e) {

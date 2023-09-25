@@ -15,6 +15,8 @@ import {ElectronService} from "../../../core/services";
 import {WorkspaceService} from "../ctrl/workspace.service";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {WebsocketEvent, WebsocketEventType} from "../../../base/websocket/WebsocketEvent";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 @Component({
   selector: 'app-terminal-workspace',
@@ -83,7 +85,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
   views: any = [];
 
   activeTerm: any = null;
-  @Input() activeSession: TerminalSession = null;
+  @Input() activeSession: Nullable<TerminalSession> = null;
 
   constructor(private wsSvc:WorkspaceService, private eSvc:ElectronService) {
     super();
@@ -104,6 +106,8 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('activeSession') && this.ready){
+      if(this.activeSession==null) return;
+
       this.activeSession.stdout.subscribe( (pData:any)=>{
         this.writeSubject.next(pData);
       });
@@ -116,6 +120,14 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
 
   _sent:boolean = false;
   ngAfterViewInit(){
+
+    if(this.terminal==null){
+      throw new Error("terminal-workspace: Terminal is not ready");
+    }
+    if(this.terminal.underlying==null){
+      throw new Error("terminal-workspace: Terminal underlying is not ready");
+    }
+
 
     this.terminal.keyEventInput.subscribe(e => {
 
@@ -187,23 +199,23 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
     this.terminal.underlying.attachCustomKeyEventHandler((pEvent:KeyboardEvent)=>{
       if(pEvent.metaKey||pEvent.ctrlKey){
         // copy
-        if((pEvent.code == 'KeyC') && this.terminal.underlying.hasSelection()){
+        if((pEvent.code == 'KeyC') && (this.terminal.underlying as any).hasSelection()){
           // prevent terminal exit, copy selection
-          this.eSvc.writeToClipboard(this.terminal.underlying.getSelection());
+          this.eSvc.writeToClipboard((this.terminal.underlying as any).getSelection());
           return false;
         }
 
         // paste
         if(pEvent.code == 'KeyV'){
           const d = this.eSvc.readFromClipboard();
-          this.terminal.underlying.write( d==null?'':d);
+          (this.terminal.underlying as any).write( d==null?'':d);
           return false;
         }
       }
       return true;
     });
 
-    this.terminal.underlying.setOption("fontSize", 12);
+    (this.terminal.underlying as any).setOption("fontSize", 12);
     this.ready = true;
 
     // initSessions() only if websocket communication is established
@@ -228,15 +240,16 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
   onClose(pItem:any): boolean {
 
     // send exit
-    this.activeSession.exit();
+    if(this.activeSession!=null) {
+      this.activeSession.exit();
+    }
 
     // reset term
     this.resetTerm();
 
     // remove sessions
     let sess:any = [];
-    this._sessions.map( x => {
-      if(x.uid != pItem.uid) sess.push(x);
+    this._sessions.map((x:any) => {     if(x.uid != pItem.uid) sess.push(x);
     })
     this._sessions = sess;
 
@@ -257,7 +270,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
    *
    * @param pInit
    */
-  resetTerm(pInit:boolean=false, pSess:TerminalSession=null){
+  resetTerm(pInit:boolean=false, pSess:Nullable<TerminalSession>=null){
     (this.terminal as any).term.reset();
     //this.writeSubject.next('$ ');
     if(pInit && pSess!=null) {
@@ -286,7 +299,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
    * To create locally and remotely a new term session
    * @param pType
    */
-  newSession(pType:string = 'sh', pInfo:TerminalInfo = null):void {
+  newSession(pType:string = 'sh', pInfo:Nullable<TerminalInfo> = null):void {
     this.ctr++;
 
     console.log(pType, pInfo);
@@ -299,7 +312,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
     if(pInfo!=null){
       info = pInfo;
     }else{
-      info = {label: "", type: undefined, uid: ""};
+      info = {label: "", type: TerminalSessionType.SH, uid: "", icon:null };
     }
 
     info.type = (pInfo!=null && pInfo.type != null ? pInfo.type : TerminalSessionType.SH);
@@ -326,6 +339,11 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
 
     // change tab
     this.switchSession(sess);
+
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
     this.controller.app.terminalCmp.selectTabByLabel('Terminal');
   }
 

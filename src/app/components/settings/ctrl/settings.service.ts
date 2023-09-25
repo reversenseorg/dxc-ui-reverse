@@ -7,6 +7,7 @@ import {ExternalTool} from "../../../models/ExternalTool";
 import {map} from "rxjs/operators";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
+import {Nullable} from "../../../base/Nullable";
 
 
 export interface Setting {
@@ -55,11 +56,12 @@ export class SettingsService extends DxcApiService {
     );
   }
 
-  listNetworkSettings():Observable<WebServerSettings> {
+  listNetworkSettings():Observable<Nullable<WebServerSettings>> {
     return this._process( this.endpoints['global']['list'], {type:'web'})
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Settings"}));
+          return null;
         }else{
           return {
             http: {name:'http', value:pRes.data.http},
@@ -111,6 +113,7 @@ export class SettingsService extends DxcApiService {
       .pipe(map( pRes => {
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Settings"}));
+          return [];
         }else{
           const d:ExternalTool[] = [];
           for(const k in pRes.data){

@@ -1,10 +1,12 @@
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ExplorerCodeComponent} from "../../code/explorer-code/explorer-code.component";
-import {IController, ViewCmpMap} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
 import {Observable, Subject} from "rxjs";
 import {ComponentFactoryResolver} from "@angular/core";
 import {ProjectService} from "./project.service";
 import {StageComponent} from "../../stage/stage.component";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 
@@ -17,16 +19,16 @@ export class SplashController implements IController {
   name:string = 'splash';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: ProjectService = null;
+  service: ProjectService;
 
   explorerCmp: any = null;
   viewCmp: ViewCmpMap = {};
   terminalCmp: any = null;
   modalCmp: any = null;
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   views:ViewportView[] = [];
   explorer:any = null;
@@ -37,11 +39,11 @@ export class SplashController implements IController {
   focusView: Subject<any> = new Subject<any>();
   //viewComp: ViewportCodeComponent = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 
-  configure( pConfig:any=null):void {
+  configure( pConfig:IControllerOptions):void {
     if(pConfig==null) return;
 
     for(let i in pConfig){
@@ -59,7 +61,7 @@ export class SplashController implements IController {
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter( (vItem:any) => {
       return (vItem.__signature__ !== pItem.__signature__);
     });
 
@@ -70,8 +72,7 @@ export class SplashController implements IController {
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
 
-    this.rendered.map( pView => {
-      if(pView.__signature__ === pItem.__signature__){
+    this.rendered.map((pView:any) => {     if(pView.__signature__ === pItem.__signature__){
         f = pView;
       }
     });

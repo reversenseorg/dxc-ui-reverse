@@ -12,13 +12,16 @@ import DeviceProfile, {BuildProfile, SystemProfile} from "../../../models/Device
 import {ElectronService} from "../../../core/services";
 import ModelSyscall from "../../../models/ModelSyscall";
 import {DEVICE_PANEL} from "../viewport-device/viewport-device.component";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 interface DeviceManagerCache {
   devices: Device[],
-  app: any,
-  profiles: any,
-  syscalls: any
+  app: IStringIndex<AppPackage[]>,
+  profiles: IStringIndex<any>,
+  syscalls: IStringIndex<ModelSyscall[]>
 }
 
 export enum DeviceCacheFlavor {
@@ -32,7 +35,7 @@ export enum FridaServerTransport {
   NETWORK='H'
 }
 
-export interface FridaServerOptions {
+export interface FridaServerOptions extends IStringIndex<any> {
   server: string,
   transport:FridaServerTransport,
   privileged:boolean,
@@ -245,38 +248,52 @@ export class DeviceManagerService extends DxcApiService {
    * To restart the server/daemon running host-side and used to communicate with specified device
    * @param {Device} pDevice
    */
-  restartBridge( pDevice:Device = null):void {
+  restartBridge( pDevice:Nullable<Device> = null):void {
 
-    if(pDevice===null){
+    let dev:Device;
+
+    if(pDevice==null){
+
       const sel = this.electronSvc.getSelectionManager().getNewest();
       console.log(sel);
+
       if(sel.el.hasOwnProperty('_t') && (sel.el._t=='dev')){
+        dev = sel.el as Device;
+      }else{
+        throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","restartBridge");
 
-        this._process(
-          this.endpoints['device']['restartBridge'],{
-            uid:pDevice.uid
-          }
-        ).pipe(
-          map((pEl:any)=>{
-            console.log(pEl);
-            if(pEl.success){
-              this.outputSvc.print(new OutputMessage({
-                src: "Device Manager",
-                msg: `The server/daemon bridge of the device ${pDevice.uid} has been restarted.`
-              }));
-              return pEl.data;
-            }else{
-              this.outputSvc.print( OutputMessage.newError({
-                src: "Device Manager",
-                msg: pEl.msg
-              }));
-            }
-          })
-        );
-
+        this.outputSvc.print( OutputMessage.newError({
+          src: "Device Manager",
+          msg: "Operation [device-manager:restartBridge] cannot be performed. A device must be specified or selected by a click"
+        }));
+        return;
       }
+    }else{
+      dev = pDevice;
     }
-    return null;
+
+    this._process(
+        this.endpoints['device']['restartBridge'],{
+          uid:dev.uid
+        }
+    ).pipe(
+        map((pEl:any)=>{
+          console.log(pEl);
+          if(pEl.success){
+            this.outputSvc.print(new OutputMessage({
+              src: "Device Manager",
+              msg: `The server/daemon bridge of the device ${dev.uid} has been restarted.`
+            }));
+            return pEl.data;
+          }else{
+            this.outputSvc.print( OutputMessage.newError({
+              src: "Device Manager",
+              msg: pEl.msg
+            }));
+            return null;
+          }
+        })
+    );
   }
 
   listDevices(pCacheFlavor:DeviceCacheFlavor = DeviceCacheFlavor.NO_CACHE):Observable<Device[]>{
@@ -306,6 +323,7 @@ export class DeviceManagerService extends DxcApiService {
             src: "Device Manager",
             msg: pEl.msg+". See help"
           }));
+          return [];
         }
       })
     );
@@ -318,15 +336,19 @@ export class DeviceManagerService extends DxcApiService {
 
 
   getProfile( pDevice:Device, pForce=false):Observable<DeviceProfile> {
-    const uid = pDevice.uid;
-    if(this._cache.profiles.hasOwnProperty(uid) && !pForce){
-        return from([ this._cache.profiles[uid] ]);
+
+    if(pDevice.uid==null){
+      throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","getProfile");
+    }
+
+    if(this._cache.profiles.hasOwnProperty(pDevice.uid) && !pForce){
+        return from([ this._cache.profiles[pDevice.uid] ]);
     }
 
     //
     return this._process(
       this.endpoints['device']['profileAll'],{
-        uid:uid,
+        uid:pDevice.uid,
       }
     ).pipe(
       map((pEl:any)=>{
@@ -336,7 +358,7 @@ export class DeviceManagerService extends DxcApiService {
             src: "Device Manager",
             msg: `Data from device profiling have been retrieved for device ${pDevice.uid}`
           }));
-          return this._cache.profiles[uid] = pEl.data; //DeviceProfile.fromJsonObject(pEl.data);
+          return this._cache.profiles[pDevice.uid as string] = pEl.data; //DeviceProfile.fromJsonObject(pEl.data);
         }else{
           this.outputSvc.print( OutputMessage.newError({
             src: "Device Manager",
@@ -347,9 +369,14 @@ export class DeviceManagerService extends DxcApiService {
     );
   }
 
-  doProfiling( pDevice:Device, pType:string, pOptions:any = {}):Observable<DeviceProfile> {
+  doProfiling( pDevice:Device, pType:string, pOptions:any = {}):Observable<Nullable<DeviceProfile>> {
     const uid = pDevice.uid;
     const opts = pOptions;
+
+
+    if(pDevice.uid==null){
+      throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","doProfiling");
+    }
 
     return this._process(
       this.endpoints['device']['doProfiling'],{
@@ -387,12 +414,13 @@ export class DeviceManagerService extends DxcApiService {
               pDevice.profile = DeviceProfile.fromJsonObject(pEl.data);
               break;
           }
-          return this._cache.profiles[uid] = pDevice.profile; //DeviceProfile.fromJsonObject(pEl.data);
+          return this._cache.profiles[uid as string] = pDevice.profile; //DeviceProfile.fromJsonObject(pEl.data);
         }else{
           this.outputSvc.print( OutputMessage.newError({
             src: "Device Manager",
             msg: pEl.msg
           }));
+          return null;
         }
       })
     );
@@ -423,12 +451,19 @@ export class DeviceManagerService extends DxcApiService {
             src: "Device Manager",
             msg: pEl.msg
           }));
+          return [];
         }
       })
     );
   }
 
   getApplications( pDevice:Device, pRefresh = false):Observable<AppPackage[]>{
+
+
+    if(pDevice.uid==null){
+      throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","getApplications");
+    }
+
     let appCache:AppPackage[] = this._cache.app[pDevice.uid];
 
     if(appCache != null && appCache.length>0 && !pRefresh){
@@ -442,29 +477,35 @@ export class DeviceManagerService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           appCache = []
-          pEl.data.apps.map( x => {
-            appCache.push( new AppPackage(x))
+          pEl.data.apps.map((x:any) => {           appCache.push( new AppPackage(x))
           });
 
-          this._cache.app[pDevice.uid] = appCache;
+          this._cache.app[pDevice.uid as string] = appCache;
 
           this.outputSvc.print(new OutputMessage({
             src: "Device Manager",
             msg: `There are ${pEl.data.apps.length} applications installed on device ${pDevice.uid}`
           }));
 
-          return this._cache.app[pDevice.uid];
+          return this._cache.app[pDevice.uid as string];
         }else{
           this.outputSvc.print( OutputMessage.newError({
             src: "Device Manager",
             msg: pEl.msg
           }));
+          return [];
         }
       })
     );
   }
 
   getSystemCalls( pDevice:Device, pRefresh = false):Observable<ModelSyscall[]>{
+
+
+    if(pDevice.uid==null){
+      throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","getSystemCalls");
+    }
+
     let scCache:ModelSyscall[] = this._cache.syscalls[pDevice.uid];
 
     if(scCache != null && scCache.length>0 && !pRefresh){
@@ -478,23 +519,23 @@ export class DeviceManagerService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           scCache = []
-          pEl.data.map( x => {
-            scCache.push( new ModelSyscall(x))
+          pEl.data.map((x:any) => {           scCache.push( new ModelSyscall(x))
           });
 
-          this._cache.syscalls[pDevice.uid] = scCache;
+          this._cache.syscalls[pDevice.uid as string] = scCache;
 
           this.outputSvc.print(new OutputMessage({
             src: "Device Manager",
             msg: `There are ${pEl.data.length} system calls available on the device ${pDevice.uid}`
           }));
 
-          return this._cache.syscalls[pDevice.uid];
+          return this._cache.syscalls[pDevice.uid as string];
         }else{
           this.outputSvc.print( OutputMessage.newError({
             src: "Device Manager",
             msg: pEl.msg
           }));
+          return [];
         }
       })
     );
@@ -572,9 +613,9 @@ export class DeviceManagerService extends DxcApiService {
     );
   }
 
-  isDeviceOnline( pDevice:Device): Observable<boolean> {
+  /*isDeviceOnline( pDevice:Device): Observable<boolean> {
     return null;
-  }
+  }*/
 
   pullApp( pDevice:Device, pApp:any, pPath:any = null): Observable<any>  {
     return this._process(
@@ -592,6 +633,11 @@ export class DeviceManagerService extends DxcApiService {
   }
 
   removeDevice( pDevice: Device): Observable<boolean> {
+
+    if(pDevice.uid==null){
+      throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","removeDevice");
+    }
+
     return this.removeDeviceByUID( pDevice.uid);
   }
 
@@ -630,7 +676,7 @@ export class DeviceManagerService extends DxcApiService {
   saveSettings( pDevice:Device, pSettings:FridaServerOptions){
     const opts = { uid: pDevice.uid, opts:{} };
 
-    for(const i in pSettings) opts.opts[i] = pSettings[i];
+    for(const i in pSettings) (opts.opts as IStringIndex<any>)[i] = pSettings[i];
 
     return this._process(
       this.endpoints['frida']['save'], opts

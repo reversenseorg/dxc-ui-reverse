@@ -23,6 +23,8 @@ import {AuditService} from "../ctrl/audit.service";
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";
 import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import Control from "../../../models/audit/common/Control";
+import {UIException} from "../../../base/error/UIException";
+import {Nullable} from "../../../base/Nullable";
 export enum AUDIT_SUBVIEW {
   THREATS="threat",
   PII='pii',
@@ -53,41 +55,11 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   override offset = 6;
 
-  override tab:ExplorerTab = new ExplorerTab({
-    offset: 0,
-    label: 'Audit',
-    icon: GLOBAL_ICONS['FILE'],
-    color: 'dxc-text-clear100'
-  });
-
-
-  override view:ExplorerView = new ExplorerView({
-    nav: new NavbarSimpleView({
-      selected: AUDIT_SUBVIEW.MODEL,
-      icon: GLOBAL_ICONS['PACKAGE'],
-      menu: new MenuView({
-        items: [
-          new MenuItem({
-            id: AUDIT_SUBVIEW.MODEL,
-            label:'Model',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['PACKAGE']
-          }),
-          new MenuItem({
-            id: AUDIT_SUBVIEW.REPORT,
-            label:'Report',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['FIND']
-          })
-        ]
-      })
-    })
-  });
 
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:ContextMenuState|null = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
   activeItem: any = null;
 
@@ -121,6 +93,35 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
                ngbTooltipConfig:NgbTooltipConfig) {
 
     super();
+    this.tab = new ExplorerTab({
+      offset: 0,
+      label: 'Audit',
+      icon: GLOBAL_ICONS['FILE'],
+      color: 'dxc-text-clear100'
+    });
+
+    this.view = new ExplorerView({
+      nav: new NavbarSimpleView({
+        selected: AUDIT_SUBVIEW.MODEL,
+        icon: GLOBAL_ICONS['PACKAGE'],
+        menu: new MenuView({
+          items: [
+            new MenuItem({
+              id: AUDIT_SUBVIEW.MODEL,
+              label:'Model',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['PACKAGE']
+            }),
+            new MenuItem({
+              id: AUDIT_SUBVIEW.REPORT,
+              label:'Report',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['FIND']
+            })
+          ]
+        })
+      })
+    });
     this.view.id = this.id;
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
   }
@@ -171,8 +172,11 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map( (vMenu:ContextMenuComponent) => {
+      if(vMenu.name!=null){
+        this.ctxMenu[vMenu.name] = vMenu;
+      }
+
     });
 
   }
@@ -211,7 +215,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
     const el = this.explRef.nativeElement; //document.getElementById('explorerCode');
     const ctn = this.explCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
-    const navHeight:number = this.view.nav.size.height;
+    const navHeight:number = (this.view.nav as NavbarSimpleView).size.height;
 
     el.style.width = pSize.width+'px';
     el.style.maxWidth = pSize.width+'px';
@@ -332,7 +336,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   onMenuItemClick( pEvent:any):void{
     this.refresh(pEvent.item.id);
     this.selected = pEvent.item.id;
-    this.view.nav.selectItem(pEvent.item);
+    (this.view.nav as NavbarSimpleView).selectItem(pEvent.item);
   }
 
   displayCtxMenu(pEvent:any, pType:string, pObject:any):void{
@@ -351,11 +355,12 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   }
 
   hideCtxMenu():void{
-    if(this.ctxMenuState!=null){
-      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
-    }else{
-      throw new Error('UIException : Contextual menu is not ready in explorer-audit');
+
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("explorer-audit","hideCtxMenu");
     }
+
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 
 

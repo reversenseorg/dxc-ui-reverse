@@ -36,6 +36,7 @@ import {
   HookFragmentPresetType,
   HookService
 } from "../../hooks/ctrl/hook.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -115,7 +116,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
   };
 
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
   constructor(private nativeSvc:NativeService,
               private hookSvc:HookService,
@@ -160,8 +161,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
 
 
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      console.log(vMenu.name, vMenu);
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {     console.log(vMenu.name, vMenu);
       this.ctxMenu[vMenu.name] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });

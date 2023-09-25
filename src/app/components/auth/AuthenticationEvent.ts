@@ -1,6 +1,7 @@
 import {UserAccount} from "../../models/user/UserAccount";
 import {DxcApiToken} from "../../base/DxcApiToken";
 import {DexcaliburConnectionParams} from "../../models/remote/DexcaliburConnectionParams";
+import {Nullable} from "../../base/Nullable";
 
 export enum AuthenticationEventType {
   AUTH_SUCCESS,
@@ -15,9 +16,9 @@ export enum AuthenticationEventType {
 export class AuthenticationEvent {
 
   type: AuthenticationEventType;
-  user: UserAccount;
-  username: string;
-  token: DxcApiToken;
+  user: Nullable<UserAccount>;
+  username: Nullable<string>;
+  token: Nullable<DxcApiToken>;
   conn: DexcaliburConnectionParams;
 
   constructor() {

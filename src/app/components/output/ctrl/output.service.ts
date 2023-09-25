@@ -3,6 +3,7 @@ import {from, Observable, Subject, throwError} from 'rxjs';
 import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {AlertMessage, AlertOptions} from "../modal-alert/modal-alert.component";
+import {Nullable} from "../../../base/Nullable";
 
 
 // @ts-ignore
@@ -34,7 +35,7 @@ export class OutputService {
   print( pMsg:OutputMessage):void {
       if(pMsg.isNotInfo()){
         this.errorCache.push(pMsg);
-        this.onNewError$.next();
+        //this.onNewError$.next();
       }
       this.msg$.next(pMsg);
   }
@@ -50,7 +51,7 @@ export class OutputService {
    * @method
    * @since 1.0.0
    */
-  alert( pMsg:OutputMessage, pOptions:AlertOptions = null):void {
+  alert( pMsg:OutputMessage, pOptions:AlertOptions = {}):void {
     const opts:AlertOptions = {};
 
     if(pMsg.isError()){
@@ -65,7 +66,7 @@ export class OutputService {
     });
   }
 
-  confirm( pMsg:OutputMessage, pOptions:AlertOptions = null):void {
+  confirm( pMsg:OutputMessage, pOptions:AlertOptions = {}):void {
     const opts:AlertOptions = {};
 
     for(const i in pOptions) opts[i] = pOptions[i];

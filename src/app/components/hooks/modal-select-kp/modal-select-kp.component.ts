@@ -21,6 +21,8 @@ import {HOOK_ICONS} from "../icons";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 interface EventSources {
@@ -30,7 +32,7 @@ interface EventSources {
 
 
 let gTargetHook:any = null;
-let gInstance:ModalSelectKpComponent = null;
+let gInstance:Nullable<ModalSelectKpComponent> = null;
 
 @Component({
   selector: 'dxc-modal-select-kp',
@@ -51,7 +53,7 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
    * @type {string}
    */
   @Input() title:Nullable<string> = null;
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -60,8 +62,8 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
   item: any = null;
   hook:any = null;
   observed:Nullable<string> = null;
-  currentKP:KeyPoint = null;
-  selectedKP:KeyPoint = null;
+  currentKP:Nullable<KeyPoint> = null;
+  selectedKP:Nullable<KeyPoint> = null;
   kpList:KeyPoint[] = [];
   moment = "load";
 
@@ -79,9 +81,9 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
 
     this.hookSvc.onKeyPointListChange.subscribe( (kp:KeyPoint[])=>{
       if(kp !== null && Array.isArray(kp)){
-        gInstance.kpList = kp;
+        (gInstance as ModalSelectKpComponent).kpList = kp;
       }else{
-        gInstance.kpList = [];
+        (gInstance as ModalSelectKpComponent).kpList = [];
       }
     });
     this.refresh();
@@ -112,6 +114,10 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
    * @method
    */
   show( pOptions:any){
+    if(gInstance==null){
+      throw UIException.MODAL_IS_NOT_READY("select-kp");
+    }
+
     if(gInstance.kpList == null || gInstance.kpList.length == 0){
       gInstance.refresh();
     }
@@ -146,6 +152,10 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
    * @method
    */
   validateKP():void {
+    if(this.selectedKP==null){
+      throw UIException.MODAL_IS_NOT_READY("select-kp:validateKP");
+    }
+
     this.hookSvc.attachHookTo( gTargetHook.id, this.selectedKP, this.moment).subscribe( data => {
       // close modal
       this.close();

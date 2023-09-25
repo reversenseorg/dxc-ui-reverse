@@ -1,4 +1,5 @@
 import {DxcCredentialContainer} from "./DxcCredentialContainer";
+import {Nullable} from "../app/base/Nullable";
 
 
 export enum ConnectionType {
@@ -28,7 +29,7 @@ export class ConnectionProfile {
    */
   ipv4:Nullable<string> = null;
   ipv6:Nullable<string> = null;
-  port:number = null;
+  port:number = -1;
   hostname:Nullable<string> = null;
 
   /**
@@ -106,16 +107,16 @@ export class ConnectionProfile {
   /**
    * To get configuration name
    */
-  getName():string {
+  getName():Nullable<string> {
     return  this.name;
   }
 
-  getUID():string {
+  getUID():Nullable<string> {
     return this.uid;
   }
 
 
-  getIpAddress():string{
+  getIpAddress():Nullable<string>{
     if(this.ipv4 != null){
       return this.ipv4
     }
@@ -127,7 +128,7 @@ export class ConnectionProfile {
     }
   }
 
-  getHostname():string {
+  getHostname():Nullable<string> {
     if(this.hostname != null){
       return this.hostname;
     }
@@ -142,7 +143,7 @@ export class ConnectionProfile {
       return this.port;
     }
     else{
-      return null; //throw DexcaliburConnectionException.PORT_NOT_DEFINED();
+      return -1; //throw DexcaliburConnectionException.PORT_NOT_DEFINED();
     }
   }
 

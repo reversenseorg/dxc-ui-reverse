@@ -19,6 +19,8 @@ import {UI} from "../../cmp/ui.const";
 import {StageComponent} from "../../components/stage/stage.component";
 import {Subject} from "rxjs";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
+import {Nullable} from "../Nullable";
+import {UIException} from "../error/UIException";
 
 
 @Component({
@@ -51,8 +53,8 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
 
   ctnHeight: number = 0;
   ctnWidth: number = 0;
-  activeCtn:IViewportContainer = null;
-  activeCmp: ComponentRef<any> = null;
+  activeCtn:Nullable<IViewportContainer> = null;
+  activeCmp: Nullable<ComponentRef<any>> = null;
 
   resize$: Subject<any> = new Subject<any>();
 
@@ -105,7 +107,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
       this.ctnHeight = pEvent.height - this.size.nav_height;
 
 
-      this.cmps.map( vRef => {
+      this.cmps.map( (vRef:ComponentRef<any>) => {
         vRef.instance.resize({
           height: ctnH,
           width:pEvent.width });
@@ -118,6 +120,10 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     let tabNav = this.viewportTabnav.nativeElement
     let viewPortEl = document.getElementById('appViewport');
 
+    if(viewPortEl==null){
+      throw UIException.APP_NOT_INITIALIZED("viewport","Viewport host element is missing");
+    }
+
     let h = parseFloat(viewPortEl.style.height);
 
     this.ctnHeight = (h - tabNav.clientHeight);
@@ -126,7 +132,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     ctn.style.minHeight = this.ctnHeight+'px';
 
 
-    this.cmps.map( vRef => {
+    this.cmps.map( (vRef:ComponentRef<any>) => {
       vRef.instance.resize({ height: this.ctnHeight });
     });
   }
@@ -151,12 +157,11 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
   close(event: MouseEvent, pView: IViewportContainer) {
     //let views = []
 
-    let v=[], i:number=-1, k:number=1;
+    let v:ComponentRef<any>[]=[], i:number=-1, k:number=1;
 
     if(pView.onClose()) {
 
-      /*this.views.map( vView => {
-        i+=k;
+      /*this.views.map((vView:any) => {       i+=k;
         if(vView.id !== pView.id){
           v.push(vView);
         }else{
@@ -165,7 +170,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
       });*/
 
 
-      this.cmps.map( vRef => {
+      this.cmps.map( (vRef:ComponentRef<any>) => {
         i+=k;
         if(vRef.instance.id !== pView.id){
           v.push(vRef);
@@ -179,7 +184,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
 
 
 
-      if(this.activeCtn.id === pView.id){
+      if(this.activeCtn!=null && this.activeCtn.id === pView.id){
         if(v.length>0) {
           if(i==0) {
             this.activeCmp = v[0]
@@ -277,7 +282,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
    */
   selectTabByUID2(pUID: string): void {
 
-    let v:ComponentRef<any> = null;
+    let v:Nullable<ComponentRef<any>> = null;
     for(let i=0; i<this.cmps.length; i++){
       v = this.cmps[i];
       if(v==null) continue;
@@ -298,7 +303,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
    * @param pEvent
    */
   selectTabByID2(pId: number, pEvent: any): void {
-    let v:ComponentRef<any> = null;
+    let v:Nullable<ComponentRef<any>> = null;
     for(let i=0; i<this.cmps.length; i++){
       v = this.cmps[i];
       if(v==null) continue;

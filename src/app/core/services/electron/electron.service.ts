@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
-import {ipcRenderer, webFrame} from 'electron';
-import * as _remote_ from '@electron/remote';
+//import {ipcRenderer, webFrame} from 'electron';
+//import * as _remote_ from '@electron/remote';
 
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
@@ -17,14 +17,16 @@ export class ElectronService {
 
   private _sm:SelectionManager;
   clipboard: ClipBoard ;
-  ipcRenderer: typeof ipcRenderer;
-  webFrame: typeof webFrame;
-  remote: typeof _remote_;
+  //ipcRenderer: typeof ipcRenderer;
+  //webFrame: typeof webFrame;
+  //remote: typeof _remote_;
+
+  _clipboard:any;
   childProcess: typeof childProcess;
   fs: typeof fs;
 
   get isElectron(): boolean {
-    return !!(window && window.process && window.process.type);
+    return false; //!!(window && window.process && window.process.type);
   }
 
   constructor() {
@@ -33,16 +35,17 @@ export class ElectronService {
 
     // Conditional imports
     if (this.isElectron) {
-      this.ipcRenderer = window.require('electron').ipcRenderer;
-      this.webFrame = window.require('electron').webFrame;
+      // this.ipcRenderer = window.require('electron').ipcRenderer;
+      // this.webFrame = window.require('electron').webFrame;
 
       // If you wan to use remote object, pleanse set enableRemoteModule to true in main.ts
-      this.remote = window.require('@electron/remote'); //_remote_; //window.require('electron').remote;
+      // this.remote = window.require('@electron/remote'); //_remote_; //window.require('electron').remote;
 
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
     }
 
+    this._clipboard = navigator.clipboard;
     this.clipboard = new ClipBoard();
   }
 
@@ -82,14 +85,14 @@ export class ElectronService {
   writeToClipboard( pData:string, pOptions:any=null):void {
     console.log("writing [",pData,"] to clipboard");
     if(pOptions==null){
-      this.remote.clipboard.writeText( pData);
+      this._clipboard.writeText( pData);
     }else if(pOptions.hasOwnProperty('format')){
       switch(pOptions.format){
         case "html":
-          this.remote.clipboard.writeHTML(pData);
-          break;
+          //this.remote.clipboard.writeHTML(pData);
+          //break;
         default:
-          this.remote.clipboard.writeText(pData);
+          this._clipboard.writeText(pData);
           break;
       }
     }
@@ -100,21 +103,21 @@ export class ElectronService {
    * @param pData
    * @param pOptions
    */
-  readFromClipboard( pOptions:any=null):string {
+  async readFromClipboard( pOptions:any=null):Promise<string> {
     if(pOptions==null){
-      return this.remote.clipboard.readText();
+      return this._clipboard.readText();
     }else if(pOptions.hasOwnProperty('format')){
       switch(pOptions.format){
         case "html":
-          return this.remote.clipboard.readHTML();
+          return this._clipboard.read();
           break;
         default:
-          return this.remote.clipboard.readText();
+          return this._clipboard.readText();
           break;
       }
+    }else{
+      return Promise.resolve("");
     }
-
-    return null;
   }
 
   setSelection( pSelection:any){

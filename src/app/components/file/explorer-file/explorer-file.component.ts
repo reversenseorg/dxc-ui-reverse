@@ -27,6 +27,8 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {ElectronService} from "../../../core/services";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {ContextMenuEvent} from "../../code/ctrl/code-controller.service";
+import {UIException} from "../../../base/error/UIException";
+import {Nullable} from "../../../base/Nullable";
 
 export enum FS_SUBVIEW {
   PKG,
@@ -111,7 +113,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
   initialSize:any = null;
   privileged:boolean = false;
@@ -172,8 +174,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {     this.ctxMenu[vMenu.name] = vMenu;
     });
 
   }
@@ -356,6 +357,10 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
   }
 
   hideCtxMenu():void{
+
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("explorer-file","hideCtxMenu");
+    }
     this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 

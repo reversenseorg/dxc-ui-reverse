@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TerminalHelperComponent } from './terminal-workspace.component';
+import { TerminalHelperComponent } from './terminal-helper.component';
 
 describe('TerminalWorkspaceComponent', () => {
   let component: TerminalHelperComponent;

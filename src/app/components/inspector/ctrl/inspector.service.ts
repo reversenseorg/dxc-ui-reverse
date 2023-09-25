@@ -55,8 +55,7 @@ export class InspectorService extends DxcApiService {
         .pipe(
           map((vObs)=>{
             console.log(vObs);
-            vObs.data.map( vInsp => {
-              this._cache.push(new Inspector(vInsp));
+            vObs.data.map((vInsp:any) => {             this._cache.push(new Inspector(vInsp));
             });
             this.needRefresh = false;
             return this._cache;

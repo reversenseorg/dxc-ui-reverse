@@ -6,6 +6,8 @@ import {TerminalInfo, TerminalSessionType} from "./TerminalSession";
 import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
 import {Device} from "../../../models/Device";
 import {IconModel} from "../../../base/icon/IconModel";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 // @ts-ignore
@@ -41,9 +43,12 @@ export class WorkspaceService extends DxcApiService {
    * @param pDev
    * @param pIcon
    */
-  createDevShellSession(pDev:Device, pIcon:IconModel = null, pPrivileged:boolean):void {
+  createDevShellSession(pDev:Device, pIcon:IconModel, pPrivileged=false):void {
 
-    console.log(pDev,pIcon);
+    if(pDev.id==null){
+      throw  UIException.DEVICE_IS_NOT_SELECTED("workspace","createDevShellSession");
+    }
+
     this.onCreateSession.next({
       type:TerminalSessionType.DEV,
       label:pDev.model+':'+pDev.id,

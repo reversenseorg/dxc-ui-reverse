@@ -40,6 +40,8 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {FILE_ICONS} from "../../file/icons";
 import {ContextMenuEvent} from "../../code/ctrl/code-controller.service";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -75,7 +77,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    * @type {AppComponent}
    * @field
    */
-  app: any = null;
+  override  app: any = null;
 
   /**
    * The default controller associated to this UI component
@@ -83,7 +85,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    * @type {DeviceController}
    * @field
    */
-  @Input() controller: DeviceController;
+  @Input() override controller: DeviceController;
 
   /**
    * This field holds the parent component, here the main explorer component.
@@ -91,7 +93,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    * @type {ExplorerComponent}
    * @field
    */
-  @Input() parent: any;
+  @Input() override parent: any;
 
   /**
    * The reference to the DOM element containing this component
@@ -122,63 +124,17 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   @ViewChild(ModalDmComponent) modalDm: ModalDmComponent;
   @ViewChild(ModalProgressComponent) modalProgress: ModalProgressComponent ;
 
-  id = 'explorerDevice';
-
   ctxMenu: ContextMenuList = {};
 
   selected: DEV_SUBVIEW = DEV_SUBVIEW.ALL;
   activeItem: any = null;
 
-  icons: any = DEV_ICONS;
-  gIcons: IconModelCollection = GLOBAL_ICONS;
 
   fIcons: any = FILE_ICONS;
 
-  // Unique identifier for all explorer tab
-  /**
-   * unique identifier for all explorer
-   */
-  offset = 4;
-
-  tab: ExplorerTab = new ExplorerTab({
-    offset: 0,
-    label: 'Devices',
-    icon: GLOBAL_ICONS['DEVICE'],
-    color: 'dxc-text-clear100'
-  });
-
-  view: ExplorerView = new ExplorerView({
-    nav: new NavbarSimpleView({
-      selected: this.selected,
-      opt: [],
-      menu: new MenuView({
-        items: [
-          new MenuItem<DeviceItem>({
-            id: DEV_SUBVIEW.ALL,
-            label: 'All',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['DEVICE']
-          }),
-          new MenuItem<DeviceItem>({
-            id: DEV_SUBVIEW.ANDROID,
-            label: 'Android',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['ANDROID']
-          }),
-          new MenuItem<DeviceItem>({
-            id: DEV_SUBVIEW.APPLE,
-            label: 'Apple',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['APPLE']
-          })
-        ]
-      })
-    })
-  });
-
   initialSize: any = null;
 
-  ctxMenuState: ContextMenuState = null;
+  ctxMenuState: Nullable<ContextMenuState> = null;
 
   devices: Device[][] = [];
 
@@ -208,10 +164,49 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
                private outputSvc: OutputService,
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
+    this.id = 'explorerDevice';
+    this.icons  = DEV_ICONS;
+    this.offset = 4;
     this.devices[DEV_SUBVIEW.ALL] = [];
     this.devices[DEV_SUBVIEW.ANDROID] = [];
     this.devices[DEV_SUBVIEW.APPLE] = [];
     this.view.id = this.id;
+
+    this.tab = new ExplorerTab({
+      offset: 0,
+      label: 'Devices',
+      icon: GLOBAL_ICONS['DEVICE'],
+      color: 'dxc-text-clear100'
+    });
+
+    this.view = new ExplorerView({
+      nav: new NavbarSimpleView({
+        selected: this.selected,
+        opt: [],
+        menu: new MenuView({
+          items: [
+            new MenuItem<DeviceItem>({
+              id: DEV_SUBVIEW.ALL,
+              label: 'All',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['DEVICE']
+            }),
+            new MenuItem<DeviceItem>({
+              id: DEV_SUBVIEW.ANDROID,
+              label: 'Android',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['ANDROID']
+            }),
+            new MenuItem<DeviceItem>({
+              id: DEV_SUBVIEW.APPLE,
+              label: 'Apple',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['APPLE']
+            })
+          ]
+        })
+      })
+    });
 
     ngbTooltipConfig.tooltipClass = "dxc-tooltip"
   }
@@ -276,8 +271,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {     this.ctxMenu[vMenu.name] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });
   }
@@ -286,7 +280,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     const el = this.explDevRef.nativeElement; // document.getElementById('explorerCode');
     const ctn = this.explDevCtnRef.nativeElement; // document.getElementById('explorerCodeCtn');
-    const navHeight: number = this.view.nav.size.height;
+    const navHeight: number = (this.view!=null ? (this.view as any).nav.size.height : 15);
 
     el.style.width = pSize.width + 'px';
     el.style.maxWidth = pSize.width + 'px';
@@ -311,9 +305,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
             console.log(pObs);
 
             if(pObs != null){
-              pObs.map( pApp => {
-
-                pApp._t = 'apkg';
+              pObs.map((pApp:any) => {                pApp._t = 'apkg';
                 pApp._e = false ;
                 pApp.tag = (pApp.packagePath.split('/')[1]);
                 pApp.dev = pItem.dev;
@@ -332,8 +324,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
         data = this.dmService.getProcesses(pItem.dev, (pItem.dev.rootMode? 'privileged':'user')).pipe(
           map( (pObs: any) => {
             if(pObs!=null){
-              pObs.map( pApp => {
-                pApp._t = 'p';
+              pObs.map((pApp:any) => {               pApp._t = 'p';
                 pApp._e = false ;
                 pApp.dev = pItem.dev;
               });
@@ -382,7 +373,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
   sortFiles( pFiles:any, pDevice:Device): any{
     const t1:any = [],t2:any = [];
-    pFiles.map( (vFile) => {
+    pFiles.map( (vFile:any) => {
       if(vFile.dev == null){
         vFile.dev = pDevice;
       }
@@ -431,14 +422,17 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
         break;
       case 'info':
         this.dmService.listDevices(DeviceCacheFlavor.CACHE_FIRST).subscribe((vDevs)=>{
-          let dev:Device = null;
+          let dev:Nullable<Device> = null;
           for(let i=0; i<vDevs.length; i++){
             if(vDevs[i].uid==pItem.uid){
               dev = vDevs[i];
               break;
             }
           }
-          this.controller.openFocus(dev, 'ss','expl');
+          if(dev!=null){
+            this.controller.openFocus(dev, 'ss','expl');
+          }
+
         })
         break;
     }
@@ -454,10 +448,10 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     if (pKey[0] == '['){
       field = pKey.substr(1);
-      cmpFn = ((aVal) => (aVal.indexOf(pValue) > -1));
+      cmpFn = ((aVal:any) => (aVal.indexOf(pValue) > -1));
     }else{
       field = pKey;
-      cmpFn = ((aVal) => (aVal === pValue));
+      cmpFn = ((aVal:any) => (aVal === pValue));
     }
 
     pData.map( (aPkg: DeviceItem) => {
@@ -479,7 +473,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
       const el = this.explDevRef.nativeElement;
       const ctn = this.explDevCtnRef.nativeElement;
-      const navH: number = this.view.nav.size.height;
+      const navH: number = (this.view as any).nav.size.height;
 
       [el, ctn].map((pEl) => {
 
@@ -578,10 +572,12 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   onMenuItemClick( pEvent: any): void{
+    if(this.view!=null){
+      (this.view as any).nav.selectItem(pEvent.item);
 
-    this.view.nav.selectItem(pEvent.item);
+      this.selected = pEvent.item.id;
+    }
 
-    this.selected = pEvent.item.id;
   }
 
 
@@ -620,6 +616,9 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   hideCtxMenu(): void{
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("explorer-device","hideCtxMenu");
+    }
     this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 
@@ -685,9 +684,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       .pipe(
         map( (pObs: any) => {
           if( pObs == null) return pObs;
-          pObs.map( vChild => {
-
-            this._prepareDeviceRendering(vChild);
+          pObs.map((vChild:any) => {            this._prepareDeviceRendering(vChild);
             /*
             vChild._icon = this.gIcons['DEVICE'];
             vChild._t = 'dev';
@@ -756,7 +753,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   enroll(pItemObj: any, pForce = false): void {
-    let dev: Device = null;
+    let dev: Nullable<Device> = null;
 
     if(pItemObj.enrolled && !pForce){
       this.outputSvc.confirm(OutputMessage.newConfirm({
@@ -775,13 +772,16 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       dev = pItemObj;
     }
 
-    this.enrolling = true;
-    this.dmService.enroll(dev).subscribe((pObs: any) => {
-      console.log('enroll started : ', pObs);
-      this.dmService.enrollStatus(dev).subscribe(( pObs2) => {
-        console.log('status : ', pObs2);
+    if(dev != null){
+      this.enrolling = true;
+      this.dmService.enroll(dev as Device).subscribe((pObs: any) => {
+        console.log('enroll started : ', pObs);
+        this.dmService.enrollStatus(dev as Device).subscribe(( pObs2) => {
+          console.log('status : ', pObs2);
+        });
       });
-    });
+    }
+
   }
 
   filterApp(pItem: any, pFilter: any) {
@@ -814,8 +814,8 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
 
-  private _getItemByDevice( pDevice:Device, pType:string): ExpandableItemComponent<any> {
-    let ret:ExpandableItemComponent<any> = null;
+  private _getItemByDevice( pDevice:Device, pType:string): Nullable<ExpandableItemComponent<any>> {
+    let ret:Nullable<ExpandableItemComponent<any>> = null;
 
     this.expandableItems.map((itm:ExpandableItemComponent<any>)=>{
       if(itm.item.uid == pDevice.uid){
@@ -839,7 +839,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     this.modalProgress.show();
   }
 
-  installApp(pDevice: any, pSource = 'proj', pPath:string = null) {
+  installApp(pDevice: any, pSource = 'proj', pPath:Nullable<string> = null) {
     const opts:any = {};
     if(pSource == 'proj'){
       opts.src = 'proj';
@@ -942,7 +942,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
                   this.outputSvc.print(new OutputMessage({ src: 'ProjectManager', msg: 'Creating a new project for app [' + subject.packageIdentifier + ']' }));
                 });
               }catch (err){
-                this.outputSvc.alert(new OutputMessage({ msg: err.message }));
+                this.outputSvc.alert(new OutputMessage({ msg: (err as Error).message }));
               }
             }else{
               this.outputSvc.print(new OutputMessage({ src: 'ProjectManager', msg: 'Project name is not available. Please change it.' }));
@@ -1085,8 +1085,8 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    * @param subject
    * @param n
    */
-  copyAttr(subject: any, n: string = null) {
-    if(n !== null)
+  copyAttr(subject: any, n: Nullable<string> = null) {
+    if(n != null)
       this.electronSvc.writeToClipboard(subject[n]);
     else
       this.electronSvc.writeToClipboard(subject);

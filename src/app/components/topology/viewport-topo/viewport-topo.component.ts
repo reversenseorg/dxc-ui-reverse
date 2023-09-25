@@ -13,6 +13,7 @@ import {IntentFilter} from "../../../models/android/IntentFilter";
 import {IntentDataCriteria} from "../../../models/android/Intent";
 import {ModalSendIntentComponent} from "../modal-intent/modal-send-intent.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
 
 @Component({
   selector: 'app-viewport-topo',
@@ -93,7 +94,7 @@ export class ViewportTopoComponent implements OnInit, AfterViewInit, IViewportCo
   }
 
 
-  prepareIntent(pComponent: AndroidComponent, pIntentFilter: IntentFilter, pCriteria: IntentDataCriteria):void {
+  prepareIntent(pComponent: AndroidComponent, pIntentFilter: IntentFilter, pCriteria: Nullable<IntentDataCriteria>):void {
     //if(pIntentFilter)
     this.sendIntentModal.comp = pComponent;
     this.sendIntentModal.filter = pIntentFilter;

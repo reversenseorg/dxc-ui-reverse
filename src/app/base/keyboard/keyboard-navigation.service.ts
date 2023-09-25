@@ -1,5 +1,6 @@
 import {HostListener, Injectable} from "@angular/core";
 import {IKeyboardNavigable} from "./IKeyboardNavigable";
+import {Nullable} from "../Nullable";
 
 
 
@@ -16,7 +17,7 @@ export class KeyboardNavigationService {
    * @type {IKeyboardNavigable}
    * @field7
    */
-  activeEl:IKeyboardNavigable = null;
+  activeEl:Nullable<IKeyboardNavigable> = null;
 
 
 
@@ -49,11 +50,9 @@ export class KeyboardNavigationService {
    * @method
    * @since 1.0.0
    */
-  focusout( pElement:IKeyboardNavigable = null):void{
+  focusout( pElement:IKeyboardNavigable):void{
     if(pElement==null) {
       this.stack.pop();
-    }else{
-      //this.stack = this.stack.filter( pEl => (pEl.uid == pElement.uid));
     }
   }
 
@@ -66,7 +65,7 @@ export class KeyboardNavigationService {
    * @method
    * @since 1.0.0
    */
-  dispatch( pEvent:KeyboardEvent, pSource:string):void {
+  dispatch( pEvent:KeyboardEvent):void {
     if(this.stack.length>0){
       let activ:IKeyboardNavigable = this.stack[this.stack.length-1];
         //activ.onKeyboardEvent.next({ e:pEvent, src:pSource });

@@ -20,6 +20,7 @@ import {PrivacyReport} from "../../../models/audit/privacy/PrivacyReport";
 import {PrivacyFinding, PrivacyFindingType} from "../../../models/audit/privacy/PrivacyFinding";
 import {TrackerInfo} from '../../../models/audit/privacy/TrackerInfo';
 import {TopologyService} from "../../topology/ctrl/topology.service";
+import {Nullable} from "../../../base/Nullable";
 
 enum INFO_TYPE {
   NONE,
@@ -69,14 +70,14 @@ export class ViewportPrivacyDashboardComponent implements OnInit, IViewportConta
   gIcons:any = GLOBAL_ICONS;
   hIcons:any = HOOK_ICONS;
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
   resize$: Subject<any> = new Subject<any>();
 
 
   data: any;
   inspectors:Inspector[] = [];
-  app: Application = null;
-  project: DexcaliburProject = null;
+  app: Nullable<Application> = null;
+  project: Nullable<DexcaliburProject> = null;
 
   activeTR: number = INFO_TYPE.TRK_DOM;
   activeTL: number = INFO_TYPE.PII_DATA;

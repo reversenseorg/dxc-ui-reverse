@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
 import {IntentDataCriteria} from "../../../models/android/Intent";
 import {OutputMessage} from "../../../cmp/OutputMessage";
+import {Nullable} from "../../../base/Nullable";
 
 
 @Component({
@@ -67,13 +68,13 @@ export class IntentPatternComponent implements OnChanges{
 
   ngOnChanges(pChanges: SimpleChanges): void {
     if(pChanges.hasOwnProperty('_f')){
-      this.prepareURI(pChanges._f.currentValue);
+      this.prepareURI(pChanges['_f'].currentValue);
     }
   }
 
-  prepareURI( pData:IntentDataCriteria):string {
+  prepareURI( pData:IntentDataCriteria):void {
     if(pData.scheme==null){
-      return null;
+      return;
     }
 
     this.uri = pData.scheme;

@@ -44,7 +44,7 @@ export class IpcDispatcher {
       this._process.on('message', (pMsg: any) => {
         try {
           self.dispatch(IpcMessage.from(pMsg));
-        } catch (err) {
+        } catch (err:any) {
           __log('[MAIN][DXC_SRV][ERROR] (dispatch) invalid IPC message caught : ' + JSON.stringify(pMsg));
           __log(err.message);
         }

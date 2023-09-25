@@ -25,6 +25,8 @@ import {HelperService} from "../../helper/ctrl/HelperService";
 import {InspectorService} from "../ctrl/inspector.service";
 import {AbstractHook} from "../../../models/AbstractHook";
 import HookStrategy from '../../../models/hook/HookStrategy';
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 enum FRAG_LOCATION {
@@ -44,7 +46,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   NODE_TYPES:any = NodeInternalType;
   FRAG = FRAG_LOCATION;
 
-  private _viewRef:ViewRef = null;
+  private _viewRef:ViewRef;
   @Input() controller: InspectorController;
   @Input() parent: ViewportComponent;
 
@@ -62,7 +64,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   resize$: Subject<any> = new Subject<any>();
 
   activeLeft = 'st';
-  activeRight:number = null;
+  activeRight:number = -1;
   activeItem:any = null;
   activeWidth = 30;
   activeFrag: any = null;
@@ -76,13 +78,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     frag: false
   };
 
-  view: ViewportView = new ViewportView({
-    tab: new ViewportTab({
-      label: 'Inspector',
-      icon: GLOBAL_ICONS['HOOKS'],
-      color: 'dxc-text-clear100'
-    })
-  });
+  view: ViewportView ;
 
   data: Inspector;
 
@@ -92,6 +88,14 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
                public helpSvc:HelperService) {
 
     this._viewRef = viewRef;
+
+    this.view = new ViewportView({
+      tab: new ViewportTab({
+        label: 'Inspector',
+        icon: GLOBAL_ICONS['HOOKS'],
+        color: 'dxc-text-clear100'
+      })
+    });
   }
 
 
@@ -144,7 +148,8 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   hooks: any;
 
   ngDoCheck() {
-    this.hiddenForce = !(this.parent.activeCtn.id == this.id);
+    // to hide currently displayed view,
+    this.hiddenForce = (this.parent.activeCtn!=null) && !(this.parent.activeCtn.id == this.id);
     this._viewRef.detectChanges();
   }
 
@@ -154,7 +159,12 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
 
   configure( pData:Inspector):void {
     this.data = pData;
-    this.view.tab.label = pData.id;
+    if(pData.id !=null){
+      this.view.tab.label = pData.id;
+    }else{
+      this.view.tab.label = pData.name as string;
+    }
+
   }
 
   onClose(): boolean {
@@ -197,7 +207,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     this.activeWidth = pWidth;
   }
 
-  showStrategy(pWidth:number, pStrat:HookStrategy = null) {
+  showStrategy(pWidth:number, pStrat:Nullable<HookStrategy> = null) {
     if(pStrat!=null){
       this.activeItem = pStrat;
       this.activeRight = NodeInternalType.HOOK_STRATEGY;
@@ -252,6 +262,11 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   }
 
   openNode(pUID: any, pNodeType:number) {
+
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
     switch (pNodeType) {
       case NodeInternalType.HOOK_JAVA:
       case NodeInternalType.HOOK_NATIVE:

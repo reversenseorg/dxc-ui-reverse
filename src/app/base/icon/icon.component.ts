@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {IconModel} from "./IconModel";
+import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
 
 export enum ICON_TYPE {
   ICON = 'img',
@@ -72,7 +74,7 @@ export class IconComponent implements OnInit, OnChanges {
    */
   @Input() label:Nullable<string> = null;
 
-  @Input() model: IconModel = null;
+  @Input() model: Nullable<IconModel> = null;
 
   @Input() spin: boolean = false;
 
@@ -87,10 +89,10 @@ export class IconComponent implements OnInit, OnChanges {
 
   ngOnChanges(pChanges: SimpleChanges) {
       if (pChanges.hasOwnProperty('model')) {
-          this.configure(pChanges.model.currentValue);
+          this.configure(pChanges['model'].currentValue);
       }
       if (pChanges.hasOwnProperty('color1')) {
-        this.color1 = pChanges.color1.currentValue;
+        this.color1 = pChanges['color1'].currentValue;
       }
   }
 

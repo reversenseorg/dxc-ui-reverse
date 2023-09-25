@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewportCodeComponent } from './viewport-code.component';
+import { ViewportSplittedComponent } from './viewport-splitted.component';
 
-describe('ViewportCodeComponent', () => {
-  let component: ViewportCodeComponent;
-  let fixture: ComponentFixture<ViewportCodeComponent>;
+describe('ViewportSplittedComponent', () => {
+  let component: ViewportSplittedComponent;
+  let fixture: ComponentFixture<ViewportSplittedComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewportCodeComponent ]
+      declarations: [ ViewportSplittedComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewportCodeComponent);
+    fixture = TestBed.createComponent(ViewportSplittedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

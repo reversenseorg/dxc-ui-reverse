@@ -3,6 +3,7 @@ import {Subject} from "rxjs";
 import {IconModel} from "../icon/IconModel";
 import {TerminalSession} from "../../components/workspace/ctrl/TerminalSession";
 import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
 
 @Component({
   selector: 'dxc-xterm',
@@ -23,8 +24,13 @@ export class XtermComponent implements OnInit, OnChanges {
 
   ngOnChanges(pChanges: SimpleChanges) {
     if(pChanges.hasOwnProperty('session')){
-      this.session.removeXterm();
-      pChanges.session.currentValue.registerXterm(this);
+      if(this.session!=null){
+        this.session.removeXterm();
+      }
+      if(pChanges['session']!=null){
+        pChanges['session'].currentValue.registerXterm(this);
+      }
+
     }
   }
 

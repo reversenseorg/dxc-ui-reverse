@@ -1,4 +1,4 @@
-import {IController} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
 import {Observable, Subject} from "rxjs";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ComponentFactoryResolver} from "@angular/core";
@@ -11,6 +11,8 @@ import {NodeType} from "../../../models/NodeType";
 import {FILE_ICONS} from "../../file/icons";
 import {UiController} from "../../../base/controllers/UiController";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
+import {IconModelCollection} from "../../../base/icon/IconModel";
 
 
 export class NativeController extends UiController implements IController {
@@ -22,51 +24,22 @@ export class NativeController extends UiController implements IController {
   name:string = 'native-main';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: NativeService = null;
-
-  explorerCmp: any = null;
-  viewCmp: any = null;
-  terminalCmp: any = null;
-  modalCmp: any = null;
-
-  views:ViewportView[] = [];
-
-  componentFactoryResolver:ComponentFactoryResolver = null;
-
-  openView: Subject<any> = new Subject<any>();
-  closeView: Subject<any> = new Subject<any>();
-  focusView: Subject<any> = new Subject<any>();
+  service: NativeService;
 
 
   rendered:any = [];
-  gIcons:any = GLOBAL_ICONS;
+  gIcons:IconModelCollection = GLOBAL_ICONS;
 
   // -- data --
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     super();
 
     this.configure(pConfig);
   }
 
-
-  configure( pConfig:any=null):void {
-    if(pConfig==null) return;
-
-    for(let i in pConfig){
-      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
-    }
-  }
-
-  getExplorerCmp():any {
-    return this.explorerCmp.main;
-  }
-
-  getViews():ViewportView[]{
-    return this.views;
-  }
 
 
   /**
@@ -106,8 +79,7 @@ export class NativeController extends UiController implements IController {
   isAlreadyRendered(pItem:ModelFile):any {
     let f:any=null;
 
-    this.rendered.map( vItem => {
-      if(vItem._uid === pItem._uid){
+    this.rendered.map((vItem:any) => {     if(vItem._uid === pItem._uid){
         f = vItem;
       }
     });

@@ -4,6 +4,8 @@ import {Observable, Subject} from "rxjs";
 import {IController} from "../controllers/IController.interface";
 import {AppComponent} from "../../app.component";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
+import {Nullable} from "../Nullable";
+import {IconModelCollection} from "../icon/IconModel";
 
 export abstract class SubExplorerComponent<T> {
 
@@ -16,7 +18,7 @@ export abstract class SubExplorerComponent<T> {
 
   id: string;
 
-  app: AppComponent;
+  app: Nullable<AppComponent>;
 
   parent: any;
 
@@ -34,9 +36,9 @@ export abstract class SubExplorerComponent<T> {
    */
   tab: ExplorerTab;
 
-  gIcons: any;
+  gIcons: IconModelCollection = GLOBAL_ICONS;
 
-  icons: any = null;
+  icons: IconModelCollection = {};
 
   resize$: Subject<any>;
 

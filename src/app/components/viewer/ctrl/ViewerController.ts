@@ -1,11 +1,12 @@
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ExplorerCodeComponent} from "../../code/explorer-code/explorer-code.component";
-import {IController, ViewCmpMap} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
 import {Observable, Subject} from "rxjs";
 import {ComponentFactoryResolver, EventEmitter} from "@angular/core";
 import {StageComponent} from "../../stage/stage.component";
 import {UiController} from "../../../base/controllers/UiController";
 import {ViewerService} from "./viewer.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -18,20 +19,18 @@ export class ViewerController extends UiController implements IController {
   name:string = 'viewer';
 
   id:string = '';
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: ViewerService = null;
+  service: ViewerService;
 
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
 
   //explorer:ExplorerCodeComponent = null;
   rendered:any = [];
-  views:ViewportView[] = [];
 
   openFile:EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     super();
     this.configure(pConfig);
     this.openFile.subscribe( pFile => {
@@ -43,7 +42,7 @@ export class ViewerController extends UiController implements IController {
 
   close(pItem: any, pSrc:any): any {
 
-    this.rendered = this.rendered.filter( vItem => {
+    this.rendered = this.rendered.filter((vItem:any) => {
       return (vItem.path !== pItem.path);
     });
 
@@ -54,8 +53,7 @@ export class ViewerController extends UiController implements IController {
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
 
-    this.rendered.map( pView => {
-      console.log(pView);
+    this.rendered.map((pView:any) => {     console.log(pView);
       if((pView.local ===pItem.local) && (pView.p === pItem.p)){
         f = pView;
       }

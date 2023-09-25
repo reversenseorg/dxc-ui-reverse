@@ -39,6 +39,8 @@ import {Device} from "../../../models/Device";
 import {DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {InspectorService} from "../../inspector/ctrl/inspector.service";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
+import {UIException} from "../../../base/error/UIException";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface HookPoolFacets {
@@ -115,7 +117,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:ContextMenuState = null;
+  ctxMenuState:Nullable<ContextMenuState> = null;
 
   initialSize:any = null;
 
@@ -302,8 +304,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map( vMenu => {
-      this.ctxMenu[vMenu.name] = vMenu;
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {     this.ctxMenu[vMenu.name] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });
 
@@ -345,14 +346,12 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
           children: []
 
         }];
-        pHooks.load.map( x => {
-          x._t = 'h';
+        pHooks.load.map((x:any) => {         x._t = 'h';
           x._icon = GLOBAL_ICONS['HOOKS'];
           x._kt = 'load';
           pItem.children[0].children.push(x);
         });
-        pHooks.unload.map( x => {
-          x._t = 'h';
+        pHooks.unload.map((x:any) => {         x._t = 'h';
           x._icon = GLOBAL_ICONS['HOOKS'];
           x._kt = 'unload';
           pItem.children[1].children.push(x);
@@ -435,6 +434,10 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   }
 
   hideCtxMenu():void{
+
+    if(this.ctxMenuState==null){
+      throw UIException.CTX_MENU_NOT_READY("explorer-hooks","hideCtxMenu");
+    }
     this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
   }
 
@@ -516,8 +519,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     console.log(pKPS);
     this.hookPools[HOOK_VIEW.KP].app = pKPS;
     this.activePool = this.hookPools[HOOK_VIEW.KP];
-    this.hookPools[HOOK_VIEW.KP].app.map( x => {
-      x._icon = HOOK_ICONS['KEYPOINT'];
+    this.hookPools[HOOK_VIEW.KP].app.map((x:any) => {     x._icon = HOOK_ICONS['KEYPOINT'];
       if(x.name == null){
         x.name = "core."+x.condition+(x.node.lengt>0 ? "."+x.node[0].uid : "");
       }
@@ -609,8 +611,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
           dynamic: { app:[] },
           kp: { app:[] },
         };
-        hooks.map( vHS => {
-          if(vHS.builtin)
+        hooks.map((vHS:any) => {         if(vHS.builtin)
             this.hookPools.builtin.app.push(vHS);
           else if(vHS.native)
             this.hookPools.native.app.push(vHS);

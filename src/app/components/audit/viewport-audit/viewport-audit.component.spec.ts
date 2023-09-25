@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewportCodeComponent } from './viewport-code.component';
+import { ViewportAuditComponent } from './viewport-audit.component';
 
-describe('ViewportCodeComponent', () => {
-  let component: ViewportCodeComponent;
-  let fixture: ComponentFixture<ViewportCodeComponent>;
+describe('ViewportAuditComponent', () => {
+  let component: ViewportAuditComponent;
+  let fixture: ComponentFixture<ViewportAuditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewportCodeComponent ]
+      declarations: [ ViewportAuditComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewportCodeComponent);
+    fixture = TestBed.createComponent(ViewportAuditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

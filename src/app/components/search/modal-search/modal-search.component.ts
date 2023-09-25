@@ -26,6 +26,8 @@ import {TagService} from "../../tag/ctrl/tag.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Tag} from "../../../models/tags/Tag";
 import {ProjectService} from "../../project/ctrl/project.service";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 const INITIAL_MSG = "Type something to search ... Visit documentation to see more.";
@@ -54,7 +56,7 @@ export class ModalSearchComponent implements OnInit {
   @Input() controller:SearchController;
 
   aliasControl = new FormControl('');
-  error:Message = null;
+  error:Nullable<Message> = null;
 
   @ViewChild('msgBox', {read:ElementRef, static:false}) msgEl:ElementRef;
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
@@ -64,7 +66,7 @@ export class ModalSearchComponent implements OnInit {
 
   TAGS:any = null;
 
-  message:Message = null;
+  message:Nullable<Message> = null;
   item: any = null;
   msg:string = INITIAL_MSG;
 
@@ -83,12 +85,12 @@ export class ModalSearchComponent implements OnInit {
   };
 
   options:SearchNode[] = [];
-  selectedNode:SearchNode;
+  selectedNode:Nullable<SearchNode>;
   selectedScope:SearchScope;
 
 
 
-  activeNode:RequestNode = null;
+  activeNode:Nullable<RequestNode> = null;
 
   /**
    * The list of picked nodes
@@ -167,6 +169,9 @@ export class ModalSearchComponent implements OnInit {
     });
 
     if(this.mainController==null){
+      if(this.controller.app==null){
+        throw  UIException.APP_NOT_INITIALIZED();
+      }
       this.mainController = this.controller.app;
     }
   }
@@ -239,7 +244,7 @@ export class ModalSearchComponent implements OnInit {
    * @method
    */
   selectNode(pNode: SearchNode, pOffset:number,pItem:any = null):void {
-    const next:RequestNode = this.helper.selectNode(pOffset);
+    const next:Nullable<RequestNode> = this.helper.selectNode(pOffset);
 
     this.pickedFilters = this.helper.getActiveFilters();
     if(next != null) {
@@ -248,6 +253,11 @@ export class ModalSearchComponent implements OnInit {
     }else{
       // selected node is a leaf
       const currNode =  this.helper.getCurrentNode();
+
+      if(currNode==null){
+        throw UIException.SOMETHING_IS_WRONG_WITH_REQUEST("Current node is null");
+      }
+
       console.log( currNode, currNode.opts[currNode.selected]._t, RequestHelperTYPES.T_TAG);
       this.closeMenu.next(true);
       if(currNode.opts[currNode.selected]._t != RequestHelperTYPES.T_TAG){
@@ -263,17 +273,17 @@ export class ModalSearchComponent implements OnInit {
   changePickedFilter(pNode: SearchNode, pStackOffset:number = -1, pOffset:number = -1) {
 
     console.log("changePickedFilter: ",pNode, pStackOffset, pOffset)
-    let next:RequestNode = this.helper.changePickedFilter(pNode, pStackOffset, pOffset);
+    let next:Nullable<RequestNode> = this.helper.changePickedFilter(pNode, pStackOffset, pOffset);
 
     console.log("changePickedFilter (next): ",next)
 
-    if(next.opts == null){
-      next.opts = [];
-    }
 
     this.pickedFilters = this.helper.getActiveFilters();
     if(next != null) {
       this.activeNode = next;
+      if(next.opts == null){
+        next.opts = [];
+      }
     }else{
       //this.activeNode = null;
 
@@ -320,7 +330,7 @@ export class ModalSearchComponent implements OnInit {
     });
   }
 
-  doBackgroundSearch(pRequest: string, pResultType:string = null):void {
+  doBackgroundSearch(pRequest: string, pResultType:string):void {
     let req:string;
     this.searching = true;
     console.log("Doing search in background");
@@ -426,7 +436,7 @@ export class ModalSearchComponent implements OnInit {
 
   }
 
-  spawn(pRawRequest:string, pResultType:string=null):void {
+  spawn(pRawRequest:string, pResultType:string):void {
     this.modal.show();
     this.searchInput.value = pRawRequest;
     this.doBackgroundSearch( pRawRequest, pResultType);

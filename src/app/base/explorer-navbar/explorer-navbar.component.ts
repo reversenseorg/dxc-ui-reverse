@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {SubExplorerComponent} from "../explorer/subexplorer.component";
 import {ItemEvent} from "../expandable-list/expandable-item.component";
+import {Nullable} from "../Nullable";
 
 @Component({
   selector: 'app-explorer-navbar',

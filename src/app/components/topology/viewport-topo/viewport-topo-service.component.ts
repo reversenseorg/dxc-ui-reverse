@@ -14,6 +14,7 @@ import {IntentFilter} from "../../../models/android/IntentFilter";
 import {IntentDataCriteria} from "../../../models/android/Intent";
 import {ViewportTopoComponent} from "./viewport-topo.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -134,7 +135,7 @@ export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterVie
   }
 
 
-  sendIntent(pComponent: AndroidComponent, pIntentFilter:IntentFilter, pCriteria: IntentDataCriteria = null, pEvent:any = null) {
+  sendIntent(pComponent: AndroidComponent, pIntentFilter:IntentFilter, pCriteria: Nullable<IntentDataCriteria> = null, pEvent:any = null) {
     // prepare generic intent
     let payload:any = {};
     if(pIntentFilter.hasMultipleActions() || pIntentFilter.hasMultipleCategories()) {

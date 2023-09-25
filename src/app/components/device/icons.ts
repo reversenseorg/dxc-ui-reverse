@@ -1,6 +1,6 @@
-import {IconModel} from "../../base/icon/IconModel";
+import {IconModel, IconModelCollection} from "../../base/icon/IconModel";
 
-export const DEV_ICONS = {
+export const DEV_ICONS: IconModelCollection = {
   DEFAULT: new IconModel({
     iconType: 'img',
     type: 'fas',

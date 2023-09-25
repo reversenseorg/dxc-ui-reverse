@@ -26,6 +26,7 @@ import {TagService} from "../../tag/ctrl/tag.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Tag} from "../../../models/tags/Tag";
 import {ProjectService} from "../../project/ctrl/project.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 const INITIAL_MSG = "Type something to search ... Visit documentation to see more.";
@@ -54,7 +55,7 @@ export class SearchResultListComponent implements OnInit {
   @Input() controller:SearchController;
   @Input() results:any[] = [];
 
-  error:Message = null;
+  error:Nullable<Message> = null;
 
   @ViewChild('msgBox', {read:ElementRef, static:false}) msgEl:ElementRef;
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
@@ -64,7 +65,7 @@ export class SearchResultListComponent implements OnInit {
 
   TAGS:any = {};
 
-  message:Message = null;
+  message:Nullable<Message> = null;
   item: any = null;
   msg:string = INITIAL_MSG;
 
@@ -101,7 +102,7 @@ export class SearchResultListComponent implements OnInit {
       }
     });
 
-    if(this.mainController==null){
+    if((this.mainController==null) && (this.controller.app!=null)){
       this.mainController = this.controller.app;
     }
   }

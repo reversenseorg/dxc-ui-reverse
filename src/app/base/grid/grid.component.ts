@@ -8,6 +8,7 @@ import {
   QueryList,
   ViewChild,
 } from '@angular/core';
+import {Nullable} from "../Nullable";
 
 // add ng-content
 @Component({
@@ -25,12 +26,12 @@ export class GridCellComponent implements OnInit {
   uid:string;
   @Input() editable: boolean = false;
   @Input() opts: any = null;
-  @Input() data: any = null;;
-  @Input() name:Nullable<string> = null;
-  @Input() rowid: number = null;
-  @Input() cellid: number = null;
+  @Input() data: any = null;
+  @Input() name:string = "";
+  @Input() rowid: number = -1;
+  @Input() cellid: number = -1;
 
-  @Input() width: number = null;
+  @Input() width: number = -1;
   @Input() height: number = 5 * 15;
   @Input() uwidth: number = 1;
 

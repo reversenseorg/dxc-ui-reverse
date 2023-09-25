@@ -1,28 +1,29 @@
 import {Injectable} from "@angular/core";
 import {from, Observable, Subject} from "rxjs";
 import {ElectronService} from "../index";
-import {IpcRenderer} from "electron";
 
 
 interface ProjectStatus {
   [uid:string] :Subject<boolean>
 }
 
+/**
+ * Connectivity/metrics service
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class DexcaliburServerService {
 
-  ipcRenderer:IpcRenderer = null;
+  ipcRenderer:any = null;
 
   projectsReady: ProjectStatus = {};
   status:Subject<number> = new Subject<number>();
   //ready: Observable<boolean> = from(true);
 
   constructor(private electronService: ElectronService) {
-    this.initializeIpcRenderer();
+    //this.initializeIpcRenderer();
   }
-
 
 
 
@@ -35,6 +36,7 @@ export class DexcaliburServerService {
    */
   private initializeIpcRenderer() {
 
+    /*
     if (this.electronService.ipcRenderer) {
       try {
         this.ipcRenderer = this.electronService.ipcRenderer;
@@ -57,11 +59,7 @@ export class DexcaliburServerService {
       }
     } else {
       console.warn('Electron\'s IPC was not loaded');
-    }
-  }
-
-  getRemoteStatus(pUrl:string):Observable<boolean> {
-    return null;
+    }*/
   }
 
 

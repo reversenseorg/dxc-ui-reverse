@@ -151,5 +151,9 @@ export class MenuItem {
 
     }
 
+    setEnable( pStatus:boolean ){
+        this.enabled = pStatus;
+    }
+
 
 }

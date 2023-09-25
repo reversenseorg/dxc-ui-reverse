@@ -15,6 +15,7 @@ import JavaMethodHook from "../../../models/JavaMethodHook";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
+import {Nullable} from "../../../base/Nullable";
 
 
 const FRAG_TYPE = {
@@ -200,7 +201,7 @@ export class ViewportHookKpComponent implements OnInit, AfterViewInit, IViewport
 
   }
 
-  onChange(pEvent){
+  onChange(){
     this.edited.code = this.codeEditor.value;
   }
 }

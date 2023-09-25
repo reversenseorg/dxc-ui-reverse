@@ -30,6 +30,7 @@ import {HookService} from "../../hooks/ctrl/hook.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import ModelSyscall from "../../../models/ModelSyscall";
 import {ElectronService} from "../../../core/services";
+import {Nullable} from "../../../base/Nullable";
 
 
 export const DEVICE_PANEL = {
@@ -148,7 +149,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   fridaTrans: any = "usb";
   fridaOK =  false;
 
-  selectedSyscall:ModelSyscall = null;
+  selectedSyscall:Nullable<ModelSyscall> = null;
 
   activeItem:any = null;
 

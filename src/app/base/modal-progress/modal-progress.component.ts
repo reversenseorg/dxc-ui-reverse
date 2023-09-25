@@ -16,6 +16,8 @@ import {ModalBaseComponent} from "../modal-base/modal-base.component";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {NgbProgressbarConfig} from "@ng-bootstrap/ng-bootstrap";
 import {StageComponent} from "../../components/stage/stage.component";
+import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
 
 
 interface EventSources {

@@ -39,6 +39,8 @@ import {STAGE_ICONS} from "./icons";
 import {PasteLocation, PasteLocationType} from "../../core/services/electron/SelectionManager";
 import {DxcApiService} from "../../base/DxcApiService";
 import {WebsocketEvent, WebsocketEventType} from "../../base/websocket/WebsocketEvent";
+import {Nullable} from "../../base/Nullable";
+import {UIException} from "../../base/error/UIException";
 
 
 // size restriction (percent)
@@ -89,15 +91,15 @@ export class StageComponent implements OnInit, AfterViewInit {
 
   ws: WebsocketClient;
 
-  statusWC: WebsocketChannel = null;
+  statusWC: Nullable<WebsocketChannel> = null;
 
   //wsHook: WebsocketClient = new WebsocketClient('ws://localhost:8001/', 'hook-protocol');
 
-  helper: HelperController = null;
+  helper: Nullable<HelperController> = null;
   controllers: IController[] = [];
   explorers: ExplorerItem[] = [];
   terminals: TerminalItem[] = [];
-  viewport: ViewportController = new ViewportController();
+  viewport: ViewportController = new ViewportController({});
 
   navHeight = 0;
   statebarHeight = 20;
@@ -173,7 +175,7 @@ export class StageComponent implements OnInit, AfterViewInit {
   renderedModals: string[] = [];
 
   projectReady = false;
-  project:DexcaliburProject = null;
+  project:Nullable<DexcaliburProject> = null;
 
   conn:any;
 
@@ -225,6 +227,9 @@ export class StageComponent implements OnInit, AfterViewInit {
 
 
     this.settingsService.listNetworkSettings().subscribe((vSettings)=>{
+
+      if(vSettings==null) return;
+
       const connParam = DxcApiService.getAuthProfile();
       console.log(connParam);
       if(connParam!=null){
@@ -268,16 +273,21 @@ export class StageComponent implements OnInit, AfterViewInit {
 
     // main nav bar
     if(this.webNav && this.navHeight>0) {
-      document.getElementById('appHeaderCtn').style.height = pEvent.header + 'px';
+      const el = document.getElementById('appHeaderCtn');
+      if(el !=null){
+        el.style.height = pEvent.header + 'px';
+      }
+
     }
 
-    const btm:HTMLElement = document.getElementById('appBottomCtn');
-    const expl:HTMLElement = document.getElementById('appSuperExpl');
-    const svp:HTMLElement = document.getElementById('appSuperViewport');
-    const vp:HTMLElement = document.getElementById('appViewport');
+    const btm:HTMLElement = document.getElementById('appBottomCtn') as HTMLElement;
+    const expl:HTMLElement = document.getElementById('appSuperExpl') as HTMLElement;
+    const svp:HTMLElement = document.getElementById('appSuperViewport') as HTMLElement;
+    const vp:HTMLElement = document.getElementById('appViewport') as HTMLElement;
+    const appMid:HTMLElement = document.getElementById('appMiddleCtn') as HTMLElement;
 
     // middle ctn : explorer + viewport
-    document.getElementById('appMiddleCtn').style.top = pEvent.header + 'px';
+    appMid.style.top = pEvent.header + 'px';
 
     svp.style.height = expl.style.height = pEvent.body+'px';
     expl.style.maxWidth = expl.style.width =pEvent.left_width+'px';
@@ -323,10 +333,14 @@ export class StageComponent implements OnInit, AfterViewInit {
         self.progress$.next(new ModalProgressEvent(pMsg.data.msg));
       }
 
-      sendRaw(pData: any) {
-        pData._a = DxcApiToken.getInstance().getToken();
+      override sendRaw(pData: any) {
+        const tok = DxcApiToken.getInstance();
+        if(tok!=null){
+          pData._a = tok.getToken();
+        }
+
         if(DxcApiToken.exists("puid")){
-          pData._puid = DxcApiToken.getInstance("puid").getToken();
+          pData._puid = (DxcApiToken.getInstance("puid") as DxcApiToken).getToken();
         }
         super.sendRaw(pData);
       }
@@ -334,13 +348,15 @@ export class StageComponent implements OnInit, AfterViewInit {
 
     this.wsServer$.subscribe((eEvt)=>{
       if(eEvt.type===WebsocketEventType.CONN_READY){
-        eEvt.getClient().registerChannel(this.statusWC);
+        if(eEvt.getClient()==null) return;
+
+        (eEvt.getClient() as any).registerChannel(this.statusWC);
       }
     });
     //this.ws.registerChannel(this.statusWC);
   }
 
-  getStatusChannel():WebsocketChannel {
+  getStatusChannel():Nullable<WebsocketChannel> {
     return this.statusWC;
   }
 
@@ -360,9 +376,9 @@ export class StageComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    const leftPanel = document.getElementById('appSuperExpl');
-    const middlePanel = document.getElementById('appSuperViewport');
-    const middleCtn = document.getElementById('appMiddleCtn');
+    const leftPanel = document.getElementById('appSuperExpl') as HTMLElement;
+    const middlePanel = document.getElementById('appSuperViewport') as HTMLElement;
+    const middleCtn = document.getElementById('appMiddleCtn') as HTMLElement;
 
 
     this.windowResize$.subscribe((pEvent) => {
@@ -393,6 +409,7 @@ export class StageComponent implements OnInit, AfterViewInit {
     // redirect 'this.projectSvc.onProjectOpening' to 'this.progress$'
     this.projectSvc.onProjectOpening.subscribe( (pData:any)=>{
 
+      if(this.statusWC==null) return;
 
       this.statusWC.send({ action:"project", svc:"stat", data: { op:'project', opts:pData.project } });
       this.statusWC.onMessage = ((pMessage)=>{
@@ -418,6 +435,11 @@ export class StageComponent implements OnInit, AfterViewInit {
     this.authSvc.onAuthentication.subscribe( (pEvent:AuthenticationEvent)=>{
       if(pEvent.type == AuthenticationEventType.AUTH_SUCCESS){
         console.log(pEvent);
+
+        if(pEvent.token==null){
+          throw UIException.AUTH_ERROR("Channel cannot be established because token is missing");
+        }
+
         this.conn = {
           name: pEvent.token.getName(),
           user: pEvent.user
@@ -658,7 +680,10 @@ export class StageComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:selectionchange',['$event'])
   onSelection(pEvent:any):void {
-    this.eSvc.getSelectionManager().select(document.getSelection());
+    const sel = document.getSelection()
+    if(sel!=null){
+      this.eSvc.getSelectionManager().select(sel);
+    }
   }
 
   @HostListener('document:contextmenu',['$event'])
@@ -701,20 +726,26 @@ export class StageComponent implements OnInit, AfterViewInit {
 
     console.log('[PASTE] what=',this.eSvc.clipboard,' in=',this.eSvc.getSelectionManager().getSelection());
 
-    const pasteLoc:PasteLocation = this.eSvc.getSelectionManager().getPasteLocationFromFocus();
-    const cp = this.eSvc.readFromClipboard();
+    this.eSvc.readFromClipboard().then((cp)=>{
 
-    switch(pasteLoc.type) {
-      case PasteLocationType.TEXTAREA:
-      case PasteLocationType.INPUT:
-        const end = pasteLoc.el.value.substring(pasteLoc.end);
-        pasteLoc.el.value = pasteLoc.el.value.substring(0,pasteLoc.start)+cp+end;
-        pasteLoc.el.selectionStart = pasteLoc.el.selectionEnd = pasteLoc.start + cp.length;
-        break;
-      case PasteLocationType.EDITOR:
-        pasteLoc.el.env.editor.execCommand("paste", cp);
-        break;
-    }
+      const pasteLoc = this.eSvc.getSelectionManager().getPasteLocationFromFocus();
+      if(pasteLoc!=null){
+        switch(pasteLoc.type) {
+          case PasteLocationType.TEXTAREA:
+          case PasteLocationType.INPUT:
+            const end = pasteLoc.el.value.substring(pasteLoc.end);
+            pasteLoc.el.value = pasteLoc.el.value.substring(0,pasteLoc.start)+cp+end;
+            pasteLoc.el.selectionStart = pasteLoc.el.selectionEnd = (pasteLoc.start!=null ? pasteLoc.start : 0) + cp.length;
+            break;
+          case PasteLocationType.EDITOR:
+            pasteLoc.el.env.editor.execCommand("paste", cp);
+            break;
+        }
+      }
+
+    });
+
+
 
 /*
     if(sel.length == 1){
@@ -747,7 +778,7 @@ export class StageComponent implements OnInit, AfterViewInit {
    */
   @HostListener('document:keydown.escape',['$event'])
   onEscape(pEvent:any){
-    this.kbSvc.dispatch(pEvent, null);
+    this.kbSvc.dispatch(pEvent);
 
     // if a modal is displayed, close the top level modal
     /*
@@ -776,27 +807,27 @@ export class StageComponent implements OnInit, AfterViewInit {
   @HostListener('document:keydown.ArrowUp',['$event'])
   onArrowUp(pEvent:any){
     // prevent if
-    this.kbSvc.dispatch(pEvent, null);
+    this.kbSvc.dispatch(pEvent);
   }
 
   @HostListener('document:keydown.ArrowDown',['$event'])
   onArrowDown(pEvent:any){
-    this.kbSvc.dispatch(pEvent, null);
+    this.kbSvc.dispatch(pEvent);
   }
 
   @HostListener('document:keydown.ArrowLeft',['$event'])
   onArrowLeft(pEvent:any){
-    this.kbSvc.dispatch(pEvent, null);
+    this.kbSvc.dispatch(pEvent);
   }
 
   @HostListener('document:keydown.ArrowRight',['$event'])
   onArrowRight(pEvent:any){
-    this.kbSvc.dispatch(pEvent, null);
+    this.kbSvc.dispatch(pEvent);
   }
 
   @HostListener('document:keydown.enter',['$event'])
   onEnter(pEvent:any){
-    this.kbSvc.dispatch(pEvent, null);
+    this.kbSvc.dispatch(pEvent);
   }
 
   @HostListener('document:mousemove',['$event'])
@@ -848,8 +879,8 @@ export class StageComponent implements OnInit, AfterViewInit {
 
   computeLayoutDim():any {
 
-    const leftPanel = document.getElementById('appSuperExpl');
-    const navEl = document.getElementById('appHeaderCtn');
+    const leftPanel = document.getElementById('appSuperExpl') as HTMLElement;
+    const navEl = document.getElementById('appHeaderCtn') as HTMLElement;
 
     let borderWidth = 5;
     const vh:number = window.innerHeight; // - this.statebarHeight;
@@ -995,7 +1026,7 @@ export class StageComponent implements OnInit, AfterViewInit {
     if(pPattern.indexOf('ctrl:')==0){
       const name = pPattern.substr(5);
       let ctrl = null;
-      this.controllers.map( vCtrl => {
+      this.controllers.map( (vCtrl:IController) => {
         if(vCtrl.name == name){
           ctrl = vCtrl;
         }
@@ -1006,7 +1037,7 @@ export class StageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  doSearch(pRequest:string, pResultType:string=null):void {
+  doSearch(pRequest:string, pResultType:string):void {
     this.searchModal.spawn(pRequest, pResultType);
   }
 

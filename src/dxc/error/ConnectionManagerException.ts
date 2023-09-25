@@ -30,7 +30,7 @@ export class ConnectionManagerException extends MonitoredError {
     return new ConnectionManagerException("Save failed, file path is missing.",
       ErrorCode.CONN + 305) };
 
-    constructor( pMsg:string, pCode:number = null, pExtra:any = null) {
+    constructor( pMsg:string, pCode:number = -1, pExtra:any = null) {
         super('CONNECTION MGR', pMsg, pCode, pExtra);
     }
 }

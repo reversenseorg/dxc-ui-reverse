@@ -1,4 +1,4 @@
-import {IController} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
 import {Observable, Subject} from "rxjs";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {ComponentFactoryResolver} from "@angular/core";
@@ -27,6 +27,10 @@ import {CodeItem} from "../../code/explorer-code/CodeItem";
 import HookMessage from "../../../models/HookMessage";
 import HookSession from "../../../models/hook/HookSession";
 import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {IconModelCollection} from "../../../base/icon/IconModel";
+import {UIException} from "../../../base/error/UIException";
 
 
 export class HookController extends UiController implements IController {
@@ -38,60 +42,30 @@ export class HookController extends UiController implements IController {
   name:string = 'hook-main';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: HookService = null;
-
-  explorerCmp: any = null;
-  viewCmp: any = null;
-  terminalCmp: any = null;
-  modalCmp: any = null;
-
-  views:ViewportView[] = [];
-
-  componentFactoryResolver:ComponentFactoryResolver = null;
-
-  openView: Subject<any> = new Subject<any>();
-  closeView: Subject<any> = new Subject<any>();
-  focusView: Subject<any> = new Subject<any>();
+  service: HookService;
 
 
   rendered:any = [];
-  gIcons:any = GLOBAL_ICONS;
+  gIcons:IconModelCollection = GLOBAL_ICONS;
 
   // -- data --
-  inspectors: any = [];
+  inspectors: Inspector[] = [];
   hooks: any = [];
 
-  iController: InspectorController = null;
-
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     super();
     this.configure(pConfig);
   }
 
 
-  configure( pConfig:any=null):void {
-    if(pConfig==null) return;
-
-    for(const i in pConfig){
-      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
-    }
-  }
 
   /**
    * Perform initializing when project is fully loaded
    */
   onAppInit(){
     this.loadInspectors();
-  }
-
-  getExplorerCmp():any {
-    return this.explorerCmp.main;
-  }
-
-  getViews():ViewportView[]{
-    return this.views;
   }
 
   /**
@@ -124,7 +98,7 @@ export class HookController extends UiController implements IController {
     switch (pItem.data.__) {
       case NodeInternalType.HOOK_JAVA:
       case NodeInternalType.HOOK_NATIVE:
-        this.rendered = this.rendered.filter( vItem => {
+        this.rendered = this.rendered.filter( (vItem:any) => {
           if(!vItem.item.hasOwnProperty('id')){
             return true;
           }else{
@@ -158,7 +132,7 @@ export class HookController extends UiController implements IController {
     return this.service.listInspectors().pipe(
       map( vEl => {
         console.log(vEl);
-        vEl.data.map( (vInsp)=>{
+        vEl.data.map( (vInsp:any)=>{
           this.inspectors.push(new Inspector(vInsp));
         })
         //this.inspectors.push()
@@ -167,11 +141,20 @@ export class HookController extends UiController implements IController {
     );
   }
 
+  /**
+   * TODO
+   * @param pInspector
+   */
   bindInspector( pInspector:Inspector):Inspector {
-    let hooks=[];
+    let hooks=[]
+
+    /*
+    if(pInspector.hookset==null){
+
+    }
     for(let i in pInspector.hookset.hooks){
       //hooks.push(this.service.getHook())
-    }
+    }*/
     //pInspector.hookset.hooks = hooks;
     return pInspector;
   }
@@ -180,8 +163,7 @@ export class HookController extends UiController implements IController {
     let f:any=null;
 
 
-    this.rendered.map( vItem => {
-      console.log("[HOOK CONTROLLER][isRendered?] ",pItem, vItem);
+    this.rendered.map((vItem:any) => {     console.log("[HOOK CONTROLLER][isRendered?] ",pItem, vItem);
 
       if(vItem.item == null) return;
 
@@ -228,6 +210,11 @@ export class HookController extends UiController implements IController {
 
   _show( pItem:any, pType:string):void {
 
+
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
     let existingRef = this.isAlreadyRendered(pItem);
     let vid: string = this.id+':v'+this.rendered.length;
 
@@ -256,9 +243,14 @@ export class HookController extends UiController implements IController {
         (this.app.getController('ctrl:inspector') as InspectorController)._show(pItem);
         break;
       case NodeInternalType.HOOK_SESSION:
-        this.service.getMessageFromSession((pItem as HookSession).getUID()).subscribe(( pMessages:RuntimeEvent<any>[] )=>{
-          console.log(pMessages);
-        });
+        if((pItem as HookSession).getUID()!=null){
+          this.service.getMessageFromSession((pItem as HookSession).getUID() as string).subscribe(( pMessages:RuntimeEvent<any>[] )=>{
+            console.log(pMessages);
+          });
+        }else{
+          this.service.outputSvc.print(OutputMessage.newError({msg:"HookSession cannot be retrieved : invalid session ID", src:"HookController"}));
+        }
+
         break;
       default:
         if(pItem._t == 's'){
@@ -298,6 +290,9 @@ export class HookController extends UiController implements IController {
    * @since 1.0.0
    */
   showAttachToKP( pOpts:any):void {
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
     this.app.showModal('selectKP', pOpts);
   }
 
@@ -310,6 +305,9 @@ export class HookController extends UiController implements IController {
    * @since 1.0.0
    */
   showInspectorDetail( pInspector:any): void {
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
     (this.app.getController('ctrl:inspector') as InspectorController)._show(pInspector);
   }
 
@@ -367,11 +365,18 @@ export class HookController extends UiController implements IController {
   }
 
   openLib(fileUID: string) {
+
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
     const nativeCtrl:NativeController = this.app.getController('ctrl:native-main');
     const fileCtrl:FileController = this.app.getController('ctrl:file');
 
-    fileCtrl.service.viewFileContent(fileUID).subscribe( (vFile:ModelFile)=>{
-      nativeCtrl.open(vFile,'code');
+    fileCtrl.service.viewFileContent(fileUID).subscribe( (vFile:Nullable<ModelFile>)=>{
+      if(vFile!=null){
+        nativeCtrl.open(vFile,'code');
+      }
     })
 
     //this.app.getController('ctrl:code')
@@ -380,6 +385,11 @@ export class HookController extends UiController implements IController {
 
   showTargetKP(pKeyPoint: any) {
     console.log(pKeyPoint);
+
+
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
 
     if(pKeyPoint.node.length==0){
       this.service.outputSvc.alert(OutputMessage.newWarning({
@@ -395,8 +405,8 @@ export class HookController extends UiController implements IController {
       case NodeInternalType.FILE:
         const fileCtrl:FileController = this.app.getController('ctrl:file');
         const nativeCtrl:NativeController = this.app.getController('ctrl:native-main');
-        fileCtrl.service.viewFileContent(pKeyPoint.node[0].uid).subscribe( (vFile:ModelFile)=>{
-          nativeCtrl.open(vFile,'code');
+        fileCtrl.service.viewFileContent(pKeyPoint.node[0].uid).subscribe( (vFile:Nullable<ModelFile>)=>{
+          if(vFile!=null) nativeCtrl.open(vFile,'code');
         });
         break;
       case NodeInternalType.CLASS:

@@ -1,5 +1,7 @@
 import {NavbarSimpleView} from "./NavbarSimpleView";
 import {MenuItem} from "./MenuView";
+import {Nullable} from "../base/Nullable";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export class ExplorerView {
@@ -12,9 +14,9 @@ export class ExplorerView {
 */
   id:Nullable<string> = null;
 
-  nav:NavbarSimpleView = null;
+  nav:Nullable<NavbarSimpleView> = null;
 
-  subnav:NavbarSimpleView = null;
+  subnav:Nullable<NavbarSimpleView> = null;
 
 
   constructor(pConfig:any=null) {
@@ -52,7 +54,7 @@ export class ExplorerView {
     return this.id+'Ctn';
   }
 
-  getNavElement():HTMLElement {
+  getNavElement():Nullable<HTMLElement> {
     return document.getElementById(this.getNavID());
   }
 /*

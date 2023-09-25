@@ -18,6 +18,7 @@ import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboard
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {SettingsService} from "../ctrl/settings.service";
 import {StageComponent} from "../../stage/stage.component";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {
@@ -26,7 +27,7 @@ interface EventSources {
 }
 
 
-let gInstance:ModalNewSettingComponent = null;
+let gInstance:Nullable<ModalNewSettingComponent> = null;
 
 @Component({
   selector: 'dxc-modal-new-setting',
@@ -49,7 +50,7 @@ export class ModalNewSettingComponent extends AbstractKeyboardNavigable implemen
    * @type {string}
    */
   @Input() title:Nullable<string> = null;
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -96,7 +97,9 @@ export class ModalNewSettingComponent extends AbstractKeyboardNavigable implemen
    */
   show( pOptions:any){
     console.log('NEW SETTINGS MODAL !');
-    gInstance.category = (pOptions.hasOwnProperty('category')? pOptions.category : ModalNewSettingComponent.DEFAULT_CAT);
+    if(gInstance!=null){
+      gInstance.category = (pOptions.hasOwnProperty('category')? pOptions.category : ModalNewSettingComponent.DEFAULT_CAT);
+    }
   }
 
   /**

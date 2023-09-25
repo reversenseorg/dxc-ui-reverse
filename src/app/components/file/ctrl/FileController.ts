@@ -1,5 +1,5 @@
 import {ViewportView} from "../../../cmp/ViewportView";
-import {IController} from "../../../base/controllers/IController.interface";
+import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
 import {Subject} from "rxjs";
 import {ComponentFactoryResolver} from "@angular/core";
 import {CodeControllerService} from "../../code/ctrl/code-controller.service";
@@ -10,6 +10,9 @@ import {FilesystemService} from "./FilesystemService";
 import {FS_SUBVIEW} from "../explorer-file/explorer-file.component";
 import {OutputService} from "../../output/ctrl/output.service";
 import {File, FileLocation} from "../../../cmp/File";
+import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {UIException} from "../../../base/error/UIException";
 
 
 export class FileController implements IController {
@@ -21,9 +24,9 @@ export class FileController implements IController {
   name:string = 'file';
 
   id:Nullable<string> = null;
-  app: StageComponent = null;
+  app: Nullable<StageComponent> = null;
 
-  service: FilesystemService = null;
+  service: FilesystemService;
 
   explorerCmp: any = null;
   viewCmp: any = null;
@@ -32,20 +35,18 @@ export class FileController implements IController {
 
   views:ViewportView[] = [];
 
-  componentFactoryResolver:ComponentFactoryResolver = null;
+  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
 
   openView: Subject<any> = new Subject<any>();
   closeView: Subject<any> = new Subject<any>();
   focusView: Subject<any> = new Subject<any>();
 
-  viewer: ViewerController = null;
-  //viewComp: ViewportCodeComponent = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IControllerOptions) {
     this.configure(pConfig);
   }
 
-  configure( pConfig:any=null):void {
+  configure( pConfig:IControllerOptions):void {
     if(pConfig==null) return;
 
     for(let i in pConfig){
@@ -67,8 +68,12 @@ export class FileController implements IController {
 
   open(pItem: any, pSrc:any): any{
 
-    if(this.viewer==null)
-      this.viewer = (this.app.getController('ctrl:viewer') as ViewerController);
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
+    const fileViewer = (this.app.getController('ctrl:viewer') as ViewerController);
+
 
     let fn:any = null;
 
@@ -78,7 +83,7 @@ export class FileController implements IController {
           console.log(pFile);
           if(pFile!=null && pFile.length==1){
             pFile[0].local = true;
-            this.viewer.open(pFile[0], 'file');
+            fileViewer.open(pFile[0], 'file');
           }else{
             // add output svc
           }
@@ -88,7 +93,7 @@ export class FileController implements IController {
         this.service.listWorkspace(pItem.file.p).subscribe( pFile => {
           if(pFile!=null && pFile.length==1){
             pFile[0].local = true;
-            this.viewer.open(pFile[0], 'file');
+            fileViewer.open(pFile[0], 'file');
           }else{
             // add output svc
           }
@@ -98,7 +103,7 @@ export class FileController implements IController {
         this.service.listWorkspace(pItem.file.p).subscribe( pFile => {
           if(pFile!=null && pFile.length==1){
             pFile[0].local = true;
-            this.viewer.open(pFile[0], 'file');
+            fileViewer.open(pFile[0], 'file');
           }else{
             // add output svc
           }
@@ -114,7 +119,7 @@ export class FileController implements IController {
                       //console.log(pFile);
                       (pFile as any).local = true;
                       pFile._icon = pItem.file._icon;
-                      this.app.getController('ctrl:native-main').open(pFile, 'file');
+                      (this.app as any).getController('ctrl:native-main').open(pFile, 'file');
                     }
                   });
 
@@ -127,7 +132,7 @@ export class FileController implements IController {
                       //console.log(pFile);
                       (pFile as any).local = true;
                       pFile._icon = pItem.file._icon;
-                      this.viewer.open(pFile, 'file');
+                      fileViewer.open(pFile, 'file');
                     }
                   });
                   break;

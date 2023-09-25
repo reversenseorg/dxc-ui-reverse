@@ -1,4 +1,5 @@
 import {WebsocketClient} from "../WebsocketClient";
+import {Nullable} from "../Nullable";
 
 
 export enum WebsocketEventType  {
@@ -25,7 +26,7 @@ export class WebsocketEvent {
    */
   type: WebsocketEventType;
 
-  client: WebsocketClient|null;
+  client: Nullable<WebsocketClient>;
 
   constructor(pType:WebsocketEventType) {
     this.type = pType;
@@ -59,7 +60,7 @@ export class WebsocketEvent {
    * @return {WebsocketClient|null} The socket instance
    * @method
    */
-  getClient():WebsocketClient|null {
+  getClient():Nullable<WebsocketClient> {
     return this.client;
   }
 }

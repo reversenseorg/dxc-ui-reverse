@@ -1,5 +1,6 @@
 import * as _child_ from "child_process"
 import {__log} from "./Log";
+import {IStringIndex} from "../base/IStringIndex";
 
 
 export default class AppUtils {
@@ -14,14 +15,14 @@ export default class AppUtils {
     const env = process.env;
 
     if (process.platform === 'darwin') {
-      return env.SHELL || '/bin/bash';
+      return env['SHELL'] || '/bin/bash';
     }
 
     if (process.platform === 'win32') {
-      return env.COMSPEC || 'cmd.exe';
+      return env['COMSPEC'] || 'cmd.exe';
     }
 
-    return env.SHELL || '/bin/sh';
+    return env['SHELL'] || '/bin/sh';
   }
 
   static getEnv(pEnv:string, shell:any=null):any{
@@ -39,16 +40,16 @@ export default class AppUtils {
 
       __log(`Ok...`);
       __log(stdout.toString());
-      const ret = [];
+      const ret:IStringIndex<string> = {};
 
       AppUtils.stripAnsi(stdout.toString()).split('\n').forEach(x => {
         const parts = x.split('=');
-        ret[parts.shift()] = parts.join('=');
-        //ret.push(parts.join(=));
+        const i = parts.shift();
+        if(i!=null) ret[i] = parts.join('=');
       });
 
       return ret[pEnv];
-    } catch (err) {
+    } catch (err:any) {
       __log('Err :  '+err.message);
       if (shell) {
         throw err;

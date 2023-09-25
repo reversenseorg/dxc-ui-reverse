@@ -4,6 +4,8 @@ import {ViewportComponent} from "../viewport/viewport.component";
 import {AppComponent} from "../../app.component";
 import {StageComponent} from "../../components/stage/stage.component";
 import {Nullable} from "../Nullable";
+import {DxcApiService} from "../DxcApiService";
+import {IStringIndex} from "../IStringIndex";
 
 
 export interface ViewCmpMap {
@@ -17,6 +19,14 @@ export interface ExplorerCmpMap {
 
 export interface TerminalCmpMap {
   [name :string] :any;
+}
+
+export interface IControllerOptions extends IStringIndex<any>{
+  service: DxcApiService|any;
+  explorerCmp?: ExplorerCmpMap;
+  viewCmp?: ViewCmpMap;
+  terminalCmp?:any;
+  modalCmp?:any;
 }
 
 export interface IController {
@@ -41,6 +51,8 @@ export interface IController {
   openView: Observable<any>;
   closeView: Observable<any>;
   focusView: Observable<any>;
+
+  //constructor( pOptions:IControllerOptions):void;
 
   open(pItem: any, pSrc:any): any;
   close(pItem: any, pSrc:any): any;

@@ -5,6 +5,8 @@ import {IconModel} from "../../../base/icon/IconModel";
 import {XtermComponent} from "../../../base/xterm/xterm.component";
 import {INFO_TYPE, InfoMessage} from "../../../cmp/InfoMessage";
 import {Device} from "../../../models/Device";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 export enum TerminalSessionType {
@@ -17,7 +19,7 @@ export interface TerminalInfo {
   type: TerminalSessionType;
   label: string;
   uid: string;
-  icon?: IconModel;
+  icon?: Nullable<IconModel>;
   target?:any;
   priv?:boolean;
 }
@@ -27,17 +29,17 @@ export interface TerminalInfo {
 export class TerminalSession {
 
   uid:Nullable<string> = null;
-  icon:IconModel = null;
+  icon:Nullable<IconModel> = null;
   label:string = 'Terminal';
   active: boolean = false;
   exited:boolean = false;
 
 
-  channel:WebsocketChannel = null;
-  xterm:XtermComponent = null;
+  channel:Nullable<WebsocketChannel> = null;
+  xterm:Nullable<XtermComponent> = null;
   _prompt:string = "$ ";
 
-  _stdout: Function = null;
+  // _stdout: Function = null;
   stdout: Subject<any> = new Subject<any>();
   stderr: Subject<any> = new Subject<any>();
 
@@ -167,15 +169,26 @@ export class TerminalSession {
     this.channel.localid = this.uid;
 
     this.stdin.subscribe( (pObs:any) => {
+
+      if(this.channel==null){
+        throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("TerminalSession","processMessage");
+      }
       this.channel.send({ action:'cmd', svc:'xterm', data: { stdin: pObs }});
     });
   }
 
   getUID():string{
-    return this.channel.sessid;
+    if(this.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("TerminalSession","getUID");
+    }
+    return this.channel.getSessID();
   }
 
   start( pType:string ='bash', pOpts:any = null){
+
+    if(this.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("TerminalSession","start");
+    }
     this.channel.sendRaw({ action:'new', svc:'xterm', data: { type:pType, opts:pOpts }});
   }
 
@@ -187,7 +200,7 @@ export class TerminalSession {
     this.xterm = null;
   }
 
-  writeIn(pIn):void{
+  writeIn(pIn:string):void{
     this._mirror.push(pIn);
     this._hist.push(pIn);
     // reset and increment history cursor position
@@ -195,11 +208,14 @@ export class TerminalSession {
     this.stdin.next(pIn);
   }
 
-  writeOut(pOut):void{
+  writeOut(pOut:string):void{
     this._mirror.push(pOut);
   }
 
   exit():void{
+    if(this.channel==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("TerminalSession","exit");
+    }
     this.channel.send({ action:'exit', svc:'xterm', data: { }});
   }
 

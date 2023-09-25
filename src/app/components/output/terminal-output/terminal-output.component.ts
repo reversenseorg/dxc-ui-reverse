@@ -14,6 +14,7 @@ import {TerminalSession} from "../../workspace/ctrl/TerminalSession";
 import { FunctionsUsingCSI } from 'ng-terminal';
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../ctrl/output.service";
+import {Nullable} from "../../../base/Nullable";
 
 // @ts-ignore
 @Component({
@@ -108,7 +109,7 @@ export class TerminalOutputComponent implements  OnInit, OnChanges, AfterViewIni
    *
    * @param pInit
    */
-  resetTerm(pInit:boolean=false, pSess:TerminalSession=null){
+  resetTerm(pInit:boolean=false, pSess:Nullable<TerminalSession>=null){
 
   }
 
