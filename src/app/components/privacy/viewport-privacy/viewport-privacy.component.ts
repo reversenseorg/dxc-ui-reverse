@@ -207,7 +207,8 @@ export class ViewportPrivacyDashboardComponent implements OnInit, IViewportConta
 
   startScan() {
     this.privSvc.scan().subscribe((vReport)=>{
-      this.report = vReport;
+      if(vReport!=null)
+        this.report = vReport;
     })
   }
 }

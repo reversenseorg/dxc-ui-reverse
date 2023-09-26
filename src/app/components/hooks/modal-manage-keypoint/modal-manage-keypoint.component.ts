@@ -52,7 +52,7 @@ export class ModalManageKeypointComponent extends AbstractKeyboardNavigable impl
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 

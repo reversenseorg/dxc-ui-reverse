@@ -97,10 +97,10 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
 
       console.log("[HELPER VIEWER] onShowDoc$ : ",vDoc);
 
-      this.currentTab.active = false;
+      if(this.currentTab!=null) this.currentTab.active = false;
 
       if(this.viewsMap[vDoc.id]==null){
-        this.viewsMap[vDoc.id] = new HelperTab(vDoc.title, vDoc)
+        this.viewsMap[vDoc.id] = new HelperTab(vDoc.title!=null ? vDoc.title : "Help #", vDoc)
         this.views.push(this.viewsMap[vDoc.id]);
       }
 
@@ -115,14 +115,14 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
       title: 'Index',
       doc: ''
     });
-    this.viewsMap.index.icon = GLOBAL_ICONS['LIST'];
-    this.viewsMap.index.closable = false;
-    this.currentTab = this.viewsMap.index;
-    this.views.push(this.viewsMap.index);
+    this.viewsMap['index'].icon = GLOBAL_ICONS['LIST'];
+    this.viewsMap['index'].closable = false;
+    this.currentTab = this.viewsMap['index'];
+    this.views.push(this.viewsMap['index']);
   }
 
   isTabActive( pItem:HelperTab):boolean {
-      return (this.currentTab.uid != pItem.uid)
+      return (this.currentTab!=null) && (this.currentTab.uid != pItem.uid)
   }
 
   close( pEvent:any, pView:TerminalView):void{
@@ -130,8 +130,11 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
   }
 
   showTab(pEvent:HelperTab) {
+
+    if(pEvent.uid==null) return;
+
     if(this.currentTab !== null){
-      this.currentTab.active = false;
+      (this.currentTab as HelperTab).active = false;
     }
 
     this.currentTab = this.viewsMap[pEvent.uid];
@@ -146,12 +149,15 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
     this._current = pTab;
   }
 
-  get currentTab():HelperTab{
+  get currentTab():Nullable<HelperTab>{
     return this._current;
   }
 
   onClose(): boolean {
-    this.currentTab.active = false;
+    const tab = this.currentTab;
+    if(tab==null) return false;
+
+    tab.active = false;
     if(this.views.length > 1){
       this.currentTab = this.views[0];
     }

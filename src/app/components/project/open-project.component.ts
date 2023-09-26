@@ -118,7 +118,8 @@ export class OpenProjectComponent implements OnInit {
     });
   }
 
-  openProject(pProj: DexcaliburProject = null) {
+  openProject(pProj: Nullable<DexcaliburProject>=null) {
+
       let p:DexcaliburProject;
       if(pProj!=null){
         p = pProj;
@@ -133,13 +134,13 @@ export class OpenProjectComponent implements OnInit {
               //this.close();
             }
           });
-        }catch (err) {
+        }catch (err:any) {
           this.outputSvc.alert(new OutputMessage({ msg:err.message }))
         }
       }
   }
 
-  deleteProject(pProj: DexcaliburProject = null) {
+  deleteProject(pProj: Nullable<DexcaliburProject> = null) {
     let p:DexcaliburProject;
     if(pProj!=null){
       p = pProj;
@@ -155,7 +156,7 @@ export class OpenProjectComponent implements OnInit {
             this.refresh();
           }
         });
-      }catch (err) {
+      }catch (err:any) {
         this.outputSvc.alert(new OutputMessage({ msg:err.message }))
       }
     }

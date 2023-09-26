@@ -215,9 +215,16 @@ export class ViewportHookScriptComponent implements OnInit, AfterViewInit, IView
       throw  UIException.APP_NOT_INITIALIZED();
     }
 
+    const proj = this.prjSvc.getSelectedProject();
+
+    if(proj==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("startHooking","viewport-hook")
+    }
+
+
     let session:HookSession = this.hookSvc.startWebsocketHookSession(
       this.controller.app.ws,
-      this.prjSvc.getSelectedProject(),
+      proj,
       {
          type: this.hookSvc.getHookMode(),
          script: this.codeEditor.value

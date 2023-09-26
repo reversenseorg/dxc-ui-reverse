@@ -8,9 +8,11 @@ import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboard
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {UIException} from "../../../base/error/UIException";
 
 
-const BINDING = {
+const BINDING:IStringIndex<any> = {
   [NodeInternalType.CLASS]:{type:'class',id:'name'},
   [NodeInternalType.METHOD]:{type:'method',id:'__signature__'},
   [NodeInternalType.FIELD]:{type:'field',id:'__signature__'},
@@ -29,12 +31,12 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
   @Input() controller:CodeController;
 
   aliasControl = new FormControl('');
-  error:Message = null;
+  error:Nullable<Message> = null;
 
   @ViewChild('msgBox', {read:ElementRef, static:false}) msgEl:ElementRef;
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
-  message:Message = null;
+  message:Nullable<Message> = null;
   item: any = null;
 
 
@@ -60,26 +62,32 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
    */
   submitAlias(){
     let b:any = BINDING[this.item.__];
+
     console.log(b.type,
       this.item,
-      this.aliasControl.value);
+      this.aliasControl.value as string);
+
+    if(this.controller.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
     this.controller.service.rename(
       b.type,
       this.item[b.id],
-      this.aliasControl.value
-    ).subscribe( vMsg => {
+      (this.aliasControl.value as string)
+    ).subscribe( (vMsg:Message) => {
       if(vMsg.isSuccess()){
         console.log(this.item);
         this.item.alias = this.aliasControl.value;
         console.log(this.item);
-        this.controller.app.hideModal('rename-item',this.item);
-        this.controller.app.print( new OutputMessage({
+        (this.controller.app as any).hideModal('rename-item',this.item);
+        (this.controller.app as any).print( new OutputMessage({
           src: "RenameNode",
           msg: `The item '${this.item[b.id]}' has been renamed '${this.aliasControl.value}' `
         }));
       }else{
         this.error = vMsg;
-        this.controller.app.print( new OutputMessage({
+        (this.controller.app as any).print( new OutputMessage({
           src: "RenameNode",
           msg: vMsg
         }));
@@ -140,6 +148,6 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
       }
     }
 
-    this.aliasControl.setValue(val);
+    this.aliasControl.setValue(val as string);
   }
 }

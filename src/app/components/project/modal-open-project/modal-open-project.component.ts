@@ -58,14 +58,14 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
   gIcons:IconModelCollection = GLOBAL_ICONS;
-  project:DexcaliburProject = null;
+  project:Nullable<DexcaliburProject> = null;
   item: any = null;
-  selected: DexcaliburProject = null;
+  selected: Nullable<DexcaliburProject> = null;
   focusEl = -1;
 
 
@@ -113,7 +113,7 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
       this.focusEl = pIndex;
       this.projSvc.getProjectInfo(proj).subscribe( (pEvent)=>{
         this.selected = pEvent;
-        this.selected.icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
+        (this.selected as any).icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
       });
   }
 
@@ -122,7 +122,7 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
       this.focusEl = pOffset;
       this.projSvc.getProjectInfo(this.projects[pOffset]).subscribe( (pEvent)=>{
         this.selected = pEvent;
-        this.selected.icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
+        (this.selected as any).icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
       });
     }
   }
@@ -167,7 +167,7 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
             this.close();
           }
         } );
-      }catch(err){
+      }catch(err:any){
         this.outputSvc.alert( new OutputMessage({ msg:err.message }));
       }
 
@@ -179,10 +179,10 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
    */
   removeProject():void {
       try{
-        this.projSvc.removeProject(this.selected).subscribe( ()=>{
+        this.projSvc.removeProject(this.selected as any).subscribe( ()=>{
           this.refresh();
         });
-      }catch(err){
+      }catch(err:any){
         this.outputSvc.alert( new OutputMessage({ msg:err.message }));
       }
 

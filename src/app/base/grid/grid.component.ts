@@ -11,6 +11,7 @@ import {
 import {Nullable} from "../Nullable";
 
 // add ng-content
+/*
 @Component({
   selector: 'dxc-grid-cell',
   template: `
@@ -20,7 +21,7 @@ import {Nullable} from "../Nullable";
     </div>
   `,
   styleUrls: ['../../grid.scss','../../forms.scss']
-})
+})*/
 export class GridCellComponent implements OnInit {
 
   uid:string;
@@ -74,14 +75,14 @@ export class GridCellComponent implements OnInit {
   }
 }
 
-
+/*
 @Component({
   selector: 'dxc-grid-col',
   template: `
     <div class="dxc-grid-col">{{ label }}</div>
   `,
   styleUrls: ['../../grid.scss']
-})
+})*/
 export class GridColComponent implements OnInit {
 
   uid:string;
@@ -91,9 +92,9 @@ export class GridColComponent implements OnInit {
 
   @Input() sortable: boolean = false;
 
-  @Input() colid: number = null;
+  @Input() colid: number = -1;
 
-  @Input() width: number = null;
+  @Input() width: number = -1;
   @Input() height: number = 5 * 15;
 
   @Output() sort: EventEmitter<string> = new EventEmitter<string>();
@@ -117,7 +118,7 @@ export class GridColComponent implements OnInit {
   }
 }
 
-
+/*
 @Component({
   selector: 'dxc-grid-row',
   template: `
@@ -127,10 +128,10 @@ export class GridColComponent implements OnInit {
     </div>
   `,
   styleUrls: ['../../grid.scss']
-})
+})*/
 export class GridRowComponent implements OnInit {
 
-  @Input() colsize: number[] = null;
+  @Input() colsize: number[] = [];
 
   @Input() name:Nullable<string> = null;
   @Input() data: any = null;
@@ -168,6 +169,7 @@ export class GridRowComponent implements OnInit {
 
 
 
+/*
 @Component({
   selector: 'dxc-grid',
   template: `
@@ -182,7 +184,7 @@ export class GridRowComponent implements OnInit {
 
   `,
   styleUrls: ['../../grid.scss']
-})
+})*/
 export class GridComponent implements OnInit {
 
   @Input() size: number = -1;

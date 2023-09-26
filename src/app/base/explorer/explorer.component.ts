@@ -12,6 +12,8 @@ import {ExplorerItem} from "../../cmp/ExplorerItem";
 import {ExplorerDirective} from "./explorer.directive";
 import {SubExplorerComponent} from "./subexplorer.component";
 import {Observable, Subject} from "rxjs";
+import {Nullable} from "../Nullable";
+import {IStringIndex} from "../IStringIndex";
 
 
 interface ExplorerElement {
@@ -59,8 +61,8 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
    * @since 1.0.0
    */
   active = 0;
-  activeExpl:SubExplorerComponent<any> = null;
-  prevExpl:SubExplorerComponent<any> = null;
+  activeExpl:Nullable<SubExplorerComponent<any>> = null;
+  prevExpl:Nullable<SubExplorerComponent<any>> = null;
 
 
   @ViewChild('explorerCtn', {read:ElementRef, static:true}) ctnEl:ElementRef;
@@ -87,11 +89,11 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
 
   initLayout(): void {
 
-    const resizeArea = document.getElementById('explorerResize')
-    const viewCtn = document.getElementById('explorerVP');
-    const explorerCtn = document.getElementById('explorerContainer');
-    const explorerCtn2 = document.getElementById('explorerContainer2');
-    const nav = document.getElementById('explorerNav');
+    const resizeArea = document.getElementById('explorerResize') as HTMLElement;
+    const viewCtn = document.getElementById('explorerVP') as HTMLElement;
+    const explorerCtn = document.getElementById('explorerContainer') as HTMLElement;
+    const explorerCtn2 = document.getElementById('explorerContainer2') as HTMLElement;
+    const nav = document.getElementById('explorerNav') as HTMLElement;
 
     const navW = parseFloat(window.getComputedStyle(nav).width);
     const resizeAW = parseFloat(window.getComputedStyle(resizeArea).width);
@@ -154,7 +156,7 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
 
     this.borderEl.nativeElement.style.width = BORDER_WIDTH+'px';
 
-    this.parent.leftPanelSize$.subscribe( (pEvent) => {
+    this.parent.leftPanelSize$.subscribe( (pEvent:any) => {
 
       //console.log("Explorer > rendeering > ", pEvent);
 
@@ -281,7 +283,7 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
       explItem = this.explorers[i];
 
       for(let e in  explItem.component){
-        componentFactory = this.componentFactoryResolver.resolveComponentFactory(explItem.component[e]);
+        componentFactory = this.componentFactoryResolver.resolveComponentFactory((explItem.component as IStringIndex<any>)[e]);
         viewContainerRef = this.explorerHost.viewContainerRef;
 
         componentRef = viewContainerRef.createComponent<ExplorerItem>(componentFactory);

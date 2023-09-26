@@ -119,6 +119,7 @@ export class InspectorController implements IController {
 
     this.service.getInspectorByID(pItem.id as string).subscribe( (pInspector:any)=>{
       console.log(pInspector);
+      if(pInspector==null) return;
       pInspector._icon = GLOBAL_ICONS['FIND'];
       pInspector = (this.app as any).getController('ctrl:hook-main').bindInspector(pInspector);
       this.rendered.push({ item:pItem, uid:vid });

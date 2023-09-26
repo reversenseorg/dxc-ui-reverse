@@ -89,7 +89,7 @@ export class HelperService {
     if(this._ipcReady) return;
 
 // TODO : replace by help service
-    this.eSvc.ipcRenderer.on('help:get-doc', ( pEvent:any, pArgs:any[])=>{
+    /*this.eSvc.ipcRenderer.on('help:get-doc', ( pEvent:any, pArgs:any[])=>{
       console.log('[HELPER SERVICE] (help:get-doc) : ',pEvent,pArgs);
 
       const doc = JSON.parse(pArgs[0]);
@@ -100,7 +100,7 @@ export class HelperService {
       };
 
       this.onShowDoc$.next(this._cache[doc.id]);
-    });
+    });*/
   }
 
 
@@ -113,10 +113,10 @@ export class HelperService {
   setProtocol( pProtocol:HelpDbProtocol){
     this._protocol = pProtocol;
     if(this._protocol == HelpDbProtocol.IPC){
-      this._ipc = this.eSvc.ipcRenderer;
+      //this._ipc = this.eSvc.ipcRenderer;
       this._initIpcHandler();
     }else{
-      this._ipc = null;
+      //this._ipc = null;
     }
   }
 
@@ -144,7 +144,7 @@ export class HelperService {
     console.log(this.eSvc.isElectron);
     if(this.eSvc.isElectron){
       // load over IPC
-      this.eSvc.ipcRenderer.send('help',[{ cmd:'get-doc', data:{ id:pDocumentID }}]);
+      // this.eSvc.ipcRenderer.send('help',[{ cmd:'get-doc', data:{ id:pDocumentID }}]);
     }
     else{
       // TODO : load over HTTP

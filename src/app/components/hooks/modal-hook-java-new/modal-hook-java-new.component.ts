@@ -23,6 +23,7 @@ import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {
@@ -31,7 +32,7 @@ interface EventSources {
 }
 
 
-let gInstance:ModalHookJavaNewComponent = null;
+let gInstance:Nullable<ModalHookJavaNewComponent> = null;
 
 
 @Component({
@@ -57,7 +58,7 @@ export class ModalHookJavaNewComponent extends AbstractKeyboardNavigable impleme
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -70,10 +71,10 @@ export class ModalHookJavaNewComponent extends AbstractKeyboardNavigable impleme
 
   name:string;
   htype:string = HOOK_TARGET_TYPE.METHOD;
-  loadKP:string =  null;
+  loadKP:string = "";
   unloadKP:Nullable<string> = null;
-  keypoints:KeyPoint[] = null;
-  weight:number = null;
+  keypoints:KeyPoint[] = [];
+  weight:number = 0;
   //location:string = "replace";
   location:any = {
     before:null,
@@ -99,9 +100,9 @@ export class ModalHookJavaNewComponent extends AbstractKeyboardNavigable impleme
     gInstance = this;
     this.hookSvc.onKeyPointListChange.subscribe( (kp:KeyPoint[])=>{
       if(kp !== null && Array.isArray(kp)){
-        gInstance.keypoints = kp;
+        (gInstance as any).keypoints = kp;
       }else{
-        gInstance.keypoints = [];
+        (gInstance as any).keypoints = [];
       }
     });
 
@@ -162,7 +163,8 @@ export class ModalHookJavaNewComponent extends AbstractKeyboardNavigable impleme
       case NodeInternalType.CLASS:
       case NodeInternalType.FUNC:
         console.log(this.target, this.getHookConfig());
-        this.hookSvc.probe(this.target, this.getHookConfig()).subscribe( (pRes:AbstractHook)=>{
+        this.hookSvc.probe(this.target, this.getHookConfig()).subscribe( (pRes:Nullable<AbstractHook>)=>{
+          if(pRes==null) return;
           console.log(pRes);
           this.outputSvc.print(OutputMessage.newSuccess({ src:'Hook Manager', msg:'Method hook has been generated successfully.'}));
           this.controller.app.getController('ctrl:hook-main').open(pRes);

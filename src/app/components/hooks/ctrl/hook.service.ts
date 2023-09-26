@@ -742,7 +742,11 @@ export class HookService extends DxcApiService {
                   }else{
                     console.log(this.projectSvc.getSelectedProject());
                     // else open default device of the project
-                    this.onDeviceConfigure.next(this.projectSvc.getSelectedProject().device );
+                    const proj = this.projectSvc.getSelectedProject();
+                    if(proj != null){
+                      this.onDeviceConfigure.next(proj.device );
+                    }
+
                   }
                   return true;
                 })

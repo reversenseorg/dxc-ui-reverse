@@ -11,6 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {Observable} from "rxjs";
+import {Nullable} from "../Nullable";
 
 
 interface EventSources {
@@ -53,7 +54,7 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
   @Input() closable = false;
   display = false;
   rPos:any = null;
-  sources:EventSources = null;
+  sources:Nullable<EventSources> = null;
 
   @ViewChild("modalComp", {read: ElementRef}) modalEl:ElementRef;
 

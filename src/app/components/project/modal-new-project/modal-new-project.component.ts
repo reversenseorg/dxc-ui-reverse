@@ -57,7 +57,7 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild('appFile',{read:ElementRef, static:true}) appFileEl:ElementRef;
 
@@ -174,7 +174,7 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
         case 'device':
           break;
       }
-    }catch(err){
+    }catch(err:any){
       this.outputSvc.alert(new OutputMessage({ msg:err.message }))
     }
 

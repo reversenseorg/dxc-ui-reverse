@@ -866,7 +866,11 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
 
   uninstallProjectApp( subject:any){
-    this.dmService.uninstallApp( subject, this.projectService.getSelectedProject().package ).subscribe( (pObs) => {
+
+    const p = this.projectService.getSelectedProject();
+    if(p==null) return;
+
+    this.dmService.uninstallApp( subject, p.package ).subscribe( (pObs) => {
       if (pObs.success){
         this.outputSvc.print(new OutputMessage({
           src: 'Device Manager',

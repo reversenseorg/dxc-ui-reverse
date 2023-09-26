@@ -44,15 +44,15 @@ export class PreviewerComponent implements OnInit, OnChanges {
 
   ngOnChanges(pChanges: SimpleChanges) {
     if (pChanges.hasOwnProperty('type')) {
-      this.type = pChanges.type.currentValue;
+      this.type = pChanges['type'].currentValue;
     }
     if (pChanges.hasOwnProperty('length')) {
-      this.length = pChanges.length.currentValue;
+      this.length = pChanges['length'].currentValue;
     }
 
     if (pChanges.hasOwnProperty('data')) {
-      console.log("Change data", pChanges.data.currentValue);
-      this.data = pChanges.data.currentValue;
+      console.log("Change data", pChanges['data'].currentValue);
+      this.data = pChanges['data'].currentValue;
       switch (this.type) {
         case 's':
             if(this.data.length>this.length){

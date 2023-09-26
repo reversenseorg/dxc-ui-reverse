@@ -120,6 +120,7 @@ import {ViewportAuditComponent} from "./components/audit/viewport-audit/viewport
 import {SearchResultListComponent} from "./components/search/search-result-list/search-result-list.component";
 import {CodeEditorModule} from "./components/code-editor/code-editor.module";
 import {MenuComponent} from "./base/menu/menu.component";
+import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/modal-select-hook.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -210,6 +211,7 @@ import {MenuComponent} from "./base/menu/menu.component";
     ModalSelectKpComponent,
     ModalInterruptorSettingsComponent,
     ModalNewFragmentComponent,
+    ModalSelectHookComponent,
 
     ViewportInspectorComponent,
 
@@ -268,6 +270,8 @@ import {MenuComponent} from "./base/menu/menu.component";
     ExplorerAuditComponent,
     ViewportAuditComponent,
     ButtonComponent
+
+
   ],
   imports: [
     BrowserModule,

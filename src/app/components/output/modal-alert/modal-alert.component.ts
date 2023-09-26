@@ -18,6 +18,7 @@ import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboard
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {HelperService} from "../../helper/ctrl/HelperService";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {Nullable} from "../../../base/Nullable";
 
 
 interface EventSources {
@@ -58,7 +59,7 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
   @Input() animated:boolean = false;
   @Input() cancelable: boolean = false;
 
-  @Input() onConfirm:Function = null;
+  @Input() onConfirm:Function = (()=>{});
   @Input() msg:OutputMessage;
   /**
    * Modal title
@@ -168,7 +169,7 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
 
   reset(){
     this.confirmMode = false;
-    this.onConfirm = null;
+    this.onConfirm = (()=>{});
     this.message = null;
   }
 
@@ -256,6 +257,7 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
   }
 
   showHelp() {
-    this.helperSvc.openDoc(this.helpDocID);
+    if(this.helpDocID!=null)
+      this.helperSvc.openDoc(this.helpDocID);
   }
 }

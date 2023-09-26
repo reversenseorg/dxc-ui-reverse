@@ -21,8 +21,8 @@ import {AuthService} from "../auth/ctrl/auth.service";
                     <div>{{ proj.uid }}</div>
                     <div>{{ proj.pkg }}</div>
                     <div class="flags">
-                      <fa-icon [icon]="['','']" *ngIf="proj.platform"></fa-icon>
-                      <fa-icon [icon]="['','']" *ngIf="proj.platform"></fa-icon>
+                      <fa-icon [icon]="" *ngIf="proj.platform"></fa-icon>
+                      <fa-icon [icon]="" *ngIf="proj.platform"></fa-icon>
                     </div>
                 </ng-template>
                 <ng-template #emptyBlock>
@@ -41,7 +41,7 @@ import {AuthService} from "../auth/ctrl/auth.service";
 })
 export class LatestProjectComponent implements OnInit {
 
-  projects: DexcaliburProject[] = [null,null,null,null];
+  projects: DexcaliburProject[] = [];
 
   constructor(
     private activeRoute:ActivatedRoute,

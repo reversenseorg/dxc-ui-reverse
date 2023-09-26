@@ -12,6 +12,7 @@ import {TopologyService} from "../../topology/ctrl/topology.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {CodeMenuEvent, ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import { PrivacyModel } from "../../../models/audit/privacy/PrivacyModel";
+import {Nullable} from "../../../base/Nullable";
 
 
 @Injectable({
@@ -72,7 +73,7 @@ export class PrivacyService extends DxcApiService{
 
         const dbs:DashBoard[] = [];
 
-        pEl.data.dashboards.map(x => {
+        pEl.data.dashboards.map((x:any) => {
           dbs.push(new DashBoard(x));
         });
 
@@ -87,6 +88,7 @@ export class PrivacyService extends DxcApiService{
           src: "Assessment",
           msg: `Privacy scan dashboard cannot be retrieved`
         }));
+        return [];
       }
     }));
   }
@@ -100,7 +102,7 @@ export class PrivacyService extends DxcApiService{
 
         const reports:PrivacyReport[] = [];
 
-        pEl.data.map((vRaw)=>{
+        pEl.data.map((vRaw:any)=>{
           reports.push(PrivacyReport.fromJsonObject(vRaw));
         });
 
@@ -115,11 +117,12 @@ export class PrivacyService extends DxcApiService{
           src: "Assessment",
           msg: `Privacy scan reports cannot be listed`
         }));
+        return [];
       }
     }));
   }
 
-  getModel():Observable<PrivacyModel> {
+  getModel():Observable<Nullable<PrivacyModel>> {
     return this._process(
       this.endpoints['assess']['model']
     ).pipe(map( (pEl:any) => {
@@ -139,11 +142,12 @@ export class PrivacyService extends DxcApiService{
           src: "Privacy",
           msg: `Privacy assurance cannot be retrieved`
         }));
+        return null;
       }
     }));
   }
 
-  scan():Observable<PrivacyReport> {
+  scan():Observable<Nullable<PrivacyReport>> {
     return this._process(
       this.endpoints['assess']['scan']
     ).pipe(map( (pEl:any) => {
@@ -166,11 +170,12 @@ export class PrivacyService extends DxcApiService{
           src: "Assessment",
           msg: `Privacy scan reports cannot be listed`
         }));
+        return null;
       }
     }));
   }
 
-  scan2(pModel:string):Observable<PrivacyReport> {
+  scan2(pModel:string):Observable<Nullable<PrivacyReport>> {
     return this._process(
       this.endpoints['assess']['scan2'],
       { model:pModel }
@@ -194,11 +199,12 @@ export class PrivacyService extends DxcApiService{
           src: "Assessment",
           msg: `Privacy scan reports cannot be listed`
         }));
+        return null;
       }
     }));
   }
 
-  scanModel():Observable<PrivacyReport> {
+  scanModel():Observable<Nullable<PrivacyReport>> {
     return this._process(
       this.endpoints['assess']['scanModel']
     ).pipe(map( (pEl:any) => {
@@ -221,6 +227,7 @@ export class PrivacyService extends DxcApiService{
           src: "Assessment",
           msg: `Privacy scan reports cannot be listed`
         }));
+        return null;
       }
     }));
   }

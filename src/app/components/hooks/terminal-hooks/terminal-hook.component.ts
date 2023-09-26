@@ -198,16 +198,21 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
 
   newSession() {
 
-    console.log(this.prjSvc.getSelectedProject());
 
     if(this.controller.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
     }
 
+    const proj = this.prjSvc.getSelectedProject();
+
+    if(proj==null){
+      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("newSession","terminal-hook")
+    }
+
     // TODO replace default Options by Hook settings
     let session:HookSession = this.hookSvc.startWebsocketHookSession(
       this.controller.app.ws,
-      this.prjSvc.getSelectedProject(),
+        proj,
       {
        // type: "spawn-self"
       });

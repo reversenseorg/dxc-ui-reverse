@@ -56,7 +56,7 @@ export enum HOOK_VIEW {
   KP = 'keyp',
   THEMA = 'thema',
   PROCESS = 'process',
-  THREAD = 'process',
+  THREAD = 'thread',
   INSPECTOR = 'inspector',
   SESSIONS = 'sessions',
 }
@@ -69,8 +69,7 @@ export enum HOOK_VIEW {
 })
 export class ExplorerHooksComponent extends SubExplorerComponent<HookController> implements OnInit, AfterViewInit, ExpandableProvider {
 
-  @Input() controller:HookController;
-  @Input() parent:any;
+
 
   @ViewChild("explHookRef", {read: ElementRef, static:true}) explHookRef: ElementRef;
   @ViewChild("explHookCtnRef", {read: ElementRef, static:true}) explHookCtnRef: ElementRef;
@@ -82,16 +81,14 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
   NODE_TYPES:any = NodeInternalType;
 
-  id:string = "explorerHook";
-  app:any = null;
+  override id:string = "explorerHook";
 
-  offset:number = 2;
+  override offset:number = 2;
 
   HOOK_JAVA = NodeInternalType.HOOK_JAVA;
   HOOK_NATIVE = NodeInternalType.HOOK_NATIVE;
 
-  gIcons: any = GLOBAL_ICONS;
-  icons: any = HOOK_ICONS;
+  override icons: any = HOOK_ICONS;
 
   hookPoolsIcons:any =  {
     /*builtin: HOOK_ICONS['BUILTIN_HS'],
@@ -119,68 +116,13 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
   ctxMenuState:Nullable<ContextMenuState> = null;
 
-  initialSize:any = null;
-
-  tab:ExplorerTab = new ExplorerTab({
-    offset: 1,
-    label: 'Hooks',
-    icon: GLOBAL_ICONS['HOOKS'],
-    color: 'dxc-text-clear100'
-  });
 
   selected:string = HOOK_VIEW.KP;
 
-  view:ExplorerView = new ExplorerView({
-    nav: new NavbarSimpleView({
-      label: 'Key Points',
-      icon: HOOK_ICONS['KEYPOINT'],
-      color: 'dxc-text-clear100',
-      menu: new MenuView({
-        items: [
-          new MenuItem({
-            id:HOOK_VIEW.KP,
-            label:'Key Points',
-            color: 'dxc-text-clear75',
-            icon: HOOK_ICONS['KEYPOINT']
-          }),
-          new MenuItem({
-            id:HOOK_VIEW.HOOK,
-            label:'Hooks',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['HOOKS']
-          }),
-          new MenuItem({
-            id:HOOK_VIEW.INSPECTOR,
-            label:'Inspectors',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['TOOLS']
-          }),
-          new MenuItem({
-            id:HOOK_VIEW.THEMA,
-            label:'Strategies',
-            color: 'dxc-text-clear75',
-            icon: HOOK_ICONS['CUSTOM_HS']
-          }),
-          new MenuItem({
-            id:HOOK_VIEW.SESSIONS,
-            label:'Sessions',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['HISTORY']
-          }),
-          new MenuItem({
-            id:HOOK_VIEW.THREAD,
-            label:'Thread',
-            color: 'dxc-text-clear75',
-            icon: HOOK_ICONS['THREAD']
-          })
-        ]
-      })
-    })
-  });
+
 
   activeItem: any = null;
 
-  inspectorCtrl: InspectorController = null;
 
   /**
    * Flag. TRUE if a project is loaded (ie. data are available), else FALSE
@@ -205,6 +147,61 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
+
+    this.tab = new ExplorerTab({
+      offset: 1,
+      label: 'Hooks',
+      icon: GLOBAL_ICONS['HOOKS'],
+      color: 'dxc-text-clear100'
+    });
+
+    this.view = new ExplorerView({
+      nav: new NavbarSimpleView({
+        label: 'Key Points',
+        icon: HOOK_ICONS['KEYPOINT'],
+        color: 'dxc-text-clear100',
+        menu: new MenuView({
+          items: [
+            new MenuItem({
+              id:HOOK_VIEW.KP,
+              label:'Key Points',
+              color: 'dxc-text-clear75',
+              icon: HOOK_ICONS['KEYPOINT']
+            }),
+            new MenuItem({
+              id:HOOK_VIEW.HOOK,
+              label:'Hooks',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['HOOKS']
+            }),
+            new MenuItem({
+              id:HOOK_VIEW.INSPECTOR,
+              label:'Inspectors',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['TOOLS']
+            }),
+            new MenuItem({
+              id:HOOK_VIEW.THEMA,
+              label:'Strategies',
+              color: 'dxc-text-clear75',
+              icon: HOOK_ICONS['CUSTOM_HS']
+            }),
+            new MenuItem({
+              id:HOOK_VIEW.SESSIONS,
+              label:'Sessions',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['HISTORY']
+            }),
+            new MenuItem({
+              id:HOOK_VIEW.THREAD,
+              label:'Thread',
+              color: 'dxc-text-clear75',
+              icon: HOOK_ICONS['THREAD']
+            })
+          ]
+        })
+      })
+    });
 
     //this.hookPools['java'] = [];
     //this.hookPools['native'] = [];
@@ -314,7 +311,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
     const el = this.explHookRef.nativeElement; //document.getElementById('explorerCode');
     const ctn = this.explHookCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
-    const navHeight:number = this.view.nav.size.height;
+    const navHeight:number = (this.view as any).nav.size.height;
 
     el.style.width = pSize.width+'px';
     el.style.maxWidth = pSize.width+'px';
@@ -416,7 +413,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     console.log(pEvent, this);
 
     if(!pForce)
-      this.view.nav.selectItem(pEvent.item);
+      (this.view as any).nav.selectItem(pEvent.item);
 
     this.refresh(pEvent.item.id);
     this.selected = pEvent.item.id;
@@ -474,12 +471,25 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
 
   turnHooking( pStatus: boolean) {
+
+
     if (pStatus){
+
+
+      if(this.controller.app==null){
+        throw  UIException.APP_NOT_INITIALIZED();
+      }
+
+      const p = this.projectSvc.getSelectedProject();
+
+      if(p==null){
+        throw UIException.PROJECT_IS_NOT_READY("explorer-file","on menu click");
+      }
 
       // TODO replace default Options by Hook settings
       this.hookSvc.startWebsocketHookSession(
         this.controller.app.ws,
-        this.projectSvc.getSelectedProject(),
+        p,
         {
           // use default mode instead of spawn
           // type: "spawn-self"
@@ -512,7 +522,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     };
     this.running = false;
     this.ctxMenuState = null;
-    this.selected = null;
+    this.selected = HOOK_VIEW.KP;
   }
 
   private _refreshKeyPointList( pKPS:KeyPoint[]):void {
@@ -549,7 +559,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   /**
    * To refresh the data and to displayed it into hook explorer
    */
-  refresh( pSelected:string = null) {
+  refresh( pSelected:Nullable<string> = null) {
 
     if(pSelected == null){
       pSelected = this.selected;

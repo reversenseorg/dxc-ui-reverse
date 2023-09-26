@@ -15,6 +15,8 @@ import {AuthController} from "../ctrl/AuthController";
 import {AuthenticationEvent, AuthenticationEventType} from "../AuthenticationEvent";
 import {ModalAlertComponent} from "../../output/modal-alert/modal-alert.component";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
+import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 interface EventSources {
@@ -46,7 +48,7 @@ export class ModalLogoutComponent extends AbstractKeyboardNavigable implements O
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message>= null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -87,7 +89,9 @@ export class ModalLogoutComponent extends AbstractKeyboardNavigable implements O
   }
 
   requestAuth(pEvent:AuthenticationEvent):void {
-    if(this.authSvc.isAuthenticated(pEvent.getConnName())==false){
+    const n = pEvent.getConnName();
+    if(n==null) throw UIException.AUTH_ERROR();
+    if(this.authSvc.isAuthenticated(n)==false){
 
     }else{
       this.outputSvc.print(new OutputMessage({

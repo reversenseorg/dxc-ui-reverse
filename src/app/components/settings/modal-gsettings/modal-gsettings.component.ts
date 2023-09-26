@@ -37,6 +37,7 @@ import {AuthenticationEvent, AuthenticationEventType} from "../../auth/Authentic
 import {ElectronService} from "../../../core/services";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 interface EventSources {
   drag: Observable<any>,
@@ -70,7 +71,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild('appFile',{read:ElementRef, static:true}) appFileEl:ElementRef;
 
@@ -128,7 +129,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
   };
   dev:any  = null;
   active = "etools";
-  account: UserAccount;
+  account: Nullable<UserAccount> = null;
   selected: any;
 
   mismatch = false;
@@ -182,7 +183,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
     // init contextual menus
     this.ctxMenu = {};
     this.ctxMenuChildren.toArray().map((vMenu:ContextMenuComponent) => {
-      this.ctxMenu[vMenu.name] = vMenu;
+      this.ctxMenu[vMenu.name as string] = vMenu;
       this.controller.registerCtxMenu(vMenu.name, this);
     });
 
@@ -207,7 +208,9 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
   }
 
   displayNetworkSettings(): void {
-    this.settSvc.listNetworkSettings().subscribe( (pSettings:WebServerSettings) => {
+    this.settSvc.listNetworkSettings().subscribe( (pSettings:Nullable<WebServerSettings>) => {
+      if(pSettings==null) return;
+
       console.log(pSettings);
       this.net = pSettings;
     });
@@ -266,7 +269,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
     this.active = pTab;
   }
 
-  show(pTab: string = null){
+  show(pTab: string = ""){
     this.modal.show();
   }
 
@@ -412,8 +415,8 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
           }else{
             this.settSvc.listServerSettings().subscribe( (vSettings:ServerSettings) => {
               for(const i in vSettings){
-                if(vSettings[i].name==pSetting.name){
-                  this.srv[i].value==vSettings[i].name
+                if((vSettings as IStringIndex<any>)[i].name==pSetting.name){
+                  this.srv[i].value=(vSettings as IStringIndex<any>)[i].name;
                 }
               }
             });

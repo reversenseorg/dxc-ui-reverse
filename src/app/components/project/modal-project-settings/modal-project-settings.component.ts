@@ -22,6 +22,7 @@ import DexcaliburProject from "../../../models/DexcaliburProject";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 interface EventSources {
@@ -31,7 +32,7 @@ interface EventSources {
 
 
 export interface ProjectSettings {
-  device:Device,
+  device:Nullable<Device>,
   platform?:any,
   devUID?:string
 }
@@ -61,7 +62,7 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
 
   item: any = null;
 
-  project:DexcaliburProject = null;
+  project:Nullable<DexcaliburProject> = null;
 
   // model
   deviceList: Device[] = [];
@@ -146,6 +147,11 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
   show(){
       // if project is not cached, retrieve info from server
       this.project = this.projSvc.getSelectedProject();
+
+      if(this.project==null){
+        throw UIException.PROJECT_IS_NOT_READY("modal-project","show");
+      }
+
       this.projSvc.getProjectInfo(this.project).subscribe( (pInfo:any)=>{
         console.log(pInfo);
 
@@ -184,6 +190,11 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
   }
 
   changeDevice() {
+
+    if(this.project==null){
+      throw UIException.PROJECT_IS_NOT_READY("modal-project","show");
+    }
+
     this.projSvc.updateSettings(
       this.project,
       {
@@ -196,6 +207,11 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
 
 
   changePlatform() {
+
+    if(this.project==null){
+      throw UIException.PROJECT_IS_NOT_READY("modal-project","show");
+    }
+
     this.projSvc.updateSettings(
       this.project,
       {

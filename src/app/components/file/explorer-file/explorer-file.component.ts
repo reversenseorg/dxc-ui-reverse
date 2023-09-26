@@ -21,7 +21,7 @@ import {Observable} from "rxjs";
 import {Utils} from "../../../cmp/Utils";
 import {FilesystemService} from "../ctrl/FilesystemService";
 import {map} from "rxjs/operators";
-import {IconModel} from "../../../base/icon/IconModel";
+import {IconModel, IconModelCollection} from "../../../base/icon/IconModel";
 import ModelFile from "../../../models/ModelFile";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {ElectronService} from "../../../core/services";
@@ -47,64 +47,19 @@ export enum FS_SUBVIEW {
 export class ExplorerFileComponent extends SubExplorerComponent<FileController> implements OnInit, AfterViewInit, ExpandableProvider {
 
 
-  @Input() controller:FileController;
-  @Input() parent:any;
 
   @ViewChild("explFileRef", {read: ElementRef, static:true}) explRef: ElementRef;
   @ViewChild("explFileCtnRef", {read: ElementRef, static:true}) explCtnRef: ElementRef;
 
   @ViewChildren(ContextMenuComponent) ctxMenuChildren: QueryList<ContextMenuComponent>;
 
-  id:string = "explorerFile";
-  app:any = null;
+  override id:string = "explorerFile";
 
-  gIcons: any = GLOBAL_ICONS;
-  icons: any = FILE_ICONS;
+  override icons:IconModelCollection = FILE_ICONS;
 
-  offset:number = 1;
-
-  tab:ExplorerTab = new ExplorerTab({
-    offset: 1,
-    label: 'Data',
-    icon: GLOBAL_ICONS['FILE'],
-    color: 'dxc-text-clear100'
-  });
+  override offset:number = 1;
 
 
-  view:ExplorerView = new ExplorerView({
-    nav: new NavbarSimpleView({
-      label: 'Package',
-      icon: GLOBAL_ICONS['PACKAGE'],
-      menu: new MenuView({
-        items: [
-          new MenuItem({
-            id: FS_SUBVIEW.PKG,
-            label:'App Package',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['PACKAGE']
-          }),
-          new MenuItem({
-            id: FS_SUBVIEW.APP,
-            label:'App device data',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['DEVICE']
-          }),
-          new MenuItem({
-            id: FS_SUBVIEW.DEV,
-            label:'Device FS',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['FILE']
-          }),
-          new MenuItem({
-            id: FS_SUBVIEW.WS,
-            label:'Workspace',
-            color: 'dxc-text-clear75',
-            icon: GLOBAL_ICONS['FOLDER']
-          }),
-        ]
-      })
-    })
-  });
 
   fsPools: any = {};
 
@@ -141,6 +96,50 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
+
+    this.tab = new ExplorerTab({
+      offset: 1,
+      label: 'Data',
+      icon: GLOBAL_ICONS['FILE'],
+      color: 'dxc-text-clear100'
+    });
+
+
+    this.view = new ExplorerView({
+      nav: new NavbarSimpleView({
+        label: 'Package',
+        icon: GLOBAL_ICONS['PACKAGE'],
+        menu: new MenuView({
+          items: [
+            new MenuItem({
+              id: FS_SUBVIEW.PKG,
+              label:'App Package',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['PACKAGE']
+            }),
+            new MenuItem({
+              id: FS_SUBVIEW.APP,
+              label:'App device data',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['DEVICE']
+            }),
+            new MenuItem({
+              id: FS_SUBVIEW.DEV,
+              label:'Device FS',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['FILE']
+            }),
+            new MenuItem({
+              id: FS_SUBVIEW.WS,
+              label:'Workspace',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['FOLDER']
+            }),
+          ]
+        })
+      })
+    });
+
     this.view.id = this.id;
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
   }
@@ -187,7 +186,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
     const el = this.explRef.nativeElement; //document.getElementById('explorerCode');
     const ctn = this.explCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
-    const navHeight:number = this.view.nav.size.height;
+    const navHeight:number = (this.view as any).nav.size.height;
 
     el.style.width = pSize.width+'px';
     el.style.maxWidth = pSize.width+'px';
@@ -287,7 +286,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
   sortFiles( pFiles:any): any{
     let t1:any = [],t2:any = [];
-    pFiles.map( (vFile) => {
+    pFiles.map( (vFile:any) => {
       if(vFile._t=='f'){
         t1.push(vFile);
       }else{
@@ -302,14 +301,20 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
   onMenuItemClick( pEvent:any):void{
 
-    this.view.nav.selectItem(pEvent.item);
+    (this.view as any).nav.selectItem(pEvent.item);
 
     this.activePool = this.fsPools[pEvent.item.id];
     this.activePoolID = pEvent.item.id;
     switch(pEvent.item.id){
       case FS_SUBVIEW.APP:
+
+        const p = this.projectSvc.getSelectedProject();
+
+        if(p==null){
+          throw UIException.PROJECT_IS_NOT_READY("explorer-file","on menu click");
+        }
         this.fsSvc.listDevicePath({
-          app:this.projectSvc.getSelectedProject().package, //.getPackageID(),
+          app:p.package, //.getPackageID(),
           type:(this.privileged? 'privileged':'user')
         }).subscribe( (pFiles:any)=>{
           this.activePool = this.fsPools[FS_SUBVIEW.APP] = this.sortFiles(pFiles);
@@ -350,7 +355,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
         subject: pObject
       };
       this.ctxMenu[pType].show(pEvent, pObject);
-    }catch(e){
+    }catch(e:any){
       console.error(e.message())
     }
 
@@ -421,7 +426,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
    * @param subject
    * @param n
    */
-  copyAttr(subject: any, n: string = null) {
+  copyAttr(subject: any, n: Nullable<string> = null) {
     console.log(subject,n);
     if(n !== null) {
       if(n.indexOf('.')==-1){

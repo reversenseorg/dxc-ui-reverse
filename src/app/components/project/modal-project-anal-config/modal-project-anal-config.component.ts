@@ -44,7 +44,7 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 

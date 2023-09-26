@@ -10,6 +10,7 @@ import {Inspector} from "../../../models/Inspector";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
+import {Nullable} from "../../../base/Nullable";
 
 
 // @ts-ignore
@@ -67,11 +68,11 @@ export class InspectorService extends DxcApiService {
     }
   }
 
-  getInspectorByID( pId:string):Observable<Inspector>{
+  getInspectorByID( pId:string):Observable<Nullable<Inspector>>{
     return this.getAll().pipe(
       map( vInsp => {
         console.log(vInsp);
-        let o: Inspector = null;
+        let o: Nullable<Inspector> = null;
         vInsp.map(x => {
           if(x.id == pId) o=x;
         });
@@ -80,10 +81,10 @@ export class InspectorService extends DxcApiService {
     );
   }
 
-  getInspector( pInsp:Inspector):Observable<Inspector>{
+  getInspector( pInsp:Inspector):Observable<Nullable<Inspector>>{
     return this.getAll().pipe(
       map( vInsp => {
-        let o: Inspector = null;
+        let o: Nullable<Inspector> = null;
         vInsp.map(x => {
           if(x.id == pInsp.id) o=x;
         });
@@ -100,6 +101,7 @@ export class InspectorService extends DxcApiService {
 
           if(!vObs.success){
             this.outputSvc.print(OutputMessage.newError({ type:"Hook Manager", msg:vObs.msg}));
+            return [];
           }else{
             return vObs.data;
           }

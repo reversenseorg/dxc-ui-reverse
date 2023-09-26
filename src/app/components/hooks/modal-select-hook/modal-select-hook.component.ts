@@ -51,7 +51,7 @@ export class ModalSelectHookComponent extends AbstractKeyboardNavigable implemen
    * @type {string}
    */
   @Input() title:Nullable<string> = null;
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -60,8 +60,8 @@ export class ModalSelectHookComponent extends AbstractKeyboardNavigable implemen
   item: any = null;
   target:any = null;
   observed:Nullable<string> = null;
-  currentHK:KeyPoint = null;
-  selectedHK:KeyPoint = null;
+  currentHK:Nullable<KeyPoint> = null;
+  selectedHK:Nullable<KeyPoint> = null;
   hkList:Hook[] = [];
 
   constructor( private changeDetectorRef: ChangeDetectorRef,

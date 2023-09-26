@@ -26,7 +26,7 @@ export class ExplorerNavbarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit():void {
-    this.explorer.view.nav.size.height = parseFloat(window.getComputedStyle(this.snavRef.nativeElement).height);
+    (this.explorer.view.nav as any).size.height = parseFloat(window.getComputedStyle(this.snavRef.nativeElement).height);
   }
 
   onItemSelect( pItem:any, pEvent:any):void{
@@ -38,6 +38,7 @@ export class ExplorerNavbarComponent implements OnInit, AfterViewInit {
     if(this.id == null) return;
 
     let el = document.getElementById(this.id);
-    el.style.width = pEvent.dim.width+'px';
+    if(el!=null)
+      el.style.width = pEvent.dim.width+'px';
   }
 }

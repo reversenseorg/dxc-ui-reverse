@@ -17,6 +17,7 @@ import {ModalAlertComponent} from "../../output/modal-alert/modal-alert.componen
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {DexcaliburConnectionParams} from "../../../models/remote/DexcaliburConnectionParams";
 import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 
 interface EventSources {
@@ -51,7 +52,7 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
    */
   @Input() title:Nullable<string> = null;
 
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 
@@ -97,7 +98,8 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
   }
 
   requestAuth(pEvent:AuthenticationEvent):void {
-    if(this.authSvc.isAuthenticated(pEvent.getConnName())==false){
+    if(pEvent.getConnName()==null) throw UIException.AUTH_ERROR();
+    if(this.authSvc.isAuthenticated(pEvent.getConnName() as string)==false){
 
     }else{
       this.outputSvc.print(new OutputMessage({
@@ -119,8 +121,8 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
    */
   doPasswordLogin() {
       try{
-        this.authSvc.doPasswordAuthentication(this.server, this.username, this.passwd).subscribe( (pResult)=>{} );
-      }catch(err){
+        this.authSvc.doPasswordAuthentication(this.server as string, this.username as string, this.passwd as string).subscribe( (pResult)=>{} );
+      }catch(err:any){
         this.outputSvc.alert(OutputMessage.newError({ msg:err.message }));
       }
   }

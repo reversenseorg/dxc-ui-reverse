@@ -17,9 +17,10 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {DEV_ICONS} from "../icons";
 import {Device} from "../../../models/Device";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
-const BINDING = {
+const BINDING:IStringIndex<any> = {
   'c':{type:'class',id:'name'},
   'm':{type:'method',id:'__signature__'},
   'f':{type:'field',id:'__signature__'},
@@ -32,7 +33,7 @@ export interface BridgeOption{
   disabled:boolean;
 }
 
-const BridgeOptions = {
+const BridgeOptions:IStringIndex<BridgeOption[]> = {
   android: [
     {value:"adb+usb", label:"adb+usb", disabled:false},
     {value:"adb+tcp", label:"adb+tcp", disabled:false},
@@ -57,8 +58,8 @@ const BridgeOptions = {
   macos: [],
   fw: []
 };
-BridgeOptions.macos = BridgeOptions.linux;
-BridgeOptions.fw = BridgeOptions.linux;
+BridgeOptions['macos'] = BridgeOptions['linux'];
+BridgeOptions['fw'] = BridgeOptions['linux'];
 
 @Component({
   selector: 'app-modal-dm',
@@ -70,7 +71,7 @@ export class ModalDmComponent implements OnInit {
   @Input() controller:DeviceController;
 
   aliasControl = new FormControl('');
-  error:Message = null;
+  error:Nullable<Message> = null;
 
   @ViewChild('msgBox', {read:ElementRef, static:false}) msgEl:ElementRef;
 
@@ -79,7 +80,7 @@ export class ModalDmComponent implements OnInit {
   icons:any = DEV_ICONS;
   gIcons:any = GLOBAL_ICONS;
 
-  message:Message = null;
+  message:Nullable<Message> = null;
   item: any = null;
 
   targetOs = "";
@@ -121,23 +122,6 @@ export class ModalDmComponent implements OnInit {
 
   }
 
-  /**
-   *
-   */
-  submitAlias(){
-    let b:any = BINDING[this.item._t];
-    this.controller.service.rename(
-      b.type,
-      this.item[b.id],
-      this.aliasControl.value
-    ).subscribe( vMsg => {
-      if(vMsg.isSuccess()){
-        this.controller.app.hideModal('rename-item',this.item);
-      }else{
-        this.error = vMsg;
-      }
-    });
-  }
 
   /**
    *
@@ -171,7 +155,7 @@ export class ModalDmComponent implements OnInit {
    * @since 1.0.0
    */
   isBridgeReady():boolean {
-    if(["adb+usb","sdb+usb","jtag","serial"].indexOf(this.bridge)>-1){
+    if((this.bridge!=null) && ["adb+usb","sdb+usb","jtag","serial"].indexOf(this.bridge)>-1){
       return true;
     }else if(this.opts != null){
       return true;
@@ -180,7 +164,7 @@ export class ModalDmComponent implements OnInit {
   }
 
   hasOptions() {
-    return ["adb+tcp","sdb+tcp","usb+ssh","ssh"].indexOf(this.bridge)>-1;
+    return ((this.bridge!=null) && (["adb+tcp","sdb+tcp","usb+ssh","ssh"].indexOf(this.bridge)>-1));
   }
 
   restartADB() {

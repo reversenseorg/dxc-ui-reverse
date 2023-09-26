@@ -133,7 +133,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   ctxMenu: ContextMenuList = {};
   ctxMenuState:Nullable<ContextMenuState> = null;
 
-  selected:CODE_SUBVIEW = CODE_SUBVIEW.ALL;
+  selected:any = CODE_SUBVIEW.ALL;
   activeItem: any = null;
 
   override icons:IconModelCollection = CODE_ICONS;
@@ -534,10 +534,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
     if(pKey[0]=='['){
       field = pKey.substr(1);
-      cmpFn = ((aVal:CodeItem) => { return (aVal.indexOf(pValue)>-1); });
+      cmpFn = ((aVal:any[]) => { return (aVal.indexOf(pValue)>-1); });
     }else{
       field = pKey;
-      cmpFn = ((aVal:CodeItem) => { return (aVal === pValue); });
+      cmpFn = ((aVal:any) => { return (aVal === pValue); });
     }
 
     pData.map( (aPkg:CodeItem) => {
@@ -587,17 +587,17 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     console.log(pEvent);
 
     if(!pForce)
-      this.view.nav.selectItem(pEvent.item);
+      (this.view.nav as NavbarSimpleView).selectItem(pEvent.item);
 
     this.controller.service
       .listPackages(pEvent.item.id)
       .subscribe((packages:any) => {
-        let c;
+        let c:any;
         let p=0;
         switch(pEvent.item.id){
           case CODE_SUBVIEW.APP:
             this.packages[CODE_SUBVIEW.APP] = [];
-            packages.map( (pPkg,pIndex)=>{
+            packages.map( (pPkg:any,pIndex:number)=>{
 
                 if(p>0 && (p%200===0)){
                   console.log("detect changes",p);
@@ -619,7 +619,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                   c = [];
                   pPkg._icon = this.icons['PKG'];
 
-                  pPkg.children.map( (vChild)=>{
+                  pPkg.children.map( (vChild:any)=>{
                     if( this.tags.STATIC.match(vChild) || this.tags.DYNAMIC.match(vChild)){
                       if(vChild._t=='c'){
                         vChild._icon = this.icons['CLASS'];
@@ -643,10 +643,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           case CODE_SUBVIEW.ANDROID_API:
           case CODE_SUBVIEW.ANDROID_FWK:
             this.packages[pEvent.item.id] = [];
-            packages.map( (pPkg)=>{
+            packages.map( (pPkg:any)=>{
               if(pPkg.tags.length==0 || this.tags.INTERNAL.match(pPkg)){
                 c = [];
-                pPkg.children.map( (vChild)=>{
+                pPkg.children.map( (vChild:any)=>{
                   if(pPkg._t=='c'){
                     pPkg._icon = this.icons['CLASS'];
                   }else{
@@ -730,7 +730,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
    * @param subject
    * @param n
    */
-  copyAttr(subject: any, n: string = null) {
+  copyAttr(subject: any, n: Nullable<string> = null) {
     console.log(subject);//, subject[n]);
 
     if(n !== null)
@@ -756,7 +756,8 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
         this.electronSvc.writeToClipboard(pObject.name);
         break;
       case 'c':
-        this.electronSvc.writeToClipboard((pObject as ModelClass).simpleName);
+        const s = (pObject as ModelClass).simpleName;
+        this.electronSvc.writeToClipboard(s==null ? "":s);
         break;
       case 'p':
         this.electronSvc.writeToClipboard(pObject.name);
@@ -822,7 +823,4 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   }
 
-  afterHide() {
-    //this.changeDetectorRef.markForCheck();
-  }
 }

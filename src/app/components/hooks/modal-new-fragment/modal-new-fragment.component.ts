@@ -55,7 +55,7 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
    * @type {string}
    */
   @Input() title:Nullable<string> = null;
-  @Input() message:Message = null;
+  @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
 

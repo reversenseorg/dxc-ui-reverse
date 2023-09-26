@@ -3,6 +3,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {DxcComponent} from "../DxcComponent";
+import {Nullable} from "../Nullable";
 
 /**
  *
