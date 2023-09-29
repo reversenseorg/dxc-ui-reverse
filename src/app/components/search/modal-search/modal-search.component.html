@@ -20,7 +20,7 @@
         </ng-container>
 
         <!-- Root filter -->
-        <app-subnavbar-menu [label]="activeNode.opts[activeNode.selected].label" [icon]="activeNode.opts[activeNode.selected].icon" [trail]="_trail" [closeWhen$]="closeMenu">
+        <app-subnavbar-menu *ngIf="activeNode" [label]="activeNode.opts[activeNode.selected].label" [icon]="activeNode.opts[activeNode.selected].icon" [trail]="_trail" [closeWhen$]="closeMenu">
           <ng-container entries>
             <ng-container *ngFor="let itm of activeNode.opts; let i = index">
               <app-subnavbar-btn [icon]="itm.icon" (click)="selectNode(itm,i,$event)" >&nbsp;{{ itm.label }}</app-subnavbar-btn>

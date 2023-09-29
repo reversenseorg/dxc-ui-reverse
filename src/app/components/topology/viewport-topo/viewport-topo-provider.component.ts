@@ -10,6 +10,13 @@ import ModelMethod from "../../../models/ModelMethod";
 import {CODE_ICONS} from "../../code/icons";
 import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
+import {ViewportView} from "../../../cmp/ViewportView";
+import {ViewportTab} from "../../../cmp/ViewportTab";
+import {Subject} from "rxjs";
+import {IntentFilter} from "../../../models/android/IntentFilter";
+import AndroidActivity from "../../../models/android/AndroidActivity";
+import AndroidProvider from "../../../models/android/AndroidProvider";
 
 
 
@@ -19,7 +26,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
   templateUrl: './viewport-topo-provider.component.html',
   styleUrls: ['./viewport-topo.component.scss']
 })
-export class ViewportTopoProviderComponent implements OnInit, OnChanges, AfterViewInit {
+export class ViewportTopoProviderComponent implements OnInit, OnChanges, IViewportContainer, AfterViewInit {
 
   @Input() item: any;
   @Input() data: any; // ModelMethod
@@ -39,7 +46,23 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, AfterVi
   icons: any = TOPO_ICONS;
 
   id: number = -1;
+  uid = "";
 
+  view: ViewportView = new ViewportView({
+    tab: new ViewportTab({
+      label: 'Providers',
+      icon: GLOBAL_ICONS['GLOBE'],
+      color: 'dxc-text-clear100'
+    })
+  });
+
+
+
+  size:any = {
+    height: '150px'
+  };
+
+  resize$: Subject<any> = new Subject<any>();
 
   ctr: number = 0;
   activeTop: string;
@@ -47,6 +70,20 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, AfterVi
 
   constructor(private codeService:CodeControllerService) {
   }
+
+  // ----- BEGIN of IViewportContainer  -------
+
+  resize( pSize:any):void{
+    this.resize$.next(pSize);
+    this.size = pSize;
+  }
+
+  onClose(): boolean {
+    this.controller.close(this,'vp:provider');
+    return true;
+  }
+
+  // ----- END of IViewportContainer  -------
 
   ngOnInit(): void {
   }
@@ -87,10 +124,6 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, AfterVi
 
   }
 
-  onClose(): boolean {
-    this.controller.close(this,'vp');
-    return true;
-  }
 
   isExpandable(pItem:any, pSrc:any):boolean{
     return (pItem.children!=null && pItem.children.length>0);
@@ -102,5 +135,12 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, AfterVi
 
   showIntents() {
     this.activeTopLeft = 'if';
+  }
+
+  getIntentFilters():IntentFilter[] {
+    if(this.data==null){
+      return [];
+    }else
+      return (this.data as AndroidProvider).intentFilters;
   }
 }

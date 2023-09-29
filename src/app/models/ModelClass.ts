@@ -23,10 +23,6 @@ interface IMethodSet {
 }
 
 
-interface IFieldSet {
-    [p: string]: ModelField
-}
-
 /**
  * Represent a Class object :
  *  - Created by the parser and the ClassLoader's hook
@@ -78,7 +74,7 @@ export default class ModelClass extends Savable
     _methCount:number = 0;
 
     // a list of the declared fields
-    fields:IFieldSet = {};
+    fields:IStringIndex<ModelField> = {};
 
     // the count of declared fields
     _fieldCount:number = 0;
@@ -407,6 +403,11 @@ export default class ModelClass extends Savable
      */
     getMethod(pattern:any, pExactMatch:number=0):ModelMethod[]{
         let res0:any = [], res1:any=[], rx:any={}, match:any=null;
+
+        if(pattern==null) {
+            return Object.values(this.methods);
+        }
+
         if(pExactMatch != CONST.EXACT_MATCH){
             for(let i in pattern){
                 rx[i] = new RegExp(pattern[i]);
@@ -444,6 +445,10 @@ export default class ModelClass extends Savable
      */
     getField(pattern:any):ModelField[]{
         let res0:any = [], res1:any=[], rx:any={}, match:any=null;
+        if(pattern==null) {
+            return Object.values(this.fields);
+        }
+
         for(let i in pattern){
             rx[i] = new RegExp(pattern[i]);
         }
@@ -511,4 +516,16 @@ export default class ModelClass extends Savable
             this.extends = cls;
         }
     }
+
+
+
+    isClassReference():boolean {
+        return false;
+    }
+
+
+    hasAlias():boolean {
+        return false;
+    }
+
 }

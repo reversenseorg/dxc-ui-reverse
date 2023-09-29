@@ -1,6 +1,6 @@
 import {IntentFilter} from "./IntentFilter";
 import AndroidComponent from "./AndroidComponent";
-import {IconModel} from "../../base/icon/IconModel";
+import {ICON_TYPE, IconModel} from "../../base/icon/IconModel";
 import {NodeType} from "../../components/search/ctrl/ModelNode";
 import {NodeInternalType} from "../NodeInternalType";
 import {Nullable} from "../../base/Nullable";

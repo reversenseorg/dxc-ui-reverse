@@ -1,5 +1,4 @@
 import {MenuItem, MenuView} from "./MenuView";
-import {IconView} from "./IconView";
 import {UI} from "./ui.const";
 import {NavbarOption} from "./NavbarOption";
 import {IconModel} from "../base/icon/IconModel";
@@ -8,6 +7,21 @@ import {IStringIndex} from "../base/IStringIndex";
 
 
 
+export interface NavbarSimpleViewOptions extends IStringIndex<any> {
+  id?:string;
+  label?:string;
+  color?:string;
+  icon?:IconModel;
+  menu:MenuView;
+  listeners?:any;
+  selected?:any;
+  entries?:MenuItem<any>[];
+  options?:NavbarOption[];
+  size?:any;
+  opt?:any;
+  style?:string;
+}
+
 
 export class NavbarSimpleView {
 
@@ -15,7 +29,7 @@ export class NavbarSimpleView {
   label:Nullable<string> = null;
   color:Nullable<string> = null;
   icon:Nullable<IconModel> = null;
-  menu:Nullable<MenuView>  = null;
+  menu:MenuView;
   listeners:any = {};
   selected:any = null;
 
@@ -24,6 +38,9 @@ export class NavbarSimpleView {
    */
   style = '';
 
+  /**
+   * deprecated ?
+   */
   entries: MenuItem<any>[] = [];
   options: NavbarOption[] = [];
 
@@ -34,10 +51,12 @@ export class NavbarSimpleView {
 
   opt:any = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:NavbarSimpleViewOptions) {
     if(pConfig != null){
-      for(const i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(const i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
+
+
 
     if(this.menu != null){
       if(this.selected != null){

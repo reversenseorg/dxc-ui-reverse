@@ -40,7 +40,7 @@
       <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='if')">
 
         <app-expandable-list style="overflow: auto;">
-          <ng-container *ngFor="let filt of data.intentFilters; let offset=index">
+          <ng-container *ngFor="let filt of getIntentFilters(); let offset=index">
 
 
               <span (contextmenu)="displayExtMenu($event,'if',filt)">

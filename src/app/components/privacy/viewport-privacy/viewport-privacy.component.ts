@@ -70,7 +70,7 @@ export class ViewportPrivacyDashboardComponent implements OnInit, IViewportConta
   gIcons:any = GLOBAL_ICONS;
   hIcons:any = HOOK_ICONS;
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
   resize$: Subject<any> = new Subject<any>();
 
 

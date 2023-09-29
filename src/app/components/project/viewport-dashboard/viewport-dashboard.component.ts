@@ -17,6 +17,7 @@ import {ElectronService} from "../../../core/services";
 import {HookService} from "../../hooks/ctrl/hook.service";
 import Application from '../../../models/Application';
 import {Nullable} from "../../../base/Nullable";
+import {TopologyController} from "../../topology/ctrl/TopologyController";
 
 enum INFO_TYPE {
   APP,
@@ -66,7 +67,7 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
   gIcons:any = GLOBAL_ICONS;
   hIcons:any = HOOK_ICONS;
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
   resize$: Subject<any> = new Subject<any>();
 
 
@@ -194,5 +195,9 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
       subject: pObject
     };
     this.ctxMenu[pType].show(pEvent, pObject, pExtra);
+  }
+
+  getTopoController():TopologyController {
+    return this.parent.parent.getController('ctrl:topo');
   }
 }

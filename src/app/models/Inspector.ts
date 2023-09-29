@@ -17,7 +17,7 @@ export enum INSPECTOR_TYPE {
     ON_DEMAND= 'ON_DEMAND',
 };
 
-interface ListenerList {
+interface ListenerList extends IStringIndex<StaticTask[]>{
     [eventType :string] :StaticTask[]
 }
 
@@ -123,6 +123,9 @@ export class Inspector
         return this.id;
     }
 
+    getListerners():StaticTask[][] {
+        return Object.values(this.listener);
+    }
 
     /**
      *

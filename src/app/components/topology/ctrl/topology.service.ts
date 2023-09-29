@@ -17,6 +17,10 @@ import {OutputService} from "../../output/ctrl/output.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import AndroidComponent from "../../../models/android/AndroidComponent";
 import {UIException} from "../../../base/error/UIException";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {IntentFilter} from "../../../models/android/IntentFilter";
+import {Nullable} from "../../../base/Nullable";
+import {IntentDataCriteria} from "../../../models/android/Intent";
 
 
 export interface TopologyMenuEvent {
@@ -378,6 +382,18 @@ export class TopologyService extends DxcApiService {
 
   sendIntent():void {
 
+  }
+
+  protected _modals:IStringIndex<any> = {};
+  registerModal( pName:string, pModal:any):void{
+    this._modals[pName] = pModal;
+  }
+
+  prepareIntent(pComponent: AndroidComponent, pIntentFilter: IntentFilter, pCriteria: Nullable<IntentDataCriteria>):void {
+    this._modals['prepareIntent'].comp = pComponent;
+    this._modals['prepareIntent'].filter = pIntentFilter;
+    this._modals['prepareIntent'].criteria = pCriteria;
+    this._modals['prepareIntent'].show();
   }
 }
 

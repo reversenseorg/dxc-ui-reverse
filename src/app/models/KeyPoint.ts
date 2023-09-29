@@ -1,5 +1,6 @@
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {NodeInternalType} from "./NodeInternalType";
 
 
 export enum KeyPointType {
@@ -27,7 +28,7 @@ export interface KeyPointLifecycleEvent {
 export default class KeyPoint {
 
   //static TYPE:NodeType = new NodeType("key_point", NodeInternalType.KEY_POINT, []);
-  // __:NodeInternalType = NodeInternalType.KEY_POINT;
+  __:NodeInternalType = NodeInternalType.KEY_POINT;
 
 
   /**

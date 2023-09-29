@@ -201,7 +201,7 @@ export class ViewportHookKpComponent implements OnInit, AfterViewInit, IViewport
 
   }
 
-  onChange(){
+  onChange(pEvent:any){
     this.edited.code = this.codeEditor.value;
   }
 }

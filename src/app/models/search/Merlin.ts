@@ -11,6 +11,8 @@ export enum MerlinType {
 export interface MerlinPrimitive {
     TYPE: MerlinType
 
+    __stringified?:string;
+
     execute?(pContext:any):Promise<any>;
 
     executeSync?(pContext:any):any;

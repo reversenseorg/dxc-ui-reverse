@@ -65,10 +65,11 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
   @Input() hasChildren:any;
 
   @Input() itemTpl:TemplateRef<any>;
-  @Input() itemType:string;
+  @Input() itemType:any; //string;
+  @Input() itemTypeName:string; //string;
   @Input() item:any; // ModelPackage | ModelClass
 
-  @Input() provider:ExpandableProvider;
+  @Input() provider:any; //ExpandableProvider;
   //@Input() expandable:boolean;
   @Input() expandableFn:Function = (()=>{});
 
@@ -227,7 +228,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
       itemCmp.instance.item = c;
       itemCmp.instance.itemTpl = this.itemTpl;
-      itemCmp.instance.itemType = c._t;
+      itemCmp.instance.itemType = (this.itemTypeName!=null ? c[this.itemTypeName] : c._t); // TODO : make _t dynamic
 
       if(this.expandableFn!=null){
         itemCmp.instance.expandableFn = this.expandableFn;

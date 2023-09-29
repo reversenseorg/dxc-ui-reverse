@@ -10,14 +10,17 @@ import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import AndroidComponent from "../../../models/android/AndroidComponent";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import {IntentDataCriteria} from "../../../models/android/Intent";
-import {ViewportTopoComponent} from "./viewport-topo.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import AndroidActivity from "../../../models/android/AndroidActivity";
 import {TopologyService} from "../ctrl/topology.service";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
-import {from, Observable} from "rxjs";
+import {from, Observable, Subject} from "rxjs";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
+import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
+import {ViewportComponent} from "../../../base/viewport/viewport.component";
+import {ViewportView} from "../../../cmp/ViewportView";
+import {ViewportTab} from "../../../cmp/ViewportTab";
 
 
 @Component({
@@ -25,12 +28,12 @@ import {UIException} from "../../../base/error/UIException";
   templateUrl: './viewport-topo-activity.component.html',
   styleUrls: ['./viewport-topo.component.scss']
 })
-export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, ExpandableProvider {
+export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, IViewportContainer, ExpandableProvider {
 
   @Input() item: any;
   @Input() data: any; // ModelMethod
   @Input() controller: TopologyController;
-  @Input() parent: ViewportTopoComponent;
+  @Input() parent: ViewportComponent;
 
   @Input() height: number;
   @Input() width: number;
@@ -45,7 +48,23 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
   icons: any = TOPO_ICONS;
 
   id = -1;
+  uid = "";
 
+  view: ViewportView = new ViewportView({
+    tab: new ViewportTab({
+      label: 'Activities',
+      icon: GLOBAL_ICONS['GLOBE'],
+      color: 'dxc-text-clear100'
+    })
+  });
+
+
+
+  size:any = {
+    height: '150px'
+  };
+
+  resize$: Subject<any> = new Subject<any>();
 
   ctr = 0;
   activeTop: string;
@@ -59,7 +78,19 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
               private topoSvc:TopologyService) {
   }
 
+  // ----- BEGIN of IViewportContainer  -------
 
+  resize( pSize:any):void{
+    this.resize$.next(pSize);
+    this.size = pSize;
+  }
+
+  onClose(): boolean {
+    this.controller.close(this,'vp:activity');
+    return true;
+  }
+
+  // ----- END of IViewportContainer  -------
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -95,10 +126,6 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
 
   }
 
-  onClose(): boolean {
-    this.controller.close(this,'vp');
-    return true;
-  }
 
   isIntentFilterExpandable(pItem:any, pSrc:any):boolean{
     return (pItem.data!=null && pItem.data.length>0);
@@ -134,16 +161,16 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
   sendIntent(pComponent: AndroidComponent, pIntentFilter:IntentFilter, pCriteria: Nullable<IntentDataCriteria> = null, pEvent:any = null) {
     // prepare generic intent
     if(pIntentFilter.hasMultipleActions() || pIntentFilter.hasMultipleCategories()) {
-      this.parent.prepareIntent(pComponent, pIntentFilter, pCriteria);
+      this.topoSvc.prepareIntent(pComponent, pIntentFilter, pCriteria);
     }
     // if pCriteria not null, generate payload
   }
 
-  openImplementation(pView: string) {
+  /*openImplementation(pView: string) {
     this.parent.parent.parent
       .getController('ctrl:code-main')
       .open({ _t:'c', name:this.data.__impl },'act');
-  }
+  }*/
 
   showImplementation(pView: string) {
     console.log(this.data);
@@ -249,6 +276,12 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
     return pItem.children;
   }
 
+  getIntentFilters():IntentFilter[] {
+    if(this.data==null){
+      return [];
+    }else
+      return (this.data as AndroidActivity).intentFilters;
+  }
   open(pItem: any): Observable<boolean> {
 
     if(this.controller.app==null){
@@ -273,4 +306,5 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
 
     return from([success]);
   }
+
 }

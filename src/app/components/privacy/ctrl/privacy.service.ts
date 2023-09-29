@@ -34,7 +34,10 @@ export class PrivacyService extends DxcApiService{
 
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
-  constructor( private appmenuSvc:AppMenuService, private topoSvc:TopologyService, private outputSvc:OutputService, protected override _http:HttpClient) {
+  constructor( private appmenuSvc:AppMenuService,
+               private topoSvc:TopologyService,
+               private outputSvc:OutputService,
+               protected override _http:HttpClient) {
 
       super({
         assess: {

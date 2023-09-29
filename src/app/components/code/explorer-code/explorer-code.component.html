@@ -24,7 +24,7 @@
             <!--<div *ngIf="itemObj.type=='c'; then classTpl else pkgTpl"></div>-->
 
             <span *ngIf="NODE_TYPES.PACKAGE==itemObj.__" #pkgTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'">DYN</dxc-meta>
               <div *ngIf="itemObj.sname; then pkgSName else pkgName"></div>
               <ng-template #pkgName>
@@ -36,7 +36,7 @@
             </span>
 
             <span *ngIf="NODE_TYPES.CLASS==itemObj.__" #classTpl (contextmenu)="displayCtxMenu($event,'clazz',itemObj)">
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'"></dxc-meta>
               <div *ngIf="itemObj.alias; then aliasedClz else stdClz"></div>
               <ng-template #aliasedClz>
@@ -54,7 +54,7 @@
             </span>
 
             <span *ngIf="NODE_TYPES.FIELD==itemObj.__" #fieldTpl (contextmenu)="displayCtxMenu($event,'fld',itemObj)">
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <div *ngIf="itemObj.alias; then aliasedFld else stdFld"></div>
               <ng-template #aliasedFld>
                 <span class="text-warning">@{{ itemObj.alias }}</span>
@@ -68,7 +68,7 @@
             <span *ngIf="NODE_TYPES.METHOD==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'meth',itemObj)">
 
 
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
 <!--
               <span *ngIf="itemObj.mod._t=='clinit'" class="text-purple" style="width:15px;text-align:right"><b>S:</b></span>
               <span *ngIf="itemObj.mod._t=='new'" class="text-primary" style="width:15px;text-align:right"><b>C:</b></span>
@@ -91,7 +91,7 @@
             </span>
 
             <span *ngIf="NODE_TYPES.FILE==itemObj.__" #binTpl (contextmenu)="displayCtxMenu($event,'bin',itemObj)">
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <div *ngIf="itemObj.alias; then aliasedBin else stdBin"></div>
               <ng-template #aliasedBin>
                 <span class="text-warning">@{{ itemObj.alias }}</span>
@@ -104,7 +104,7 @@
             <span *ngIf="NODE_TYPES.FUNC==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'fun',itemObj)">
 
 
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <div *ngIf="itemObj.alias!=null; then aliasedSym else stdSym"></div>
               <ng-template #aliasedSym>
                 <i class="text-info"> @{{ itemObj.alias }}</i>
@@ -117,7 +117,7 @@
             </span>
 
             <span *ngIf="itemObj._t=='b'" #byteTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
-              <dxc-icon [model]="itemObj._icon"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'">DYN</dxc-meta>
               <div *ngIf="itemObj.sname; then pkgSName else pkgName"></div>
               <ng-template #pkgName>

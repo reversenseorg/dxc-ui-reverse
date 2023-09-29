@@ -33,6 +33,7 @@ interface EventSources {
 }
 
 
+export type TargetNode = { alias:Nullable<string>; [key:string]: any; } | any;
 
 
 @Component({
@@ -77,7 +78,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
   type:number = -1;
   targetName:string;
   htype:string = HOOK_TARGET_TYPE.METHOD;
-  target:any = null;
+  target:TargetNode = null;
   observed:Nullable<string> = null;
   ktype = 'java';
   weight = -1;
@@ -86,7 +87,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
   token:string;
   condition:string;
   code:string;
-  targetIcon: IconModel;
+  targetIcon: IconModel = GLOBAL_ICONS['TARGET'];
 
   constructor( private changeDetectorRef: ChangeDetectorRef,
                private outputSvc:OutputService,
@@ -131,7 +132,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
   show( pOptions:any, pTarget:any){
     console.log("Prepare tpl kp : ",pTarget,pOptions);
 
-    this.targetIcon = pTarget._icon;
+    this.targetIcon = pTarget._icon!=null?pTarget._icon : GLOBAL_ICONS['TARGET'];
     this.htype = pTarget._t;
     this.type = pTarget.__; //pOptions.type;
 
@@ -174,7 +175,7 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
    * @param pNextStep {string} Default: null. Name of the next step after key point creation
    * @method
    */
-  create():void {
+  create(pNextStep = ""):void {
     const opts:any = {
       condition:this.condition,
       weight:this.weight,
@@ -199,5 +200,13 @@ export class ModalHookKeypointNewComponent extends AbstractKeyboardNavigable imp
     //if(this.token.length == 0){
       this.token = `@@__KP:${this.name}__@@`;
     //}
+  }
+
+  targetHasAlias():boolean {
+    return (this.target!=null && (this.target as any).alias!=null);
+  }
+
+  getTargetAlias():string {
+    return (this.target as any).alias;
   }
 }

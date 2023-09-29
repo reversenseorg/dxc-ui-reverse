@@ -52,10 +52,10 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
   @Input() mainController:StageComponent;
   @ViewChildren(ModalBaseComponent) modals:QueryList<ModalBaseComponent>;
 
-  // contextuak menu
+  // contextual menu
   @ViewChildren(ContextMenuComponent) ctxMenuChildren: QueryList<ContextMenuComponent>;
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
 
   /**
    * Active project

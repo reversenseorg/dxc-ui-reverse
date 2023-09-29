@@ -76,7 +76,7 @@ export class DxcApiService {
 
     const params = (new URL(location.href)).searchParams;
 
-    if(gAuthProfile===null){
+    if(gAuthProfile==null){
       if(params.get('auth')!=null){
         gAuthProfile = JSON.parse(atob(params.get('auth') as string));
         console.log("[AUTH PROFILE] Saving profile ",gAuthProfile);
@@ -92,9 +92,11 @@ export class DxcApiService {
         }catch(err){
           console.log("[AUTH PROFILE] Profile not found. Creating new one :",gAuthProfile);
           this._baseURL = location.protocol+'//'+location.host+'/api';
+
+          location.host.split(":")[0]
           gAuthProfile = {
             ssl: location.protocol.endsWith('s'),
-            ip: location.host,
+            ip: location.host.split(":")[0],
             port: location.port
           };
         }
@@ -134,6 +136,8 @@ export class DxcApiService {
    * @protected
    */
   protected _delegateProcess( pEndpoint:EndpointInfo, pConnParam:Nullable<DexcaliburConnectionParams> = null, pOptions:any = {}):Observable<any>{
+
+    console.log(this._baseURL);
     let url:string = this._baseURL; //environment.apiUrl ;
     const extra:any = {};
 

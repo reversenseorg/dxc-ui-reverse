@@ -5,7 +5,6 @@ import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
 import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {SubExplorerComponent} from "../../../base/explorer/subexplorer.component";
 import {ExplorerTab} from "../../../cmp/ExplorerTab";
-import {ActivatedRoute} from "@angular/router";
 import {empty, Observable, Subject} from "rxjs";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {
@@ -143,8 +142,10 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
 
 
-  ctxMenuState:Nullable<ContextMenuState> = null;
-
+  //ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = {
+    subject: null
+  };
 
   data:any = {};
   // packages:CodeItem[][] = [];
@@ -155,14 +156,11 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
   constructor( private projectService:ProjectService,
                private topoSvc: TopologyService,
-               private route: ActivatedRoute,
-
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
 
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
     this._cuid = nextCUID();
-    this.view.id = this.id;
 
     this.offset = 5;
 
@@ -175,6 +173,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     });
 
     this.view = new ExplorerView({
+      id: this.id,
       nav: new NavbarSimpleView({
         selected: this.selected,
         menu: new MenuView({
@@ -706,7 +705,10 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("explorer-topo","hideCtxMenu");
     }
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+
+    if(this.ctxMenuState.menu!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
   }
 
   /**

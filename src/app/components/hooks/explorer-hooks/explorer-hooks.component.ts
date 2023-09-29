@@ -41,15 +41,33 @@ import {InspectorService} from "../../inspector/ctrl/inspector.service";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {INode} from "../../../models/INode";
+import NativeFunctionHook from "../../../models/NativeFunctionHook";
+import JavaMethodHook from "../../../models/JavaMethodHook";
 
 
 interface HookPoolFacets {
   [facet:string] :HookPool
 }
 
-interface HookPool {
+interface HookPool  {
   [name:string] :HookSet[]
 }
+
+
+
+export interface HookPoolMap {
+  hook: { app: (NativeFunctionHook | JavaMethodHook | AbstractHook)[] },
+  keyp: { app: KeyPoint[] },
+  inspector: { app: Inspector[] },
+  sessions: { app: HookSession[] },
+  thema: { app:any[] },
+  process: { app:any[] },
+  thread: { app:any[] }
+
+};
+
 
 export enum HOOK_VIEW {
   HOOK = 'hook',
@@ -102,7 +120,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     sessions: GLOBAL_ICONS['HISTORY']
   };
 
-  hookPools: any = {
+  hookPools: HookPoolMap = {
     [HOOK_VIEW.KP]: { app:[] },
     [HOOK_VIEW.HOOK]: { app:[] },
     [HOOK_VIEW.THEMA]: { app:[] },
@@ -114,7 +132,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
 
 
   selected:string = HOOK_VIEW.KP;
@@ -374,7 +392,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   }
 
   itemHasChildren( pItem:any, pType='p'): boolean {
-    return (pType=='c'||pType=='p'||pType=='kp');
+    return ['c','p','kp'].indexOf(pItem._t)>-1; //(pType=='c'||pType=='p'||pType=='kp');
   }
 
   itemHasLazyChildren( pItem:any, pType ='p'): boolean {
@@ -435,7 +453,9 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("explorer-hooks","hideCtxMenu");
     }
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    if(this.ctxMenuState.menu!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
   }
 
   editKP(pKeyPoint:KeyPoint) {
@@ -521,7 +541,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
       [HOOK_VIEW.SESSIONS]: { app:[] },
     };
     this.running = false;
-    this.ctxMenuState = null;
+    this.ctxMenuState = {subject:null};
     this.selected = HOOK_VIEW.KP;
   }
 

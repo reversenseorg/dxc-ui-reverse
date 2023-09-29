@@ -77,6 +77,9 @@ export class ModelClassReference
 {
     fqcn:Nullable<string> = null;
 
+
+    // An alias
+    alias:Nullable<string> = null;
     constructor(pFQCN:Nullable<string>=null) {
         this.fqcn = pFQCN;
     }
@@ -85,8 +88,24 @@ export class ModelClassReference
         return this.fqcn;
     }
 
+    get name():Nullable<string> {
+        return this.fqcn;
+    }
+
     toJsonObject(){
         return {};
+    }
+
+    isClassReference():boolean {
+        return true;
+    }
+
+    hasAlias():boolean {
+        return false;
+    }
+
+    getAlias():string {
+        return "";
     }
 }
 

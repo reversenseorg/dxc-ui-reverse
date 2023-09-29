@@ -45,9 +45,12 @@ export class AuditController implements IController {
     if(pConfig==null) return;
 
     for(let i in pConfig){
-      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+     (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
+    if(this.service==null && pConfig.service!=null){
+      this.service = pConfig.service;
+    }
     this.service.onScanDone$.subscribe((vReport)=>{
       this.open( vReport, "privacy-svc");
     });

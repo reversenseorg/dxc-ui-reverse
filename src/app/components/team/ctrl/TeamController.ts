@@ -43,7 +43,7 @@ export class TeamController implements IController {
     if(pConfig==null) return;
 
     for(let i in pConfig){
-      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+       (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

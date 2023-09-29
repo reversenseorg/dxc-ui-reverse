@@ -31,7 +31,7 @@ export class ViewportView {
 
   constructor(pConfig:ViewportViewOptions) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
     if(pConfig.tab==null){

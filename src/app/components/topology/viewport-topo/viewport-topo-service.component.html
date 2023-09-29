@@ -25,7 +25,7 @@
     </ng-container>-->
   </div>
 
-  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="50" [type]="'1:2'">
+  <app-viewport-splitted [controller]="controller" [parent]="this.parent.parent" [flex]="true" [leftWidth]="50" [type]="'1:2'">
     <ng-container nav-left>
       <app-subnavbar [type]="'navbar'" [parent]="this">
         <ng-container main>
@@ -40,7 +40,7 @@
       <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='if')">
 
         <app-expandable-list style="overflow: auto;">
-          <ng-container *ngFor="let filt of data.intentFilters; let offset=index">
+          <ng-container *ngFor="let filt of getIntentFilters(); let offset=index">
 
 
               <span (contextmenu)="displayExtMenu($event,'if',filt)">

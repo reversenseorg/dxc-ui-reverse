@@ -14,7 +14,9 @@ import {IntentDataCriteria} from "../../../models/android/Intent";
 import {ModalSendIntentComponent} from "../modal-intent/modal-send-intent.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Nullable} from "../../../base/Nullable";
+import {TopologyService} from "../ctrl/topology.service";
 
+/*
 @Component({
   selector: 'app-viewport-topo',
   templateUrl: './viewport-topo.component.html',
@@ -49,7 +51,10 @@ export class ViewportTopoComponent implements OnInit, AfterViewInit, IViewportCo
 
   data: any;
 
-  constructor() { }
+  constructor(private topoSvc:TopologyService) {
+
+    this.topoSvc.registerModal('prepareIntent',this.sendIntentModal);
+  }
 
   ngOnInit(): void {
 
@@ -95,11 +100,9 @@ export class ViewportTopoComponent implements OnInit, AfterViewInit, IViewportCo
 
 
   prepareIntent(pComponent: AndroidComponent, pIntentFilter: IntentFilter, pCriteria: Nullable<IntentDataCriteria>):void {
-    //if(pIntentFilter)
-    this.sendIntentModal.comp = pComponent;
-    this.sendIntentModal.filter = pIntentFilter;
-    this.sendIntentModal.criteria = pCriteria;
-    this.sendIntentModal.show();
+
+
+    this.topoSvc.prepareIntent(pComponent,pIntentFilter,pCriteria)
   }
 
-}
+}*/

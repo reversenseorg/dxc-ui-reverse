@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import {NavbarSimpleView} from "../../cmp/NavbarSimpleView";
 import {NavbarTabView} from "../../cmp/NavbarTabView";
-import {IconView} from "../../cmp/IconView";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {IconModel} from "../icon/IconModel";
@@ -289,6 +288,7 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
   @Input() type: string = 'navbar';
   @Input() direction: string = 'row';
   @Input() style: string = '';
+  @Input() inlineStyle: IStringIndex<string> = {};
   @Input() height: number = -1;
 
   @Input() navbar: Nullable<NavbarSimpleView> = null;
@@ -322,7 +322,7 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
   configure(pConfig:any = null):void {
     if(pConfig != null){
       for(let i in pConfig)
-        if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 
@@ -371,5 +371,28 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
 
   getHeight():number {
     return this.navEl.nativeElement.offsetHeight;
+  }
+
+  getNavtabStyle():string {
+    if(this.navtab==null){
+      throw new Error();
+    }
+
+    if(this.navtab.tab.iconColor!=''){
+      return this.navtab.tab.iconColor;
+    }else if(this.navtab.tab.icon !=null){
+      return this.navtab.tab.icon.color1
+    }else{
+      return '';
+    }
+  }
+
+  isTabsClosable() {
+
+    if(this.navtab==null){
+      throw new Error();
+    }
+
+    return this.navtab.tab.closable;
   }
 }

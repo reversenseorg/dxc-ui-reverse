@@ -7,6 +7,19 @@ import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
 
+export type FunctionSymbol = string;
+export interface AdressableMapping<T>  extends IStringIndex<T>{
+  [hexa:string|number] :T
+}
+export interface ExtraAnalyzedPpt extends IStringIndex<any>{
+  fn?: AdressableMapping<FunctionSymbol>,
+  imp?: AdressableMapping<ModelFunction>, // imported
+  f_list?: AdressableMapping<ModelFunction>, // local
+  fn_list?: AdressableMapping<ModelFunction>, // exported
+  m?:ModelFileSection[],
+  sections?:ModelExecutableSection[],
+  [extra:string]:any
+}
 
 /**
  * Represent a file which exists into Application data,
@@ -38,7 +51,7 @@ export default class ModelFile
   /**
    * Additional properties/link for this node
    */
-  __p:any = {};
+  __p:ExtraAnalyzedPpt = {};
   __t:any[] = [];
 
 
@@ -102,7 +115,7 @@ export default class ModelFile
    * @since 1.0.0
    */
   getSections():ModelFileSection[] {
-    return this.__p.m;
+    return (this.__p.m!=null ? this.__p.m : []);
   }
 
   static unserialize(o:any):ModelFile {
@@ -120,7 +133,7 @@ export default class ModelFile
   }
 
   getFuncAt(pAddress:number|string):ModelFunction {
-    if(!this.__p.f_list.hasOwnProperty(pAddress)){
+    if(this.__p.f_list ==null || this.__p.f_list[pAddress]==null){
       throw new Error("Function not found at ["+pAddress+"]");
     }
 

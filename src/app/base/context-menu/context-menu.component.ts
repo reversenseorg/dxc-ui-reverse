@@ -19,7 +19,7 @@ export interface ContextMenuList {
 
 
 export interface ContextMenuState {
-  menu: ContextMenuComponent,
+  menu?: ContextMenuComponent,
   subject: any,
   extra?: any
 }

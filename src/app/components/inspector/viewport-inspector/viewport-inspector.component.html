@@ -53,10 +53,10 @@
             <b>Input pipes</b>
           </div>
         </div>
-        <ng-container *ngFor="let l of data.listener">
+        <ng-container *ngFor="let l of data.listener | keyvalue">
           <div class="row hook-row">
             <div class="col-lg-10">
-              {{ l.n }}
+              {{ l.key }}
             </div>
             <div class="col-lg-2">
               <dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>
@@ -98,16 +98,19 @@
           </div>
         </div>
         -->
-        <ng-container *ngFor="let e of data.hookset.strats" >
-          <div class="row hook-row" (click)="showDetail(NODE_TYPES.HOOK_STRATEGY, e)">
-            <div class="col-lg-10">
-              {{ e.name }}
+        <ng-container *ngIf="data.hookset">
+          <ng-container *ngFor="let e of data.hookset.strats" >
+            <div class="row hook-row" (click)="showDetail(NODE_TYPES.HOOK_STRATEGY, e)">
+              <div class="col-lg-10">
+                {{ e.name }}
+              </div>
+              <div class="col-lg-2">
+                <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
+              </div>
             </div>
-            <div class="col-lg-2">
-              <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
-            </div>
-          </div>
+          </ng-container>
         </ng-container>
+
       </div>
 
       <!--<div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='ec')">

@@ -17,7 +17,7 @@
   </app-explorer-navbar>
 
   <ul *ngIf="view.subnav != null" class="nav">
-    <li *ngFor="let navBtn in view.subnav.menu.items">
+    <li *ngFor="let navBtn of view.subnav.menu.items">
       <!--<fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>-->
       <dxc-icon [model]="navBtn.icon"></dxc-icon>
     </li>
@@ -46,7 +46,7 @@
 
           <ng-template #expHookItem let-itemObj="item" >
 
-            <span *ngIf="NODE_TYPES.KEY_POINT==itemObj.__" (contextmenu)="displayCtxMenu($event,'kp',itemObj)">
+            <span *ngIf="itemObj.__==NODE_TYPES.KEY_POINT" (contextmenu)="displayCtxMenu($event,'kp',itemObj)">
               <dxc-icon [model]="itemObj.enabled ? icons['KEYPOINT'] : icons['KEYPOINT_DOWN']"></dxc-icon>
               <ng-container  *ngIf="itemObj._decor=='JAVA'; else otherDec">
                 <dxc-meta [css]="'dxc-herb dxc-sz-6 mr-1'" [label]="'java'">java</dxc-meta>
@@ -114,7 +114,6 @@
             [itemTpl]="expHookItem"
             [item]="hook"
             [provider]="this"
-            [itemType] = "hook.__"
             [expandableFn]="isExpendable"
             (itemFocus)="onItemFocus($event)"
             (collapse)="onCollapse($event)"
@@ -150,7 +149,7 @@
   <app-context-item [label]="'Details'" (itemclick)="controller.showInspectorDetail(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Show logs'" (itemclick)="controller.showLogsOf(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Detections'" (itemclick)="controller.showDetectionsOf(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Help'" [icon]="gIcons['HELP']" (itemclick)="controller.app.helper.openInspector(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Help'" [icon]="gIcons['HELP']" (itemclick)="controller.app?.helper?.openInspector(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 

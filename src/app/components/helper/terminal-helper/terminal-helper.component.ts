@@ -58,7 +58,7 @@ export class TerminalHelperComponent implements OnInit, ITerminalContainer {
   gIcons: any = GLOBAL_ICONS;
 
   view:TerminalView = new TerminalView({
-    nav: new NavbarTabView({
+    navtab: new NavbarTabView({
       //label: 'Help',
       tab: new NavbarTab({
         offset: 0,

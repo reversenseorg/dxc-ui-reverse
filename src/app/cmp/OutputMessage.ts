@@ -9,9 +9,21 @@ export enum OutputMessageType {
   CONFIRM
 }
 
-export class OutputMessage {
+export interface IOutputMessage {
+  _t:OutputMessageType;
+  src:any;
+  msg:string;
+  data:any;
+  cb:Function;
+}
+
+export class OutputMessage implements IOutputMessage{
 
   _t:OutputMessageType = OutputMessageType.INFO;
+  /**
+   * Select flag
+   */
+  _s = false;
   src:any = null;
   msg:string = "";
   data:any = {};
@@ -19,7 +31,7 @@ export class OutputMessage {
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig)  (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

@@ -80,7 +80,6 @@ import {BookmarkButtonComponent} from "./components/bookmark/bookmarkbtn.compone
 import {ExplorerTopoComponent} from "./components/topology/explorer-topo/explorer-topo.component";
 import {ViewportEditorComponent} from "./components/viewer/vp-editor/viewport-editor.component";
 //import {ModalMethodComponent} from "./components/code/modal-method/modal-method.component";
-import {ViewportTopoComponent} from "./components/topology/viewport-topo/viewport-topo.component";
 import {ViewportTopoActivityComponent} from "./components/topology/viewport-topo/viewport-topo-activity.component";
 import {ViewportTopoProviderComponent} from "./components/topology/viewport-topo/viewport-topo-provider.component";
 import {ViewportTopoReceiverComponent} from "./components/topology/viewport-topo/viewport-topo-receiver.component";
@@ -121,6 +120,7 @@ import {SearchResultListComponent} from "./components/search/search-result-list/
 import {CodeEditorModule} from "./components/code-editor/code-editor.module";
 import {MenuComponent} from "./base/menu/menu.component";
 import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/modal-select-hook.component";
+import {CommonModule} from "@angular/common";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -133,8 +133,9 @@ import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/mod
 @NgModule({
   declarations: [
     // base component
-    AppComponent,
+
     StageComponent,
+    AppComponent,
 
     NavbarComponent,
     ExplorerComponent,
@@ -235,7 +236,6 @@ import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/mod
 
     ExplorerTopoComponent,
     IntentPatternComponent,
-    ViewportTopoComponent,
     ViewportTopoActivityComponent,
     ViewportTopoServiceComponent,
     ViewportTopoProviderComponent,
@@ -274,11 +274,12 @@ import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/mod
 
   ],
   imports: [
+    AppRoutingModule,
+    CommonModule,
     BrowserModule,
     CoreModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
     FontAwesomeModule,
     NgbModule,
     CodeEditorModule,

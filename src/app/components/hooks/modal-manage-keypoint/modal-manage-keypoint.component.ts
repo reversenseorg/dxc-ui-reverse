@@ -28,8 +28,8 @@ interface EventSources {
 
 
 
-
-/*@Component({
+/*
+@Component({
   selector: 'dxc-modal-manage-keypoint',
   templateUrl: './modal-manage-keypoint.component.html',
   styleUrls: ['../../../modal.scss','../../../forms.scss'],

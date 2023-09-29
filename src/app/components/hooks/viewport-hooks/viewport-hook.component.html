@@ -1,5 +1,5 @@
 <div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-hook">
-  <app-viewport-hook-javahook *ngIf="data._t=='h'" [data]="data" [height]="size.height"  [parent]="this" [controller]="controller"></app-viewport-hook-javahook>
-  <app-viewport-hook-script *ngIf="data._t=='s'" [data]="data" [height]="size.height"  [parent]="this" [controller]="controller"></app-viewport-hook-script>
-  <app-viewport-hook-kp *ngIf="data.__==NODE_TYPES.KEY_POINT" [data]="data" [height]="size.height"  [parent]="this" [controller]="controller"></app-viewport-hook-kp>
+  <app-viewport-hook-javahook *ngIf="data._t=='h'" [data]="data" [height]="size.height"  [parent]="this.parent" [controller]="controller"></app-viewport-hook-javahook>
+  <app-viewport-hook-script *ngIf="data._t=='s'" [data]="data" [height]="size.height"  [parent]="this.parent" [controller]="controller"></app-viewport-hook-script>
+  <app-viewport-hook-kp *ngIf="data.__==NODE_TYPES.KEY_POINT" [data]="data" [height]="size.height"  [parent]="this.parent" [controller]="controller"></app-viewport-hook-kp>
 </div>

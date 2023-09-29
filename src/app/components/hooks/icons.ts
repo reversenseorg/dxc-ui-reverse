@@ -2,18 +2,18 @@ import {ICON_TYPE, IconModel} from "../../base/icon/IconModel";
 
 export const HOOK_ICONS = {
   DEFAULT: new IconModel({
-    iconType: 'img',
+    iconType: ICON_TYPE.ICON,
     type: 'fas',
     name: 'code'
   }),
   DOWN: new IconModel({
-    iconType: 'img',
+    iconType: ICON_TYPE.ICON,
     type: 'fas',
     name: 'circle',
     color1: 'dxc-error-icon'
   }),
   UP: new IconModel({
-    iconType: 'img',
+    iconType: ICON_TYPE.ICON,
     type: 'fas',
     name: 'circle',
     color1: 'dxc-success-icon'
@@ -25,7 +25,7 @@ export const HOOK_ICONS = {
     color1: 'dxc-text-75', //'dxc-text-75',
   }),
   FRIDA: new IconModel({
-    iconType: 'txt',
+    iconType: ICON_TYPE.TEXT,
     label: 'F',
     color1: 'dxc-clear-100'
   }),

@@ -65,7 +65,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
   gIcons: any = GLOBAL_ICONS;
 
   view:TerminalView = new TerminalView({
-    nav: new NavbarTabView({
+    navtab: new NavbarTabView({
       label: 'Terminal',
       tab: new NavbarTab({
         offset: 0,
@@ -215,7 +215,9 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
       return true;
     });
 
-    (this.terminal.underlying as any).setOption("fontSize", 12);
+    //(this.terminal.underlying as any).setOption("fontSize", 12);
+    (this.terminal.underlying as any).options.fontSize= 12;
+
     this.ready = true;
 
     // initSessions() only if websocket communication is established

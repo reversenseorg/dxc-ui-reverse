@@ -8,7 +8,7 @@
     </ng-container>
   </app-subnavbar>-->
 
-  <app-subnavbar [type]="'navtab'" [navtab]="this.view.nav" [items]="_sessions" [parent]="this"
+  <app-subnavbar [type]="'navtab'" [navtab]="this.view.navtab" [items]="_sessions" [parent]="this"
                  (closeTab)="onClose($event)" (selectTab)="switchSession($event)" #termHookNav>
     <span class="nav-label pt-2" navLabel>Sessions :</span>
     <ng-container rightTab>
@@ -40,39 +40,42 @@
           <ng-container *ngFor="let n of msg.node">
             <ng-container *ngIf="n.__==NODE_TYPE.METHOD">
 
-              <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(n.enclosingClass,NODE_TYPE.CLASS)" class="actionable">{{ n.enclosingClass }}</span>
+              <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(n, NODE_TYPE.CLASS, 'enclosingClass')" class="actionable">{{ getProperty(n,'enclosingClass') }}</span>
               .
-              <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(n,NODE_TYPE.METHOD)" class="actionable">{{ n.name }}</span>(...)
+              <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(n,NODE_TYPE.METHOD)" class="actionable">{{ getProperty(n,'name') }}</span>(...)
             </ng-container>
           </ng-container>
         </div>
         <div class="col-lg-7 ppt">
-          <ng-container *ngFor="let d of msg.data.data | keyvalue">
+          <ng-container *ngIf="msg.isHookMessage()">
+            <ng-container *ngFor="let d of msg.getHookMessageData() | keyvalue">
 
-            <ng-container [ngSwitch]="d.value.__">
-              <ng-container *ngSwitchCase="NODE_TYPE.CLASS">
-                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d.value,NODE_TYPE.CLASS)" class="actionable">{{ d.value.fqcn }}</span>
-              </ng-container>
-              <ng-container *ngSwitchCase="NODE_TYPE.METHOD">
-                <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
-              </ng-container>
-              <ng-container *ngSwitchCase="NODE_TYPE.FILE">
-                <dxc-icon [model]="cIcons['FILE']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>
-              </ng-container>
-              <ng-container *ngSwitchDefault>
-                <div *ngIf="d.key[0]!='_'">
-                  <span>{{ d.key }}</span>&nbsp;:&nbsp;<span>{{ d.value }}</span>
-                </div>
-                <div *ngIf="d.key=='__class__'">
-                  <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.CLASS)" class="actionable">{{ d.value }}</span>
-                </div>
-                <div *ngIf="d.key=='__meth__'">
+              <ng-container [ngSwitch]="getProperty(d.value,'__')">
+                <ng-container *ngSwitchCase="NODE_TYPE.CLASS">
+                  <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d.value,NODE_TYPE.CLASS)" class="actionable">{{ getProperty(d.value,'fqcn') }}</span>
+                </ng-container>
+                <ng-container *ngSwitchCase="NODE_TYPE.METHOD">
                   <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
-                </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="NODE_TYPE.FILE">
+                  <dxc-icon [model]="cIcons['FILE']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <div *ngIf="d.key[0]!='_'">
+                    <span>{{ d.key }}</span>&nbsp;:&nbsp;<span>{{ d.value }}</span>
+                  </div>
+                  <div *ngIf="d.key=='__class__'">
+                    <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.CLASS)" class="actionable">{{ d.value }}</span>
+                  </div>
+                  <div *ngIf="d.key=='__meth__'">
+                    <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+                  </div>
+                </ng-container>
               </ng-container>
-            </ng-container>
 
+            </ng-container>
           </ng-container>
+
         </div>
       </div>
     </ng-container>

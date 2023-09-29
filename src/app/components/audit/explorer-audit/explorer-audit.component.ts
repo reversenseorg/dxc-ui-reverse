@@ -25,6 +25,7 @@ import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import Control from "../../../models/audit/common/Control";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
+import {ICON_TYPE} from "../../../base/icon/IconModel";
 export enum AUDIT_SUBVIEW {
   THREATS="threat",
   PII='pii',
@@ -59,7 +60,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
 
   activeItem: any = null;
 
@@ -359,8 +360,9 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("explorer-audit","hideCtxMenu");
     }
-
+    if(this.ctxMenuState.menu!=null){
       this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
   }
 
 
@@ -372,4 +374,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   scanModel( pModel:AssuranceModel) {
     this.open(pModel)
   }
+
+    protected readonly ICON_TYPE = ICON_TYPE;
 }

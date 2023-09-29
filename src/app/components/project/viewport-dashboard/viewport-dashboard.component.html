@@ -43,7 +43,7 @@
                     <dxc-icon [model]="insp.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
                     <span>{{ insp.name }}</span>
                     <span *ngIf="insp.hookset && insp.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
-                    <span *ngIf="insp.listener.length>0" class="text-info">&nbsp;[rules]</span>
+                    <!--<span *ngIf="insp.getListerners().length>0" class="text-info">&nbsp;[rules]</span>-->
                   </span>
                 </li>
               </ng-container>
@@ -111,19 +111,19 @@
         <ng-container body-top>
 
           <ng-container *ngIf="data._t=='taa'">
-            <app-viewport-topo-activity [data]="data" [width]="size.width" [height]="size.height" [parent]="this" [controller]="controller"></app-viewport-topo-activity>
+            <app-viewport-topo-activity [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-activity>
           </ng-container>
 
           <ng-container *ngIf="data._t=='tas'">
-            <app-viewport-topo-service [data]="data" [width]="size.width" [height]="size.height" [parent]="this" [controller]="controller"></app-viewport-topo-service>
+            <app-viewport-topo-service [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-service>
           </ng-container>
 
           <ng-container *ngIf="data._t=='tap'">
-            <app-viewport-topo-provider [data]="data" [width]="size.width" [height]="size.height" [parent]="this" [controller]="controller"></app-viewport-topo-provider>
+            <app-viewport-topo-provider [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-provider>
           </ng-container>
 
           <ng-container *ngIf="data._t=='tar'">
-            <app-viewport-topo-receiver [data]="data" [width]="size.width" [height]="size.height" [parent]="this" [controller]="controller"></app-viewport-topo-receiver>
+            <app-viewport-topo-receiver [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-receiver>
           </ng-container>
 
         </ng-container>

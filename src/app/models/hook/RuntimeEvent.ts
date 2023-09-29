@@ -12,6 +12,13 @@ export enum RuntimeEventType {
   FILESYSTEM='f'
 }
 
+export interface HookRawMessage {
+  hid?:string;
+  fid?:string;
+  data?:IStringIndex<any>;
+  when?:number;
+  frag?:any;
+}
 
 /**
  * This class represents any events happening at runtime of target applications and
@@ -40,7 +47,7 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
     super(pConfig);
 
     for(const i in this){
-      if(this.hasOwnProperty(i))
+
         (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
@@ -57,6 +64,14 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
   isHookMessage(){
     return (this.type==RuntimeEventType.HOOK);
+  }
+
+  getHookMessage():HookRawMessage {
+    return this.data;
+  }
+
+  getHookMessageData():IStringIndex<any> {
+    return (this.data.data==null ? {} : this.data.data);
   }
 
   setNodes(pNodes:INode[]){

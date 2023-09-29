@@ -1,6 +1,6 @@
 import {IStringIndex} from "../IStringIndex";
 import {Nullable} from "../Nullable";
-
+import {IconName, IconPrefix} from "@fortawesome/fontawesome-common-types";
 
 export interface IconModelCollection {
   [iconName:string] :IconModel
@@ -9,32 +9,70 @@ export interface IconModelCollection {
 export enum ICON_TYPE {
   ICON = 'img',
   TEXT = 'txt',
+  SVG = 'svg',
   NONE = 'none'
 }
+
+export interface IconEmptyOptions extends IStringIndex<any> {
+  iconType: ICON_TYPE;
+}
+
+export interface IconImgOptions extends IStringIndex<any> {
+  iconType: ICON_TYPE;
+  type:IconPrefix;
+  name:IconName;
+  color1:string;
+  src?:string;
+  style?:IStringIndex<string>;
+  color2?:string;
+  spin?:boolean;
+}
+
+export interface IconTextOptions extends IStringIndex<any> {
+  iconType: ICON_TYPE;
+  label:string;
+  color1:string;
+}
+
+export interface IconSvgOptions extends IStringIndex<any> {
+  iconType: ICON_TYPE;
+  src:string;
+  styles?:IStringIndex<string>;
+  color1:string;
+}
+
+export type IconOptions = IconImgOptions | IconTextOptions | IconEmptyOptions;
 
 export class IconModel {
 
   static EMPTY = new IconModel({
-    type: ICON_TYPE.NONE
+    iconType: ICON_TYPE.NONE
   });
 
   iconType: ICON_TYPE = ICON_TYPE.ICON;
-  type: Nullable<string> = null;
-  name: Nullable<string> = null;
-  label: Nullable<string> = null;
-  color1: Nullable<string> = null;
+  type: IconPrefix;
+  name: IconName;
+  label: string;
+  color1: string;
   color2: Nullable<string> = null;
-  style: Nullable<string> = null;
+  style: IStringIndex<string> = {};
   spin: boolean = false;
 
   src?:Nullable<string> = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:IconOptions) {
     if(pConfig != null){
       for(let i in pConfig) {
-        if(this.hasOwnProperty(i))
           (this as IStringIndex<any>)[i] = pConfig[i];
       }
     }
+  }
+
+  /*toIconName():IconName {
+    return this.type+this.name.split("-").map(x => x[0].toUpperCase()+x.substring(1)).join('');
+  }*/
+
+  isIcon(){
+    return this.iconType===ICON_TYPE.ICON;
   }
 }

@@ -1,6 +1,6 @@
-import {IconView} from "./IconView";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {IconModel} from "../base/icon/IconModel";
 
 
 export class TerminalTab {
@@ -8,13 +8,13 @@ export class TerminalTab {
   uid:Nullable<string> = null;
   offset:number = -1;
   label:string = "";
-  icon:Nullable<IconView> = null;
+  icon:Nullable<IconModel> = null;
   color:string = '';
   closable:boolean = false;
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 }

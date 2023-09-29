@@ -402,7 +402,7 @@ export class Device
      * @param {Path|String} pLocalPath
      * @param {Path|String} pRemotePath
      */
-    pushBinary( pLocalPath:string, pRemotePath:string):string|Buffer{
+    pushBinary( pLocalPath:string, pRemotePath:string):string{
         // remote binding
         return "";
     }

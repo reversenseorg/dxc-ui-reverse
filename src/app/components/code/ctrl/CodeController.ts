@@ -68,6 +68,7 @@ export class CodeController extends UiController implements IController {
 
   isAlreadyRendered(pItem:any):any {
     let f:any=null;
+    if(pItem==null) return;
 
    //console.log("[HOOK CONTROLLER][isRendered?] ",pItem)
     this.rendered.map((vItem:any):void => {
@@ -79,6 +80,8 @@ export class CodeController extends UiController implements IController {
 
       //if(vItem.item._t !== pItem._t) return null;
       if(pItem!=null && (vItem.item.__ != pItem.__)) return;
+
+
       switch(vItem.item._t){
         case 'p':
         case 'c':

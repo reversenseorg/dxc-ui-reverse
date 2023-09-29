@@ -1,33 +1,30 @@
-import {IconModel} from "../../base/icon/IconModel";
+import {ICON_TYPE, IconModel} from "../../base/icon/IconModel";
 
 export const FILE_ICONS = {
   LOCAL_FS: new IconModel({
-    iconType: 'img',
+    iconType: ICON_TYPE.ICON,
     type: 'fas',
     name: 'code'
   }),
   APP_FS: new IconModel({
-    iconType: 'txt',
+    iconType: ICON_TYPE.TEXT,
     label: 'APP:',
     color1: 'dxc-icon-field'
   }),
 
 
   XML: new IconModel({
-    iconType: 'img',
-    type: 'svg',
+    iconType: ICON_TYPE.SVG,
     src: 'assets/icons/files_format_2/xml.svg',
     color1: 'dxc-icon-ff'
   }),
   PNG: new IconModel({
-    iconType: 'img',
-    type: 'svg',
+    iconType: ICON_TYPE.SVG,
     src: 'assets/icons/files_format_2/png.svg',
     color1: 'dxc-icon-ff'
   }),
   BIN: new IconModel({
-    iconType: 'img',
-    type: 'svg',
+    iconType: ICON_TYPE.SVG,
     src: 'assets/icons/files_format_3/bin-1.svg',
     color1: 'dxc-icon-ff',
     style: {
@@ -35,8 +32,7 @@ export const FILE_ICONS = {
     }
   }),
   FILE: new IconModel({
-    iconType: 'img',
-    type: 'svg',
+    iconType: ICON_TYPE.SVG,
     src: 'assets/icons/files_format_2/info.svg',
     color1: 'dxc-icon-ff'
   })

@@ -364,7 +364,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   openHook(pHook:AbstractHook) {
-    (this.parent.parent as any).parent.getController('ctrl:hook-main').open(pHook);
+    (this.parent as any).parent.getController('ctrl:hook-main').open(pHook);
   }
 
   switchHook(pHook: AbstractHook) {

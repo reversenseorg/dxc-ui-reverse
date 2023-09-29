@@ -8,9 +8,9 @@
     </app-explorer-navbar>
 
     <ul *ngIf="view.subnav != null" class="nav">
-      <li *ngFor="let navBtn in view.subnav.menu.items">
+      <li *ngFor="let navBtn of view.subnav.menu.items">
         <!--<fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>-->
-        <dxc-icon [model]="navBtn.icon"></dxc-icon>
+        <dxc-icon *ngIf="navBtn.icon" [model]="navBtn.icon"></dxc-icon>
       </li>
     </ul>
 
@@ -107,7 +107,6 @@
               [itemTpl]="expItem"
               [item]="cat.value"
               [provider]="this"
-              [itemType]="cat.value._t"
               [expandableFn]="isExpandable"
               (itemFocus)="onItemFocus($event)"
               (collapse)="onCollapse($event)"
@@ -154,6 +153,8 @@
   <app-context-item [separator]="true" [label]="'Go to class'" (itemclick)="openClassOf(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Send intent'" [icon]="gIcons['FIND']" (itemclick)="controller.sendIntentTo(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
+
+<dxc-modal-send-intent [controller]="controller"></dxc-modal-send-intent>
 
 <!--
 <app-modal-rename [controller]="controller"></app-modal-rename>

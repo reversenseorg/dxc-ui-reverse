@@ -8,6 +8,7 @@ import {NodeInternalType} from "./NodeInternalType";
 import {Savable, STUB_TYPE} from "./ModelSavable";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import NativeFunctionHook from "./NativeFunctionHook";
 
 export interface ModelFunctionList {
   [pAddress:string] :ModelFunction
@@ -70,6 +71,9 @@ export class ModelFunction extends Savable {
   __s:Nullable<string> = null;
 
   _s:any = {};
+
+  alias:Nullable<string> = null;
+  hook:Nullable<NativeFunctionHook> = null;
 
   constructor(pConfig:any = null){
     super(STUB_TYPE.CALL)

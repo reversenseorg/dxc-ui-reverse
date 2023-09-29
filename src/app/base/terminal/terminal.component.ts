@@ -192,14 +192,14 @@ export class TerminalComponent implements OnInit, OnChanges {
   }
 
   onDragToResize(pEvent: any): void {
-    if(pEvent.path[0].classList.value.indexOf("tabnav")==-1){
+    if(pEvent.target.classList.value.indexOf("tabnav")==-1){
       // prevent default
       pEvent.preventDefault();
     }else{
       this.parent.startDrag('terminal', {
         clientY: pEvent.clientY,
         clientX: pEvent.clientX,
-        delta:(pEvent.clientY-(window.innerHeight-pEvent.path[0].offsetParent.offsetHeight))
+        delta:(pEvent.clientY-(window.innerHeight-pEvent.target.offsetParent.offsetHeight))
       });
     }
   }

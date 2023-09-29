@@ -23,7 +23,7 @@
     </ng-container>
     <ng-container body-left>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='fl')" style="margin:0px; padding:0px; width:100%;">
+      <div *ngIf="data && data.__p.f_list " class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='fl')" style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ex')" style="margin:0px; padding:0px; width:100%;">
+      <div *ngIf="data && data.__p.fn_list" class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ex')" style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -52,7 +52,7 @@
           <div class="col-lg-8">Symbol</div>
         </div>
 
-        <div *ngFor="let fn of data.__p.fn | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
+        <div *ngFor="let fn of data.__p.fn_list | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
              (contextmenu)="displayCtxMenu($event,id+'fn',fn.value)" (click)="showDetail('fn', fn.value, 'di')">
           <div class="col-lg-2" [ngClass]="{ 'active' : (fn.value.hook!=null)}"  style="border-right:1px solid #aaa;">{{ fn.key }}</div>
           <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.value.sz }}</div>
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ii')" style="margin:0px; padding:0px; width:100%;">
+      <div *ngIf="data && data.__p.imp" class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ii')" style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='is')"  style="margin:0px; padding:0px; width:100%;">
+      <div  *ngIf="data" class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='is')"  style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -104,7 +104,7 @@
         </div>
       </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='st')"  style="margin:0px; padding:0px; width:100%;">
+      <div  *ngIf="data" class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='st')"  style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -120,7 +120,7 @@
         </div>-->
       </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ss')"  style="margin:0px; padding:0px; width:100%;">
+      <div  *ngIf="data" class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ss')"  style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -160,7 +160,7 @@
           <ng-container *ngFor="let ins of activeObj.instr; let offset=index">
 
             <div *ngIf="ins.flags!=null && ins.flags.length>0" class="row no-gutters">
-              <div class="col-lg-10" [ngStyle]="{color: opstyle.flags.color}" style="font-family: 'Courier New', Courier, monospace;"><b>{{ ins.flags[0] }}</b></div>
+              <div class="col-lg-10" [ngStyle]="{color: opstyle.flags.color}" style="font-family: 'Courier New', Courier, monospace;"><b>{{ ins?.flags[0] }}</b></div>
             </div>
             <div class="row no-gutters dxc-disass-row"  (contextmenu)="displayCtxMenu($event,id+'inst',ins)" [ngClass]="getStyleForInstr(ins, offset)">
               <div class="col-lg-2">

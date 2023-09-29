@@ -9,6 +9,7 @@ import {FILE_ICONS} from "../../file/icons";
 import ModelFile from "../../../models/ModelFile";
 import {ViewportNativeComponent} from "./viewport-native.component";
 import {Nullable} from "../../../base/Nullable";
+import {UIException} from "../../../base/error/UIException";
 
 @Component({
   selector: 'app-viewport-native',
@@ -72,6 +73,9 @@ export class ViewportNativeMainComponent implements OnInit, AfterViewInit, IView
 
   ngAfterViewInit() {
     if(this.libViewCmp != null){
+      if(this.data==null){
+        throw UIException.MISSING_LIBRARY("native-view");
+      }
       this.libViewCmp.configure(this.data);
     }
   }

@@ -2,7 +2,7 @@
 @use "app/base/modal-base/modal-base.component";
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import '../node_modules/bootstrap/scss/bootstrap';
 @import "themes.scss";
 @import 'fonts';
 
@@ -948,7 +948,7 @@ div.box {
 div.dxc-list {
   div.row {
     padding: 0px 0px;
-    border-color: $table-dark-border-color;
+    border-color: var(--text-100);
 
     & > div.col-1, & > div.col-2, & > div.col-3,
     & > div.col-4, & > div.col-5, & > div.col-6,

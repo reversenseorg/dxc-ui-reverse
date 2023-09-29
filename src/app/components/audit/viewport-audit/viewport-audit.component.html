@@ -143,7 +143,7 @@
             <i>( <span class="dxc-text-yellow">#{{selectedData.id}}</span> )</i>
 
 
-            <p>{{ selectedData.descr }}</p>
+            <p>{{ selectedData.description }}</p>
 
             <div class="row no-gutters dxc-text-std dxc-text-100">
               <div class="col-11 pl-1"><b>Rules</b></div>
@@ -169,7 +169,7 @@
             <div class="row no-gutters">
               <div class="col-12 pl-1 pt-1">
                 <div class="dxc-list dxc-rules-list">
-                  <dxc-search-result-list [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>
+                  <dxc-search-result-list *ngIf="searchCtrl.app" [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>
                 </div>
               </div>
             </div>

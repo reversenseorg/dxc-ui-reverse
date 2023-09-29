@@ -5,6 +5,18 @@ import {IconModel} from "../base/icon/IconModel";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
 
+export interface NavbarTabViewOptions extends IStringIndex<any> {
+  tab: NavbarTab;
+  id?:Nullable<string>;
+  label?:Nullable<string>;
+  color?:Nullable<string>;
+  icon?:Nullable<IconModel>;
+  menu?:Nullable<MenuView>;
+  listeners?:any;
+  selected?:any;
+  size?:any;
+  opt?:any;
+}
 
 export class NavbarTabView {
 
@@ -16,7 +28,7 @@ export class NavbarTabView {
   listeners:any = {};
   selected:any = null;
 
-  tab: Nullable<NavbarTab> = null;
+  tab: NavbarTab;
 
   /* @deprecated */
 
@@ -32,25 +44,22 @@ export class NavbarTabView {
 
   opt:any = null;
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:NavbarTabViewOptions) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
-    if(this.menu!=null){
-      if(this.selected != null){
-        let el = this.menu.getItemByID(this.selected);
-        if(el != null){
-          this.label =  el.label;
-          this.icon = el.icon;
-        }
+    /*
+    if(this.selected != null){
+      let el = this.menu.getItemByID(this.selected);
+      if(el != null){
+        this.label =  el.label;
+        this.icon = el.icon;
       }
-    }else{
-      throw new Error('UIException : NavbarTabView : menu is null');
-    }
+    }*/
 
   }
-
+/*
   selectItemByID( pName:string):any {
 
 
@@ -65,7 +74,7 @@ export class NavbarTabView {
       this.icon = el.icon;
       this.selected = el.id;
     }
-  }
+  }*/
 
   selectItem( pItem:MenuItem<any>):any {
     this.label = pItem.label;
@@ -73,9 +82,11 @@ export class NavbarTabView {
     this.id = pItem.id;
   }
 
+
   hasDropDown(): boolean {
     return (this.menu != null) && (this.menu instanceof MenuView);
   }
+
 
   hasOptions(): boolean{
     return (this.opt != null);

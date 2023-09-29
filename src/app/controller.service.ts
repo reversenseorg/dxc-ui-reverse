@@ -40,11 +40,9 @@ import {FilesystemService} from "./components/file/ctrl/FilesystemService";
 import {TopologyController} from "./components/topology/ctrl/TopologyController";
 import {TopologyService} from "./components/topology/ctrl/topology.service";
 import {ExplorerTopoComponent} from "./components/topology/explorer-topo/explorer-topo.component";
-import {ViewportController} from "./base/viewport/ViewportController";
 import {ViewerController} from "./components/viewer/ctrl/ViewerController";
 import {ViewportEditorComponent} from "./components/viewer/vp-editor/viewport-editor.component";
 import {ViewerService} from "./components/viewer/ctrl/viewer.service";
-import {ViewportTopoComponent} from "./components/topology/viewport-topo/viewport-topo.component";
 import {NativeService} from "./components/native/ctrl/native.service";
 import {NativeController} from "./components/native/ctrl/NativeController";
 import {ViewportNativeMainComponent} from "./components/native/vp-viewer/viewport-native-main.component";
@@ -70,6 +68,10 @@ import {ExplorerAuditComponent} from "./components/audit/explorer-audit/explorer
 import {ViewportAuditComponent} from "./components/audit/viewport-audit/viewport-audit.component";
 import {Nullable} from "./base/Nullable";
 import {UIException} from "./base/error/UIException";
+import {ViewportTopoActivityComponent} from "./components/topology/viewport-topo/viewport-topo-activity.component";
+import {ViewportTopoReceiverComponent} from "./components/topology/viewport-topo/viewport-topo-receiver.component";
+import {ViewportTopoProviderComponent} from "./components/topology/viewport-topo/viewport-topo-provider.component";
+import {ViewportTopoServiceComponent} from "./components/topology/viewport-topo/viewport-topo-service.component";
 
 
 interface StageSet {
@@ -106,11 +108,13 @@ export class ControllerService {
     private deobfSvc: DeobfuscationService,
     private authSvc: AuthService,
     private auditSvc: AuditService,
-
     private privSvc: PrivacyService,
     private teamSvc: TeamService) {
 
+
+    console.log("Before menu rendered");
     this.appmenuService.render();
+    console.log("Menu rendered");
   }
 
   addStage(pName:string, pApp:StageComponent):void {
@@ -224,7 +228,11 @@ export class ControllerService {
           main: ExplorerTopoComponent
         },
         viewCmp: {
-          main: ViewportTopoComponent
+          //main: ViewportTopoComponent,
+          activity: ViewportTopoActivityComponent,
+          service: ViewportTopoServiceComponent,
+          provider: ViewportTopoProviderComponent,
+          receiver: ViewportTopoReceiverComponent,
         }
       }),
       new ViewerController({

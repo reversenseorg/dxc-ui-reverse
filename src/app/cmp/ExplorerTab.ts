@@ -1,5 +1,4 @@
-import {NavbarSimpleView} from "./NavbarSimpleView";
-import {IconView} from "./IconView";
+
 import {IconModel} from "../base/icon/IconModel";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
@@ -15,7 +14,7 @@ export class ExplorerTab {
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

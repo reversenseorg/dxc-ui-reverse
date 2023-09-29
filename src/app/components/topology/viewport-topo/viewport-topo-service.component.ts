@@ -4,7 +4,6 @@ import {ViewportComponent} from "../../../base/viewport/viewport.component";
 import {TOPO_ICONS} from "../icons";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
 import {TopologyController} from "../ctrl/TopologyController";
-import {NodeType} from "../../search/ctrl/ModelNode";
 import ModelClass from "../../../models/ModelClass";
 import ModelMethod from "../../../models/ModelMethod";
 import {CODE_ICONS} from "../../code/icons";
@@ -12,9 +11,15 @@ import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import AndroidComponent from "../../../models/android/AndroidComponent";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import {IntentDataCriteria} from "../../../models/android/Intent";
-import {ViewportTopoComponent} from "./viewport-topo.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Nullable} from "../../../base/Nullable";
+import {from, Observable, Subject} from "rxjs";
+import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
+import {ViewportView} from "../../../cmp/ViewportView";
+import {ViewportTab} from "../../../cmp/ViewportTab";
+import {TopologyService} from "../ctrl/topology.service";
+import AndroidProvider from "../../../models/android/AndroidProvider";
+import AndroidService from "../../../models/android/AndroidService";
 
 
 
@@ -24,12 +29,12 @@ import {Nullable} from "../../../base/Nullable";
   templateUrl: './viewport-topo-service.component.html',
   styleUrls: ['./viewport-topo.component.scss']
 })
-export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterViewInit {
+export class ViewportTopoServiceComponent implements OnInit, IViewportContainer, OnChanges, AfterViewInit {
 
   @Input() item: any;
   @Input() data: any; // ModelMethod
   @Input() controller: TopologyController;
-  @Input() parent: ViewportTopoComponent;
+  @Input() parent: ViewportComponent;
 
   @Input() height: number;
   @Input() width: number;
@@ -45,15 +50,45 @@ export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterVie
   icons: any = TOPO_ICONS;
 
   id: number = -1;
+  uid = "";
 
+  view: ViewportView = new ViewportView({
+    tab: new ViewportTab({
+      label: 'Services',
+      icon: GLOBAL_ICONS['GLOBE'],
+      color: 'dxc-text-clear100'
+    })
+  });
+
+
+
+  size:any = {
+    height: '150px'
+  };
+
+  resize$: Subject<any> = new Subject<any>();
 
   ctr: number = 0;
   activeTop: string;
   activeTopLeft: string = 'if';
   activeTopRight: string = 'xr';
 
-  constructor(private codeService:CodeControllerService) {
+  constructor(private codeService:CodeControllerService, private _topoSvc:TopologyService) {
   }
+
+  // ----- BEGIN of IViewportContainer  -------
+
+  resize( pSize:any):void{
+    this.resize$.next(pSize);
+    this.size = pSize;
+  }
+
+  onClose(): boolean {
+    this.controller.close(this,'vp:service');
+    return true;
+  }
+
+  // ----- END of IViewportContainer  -------
 
   ngOnInit(): void {
   }
@@ -109,10 +144,6 @@ export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterVie
 
   }
 
-  onClose(): boolean {
-    this.controller.close(this,'vp');
-    return true;
-  }
 
   isIntentFilterExpandable(pItem:any, pSrc:any):boolean{
     return (pItem.data!=null && pItem.data.length>0);
@@ -137,9 +168,9 @@ export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterVie
 
   sendIntent(pComponent: AndroidComponent, pIntentFilter:IntentFilter, pCriteria: Nullable<IntentDataCriteria> = null, pEvent:any = null) {
     // prepare generic intent
-    let payload:any = {};
+   // let payload:any = {};
     if(pIntentFilter.hasMultipleActions() || pIntentFilter.hasMultipleCategories()) {
-      this.parent.prepareIntent(pComponent, pIntentFilter, pCriteria);
+      this._topoSvc.prepareIntent(pComponent, pIntentFilter, pCriteria);
     }
     // if pCriteria not null, generate payload
   }
@@ -156,4 +187,39 @@ export class ViewportTopoServiceComponent implements OnInit, OnChanges, AfterVie
       this.activeTopRight = pView;
     });
   }
+
+
+  // ---------
+
+  /*
+  serviceProvider:ExpandableProvider = new class implements ExpandableProvider {
+    expand(pItem: any, pType: string): Observable<any> {
+      return undefined;
+    }
+
+    itemGetChildren(pItem: any, pType?: string): any[] {
+      return [];
+    }
+
+    itemHasChildren(pItem: any, pType?: string): boolean {
+      return false;
+    }
+
+    itemHasLazyChildren(pItem: any, pType?: string): boolean {
+      return false;
+    }
+
+    open(pItem: any): Observable<any> {
+      return undefined;
+    }
+  }
+  */
+
+  getIntentFilters():IntentFilter[] {
+    if(this.data==null){
+      return [];
+    }else
+      return (this.data as AndroidService).intentFilters;
+  }
+
 }

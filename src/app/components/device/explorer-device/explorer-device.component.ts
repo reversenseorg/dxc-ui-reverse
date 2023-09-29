@@ -134,7 +134,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
   initialSize: any = null;
 
-  ctxMenuState: Nullable<ContextMenuState> = null;
+  ctxMenuState: ContextMenuState = {subject:null};
 
   devices: Device[][] = [];
 
@@ -170,7 +170,6 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     this.devices[DEV_SUBVIEW.ALL] = [];
     this.devices[DEV_SUBVIEW.ANDROID] = [];
     this.devices[DEV_SUBVIEW.APPLE] = [];
-    this.view.id = this.id;
 
     this.tab = new ExplorerTab({
       offset: 0,
@@ -180,6 +179,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     });
 
     this.view = new ExplorerView({
+      id: this.id,
       nav: new NavbarSimpleView({
         selected: this.selected,
         opt: [],
@@ -619,7 +619,9 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("explorer-device","hideCtxMenu");
     }
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    if(this.ctxMenuState.menu!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
   }
 
   private _prepareDeviceRendering(pDevice:DeviceListItem):DeviceListItem {

@@ -45,13 +45,20 @@ export class PrivacyController implements IController {
     if(pConfig==null) return;
 
     for(let i in pConfig){
-      if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+       (this as IStringIndex<any>)[i] = pConfig[i];
     }
 
-    this.service.onScanDone$.subscribe((vReport)=>{
+    if(this.service==null && pConfig.service!=null){
+      this.service = pConfig.service;
+    }
+
+    (this.service as PrivacyService).onScanDone$.subscribe((vReport)=>{
       this.open( vReport, "privacy-svc");
     });
+
+
   }
+
 
   getExplorerCmp():any {
     return null; //this.explorerCmp.main;

@@ -75,23 +75,25 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   };
   activeWidth = 70;
 
-
+/*
   topNav: NavbarSimpleView = new NavbarSimpleView({
     style: 'vp-navbar',
-    entries: [
-      new MenuItem({
-        icon: GLOBAL_ICONS['JAVA'],
-        label: "Implemented By"
-      }),
-      new MenuItem({
-        icon: GLOBAL_ICONS['FIND'],
-        label: "Instances"
-      }),
-      new MenuItem({
-        icon: GLOBAL_ICONS['HOOKS'],
-        label: "Permissions",
-      })
-    ]
+    menu: new MenuView({
+      items: [
+        new MenuItem({
+          icon: GLOBAL_ICONS['JAVA'],
+          label: "Implemented By"
+        }),
+        new MenuItem({
+          icon: GLOBAL_ICONS['FIND'],
+          label: "Instances"
+        }),
+        new MenuItem({
+          icon: GLOBAL_ICONS['HOOKS'],
+          label: "Permissions",
+        })
+      ]
+    })
   });
 
   leftNav: NavbarSimpleView =  new NavbarSimpleView({
@@ -113,21 +115,24 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   });
 
   rightNav: NavbarSimpleView = new NavbarSimpleView({
-    entries: [
-      new MenuItem({
-        icon: GLOBAL_ICONS['HOOKS'],
-        label: "Hook logs"
-      }),
-      new MenuItem({
-        icon: GLOBAL_ICONS['LIBS'],
-        label: "VM Out"
-      }),
-      new MenuItem({
-        icon: GLOBAL_ICONS['ANDROID'],
-        label: "adb logs"
-      })
-    ]
+    menu: new MenuView({
+      items: [
+        new MenuItem({
+          icon: GLOBAL_ICONS['HOOKS'],
+          label: "Hook logs"
+        }),
+        new MenuItem({
+          icon: GLOBAL_ICONS['LIBS'],
+          label: "VM Out"
+        }),
+        new MenuItem({
+          icon: GLOBAL_ICONS['ANDROID'],
+          label: "adb logs"
+        })
+      ]
+    })
   });
+*/
 
 
   icons:any = DEV_ICONS;

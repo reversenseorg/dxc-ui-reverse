@@ -1,10 +1,9 @@
-
 import ModelMethod from "./ModelMethod";
 import {CONST} from "./CoreConst";
 import {IconModel} from "../base/icon/IconModel";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
-
+import {NodeInternalType} from "./NodeInternalType";
 
 
 function getLetterFromType(typename:string):Nullable<string>{
@@ -78,7 +77,6 @@ export default class Hook
 
         if(pConfig!==null) {
           for (let i in pConfig)
-            if (this.hasOwnProperty(i))
               (this as IStringIndex<any>)[i] = pConfig[i];
 
           if(pConfig.enable!==undefined)

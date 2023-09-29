@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from "@angular/core";
-import {IconModel} from "../../base/icon/IconModel";
+import {ICON_TYPE, IconModel} from "../../base/icon/IconModel";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {HelperBtnType, HelperService, HelperType} from "./ctrl/HelperService";
 

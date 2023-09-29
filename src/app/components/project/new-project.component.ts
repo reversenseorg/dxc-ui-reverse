@@ -1,5 +1,4 @@
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
 import {Device} from "../../models/Device";
 import {ProjectService} from "./ctrl/project.service";
 import {DeviceManagerService} from "../device/ctrl/device-manager.service";

@@ -2,7 +2,7 @@ import {ICON_TYPE, IconModel} from "../../base/icon/IconModel";
 
 export const SEARCH_ICONS = {
   ALIAS: new IconModel({
-    iconType: 'txt',
+    iconType: ICON_TYPE.TEXT,
     label: '@:',
     color1: 'dxc-icon-field'
   }),

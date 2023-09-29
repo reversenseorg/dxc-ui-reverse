@@ -2,7 +2,7 @@
   <div class="row app-terminal-nav" (mousedown)="onDragToResize($event)" [class.active]="parent.topFocus.terminal == true" #termNav>
     <div class="col-lg-11 text-left tabnav nav">
       <ng-container *ngFor="let vp of views">
-        <span class="tab" [class.active]="vp.id == activeCtn.id" (click)="selectTab(vp)">
+        <span class="tab" [class.active]="vp.id == activeCtn?.id" (click)="selectTab(vp)">
           <dxc-icon [model]="vp.tab.icon"></dxc-icon>
           {{ vp.tab.label}}</span>
       </ng-container>

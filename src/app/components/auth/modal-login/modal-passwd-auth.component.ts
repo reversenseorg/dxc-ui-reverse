@@ -161,8 +161,8 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
     return true;
   }
 
-  isAuthenticated(pConnName: string) {
-    if(this.server == null){
+  isAuthenticated(pConnName:Nullable<string>) {
+    if(this.server == null || pConnName==null){
       return false;
     }else{
       return this.authSvc.isAuthenticated(pConnName);

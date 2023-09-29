@@ -12,9 +12,12 @@ import {NgTerminal} from "ng-terminal";
 import {Subject} from "rxjs";
 import {TerminalSession} from "../../workspace/ctrl/TerminalSession";
 import { FunctionsUsingCSI } from 'ng-terminal';
-import {OutputMessage} from "../../../cmp/OutputMessage";
+import {IOutputMessage, OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../ctrl/output.service";
 import {Nullable} from "../../../base/Nullable";
+import {Message} from "websocket";
+
+
 
 // @ts-ignore
 @Component({
@@ -64,7 +67,7 @@ export class TerminalOutputComponent implements  OnInit, OnChanges, AfterViewIni
   ready:boolean = false;
   views: any = [];
 
-  selected: any = {};
+  selected: Nullable<OutputMessage> = null;
 
   msg: OutputMessage[] = [];
 

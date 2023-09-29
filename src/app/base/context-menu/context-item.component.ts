@@ -1,6 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MenuView} from "../../cmp/MenuView";
-import {IconView} from "../../cmp/IconView";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {ContextMenuComponent} from "./context-menu.component";
 import {IconModel} from "../icon/IconModel";

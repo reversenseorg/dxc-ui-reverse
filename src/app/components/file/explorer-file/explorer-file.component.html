@@ -14,8 +14,8 @@
   </app-explorer-navbar>
 
   <ul *ngIf="view.subnav != null" class="nav">
-    <li *ngFor="let navBtn in view.subnav.menu.items">
-      <fa-icon [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>
+    <li *ngFor="let navBtn of view.subnav.menu.items">
+      <fa-icon *ngIf="navBtn.icon && navBtn.icon.isIcon()" [icon]="[navBtn.icon.type,navBtn.icon.name]"></fa-icon>
     </li>
   </ul>
 

@@ -75,7 +75,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   };
   activeWidth = 70;
 
-
+/*
   topNav: NavbarSimpleView = new NavbarSimpleView({
     style: 'vp-navbar',
     entries: [
@@ -128,7 +128,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
       })
     ]
   });
-
+*/
 
   gIcons:any = GLOBAL_ICONS;
   tIcons:any = TOPO_ICONS;
@@ -153,7 +153,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   selectedSyscall:Nullable<ModelSyscall> = null;
 
   activeItem:any = null;
-  selectedData: any = null;
+  selectedData: Nullable<ControlAssessment> = null;
   execResults: any[] = []
 
 

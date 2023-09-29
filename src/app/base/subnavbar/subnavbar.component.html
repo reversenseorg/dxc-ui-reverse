@@ -10,30 +10,33 @@
           <ng-content select="[options]"></ng-content>
         </div>
       </div>
-      <div *ngIf="direction=='col'" class="dxc-navbar vertical" [ngClass]="style" #svnavRef>
+      <div *ngIf="direction=='col'" class="dxc-navbar vertical" [ngStyle]="inlineStyle" [ngClass]="style" #svnavRef>
           <ng-content select="[vmain]"></ng-content>
           <ng-content select="[vextra]"></ng-content>
       </div>
     </ng-container>
-    <ng-container *ngIf="type=='navtab'">
+    <ng-container *ngIf="type=='navtab' && navtab!=null">
       <ul ngbNav class="nav-tabs flex-nowrap" #subTabnav>
         <li ngbNavItem="" *ngIf="label != null" class="nav-label">
           <ng-content select="[navLabel]"></ng-content>
         </li>
         <ng-content select="[leftTab]"></ng-content>
         <ng-container *ngFor="let item of items; let offset=index">
-          <app-subnavbar-tab
-            ngbNavItem
-            [offset]="offset"
-            [color]="navtab.tab.color"
-            [icon]="item.icon"
-            [label]="item.label"
-            [active]="item.active"
-            [ngClass]="(navtab.tab.iconColor!='')? navtab.tab.iconColor : navtab.tab.icon.color1 "
-            [closable]="navtab.tab.closable"
-            (focusTab)="onSelectTab(item)"
-            (closeTab)="onCloseTab(item)">
-          </app-subnavbar-tab>
+            <ng-container *ngIf="navtab!=null">
+                <app-subnavbar-tab
+                        ngbNavItem
+                        [offset]="offset"
+                        [color]="navtab.tab.color"
+                        [icon]="item.icon"
+                        [label]="item.label"
+                        [active]="item.active"
+                        [ngClass]="getNavtabStyle()"
+                        [closable]="isTabsClosable()"
+                        (focusTab)="onSelectTab(item)"
+                        (closeTab)="onCloseTab(item)">
+                </app-subnavbar-tab>
+            </ng-container>
+
         </ng-container>
         <ng-content select="[rightTab]"></ng-content>
         <li>&nbsp;</li>

@@ -8,8 +8,8 @@
     </app-explorer-navbar>
 
     <ul *ngIf="view.subnav != null" class="nav">
-      <li *ngFor="let navBtn in view.subnav.menu.items">
-        <dxc-icon [model]="navBtn.icon"></dxc-icon>
+      <li *ngFor="let navBtn of view.subnav.menu.items">
+        <dxc-icon *ngIf="navBtn.icon" [model]="navBtn.icon"></dxc-icon>
       </li>
     </ul>
 
@@ -22,7 +22,7 @@
           <!--<div *ngIf="itemObj.type=='c'; then classTpl else pkgTpl"></div>-->
 
           <ng-template #devEnrolled>
-            <dxc-icon [model]="itemObj._icon" [color1]="itemObj.connected==false ? 'text-danger' : 'text-success'"></dxc-icon>
+            <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon" [color1]="itemObj.connected==false ? 'text-danger' : 'text-success'"></dxc-icon>
             <span class="dxc-text-clear100">{{ itemObj.model }}</span>&nbsp;{{ itemObj.id }}&nbsp;&nbsp;&nbsp;
             <span class="text-warning">[ENROLLED]</span>
             <!--<span class="badge badge-pill badge-danger ml-1" *ngIf="itemObj.rootMode">ROOT</span>
@@ -43,7 +43,7 @@
 
 
           <span *ngIf="itemObj._t=='b'" #bridgeTpl (contextmenu)="displayCtxMenu($event,'bridge',itemObj)">
-              <dxc-icon [model]="itemObj._icon" [color1]="'text-warning'"></dxc-icon>
+              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon" [color1]="'text-warning'"></dxc-icon>
               <span class="text-warning">{{ itemObj.shortname }}</span>&nbsp;&nbsp;
               <span class="dxc-text-clear100">{{ itemObj.uid }}</span>
             </span>
@@ -129,7 +129,6 @@
             [itemTpl]="expCodeItem"
             [item]="dev"
             [provider]="this"
-            [itemType]="dev._t"
             [expandableFn]="itemHasChildren"
             (itemFocus)="onItemFocus($event)"
             (collapse)="onCollapse($event)"

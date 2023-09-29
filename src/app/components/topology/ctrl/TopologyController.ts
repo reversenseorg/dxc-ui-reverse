@@ -78,15 +78,36 @@ export class TopologyController extends UiController implements IController {
 
     switch(pItem.__){
       case NodeInternalType.ANDROID_SERVICE:
+
+        for(let i=0; i<pItem.intentFilters.length; i++){
+          pItem.intentFilters[i] = IntentFilter.from(pItem.intentFilters[i]);
+        }
+
+        this.openView.next( { cmp: this.viewCmp['service'],  ctrl:this, data:pItem, uid:vid });
+        break;
       case NodeInternalType.ANDROID_RECEIVER:
+
+        for(let i=0; i<pItem.intentFilters.length; i++){
+          pItem.intentFilters[i] = IntentFilter.from(pItem.intentFilters[i]);
+        }
+
+        this.openView.next( { cmp: this.viewCmp['receiver'],  ctrl:this, data:pItem, uid:vid });
+        break;
       case NodeInternalType.ANDROID_PROVIDER:
+
+        for(let i=0; i<pItem.intentFilters.length; i++){
+          pItem.intentFilters[i] = IntentFilter.from(pItem.intentFilters[i]);
+        }
+
+        this.openView.next( { cmp: this.viewCmp['provider'],  ctrl:this, data:pItem, uid:vid });
+        break;
       case NodeInternalType.ANDROID_ACTIVITY:
 
         for(let i=0; i<pItem.intentFilters.length; i++){
           pItem.intentFilters[i] = IntentFilter.from(pItem.intentFilters[i]);
         }
 
-        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
+        this.openView.next( { cmp: this.viewCmp['activity'],  ctrl:this, data:pItem, uid:vid });
         break;
     }
   }

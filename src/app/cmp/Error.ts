@@ -18,7 +18,7 @@ export class Message {
   msg: string = '';
 
   constructor(pConfig:any={}) {
-    for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+    for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
   }
 
   // shortcut

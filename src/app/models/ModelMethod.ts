@@ -12,7 +12,52 @@ import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
 
+export const AccessFlags:IStringIndex<number> = {
+    NONE: 0,
+    PUBLIC: 0b1,
+    PROTECTED: 0b10,
+    STATIC: 0b10 << 1,
+    ABSTRACT: 0b10 << 2,
+    CONSTRUCT: 0b10 << 3,
+    FINAL: 0b10 << 4,
+    TRANS: 0b10 << 5,
+    NATIVE: 0b10 << 6,
+    INTERFACE: 0b10 << 7,
+    STRICTFP: 0b10 << 8,
+    BRIDGE: 0b10 << 9,
+    VARARGS: 0b10 << 10,
+    DECLSYNC: 0b10 << 11,
+    ENUM: 0b10 << 12,
+    SYNTH: 0b10 << 13,
+    VOLATILE: 0b10 << 14,
+    SYNC: 0b10 << 15,
+    PRIVATE: 0b1 << 16,
+    ANNOTATION: 0b10 << 17
+}
 
+
+export interface  AccessFlagsState {
+    NONE:boolean;
+    PUBLIC:boolean;
+    PROTECTED:boolean;
+    STATIC:boolean;
+    ABSTRACT:boolean;
+    CONSTRUCT:boolean;
+    FINAL:boolean;
+    TRANS:boolean;
+    NATIVE:boolean;
+    INTERFACE:boolean;
+    STRICTFP:boolean;
+    BRIDGE:boolean;
+    VARARGS:boolean;
+    DECLSYNC:boolean;
+    ENUM:boolean;
+    SYNTH:boolean;
+    VOLATILE:boolean;
+    SYNC:boolean;
+    PRIVATE:boolean;
+    ANNOTATION:boolean;
+}
 /*interface LazyMethodReference {
     string|ModelMethod
 };*/
@@ -476,6 +521,14 @@ export default class ModelMethod extends Savable
 
    getModifier():Modifier{
         return this.modifiers;
+    }
+
+    getModifiers():IStringIndex<boolean>{
+        const mods:any = {};
+        for(let k in AccessFlags){
+            mods[k] = ((this.modifiers & AccessFlags[k])==AccessFlags[k]);
+        }
+        return mods;
     }
 
    getInstr(offsetBB:number,offsetInstr:number){

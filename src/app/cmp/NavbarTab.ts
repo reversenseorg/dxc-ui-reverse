@@ -18,8 +18,7 @@ export class NavbarTab {
   constructor(pConfig:any=null) {
     if(pConfig != null){
       for(let i in pConfig)
-        if(this.hasOwnProperty(i))
-          (this as IStringIndex<any>)[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

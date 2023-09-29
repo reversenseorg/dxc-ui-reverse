@@ -1,16 +1,16 @@
 import {NavbarSimpleView} from "./NavbarSimpleView";
 import {TerminalTab} from "./TerminalTab";
 import {NavbarTabView} from "./NavbarTabView";
-import {IconView} from "./IconView";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {IconModel} from "../base/icon/IconModel";
 
 
 export class TerminalView {
 
   id: Nullable<string> = null;
   label:string = "label";
-  icon: Nullable<IconView> = null
+  icon: Nullable<IconModel> = null
   labelColor:string = "#ccc";
   ctn:string = "";
 
@@ -21,7 +21,7 @@ export class TerminalView {
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

@@ -5,8 +5,8 @@
         <div class="row no-gutters">
           <div class="col-12">
                 <select [(ngModel)]="selectedHK" class="dxc-input">
-                  <ng-container *ngFor="let hk in hkList">
-                    <option [value]="hk.uid">{{ hk.name }}</option>
+                  <ng-container *ngFor="let hk of hkList">
+                    <option [value]="hk.id">{{ hk.name }}</option>
                   </ng-container>
                 </select>
           </div>

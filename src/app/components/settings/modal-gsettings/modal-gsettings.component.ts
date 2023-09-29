@@ -88,7 +88,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
 
 
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
 
 
   gIcons:any = GLOBAL_ICONS;
@@ -321,7 +321,11 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("modal-gsettings","hideCtxMenu");
     }
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+
+    if(this.ctxMenuState.menu!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
+
   }
 
   onEdit(ext: string, itemObj: any, path: string) {

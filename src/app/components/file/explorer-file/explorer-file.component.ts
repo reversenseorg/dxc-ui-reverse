@@ -3,7 +3,6 @@ import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
 import {ExplorerView} from "../../../cmp/ExplorerView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {MenuItem, MenuView} from "../../../cmp/MenuView";
-import {IconView} from "../../../cmp/IconView";
 import {SubExplorerComponent} from "../../../base/explorer/subexplorer.component";
 import {ExplorerTab} from "../../../cmp/ExplorerTab";
 import {FileController} from "../ctrl/FileController";
@@ -68,7 +67,9 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
   ctxMenu: ContextMenuList = {};
 
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = {
+    subject: null
+  };
 
   initialSize:any = null;
   privileged:boolean = false;
@@ -366,7 +367,9 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("explorer-file","hideCtxMenu");
     }
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    if(this.ctxMenuState.menu!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
   }
 
   refresh() {

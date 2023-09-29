@@ -37,6 +37,7 @@ import {
   HookService
 } from "../../hooks/ctrl/hook.service";
 import {Nullable} from "../../../base/Nullable";
+import ModelFile from "../../../models/ModelFile";
 
 
 
@@ -54,7 +55,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
   PRESET_HOOK = HookFragmentPresetType;
 
   @Input() item: any;
-  @Input() data: ModelFunction|ModelExecutableSection; // ModelMethod
+  @Input() data: Nullable<ModelFile>; //ModelFunction|ModelExecutableSection; // ModelMethod
   @Input() controller: NativeController;
   @Input() parent: ViewportComponent;
 
@@ -116,7 +117,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
   };
 
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = { subject: null };
 
   constructor(private nativeSvc:NativeService,
               private hookSvc:HookService,
@@ -170,7 +171,7 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
 
 
 
-  configure( pData:any):void {
+  configure( pData:ModelFile):void {
     this.data = pData;
 
 //    this.sections = this.data.__p.sections;

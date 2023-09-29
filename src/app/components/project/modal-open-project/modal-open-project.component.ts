@@ -177,9 +177,14 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
   /**
    * To remove selected project
    */
-  removeProject():void {
+  removeProject(pProject:Nullable<DexcaliburProject> = null):void {
+      let project:Nullable<DexcaliburProject>;
       try{
-        this.projSvc.removeProject(this.selected as any).subscribe( ()=>{
+        project = (pProject==null ? this.selected : pProject);
+        if(project==null){
+          throw new Error("Cannot remove project");
+        }
+        this.projSvc.removeProject(project).subscribe( ()=>{
           this.refresh();
         });
       }catch(err:any){

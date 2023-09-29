@@ -20,10 +20,10 @@ import {AuthService} from "../auth/ctrl/auth.service";
                     <img class="card-img" src="/assets/icon/dexcaalibur_64.png"/>
                     <div>{{ proj.uid }}</div>
                     <div>{{ proj.pkg }}</div>
-                    <div class="flags">
+                    <!--<div class="flags">
                       <fa-icon [icon]="" *ngIf="proj.platform"></fa-icon>
                       <fa-icon [icon]="" *ngIf="proj.platform"></fa-icon>
-                    </div>
+                    </div>-->
                 </ng-template>
                 <ng-template #emptyBlock>
                   <div *ngIf="(i==0 || (projects[i-1] != null))" class="new" [routerLink]="['..','new']">

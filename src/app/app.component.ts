@@ -23,6 +23,7 @@ import {WebsocketClient} from "./base/WebsocketClient";
 import {GLOBAL_ICONS} from "./cmp/GLOBAL_ICONS";
 import {ElectronService} from "./core/services";
 import {environment} from "../environments/environment";
+import {DxcApiService} from "./base/DxcApiService";
 //import {Menu} from "electron";
 //import {TranslateService} from "@ngx-translate/core";
 
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private elementRef: ElementRef,
+    //private dxcApiService: DxcApiService,
     private ctrlService: ControllerService,
     private settingsService: SettingsService,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -62,6 +64,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+      // Local conn
+      /*DxcApiService.setAuthProfile({
+        ssl: false,
+        ip: "localhost",
+        port: 8080
+      });*/
 
 
   }

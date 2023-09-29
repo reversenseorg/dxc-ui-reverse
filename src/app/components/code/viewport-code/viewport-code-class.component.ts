@@ -20,6 +20,7 @@ import * as ace from "ace-builds";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {Nullable} from "../../../base/Nullable";
+import {ModelClassReference} from "../../../models/ModelReference";
 
 
 @Component({
@@ -43,7 +44,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   activeLeft:string =  "";
   activeWidth: number = 70;
 
-
+/*
   topNav: NavbarSimpleView = new NavbarSimpleView({
     style: 'vp-navbar',
     entries: [
@@ -96,7 +97,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
       })
     ]
   });
-
+*/
   id: number = -1;
   icons:any = CODE_ICONS;
   gIcons:any = GLOBAL_ICONS;
@@ -204,4 +205,6 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
       console.log(pXref);
     });
   }
+
+  protected readonly ModelClassReference = ModelClassReference;
 }

@@ -22,10 +22,10 @@ import {Nullable} from "../../base/Nullable";
         <div *ngIf="dev.invalid && (dev.dirty || dev.touched)"
              class="text-danger">
 
-          <div *ngIf="dev.errors.dxcType=='device:device.uid'">
+          <div *ngIf="dev.errors?.dxcType=='device:device.uid'">
             Invalid Device UID
           </div>
-          <div *ngIf="dev.errors.dxcType=='device:not_enrolled'">
+          <div *ngIf="dev.errors?.dxcType=='device:not_enrolled'">
             This device is not enrolled.
           </div>
         </div>

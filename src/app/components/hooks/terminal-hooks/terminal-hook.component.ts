@@ -19,6 +19,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 interface SelectedMessage {
@@ -52,7 +53,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   icons: any = HOOK_ICONS;
 
   view:TerminalView = new TerminalView({
-    nav: new NavbarTabView({
+    navtab: new NavbarTabView({
       label: 'Session',
       tab: new NavbarTab({
         offset: 0,
@@ -226,9 +227,18 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
     }
   }
 
-  open(d: any, pNodeType:number) {
+  getProperty( d:any, pSubPpt:string ):string {
+    return (d as IStringIndex<any>)[pSubPpt] as string;
+  }
+
+  open(pObj: any, pNodeType:number, pSubPpt:Nullable<string>=null) {
     if(this.controller.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
+    }
+
+    let d = pObj;
+    if(pSubPpt!=null){
+      d = pObj[pSubPpt];
     }
 
     console.log("[HOOK MESSAGE] open ",d,pNodeType);

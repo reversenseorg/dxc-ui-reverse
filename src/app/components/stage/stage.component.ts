@@ -234,7 +234,8 @@ export class StageComponent implements OnInit, AfterViewInit {
       console.log(connParam);
       if(connParam!=null){
         // init websocket
-        this.ws = new WebsocketClient(((connParam.ssl==true)?'wss':'ws')+'://'+connParam.ip+':'+vSettings.ws.value+'/','term-protocol');
+        const addr = ((connParam.ssl==true)?'wss':'ws')+'://'+connParam.ip+':'+vSettings.ws.value+'/';
+        this.ws = new WebsocketClient(addr,'term-protocol');
         this.wsServer$.next(WebsocketEvent.newConnectionReady(this.ws));
       }
     })

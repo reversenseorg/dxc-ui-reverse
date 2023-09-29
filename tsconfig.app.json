@@ -2,13 +2,17 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "baseUrl": "",
-    "types": []
+    "types": [
+      "@angular/localize"
+    ]
   },
   "include": [
     "./src/main.ts"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "./src/app/components/hooks/modal-manage-keypoint/modal-manage-keypoint.component.ts",
+    "./src/app/base/grid/*.ts"
   ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

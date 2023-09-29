@@ -7,7 +7,7 @@ export interface ITerminalContainer {
   id:number;
   parent: TerminalComponent;
   view: TerminalView;
-  tab?:TerminalTab;
+  tab:TerminalTab;
 
   resize( pSize:any):void;
 }

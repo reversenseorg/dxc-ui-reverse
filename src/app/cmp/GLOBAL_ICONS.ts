@@ -45,8 +45,7 @@ export const GLOBAL_ICONS:IconModelCollection = {
     color1: 'dxc-text-clear75',
   }),
   BIN: new IconModel({
-    iconType: ICON_TYPE.ICON,
-    type: 'svg',
+    iconType: ICON_TYPE.SVG,
     src: 'assets/icons/files_format_3/bin-1.svg',
     color1: 'dxc-icon-ff',
     style: {

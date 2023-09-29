@@ -131,7 +131,9 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   override id = "explorerCode";
 
   ctxMenu: ContextMenuList = {};
-  ctxMenuState:Nullable<ContextMenuState> = null;
+  ctxMenuState:ContextMenuState = {
+    subject: null
+  };
 
   selected:any = CODE_SUBVIEW.ALL;
   activeItem: any = null;
@@ -706,8 +708,9 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     if(this.ctxMenuState==null){
       throw UIException.CTX_MENU_NOT_READY("explorer-code","hideCtxMenu");
     }
-
-    this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    if(this.ctxMenuState.menu!=null){
+      this.ctxMenuState.menu.hide(this.ctxMenuState.subject);
+    }
   }
 
   createHook(pMeth: any, pOptions:any = null) {

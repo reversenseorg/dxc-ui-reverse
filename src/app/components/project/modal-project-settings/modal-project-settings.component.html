@@ -14,13 +14,13 @@
                class="text-danger">
 
 
-            <div *ngIf="pname.errors.required">
+            <div *ngIf="pname.errors && pname.errors.required">
               Project name is required.
             </div>
-            <div *ngIf="pname.errors.dxcType=='context:project.uid.new'">
+            <div *ngIf="pname.errors && pname.errors.dxcType=='context:project.uid.new'">
               Please choose another name
             </div>
-            <div *ngIf="pname.errors.dxcType=='context:project.uid'">
+            <div *ngIf="pname.errors && pname.errors.dxcType=='context:project.uid'">
               Invalid project name format
             </div>
           </div>
@@ -44,10 +44,10 @@
             <div *ngIf="dev.invalid && (dev.dirty || dev.touched)"
                  class="text-danger">
 
-              <div *ngIf="dev.errors.dxcType=='device:device.uid'">
+              <div *ngIf="dev.errors && dev.errors.dxcType=='device:device.uid'">
                 Invalid Device UID
               </div>
-              <div *ngIf="dev.errors.dxcType=='device:not_enrolled'">
+              <div *ngIf="dev.errors && dev.errors.dxcType=='device:not_enrolled'">
                 This device is not enrolled.
               </div>
             </div>

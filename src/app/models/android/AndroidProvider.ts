@@ -1,7 +1,7 @@
 import {IntentFilter} from "./IntentFilter";
 import AndroidComponent from "./AndroidComponent";
 import {NodeType} from "../../components/search/ctrl/ModelNode";
-import {IconModel} from "../../base/icon/IconModel";
+import {ICON_TYPE, IconModel} from "../../base/icon/IconModel";
 import {NodeInternalType} from "../NodeInternalType";
 import {Nullable} from "../../base/Nullable";
 import {IStringIndex} from "../../base/IStringIndex";

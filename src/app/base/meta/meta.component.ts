@@ -18,7 +18,7 @@ import {Nullable} from "../Nullable";
 export class MetaComponent extends DxcComponent implements OnInit, OnChanges {
 
 
-  @Input() style:Nullable<string> = null;
+  @Input() style:Nullable<{ [klass:string]:any }> = null;
 
   @Input() css:string = '';
 

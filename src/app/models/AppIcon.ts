@@ -27,7 +27,7 @@ export class AppIcon {
    */
   constructor( pConfig:any = {}) {
     for(let i in pConfig)
-      if(this.hasOwnProperty(i))
+
         (this as IStringIndex<any>)[i] = pConfig[i];
   }
 

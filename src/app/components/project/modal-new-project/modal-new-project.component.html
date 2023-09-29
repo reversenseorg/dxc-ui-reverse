@@ -13,13 +13,13 @@
                class="text-danger">
 
 
-            <div *ngIf="pname.errors.required">
+            <div *ngIf="pname.errors?.required">
               Project name is required.
             </div>
-            <div *ngIf="pname.errors.dxcType=='context:project.uid.new'">
+            <div *ngIf="pname.errors?.dxcType=='context:project.uid.new'">
               Please choose another name
             </div>
-            <div *ngIf="pname.errors.dxcType=='context:project.uid'">
+            <div *ngIf="pname.errors?.dxcType=='context:project.uid'">
               Invalid project name format
             </div>
           </div>

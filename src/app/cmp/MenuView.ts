@@ -25,19 +25,23 @@ export class MenuItem<T> {
 
   constructor(pConfig:any=null) {
     if(pConfig != null){
-      for(let i in pConfig) if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+      for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 }
 
+
+export interface MenuViewOptions extends IStringIndex<any> {
+  items?:MenuItem<any>[];
+}
 export class MenuView {
 
   items:MenuItem<any>[] = [];
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:MenuViewOptions={}) {
     if(pConfig != null){
       for(let i in pConfig)
-        if(this.hasOwnProperty(i)) (this as IStringIndex<any>)[i] = pConfig[i];
+        (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 

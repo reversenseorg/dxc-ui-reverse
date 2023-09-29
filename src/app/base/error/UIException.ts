@@ -14,7 +14,13 @@ export class UIException extends MonitoredError {
         SOMETHING_IS_WRONG_WITH_REQUEST: ErrorCode.UI + 308,
         AUTH_ERROR: ErrorCode.UI + 309,
         MODAL_IS_NOT_READY: ErrorCode.UI + 310,
+        MISSING_LIBRARY: ErrorCode.UI + 311
     }
+
+
+    static MISSING_LIBRARY = (pSrc="-",)=>{
+        return new UIException("The library cannot be displayed because the file is undefined in UI : "+pSrc,
+            UIException.CODE.MISSING_LIBRARY) };
 
 
     static MODAL_IS_NOT_READY = (pModal="-",)=>{

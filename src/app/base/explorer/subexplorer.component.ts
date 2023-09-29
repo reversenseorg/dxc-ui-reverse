@@ -9,12 +9,7 @@ import {IconModelCollection} from "../icon/IconModel";
 
 export abstract class SubExplorerComponent<T> {
 
-  /*
-    offset:number;
-    label:string;
-    icon: IconView;
-    color:string;
-   */
+
 
   id: string;
 

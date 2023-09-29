@@ -32,7 +32,7 @@ export class TerminalExecComponent implements OnInit, AfterViewInit, ITerminalCo
   });
 
   view:TerminalView = new TerminalView({
-    nav: new NavbarTabView({
+    navtab: new NavbarTabView({
       label: 'Terminal',
       tab: new NavbarTab({
         offset: 0,

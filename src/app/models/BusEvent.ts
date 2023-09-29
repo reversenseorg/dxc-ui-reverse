@@ -1,10 +1,12 @@
 import {IStringIndex} from "../base/IStringIndex";
 import {Nullable} from "../base/Nullable";
 
+
+
 export default class BusEvent
 {
   type:Nullable<string> = null;
-  data:any = null;
+  data:any = {};
 
   constructor(pConfig:any=null) {
     if(pConfig!=null)

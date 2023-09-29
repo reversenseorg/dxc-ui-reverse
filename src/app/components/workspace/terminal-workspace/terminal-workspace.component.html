@@ -1,5 +1,5 @@
 <div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-ws" #termWs>
-  <app-subnavbar [type]="'navtab'" [navtab]="this.view.nav" [items]="_sessions" [parent]="this"
+  <app-subnavbar [type]="'navtab'" [navtab]="this.view.navtab" [items]="_sessions" [parent]="this"
                  (closeTab)="onClose($event)" (selectTab)="switchSession($event)" #termWsNav>
     <b class="nav-label" navLabel>Terminal :</b>
     <ng-container rightTab>

@@ -27,7 +27,7 @@ export class ViewportSplittedComponent implements OnInit, OnChanges, AfterViewIn
   @Input() item: any;
   @Input() data: ModelClass;
   @Input() controller: IController;
-  @Input() parent: ViewportComponent;
+  @Input() parent: any; //ViewportComponent;
 
   @Output() onLayoutResize: EventEmitter<any> = new EventEmitter<any>();
 
