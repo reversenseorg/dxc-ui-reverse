@@ -33,19 +33,19 @@ export class NativeService extends DxcApiService {
     super(
       {
           list: {
-            sections: { method: 'POST', url:'/probe/server/start', format:'json', auth:true, puid:true },
-            funcs: { method: 'GET', url:'/native/func', format:'json', auth:true, puid:true },
-            imports: { method: 'GET', url:'/probe/server/status', format:'json', auth:true, puid:true },
+            sections: { method: 'POST', url:'/probe/server/start', format:'json', auth:false /* removed */, puid:true },
+            funcs: { method: 'GET', url:'/native/func', format:'json', auth:false /* removed */, puid:true },
+            imports: { method: 'GET', url:'/probe/server/status', format:'json', auth:false /* removed */, puid:true },
           },
           get: {
-            sections: { method: 'POST', url:'/native/sections', format:'json', auth:true, puid:true },
-            func: {method: 'GET', url:'/native/func', format:'json', auth:true, puid:true  },
-            disass_func: {method: 'GET', url:'/native/disass/func', format:'json', auth:true, puid:true  },
-            analyze: { method: 'GET', url:'/native/analysis', format:'json', auth:true, puid:true },
-            imports: { method: 'GET', url:'/native/imports', format:'json', auth:true, puid:true },
+            sections: { method: 'POST', url:'/native/sections', format:'json', auth:false /* removed */, puid:true },
+            func: {method: 'GET', url:'/native/func', format:'json', auth:false /* removed */, puid:true  },
+            disass_func: {method: 'GET', url:'/native/disass/func', format:'json', auth:false /* removed */, puid:true  },
+            analyze: { method: 'GET', url:'/native/analysis', format:'json', auth:false /* removed */, puid:true },
+            imports: { method: 'GET', url:'/native/imports', format:'json', auth:false /* removed */, puid:true },
           },
           do: {
-            file_anal: { method:'POST', url:'/native/analyze/file', format:'json', auth:true, puid:true }
+            file_anal: { method:'POST', url:'/native/analyze/file', format:'json', auth:false /* removed */, puid:true }
           }
         },_http, outputSvc
       );

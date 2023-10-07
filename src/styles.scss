@@ -257,7 +257,8 @@ span.dxc-icon-window {
   background-color: var(--panel-bg); /* #333;*/
 }
 
-.dxc-explorer-vpnav {
+.dxc-explorer-vpnav,
+.row > .dxc-explorer-vpnav {
   font-family: var(--nav-font);
   height: var(--nav-height);
   background-color: var(--nav-bg);
@@ -970,6 +971,10 @@ div.dxc-list {
 
 
 .dxc-no-gutters {
+  margin: 0px;
+}
+
+.row > .dxc-no-gutters {
   margin: 0px;
 }
 

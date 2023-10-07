@@ -39,14 +39,14 @@ export class AuditService extends DxcApiService{
 
       super({
         audit: {
-          reports: { method: 'GET', url:'/audit/reports', format:'json', auth:true, puid:true},
-          reportDelete: { method: 'DELETE', url:'/audit/report/:model', format:'json', auth:true, puid:true},
-          reportByModel: { method: 'GET', url:'/audit/report/:model', format:'json', auth:true, puid:true},
-          model: { method: 'GET', url:'/audit/model/:model', format:'json', auth:true, puid:true},
+          reports: { method: 'GET', url:'/audit/reports', format:'json', auth:false /* removed */, puid:true},
+          reportDelete: { method: 'DELETE', url:'/audit/report/:model', format:'json', auth:false /* removed */, puid:true},
+          reportByModel: { method: 'GET', url:'/audit/report/:model', format:'json', auth:false /* removed */, puid:true},
+          model: { method: 'GET', url:'/audit/model/:model', format:'json', auth:false /* removed */, puid:true},
           models: { method: 'GET', url:'/audit/models', format:'json', auth:false, puid:false},
-          dashboard: { method: 'GET', url:'/audit/dashboard/:model', format:'json', auth:true, puid:true},
-          scan: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:true, puid:true},
-          scanInfo: { method: 'POST', url:'/audit/scanInfo', format:'json', auth:true, puid:true}
+          dashboard: { method: 'GET', url:'/audit/dashboard/:model', format:'json', auth:false /* removed */, puid:true},
+          scan: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:false /* removed */, puid:true},
+          scanInfo: { method: 'POST', url:'/audit/scanInfo', format:'json', auth:false /* removed */, puid:true}
         }
       }, _http, outputSvc);
 

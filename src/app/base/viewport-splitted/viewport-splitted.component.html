@@ -1,12 +1,12 @@
 <ng-container *ngIf="type=='1:2'">
-  <div class="container-fluid row viewport-splitted" [ngStyle]="{ height: heightPct+'%' }" #2colLayout>
-    <div class="ctn-code-left" #leftCtn>
+  <div class="container-fluid row dxc-no-gutters viewport-splitted" [ngStyle]="{ height: heightPct+'%' }" #2colLayout>
+    <div class="ctn-code-left p-0" #leftCtn>
       <ng-content select="[nav-left]"></ng-content>
       <div class="host-left" #leftVH leftViewHost>
         <ng-content select="[body-left]"></ng-content>
       </div>
     </div>
-    <div class="ctn-code-right" #rightCtn>
+    <div class="ctn-code-right p-0" #rightCtn>
       <ng-content select="[nav-right]"></ng-content>
       <div class="host-right" #rightVH rightViewHost>
         <ng-content select="[body-right]"></ng-content>

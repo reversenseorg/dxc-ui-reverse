@@ -24,6 +24,9 @@ import {GLOBAL_ICONS} from "./cmp/GLOBAL_ICONS";
 import {ElectronService} from "./core/services";
 import {environment} from "../environments/environment";
 import {DxcApiService} from "./base/DxcApiService";
+import {AuthenticationEvent} from "./components/auth/AuthenticationEvent";
+import {AuthService} from "./components/auth/ctrl/auth.service";
+import {DxcApiToken} from "./base/DxcApiToken";
 //import {Menu} from "electron";
 //import {TranslateService} from "@ngx-translate/core";
 
@@ -55,12 +58,20 @@ export class AppComponent implements OnInit, AfterViewInit {
     //private dxcApiService: DxcApiService,
     private ctrlService: ControllerService,
     private settingsService: SettingsService,
+    private authService: AuthService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private electronService: ElectronService) {
 
 
     document.documentElement.setAttribute('data-theme', 'dark');
     this.elementRef = elementRef;
+
+    this.authService.getUserInfo().subscribe((pUser)=>{
+      console.log("USer account ",pUser);
+      if(pUser != null){
+        this.authService.onAuthentication.next(AuthenticationEvent.newSuccess( new DxcApiToken("local",""), pUser))
+      }
+    });
   }
 
   ngOnInit() {

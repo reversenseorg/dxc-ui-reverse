@@ -82,7 +82,13 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
     this.event = pEvent;
     this.extra = pExtra;
 
-    this.event.path[0].classList.add('dxc-ctxm-active');
+    const path = this.event.composedPath ? this.event.composedPath() : this.event.path;
+    if(path){
+      path[0].classList.add('dxc-ctxm-active');
+    }else{
+      console.error("Event path cannot be retrieved : ",this.event);
+    }
+
 
 
     this.menuEl.nativeElement.style.display = 'block';
@@ -94,7 +100,19 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
   hide(pObject:any) :void {
     this.rendered = false;
     this.menuEl.nativeElement.style.display = 'none';
-    this.event.path[0].classList.remove('dxc-ctxm-active');
+
+    const path = this.event.composedPath ? this.event.composedPath() : this.event.path;
+    if(path && path[0]!=null){
+      path[0].classList.remove('dxc-ctxm-active');
+    }else{
+      if(this.event.originalTarget.classList.indexOf("dxc-ctxm-active")>-1){
+        this.event.originalTarget.remove('dxc-ctxm-active');
+      }else{
+        console.error("Event path cannot be retrieved : ",this.event);
+      }
+
+    }
+
   }
 
   @HostListener('document:click',['$event'])

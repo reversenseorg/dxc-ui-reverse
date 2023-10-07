@@ -41,14 +41,14 @@ export class AuthService extends DxcApiService{
       super({
         auth: {
           passwd: { method: 'POST', url:'/remote/auth', format:'json'},
-          logout: { method: 'GET', url:'/remote/logout', format:'json', auth:true},
+          logout: { method: 'GET', url:'/remote/logout', format:'json', auth:false /* removed */},
         },
         connections: {
           list: { method: 'GET', url:'/remote/connections', format:'json', auth:false}
         },
         account: {
-          info: { method: 'GET', url:'/user/account', format:'json', auth:true },
-          change_pwd: { method: 'POST', url:'/user/account/passwd', format:'json', auth:true }
+          info: { method: 'GET', url:'/user/account', format:'json', auth:false /* removed */ },
+          change_pwd: { method: 'POST', url:'/user/account/passwd', format:'json', auth:false /* removed */ }
         }
       }, _http, outputSvc);
 
@@ -124,6 +124,7 @@ export class AuthService extends DxcApiService{
     ).pipe(map((pEl:any)=>{
       if(pEl.success){
         const data = pEl.data;
+        console.log('raw user', pEl.data);
         const u:UserAccount = new UserAccount({
           username:data.username,
           uid:data.uid

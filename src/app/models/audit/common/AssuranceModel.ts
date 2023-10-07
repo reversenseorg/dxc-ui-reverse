@@ -59,23 +59,35 @@ export default class AssuranceModel {
     static fromJsonObject(pOpts:any):AssuranceModel {
       const a = new AssuranceModel(pOpts);
 
-      pOpts.globalThreats.map( (x:Threat,i:number) => {
-        a.globalThreats[i] = new Threat(x);
-      });
+      if(pOpts.globalThreats!=null && Array.isArray(pOpts.globalThreats)){
+          pOpts.globalThreats.map( (x:Threat,i:number) => {
+              a.globalThreats[i] = new Threat(x);
+          });
+      }
 
-      pOpts.primaryAssets.map( (x:Asset,i:number) => {
-        a.primaryAssets[i] = new Asset(x);
-      });
 
-      pOpts.secondaryAssets.map( (x:Asset,i:number) => {
-        a.secondaryAssets[i] = new Asset(x);
-      });
+    if(pOpts.primaryAssets!=null && Array.isArray(pOpts.primaryAssets)){
+        pOpts.primaryAssets.map( (x:Asset,i:number) => {
+            a.primaryAssets[i] = new Asset(x);
+        });
+    }
+
+
+    if(pOpts.secondaryAssets!=null && Array.isArray(pOpts.secondaryAssets)){
+        pOpts.secondaryAssets.map( (x:Asset,i:number) => {
+            a.secondaryAssets[i] = new Asset(x);
+        });
+    }
+
 
       const ctrls:Control[] = [];
-      pOpts.controls.map( (x:Control) => {
-        ctrls.push(Control.fromJsonObject(x));
-      });
-      a.controls = ctrls;
+        if(pOpts.controls!=null && Array.isArray(pOpts.controls)){
+            pOpts.controls.map( (x:Control) => {
+                ctrls.push(Control.fromJsonObject(x));
+            });
+            a.controls = ctrls;
+        }
+
 
       return a;
     }

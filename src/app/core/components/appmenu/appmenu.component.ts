@@ -1,19 +1,23 @@
 import {Component, OnInit} from "@angular/core";
-import {ElectronService} from "../../services";
-import {AppMenuService} from "./appmenu.service";
+
 
 
 @Component({
   selector: 'app-menu',
-  template: ''
+  template: ``
 })
 export class AppMenuComponent implements OnInit {
 
   menu: any = null;
+  activeLeft = "";
 
-  constructor( private electronSvc:ElectronService,
-               private appmenuSvc:AppMenuService) {
 
+  constructor() {
+
+
+  }
+
+  showDetail(pName:string){
 
   }
 

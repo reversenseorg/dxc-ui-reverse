@@ -133,9 +133,9 @@ import {CommonModule} from "@angular/common";
 @NgModule({
   declarations: [
     // base component
-
-    StageComponent,
     AppComponent,
+    StageComponent,
+
 
     NavbarComponent,
     ExplorerComponent,

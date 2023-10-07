@@ -59,72 +59,72 @@ export class CodeControllerService extends DxcApiService{
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:ds&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
           format: 'json',
-          auth: true,
+          auth:false /* removed */,
           puid: true
         },
         app_dyn: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:dd&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
           format: 'json',
-          auth: true,
+          auth:false /* removed */,
           puid: true
         },
         android_api: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:di&fields=name,children<ModelClass>.name,children<ModelPackage>.name',
           format: 'json',
-          auth: true,
+          auth:false /* removed */,
           puid: true
         },
         android_int: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:di&fields=name,children<ModelClass>.name,children<ModelPackage>.name',
           format: 'json',
-          auth: true,
+          auth:false /* removed */,
           puid: true
         },
         vendor: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:dv&fields=name,children<ModelClass>.name,children<ModelPackage>.name',
           format: 'json',
-          auth: true,
+          auth:false /* removed */,
           puid: true
         },
         all: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:ds&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
           format: 'json',
-          auth: true,
+          auth:false /* removed */,
           puid: true
         },
-        edit: {method: 'PUT', url: '/code/package/:id', format: 'json', auth: true, puid: true},
+        edit: {method: 'PUT', url: '/code/package/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       method: {
-        disass: {method: 'GET', url: '/code/method/disass/:id', format: 'json', auth: true, puid: true},
-        edit: {method: 'PUT', url: '/code/method/:id', format: 'json', auth: true, puid: true},
-        info: {method: 'GET', url: '/code/method/:id', format: 'json', auth: true, puid: true},
-        xref: {method: 'GET', url: '/code/method/xref/:id', format: 'json', auth: true, puid: true}
+        disass: {method: 'GET', url: '/code/method/disass/:id', format: 'json', auth:false /* removed */, puid: true},
+        edit: {method: 'PUT', url: '/code/method/:id', format: 'json', auth:false /* removed */, puid: true},
+        info: {method: 'GET', url: '/code/method/:id', format: 'json', auth:false /* removed */, puid: true},
+        xref: {method: 'GET', url: '/code/method/xref/:id', format: 'json', auth:false /* removed */, puid: true}
       },
       class: {
-        edit: {method: 'PUT', url: '/code/class/:id', format: 'json', auth: true, puid: true},
-        info: {method: 'GET', url: '/code/class/:id', format: 'json', auth: true, puid: true}
+        edit: {method: 'PUT', url: '/code/class/:id', format: 'json', auth:false /* removed */, puid: true},
+        info: {method: 'GET', url: '/code/class/:id', format: 'json', auth:false /* removed */, puid: true}
       },
       field: {
-        edit: {method: 'PUT', url: '/code/field/:id', format: 'json', auth: true, puid: true},
-        info: {method: 'GET', url: '/code/field/:id', format: 'json', auth: true, puid: true}
+        edit: {method: 'PUT', url: '/code/field/:id', format: 'json', auth:false /* removed */, puid: true},
+        info: {method: 'GET', url: '/code/field/:id', format: 'json', auth:false /* removed */, puid: true}
       },
       file: {
-        edit: {method: 'PUT', url: '/file/field/:id', format: 'json', auth: true, puid: true},
+        edit: {method: 'PUT', url: '/file/field/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       func: {
-        edit: {method: 'PUT', url: '/native/func/:id', format: 'json', auth: true, puid: true},
+        edit: {method: 'PUT', url: '/native/func/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       finder: {
-        search: {method: 'GET', url: '/code/finder?search=:query', format: 'json', auth: true, puid: true},
-        androidXref: {method: 'GET', url: '/code/android/xref/:type/:id', format: 'json', auth: true, puid: true},
+        search: {method: 'GET', url: '/code/finder?search=:query', format: 'json', auth:false /* removed */, puid: true},
+        androidXref: {method: 'GET', url: '/code/android/xref/:type/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       vm: {
-        simplify: {method: 'POST', url: '/code/method/simplify/:id', format: 'json', auth: true, puid: true}
+        simplify: {method: 'POST', url: '/code/method/simplify/:id', format: 'json', auth:false /* removed */, puid: true}
       }
     }, http, outputSvc);
     //let ser:SerializeFilter = new SerializeFilter();

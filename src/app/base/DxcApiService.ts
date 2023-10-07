@@ -1,5 +1,5 @@
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {from, Observable} from "rxjs";
+import {from, Observable, Subject} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Utils} from "../cmp/Utils";
 import {Injectable} from "@angular/core";
@@ -10,6 +10,8 @@ import {OutputService} from "../components/output/ctrl/output.service";
 import {OutputMessage} from "../cmp/OutputMessage";
 import {Nullable} from "./Nullable";
 import {IStringIndex} from "./IStringIndex";
+import {UIException} from "./error/UIException";
+import {map} from "rxjs/operators";
 
 /*
 export interface ServerResponse {
@@ -17,6 +19,12 @@ export interface ServerResponse {
   data?: any;
   msg?: string;
 }*/
+
+export interface ServerLocation {
+  ssl:boolean;
+  ip: string;
+  port: string;
+}
 
 export interface EndpointInfo {
   method :string;
@@ -45,8 +53,9 @@ export interface EndpointMap {
   [group :string]: EndpointGroup
 }
 
+export
 let gAuthProfile:any = null;
-
+let gCreating = false;
 /**
  * This class helps to send request HTTP API
  *
@@ -59,6 +68,9 @@ let gAuthProfile:any = null;
   providedIn: 'root'
 })*/
 export class DxcApiService {
+
+  static gAuthProfileUpdate$:Subject<any> = new Subject<any>();
+  static baseUrlUpdate$:Subject<string> = new Subject<string>();
 
   token: Nullable<DxcApiToken> = null;
 
@@ -76,6 +88,39 @@ export class DxcApiService {
 
     const params = (new URL(location.href)).searchParams;
 
+    if(gAuthProfile==null){
+      gAuthProfile = {
+        ssl: false,
+        ip: "127.0.0.1",
+        port: "8080"
+      };
+    }
+
+    this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
+    /*
+    const sub = DxcApiService.baseUrlUpdate$.subscribe((pURL)=>{
+      this._baseURL = pURL;
+      sub.unsubscribe();
+    });
+
+    if(gAuthProfile==null && !gCreating){
+      gCreating = true;
+      pHttp.get('/assets/env.json').subscribe((pData:any)=>{
+
+        gAuthProfile = {
+          ssl: pData.ssl,
+          ip: pData.host,
+          port: pData.port
+        };
+
+        DxcApiService.gAuthProfileUpdate$.next(gAuthProfile);
+        DxcApiService.baseUrlUpdate$.next((gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api');
+      });
+    }*/
+
+
+
+    /*
     if(gAuthProfile==null){
       if(params.get('auth')!=null){
         gAuthProfile = JSON.parse(atob(params.get('auth') as string));
@@ -107,7 +152,7 @@ export class DxcApiService {
      //this._baseURL = location.protocol+'//'+location.host+'/api';
       this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
 
-    }
+    }*/
 
   }
 
@@ -119,6 +164,18 @@ export class DxcApiService {
    */
   static getAuthProfile():any {
     return gAuthProfile;
+  }
+
+  /**
+   * To retrive the base URL of remote API server
+   *
+   * If the baseURL is not yet intialized it is built from gAuthProfile.
+   *
+   * @return {string} API server location
+   * @method
+   */
+  getBaseUrl():string {
+    return  this._baseURL;
   }
 
   protected _setWindowing( pOffset:number, pSize:number):void {
@@ -137,8 +194,9 @@ export class DxcApiService {
    */
   protected _delegateProcess( pEndpoint:EndpointInfo, pConnParam:Nullable<DexcaliburConnectionParams> = null, pOptions:any = {}):Observable<any>{
 
-    console.log(this._baseURL);
-    let url:string = this._baseURL; //environment.apiUrl ;
+    console.log("BASE URL = ",this._baseURL);
+
+    let url:string = this._baseURL; //this.getBaseUrl(); //environment.apiUrl ;
     const extra:any = {};
 
     if(pEndpoint.url.indexOf(':')>-1){
@@ -287,6 +345,7 @@ export class DxcApiService {
    * @protected
    */
   protected _process( pEndpoint:EndpointInfo, pOptions:any = {}):Observable<any>{
+
     return this._delegateProcess( pEndpoint, null, pOptions);
   }
 }

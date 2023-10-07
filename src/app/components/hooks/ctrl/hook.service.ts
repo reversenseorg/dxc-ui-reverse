@@ -156,59 +156,59 @@ export class HookService extends DxcApiService {
     super(
       {
           hook: {
-            list: { method: 'GET', url:'/hook/list', format:'json', auth:true, puid:true},
-            listByKp: { method: 'GET', url:'/hook/list/kp/:name', format:'json', auth:true, puid:true},
-            probe: { method: 'POST', url:'/hook/new/:id', format:'json', auth:true, puid:true},
-            start: { method: 'POST', url:'/hook/start', format:'json', auth:true, puid:true},
-            probeSwitch: { method: 'PUT', url:'/hook/new/:id', format:'json', auth:true, puid:true},
-            download: { method: 'GET', url:'/hook/download', format:'json', auth:true, puid:true},
-            logs: { method: 'GET', url:'/hook/msg', format:'json', auth:true, puid:true},
-            list_session: { method: 'GET', url:'/hook/sessions', format:'json', auth:true, puid:true},
-            get: { method: 'GET', url:'/hook/get/:uid', format:'json', auth:true, puid:true},
-            save: { method: 'PUT', url:'/hook/get/:uid', format:'json', auth:true, puid:true},
-            remove: { method: 'DELETE', url:'/hook/get/:hookid', format:'json', auth:true, puid:true},
-            enable: { method: 'PUT', url:'/hook/enable/:hookid', format:'json', auth:true, puid:true},
-            disable: { method: 'PUT', url:'/hook/disable/:hookid', format:'json', auth:true, puid:true},
-            detach: { method: 'POST', url:'/hook/app/detach', format:'json', auth:true, puid:true},
-            kill: { method: 'POST', url:'/hook/app/kill', format:'json', auth:true, puid:true},
-            exec: { method: 'POST', url:'/hook/frida/exec', format:'json', auth:true, puid:true},
-            buildScript: { method: 'GET', url:'/hook/frida/build', format:'json', auth:true, puid:true},
+            list: { method: 'GET', url:'/hook/list', format:'json', auth:false /* removed */, puid:true},
+            listByKp: { method: 'GET', url:'/hook/list/kp/:name', format:'json', auth:false /* removed */, puid:true},
+            probe: { method: 'POST', url:'/hook/new/:id', format:'json', auth:false /* removed */, puid:true},
+            start: { method: 'POST', url:'/hook/start', format:'json', auth:false /* removed */, puid:true},
+            probeSwitch: { method: 'PUT', url:'/hook/new/:id', format:'json', auth:false /* removed */, puid:true},
+            download: { method: 'GET', url:'/hook/download', format:'json', auth:false /* removed */, puid:true},
+            logs: { method: 'GET', url:'/hook/msg', format:'json', auth:false /* removed */, puid:true},
+            list_session: { method: 'GET', url:'/hook/sessions', format:'json', auth:false /* removed */, puid:true},
+            get: { method: 'GET', url:'/hook/get/:uid', format:'json', auth:false /* removed */, puid:true},
+            save: { method: 'PUT', url:'/hook/get/:uid', format:'json', auth:false /* removed */, puid:true},
+            remove: { method: 'DELETE', url:'/hook/get/:hookid', format:'json', auth:false /* removed */, puid:true},
+            enable: { method: 'PUT', url:'/hook/enable/:hookid', format:'json', auth:false /* removed */, puid:true},
+            disable: { method: 'PUT', url:'/hook/disable/:hookid', format:'json', auth:false /* removed */, puid:true},
+            detach: { method: 'POST', url:'/hook/app/detach', format:'json', auth:false /* removed */, puid:true},
+            kill: { method: 'POST', url:'/hook/app/kill', format:'json', auth:false /* removed */, puid:true},
+            exec: { method: 'POST', url:'/hook/frida/exec', format:'json', auth:false /* removed */, puid:true},
+            buildScript: { method: 'GET', url:'/hook/frida/build', format:'json', auth:false /* removed */, puid:true},
           },
           session: {
-            show: { method: 'GET', url:'/hook/session/:id', format:'json', auth:true, puid:true}
+            show: { method: 'GET', url:'/hook/session/:id', format:'json', auth:false /* removed */, puid:true}
           },
           sessions: {
-            list: { method: 'GET', url:'/hook/sessions', format:'json', auth:true, puid:true},
-            get_msg: { method: 'GET', url:'/hook/session/msg', format:'json', auth:true, puid:true, window: new WebApiWindowing(0,100)},
+            list: { method: 'GET', url:'/hook/sessions', format:'json', auth:false /* removed */, puid:true},
+            get_msg: { method: 'GET', url:'/hook/session/msg', format:'json', auth:false /* removed */, puid:true, window: new WebApiWindowing(0,100)},
           },
           global: {
-            edit_config: { method: 'POST', url:'/hook/global/opts', format:'json', auth:true, puid:true},
-            update_libs: { method: 'GET', url:'/hook/libs/update', format:'json', auth:true, puid:true},
+            edit_config: { method: 'POST', url:'/hook/global/opts', format:'json', auth:false /* removed */, puid:true},
+            update_libs: { method: 'GET', url:'/hook/libs/update', format:'json', auth:false /* removed */, puid:true},
           },
           frag: {
-            new: { method: 'POST', url:'/hook_frag/hook_frag/:uid', format:'json', auth:true, puid:true},
-            edit: { method: 'PUT', url:'/hook_frag/hook_frag/:uid', format:'json', auth:true, puid:true},
-            del: { method: 'DELETE', url:'/hook_frag/hook_frag/:uid/:frag_uid', format:'json', auth:true, puid:true}
+            new: { method: 'POST', url:'/hook_frag/hook_frag/:uid', format:'json', auth:false /* removed */, puid:true},
+            edit: { method: 'PUT', url:'/hook_frag/hook_frag/:uid', format:'json', auth:false /* removed */, puid:true},
+            del: { method: 'DELETE', url:'/hook_frag/hook_frag/:uid/:frag_uid', format:'json', auth:false /* removed */, puid:true}
           },
           server: {
-            start: { method: 'POST', url:'/hookserver/start', format:'json', auth:true, puid:true},
-            stop: { method: 'POST', url:'/hookserver/stop', format:'json', auth:true, puid:true},
-            status: { method: 'GET', url:'/hookserver/status', format:'json', auth:true, puid:true}
+            start: { method: 'POST', url:'/hookserver/start', format:'json', auth:false /* removed */, puid:true},
+            stop: { method: 'POST', url:'/hookserver/stop', format:'json', auth:false /* removed */, puid:true},
+            status: { method: 'GET', url:'/hookserver/status', format:'json', auth:false /* removed */, puid:true}
           },
           kp: {
-            list: { method: 'GET', url:'/keypoint/list', format:'json', auth:true, puid:true},
-            search: { method: 'GET', url:'/keypoint/search', format:'json', auth:true, puid:true},
-            show: { method: 'GET', url:'/keypoint/edit/:uid', format:'json', auth:true, puid:true},
-            save: { method: 'POST', url:'/keypoint/edit/:uid', format:'json', auth:true, puid:true},
-            del: { method: 'DELETE', url:'/keypoint/edit/:uid', format:'json', auth:true, puid:true},
-            new: { method: 'POST', url:'/keypoint/new', format:'json', auth:true, puid:true},
-            removeByToken: { method: 'POST', url:'/keypoint/remove/token', format:'json', auth:true, puid:true},
-            attach: { method: 'POST', url:'/keypoint/attach/hook', format:'json', auth:true, puid:true},
-            enable: { method: 'POST', url:'/keypoint/enable', format:'json', auth:true, puid:true},
+            list: { method: 'GET', url:'/keypoint/list', format:'json', auth:false /* removed */, puid:true},
+            search: { method: 'GET', url:'/keypoint/search', format:'json', auth:false /* removed */, puid:true},
+            show: { method: 'GET', url:'/keypoint/edit/:uid', format:'json', auth:false /* removed */, puid:true},
+            save: { method: 'POST', url:'/keypoint/edit/:uid', format:'json', auth:false /* removed */, puid:true},
+            del: { method: 'DELETE', url:'/keypoint/edit/:uid', format:'json', auth:false /* removed */, puid:true},
+            new: { method: 'POST', url:'/keypoint/new', format:'json', auth:false /* removed */, puid:true},
+            removeByToken: { method: 'POST', url:'/keypoint/remove/token', format:'json', auth:false /* removed */, puid:true},
+            attach: { method: 'POST', url:'/keypoint/attach/hook', format:'json', auth:false /* removed */, puid:true},
+            enable: { method: 'POST', url:'/keypoint/enable', format:'json', auth:false /* removed */, puid:true},
           },
           inspector: {
-            list: { method: 'GET', url:'/inspector', format:'json', auth:true, puid:true},
-            dyn: { method: 'GET', url:'/inspectors/DynamicLoader', format:'json', auth:true, puid:true}
+            list: { method: 'GET', url:'/inspector', format:'json', auth:false /* removed */, puid:true},
+            dyn: { method: 'GET', url:'/inspectors/DynamicLoader', format:'json', auth:false /* removed */, puid:true}
           }
         },_http, outputSvc
       );

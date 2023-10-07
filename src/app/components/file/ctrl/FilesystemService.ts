@@ -27,13 +27,13 @@ export class FilesystemService extends DxcApiService{
       super({
         list: {
           dev: { method: 'GET', url:'/device/fs/list', format:'json',  puid:false, auth:false },
-          devData: { method: 'GET', url:'/device/fs/list', format:'json',  puid:true, auth:true },
-          //app: { method: 'GET', url:'/device/fs/list', format:'json', puid:true, auth:true},
-          pkg: { method: 'GET', url:'/application/package/content', format:'json', puid:true, auth:true },
-          ws: { method: 'POST', url:'/project/ws', format:'json', puid:true, auth:true },
+          devData: { method: 'GET', url:'/device/fs/list', format:'json',  puid:true, auth:false /* removed */ },
+          //app: { method: 'GET', url:'/device/fs/list', format:'json', puid:true, auth:false /* removed */},
+          pkg: { method: 'GET', url:'/application/package/content', format:'json', puid:true, auth:false /* removed */ },
+          ws: { method: 'POST', url:'/project/ws', format:'json', puid:true, auth:false /* removed */ },
         },
         view: {
-          file: {method:'GET', url:'/file/view', format:'json', puid:true, auth:true },
+          file: {method:'GET', url:'/file/view', format:'json', puid:true, auth:false /* removed */ },
         }
       }, _http, outputSvc);
   }

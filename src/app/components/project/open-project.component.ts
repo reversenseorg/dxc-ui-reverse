@@ -7,8 +7,7 @@ import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {OutputService} from "../output/ctrl/output.service";
 import {AppIcon} from "../../models/AppIcon";
 import {AuthService} from "../auth/ctrl/auth.service";
-import {AuthenticationEvent, AuthenticationEventType} from "../auth/AuthenticationEvent";
-import {Observable, Subscription} from "rxjs";
+import {Observable} from "rxjs";
 import {Nullable} from "../../base/Nullable";
 
 
@@ -52,7 +51,6 @@ import {Nullable} from "../../base/Nullable";
                 <div class="label">
                   <div class="selt"><b><dxc-ref>{{ selectedProject.uid }}</dxc-ref></b></div>
                   <div *ngIf="selectedProject.package!=null" >App name : <dxc-ref>{{ selectedProject.package }}</dxc-ref></div>
-                  <div><span>Path :</span><i class="text-warning"><dxc-ref>{{ selectedProject.apk.path }}</dxc-ref></i></div>
                   <div *ngIf="selectedProject.platform && selectedProject.platform.indexOf('android')>-1" class="text-success">
                     <fa-icon [icon]="['fab','android']"></fa-icon>&nbsp;{{ selectedProject.platform }}
                   </div>

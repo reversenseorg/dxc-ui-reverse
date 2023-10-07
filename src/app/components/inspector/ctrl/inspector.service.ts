@@ -32,11 +32,11 @@ export class InspectorService extends DxcApiService {
   constructor( protected http:HttpClient, protected outputSvc:OutputService) {
     super({
       inspector: {
-        list: { method:'GET', url:'/plugin/inspector/list', format:'json', auth:true, puid:true},
+        list: { method:'GET', url:'/plugin/inspector/list', format:'json', auth:false /* removed */, puid:true},
         show: { method:'GET', url:'/plugin/inspectors/:uid', format:'json'}
       },
       hook: {
-        byInspector: { method:'GET', url:'/hook/getBy/inspector', format:'json', auth:true, puid:true},
+        byInspector: { method:'GET', url:'/hook/getBy/inspector', format:'json', auth:false /* removed */, puid:true},
       }
     },http,outputSvc)
   }

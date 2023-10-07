@@ -41,10 +41,10 @@ export class TagService extends DxcApiService {
     super(
       {
         category: {
-          list: { method:'GET', url:'/tag/categories', format: 'json', auth:true, puid:true }
+          list: { method:'GET', url:'/tag/categories', format: 'json', auth:false /* removed */, puid:true }
         },
         tag: {
-          list: { method:'GET', url:'/tag/tags', format: 'json', auth:true, puid:true }
+          list: { method:'GET', url:'/tag/tags', format: 'json', auth:false /* removed */, puid:true }
         }
       },_http,outputSvc
     );

@@ -226,6 +226,7 @@ export class StageComponent implements OnInit, AfterViewInit {
 
 
 
+
     this.settingsService.listNetworkSettings().subscribe((vSettings)=>{
 
       if(vSettings==null) return;
@@ -335,10 +336,6 @@ export class StageComponent implements OnInit, AfterViewInit {
       }
 
       override sendRaw(pData: any) {
-        const tok = DxcApiToken.getInstance();
-        if(tok!=null){
-          pData._a = tok.getToken();
-        }
 
         if(DxcApiToken.exists("puid")){
           pData._puid = (DxcApiToken.getInstance("puid") as DxcApiToken).getToken();
@@ -529,15 +526,14 @@ export class StageComponent implements OnInit, AfterViewInit {
       console.log('isConnectected>',pObs);
     })**/
 
-
-
-
+    // deprecated, use SSO instead
+    /*
     DxcApiToken.importLocalStorage();
     if(DxcApiToken.exists("local")==false){
       this.showModal('passwd_auth');
     }else{
       this.authSvc.refresh();
-    }
+    }*/
   }
 
   setTerminalFocus(pLabel:string){

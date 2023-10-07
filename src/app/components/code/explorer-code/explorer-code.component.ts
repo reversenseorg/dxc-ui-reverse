@@ -386,13 +386,16 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     const ctn = this.explCodeCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
     const navHeight:number = (this.view as any).nav.size.height;
 
-    el.style.width = pSize.width+'px';
-    el.style.maxWidth = pSize.width+'px';
+
+    el.style.width = '100%';
+    //el.style.width = pSize.width+'px';
+    //el.style.maxWidth = pSize.width+'px';
     el.style.height = pSize.height+'px';
     el.style.maxHeight = pSize.height+'px';
 
-    ctn.style.width = pSize.width+'px';
-    ctn.style.maxWidth = pSize.width+'px';
+    ctn.style.width = '100%';
+    //ctn.style.width = pSize.width+'px';
+    //ctn.style.maxWidth = pSize.width+'px';
     ctn.style.height = (pSize.height-navHeight)+'px';
     ctn.style.maxHeight = (pSize.height-navHeight)+'px';
   }

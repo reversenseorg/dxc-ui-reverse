@@ -1,5 +1,5 @@
 <div class="explorer-container" id="explorerContainer" #outterExpl>
-  <div class="row explorer-tab" id="explorerContainer2" #explorerCtn>
+  <div class="row g-0 explorer-tab" id="explorerContainer2" #explorerCtn>
     <div class="explorer-tabnav" id="explorerNav" #explorerNav>
       <ul ngbNav [(activeId)]="active"  class="nav-tabs">
         <li *ngFor="let el of elements; let even=even; let odd=odd;" [ngbNavItem]="el.offset" [class.active]="active == el.offset" (click)="selectTab(el.offset, $event)">

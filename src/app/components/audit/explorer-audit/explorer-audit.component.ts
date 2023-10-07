@@ -350,7 +350,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
       };
       this.ctxMenu[pType].show(pEvent, pObject);
     }catch(e:any){
-      console.error(e.message())
+      console.error(e.message)
     }
 
   }

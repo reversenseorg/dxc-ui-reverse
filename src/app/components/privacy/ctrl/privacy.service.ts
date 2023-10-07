@@ -41,12 +41,12 @@ export class PrivacyService extends DxcApiService{
 
       super({
         assess: {
-          reports: { method: 'GET', url:'/privacy/reports', format:'json', auth:true, puid:true},
-          model: { method: 'GET', url:'/privacy/model', format:'json', auth:true, puid:true},
-          dashboard: { method: 'GET', url:'/privacy/dashboard', format:'json', auth:true, puid:true},
-          scan: { method: 'POST', url:'/privacy/scan', format:'json', auth:true, puid:true},
-          scanModel: { method: 'POST', url:'/privacy/scanModel', format:'json', auth:true, puid:true},
-          scan2: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:true, puid:true}
+          reports: { method: 'GET', url:'/privacy/reports', format:'json', auth:false /* removed */, puid:true},
+          model: { method: 'GET', url:'/privacy/model', format:'json', auth:false /* removed */, puid:true},
+          dashboard: { method: 'GET', url:'/privacy/dashboard', format:'json', auth:false /* removed */, puid:true},
+          scan: { method: 'POST', url:'/privacy/scan', format:'json', auth:false /* removed */, puid:true},
+          scanModel: { method: 'POST', url:'/privacy/scanModel', format:'json', auth:false /* removed */, puid:true},
+          scan2: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:false /* removed */, puid:true}
         }
       }, _http, outputSvc);
 

@@ -139,7 +139,14 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   }
 
   updateAppFile($event: any) {
-    this.targetFile = $event.path[0].files[0].path;
+    const path = $event.composedPath ? $event.composedPath() : $event.path;
+    if(path){
+      this.targetFile = path[0].files[0].path;
+    }else{
+      console.error("Event path cannot be retrieved : ",$event);
+    }
+
+    //this.targetFile = $event.path[0].files[0].path;
     this.displayDeviceList();
   }
 

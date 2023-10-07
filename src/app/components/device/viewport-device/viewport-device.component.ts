@@ -249,7 +249,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     const o = {
       item:pItem,
       src:pSrc,
-      el: pEvent.path[0],
+      el: pEvent.composedPath ? pEvent.composedPath()[0] : pEvent.path[0],
       oldBg: null
     };
 
@@ -262,7 +262,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     }
 
     if(o.el.className.indexOf('col-')>-1){
-      o.el = pEvent.path[1];
+      o.el = pEvent.composedPath ? pEvent.composedPath()[1] : pEvent.path[1];
     }
 
     o.oldBg = o.el.style.backgroundColor;

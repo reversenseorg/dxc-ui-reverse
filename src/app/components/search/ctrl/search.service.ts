@@ -23,7 +23,7 @@ export class SearchService extends DxcApiService {
       {
         find: {
           raw: {
-            method:'GET', url:'/code/finder', format: 'json', auth:true, puid:true
+            method:'GET', url:'/code/finder', format: 'json', auth:false /* removed */, puid:true
           }
         }
       },_http

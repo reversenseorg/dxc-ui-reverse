@@ -70,15 +70,21 @@ export default class Control {
       const a = new Control(pOpts);
 
       let ctrls:any[] = [];
-      pOpts.children.map( (x:any) => {
-        ctrls.push(Control.fromJsonObject(x));
-      });
+      if(pOpts.children!=null && Array.isArray(pOpts.children)){
+          pOpts.children.map( (x:any) => {
+              ctrls.push(Control.fromJsonObject(x));
+          });
+      }
+
       a.children = ctrls;
 
       ctrls = []
-      pOpts.assessments.map( (x:any) => {
-        ctrls.push(ControlAssessment.fromJsonObject(x));
-      });
+        if(pOpts.assessments!=null && Array.isArray(pOpts.assessments)){
+            pOpts.assessments.map( (x:any) => {
+                ctrls.push(ControlAssessment.fromJsonObject(x));
+            });
+        }
+
       a.assessments = ctrls;
 
       return a;

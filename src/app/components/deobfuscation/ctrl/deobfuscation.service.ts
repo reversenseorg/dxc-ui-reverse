@@ -31,9 +31,9 @@ export class DeobfuscationService extends DxcApiService {
   constructor(protected http:HttpClient, private outputSvc:OutputService) {
     super({
       action: {
-        nop_count: { method:'GET', url:'/plugin/BytecodeCleaner/nop_count', format:'json', auth:true, puid:true },
-        nop_clean: { method:'GET', url:'/plugin/BytecodeCleaner/nop_clean', format:'json', auth:true, puid:true },
-        wrap_clean: { method:'GET', url:'/plugin/BytecodeCleaner/wrap_clean', format:'json', auth:true, puid:true },
+        nop_count: { method:'GET', url:'/plugin/BytecodeCleaner/nop_count', format:'json', auth:false /* removed */, puid:true },
+        nop_clean: { method:'GET', url:'/plugin/BytecodeCleaner/nop_clean', format:'json', auth:false /* removed */, puid:true },
+        wrap_clean: { method:'GET', url:'/plugin/BytecodeCleaner/wrap_clean', format:'json', auth:false /* removed */, puid:true },
       }
     },http, outputSvc)
   }

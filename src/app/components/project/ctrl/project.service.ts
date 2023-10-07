@@ -129,22 +129,22 @@ export class ProjectService extends DxcApiService {
     super(
       {
         workspace: {
-          list: { method: 'GET', url:'/workspace/list', format:'json', auth:true},
-          open: { method: 'GET', url:'/workspace/open', format:'json', auth:true},
+          list: { method: 'GET', url:'/workspace/list', format:'json', auth:false /* removed */},
+          open: { method: 'GET', url:'/workspace/open', format:'json', auth:false /* removed */},
           status: { method: 'GET', url:'/status', format:'json'},
-          new: { method: 'POST', url:'/workspace/new', format:'json', auth:true},
-          delete: { method: 'POST', url:'/workspace/delete', format:'json', auth:true},
-          upload: { method: 'POST', url:'/workspace/upload', format:'json', auth:true},
-          test: { method:'GET', url:'/workspace/availability', format:'json', auth:true}
+          new: { method: 'POST', url:'/workspace/new', format:'json', auth:false /* removed */},
+          delete: { method: 'POST', url:'/workspace/delete', format:'json', auth:false /* removed */},
+          upload: { method: 'POST', url:'/workspace/upload', format:'json', auth:false /* removed */},
+          test: { method:'GET', url:'/workspace/availability', format:'json', auth:false /* removed */}
         },
         project: {
-          device: { method: 'GET', url:'/project/device', format:'json', auth:true, puid:true },
-          set_device: { method: 'POST', url:'/project/device', format:'json', auth:true, puid:true },
-          edit_settings: { method: 'POST', url:'/project/settings', format:'json', auth:true, puid:true },
-          info: { method: 'GET', url:'/project/info/:uid', format:'json', auth:true },
-          active: { method: 'GET', url:'/project/active', format:'json', auth:true },
-          set_active: { method: 'POST', url:'/project/active', format:'json', auth:true},
-          close: { method: 'POST', url:'/project/close', format:'json', auth:true, puid:true }
+          device: { method: 'GET', url:'/project/device', format:'json', auth:false /* removed */, puid:true },
+          set_device: { method: 'POST', url:'/project/device', format:'json', auth:false /* removed */, puid:true },
+          edit_settings: { method: 'POST', url:'/project/settings', format:'json', auth:false /* removed */, puid:true },
+          info: { method: 'GET', url:'/project/info/:uid', format:'json', auth:false /* removed */ },
+          active: { method: 'GET', url:'/project/active', format:'json', auth:false /* removed */ },
+          set_active: { method: 'POST', url:'/project/active', format:'json', auth:false /* removed */},
+          close: { method: 'POST', url:'/project/close', format:'json', auth:false /* removed */, puid:true }
         },
         settings: {
           list_abi: { method:'GET', url:'/native/public/settings/abi', format:'json'}
@@ -271,6 +271,7 @@ export class ProjectService extends DxcApiService {
         }]
       }
       , 1);
+
 
 
 

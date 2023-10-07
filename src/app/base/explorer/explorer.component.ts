@@ -164,10 +164,13 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
       this.outterEl.nativeElement.style.height = pEvent.height+'px';
       this.borderEl.nativeElement.style.height = pEvent.height+'px';
 
+
+      this.vpEl.nativeElement.style.width = (pEvent.width-(navWidth*2)-borderWidth-1)+ 'px';
+//      alert(pEvent.width+" "+navWidth+" "+borderWidth);
       // explorer view has a left border of 1px
       this.resize$.next({
         height: pEvent.height,
-        width: pEvent.width-navWidth-borderWidth-1
+        width: pEvent.width-(navWidth*2)-borderWidth-1
       });
     });
   }

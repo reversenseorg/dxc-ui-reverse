@@ -59,23 +59,23 @@ export class TopologyService extends DxcApiService {
     super(
       {
         app: {
-          act: { method:'GET', url:'/android/activities', format: 'json', auth:true, puid:true },
-          serv: { method:'GET', url:'/android/services', format: 'json', auth:true, puid:true },
-          prov: { method:'GET', url:'/android/providers', format: 'json', auth:true, puid:true },
-          recv: { method:'GET', url:'/android/receivers', format: 'json', auth:true, puid:true },
-          perm: { method:'GET', url:'/android/permissions', format: 'json', auth:true, puid:true },
-          manifest: { method:'GET', url:'/android/manifest', format: 'json', auth:true, puid:true },
+          act: { method:'GET', url:'/android/activities', format: 'json', auth:false /* removed */, puid:true },
+          serv: { method:'GET', url:'/android/services', format: 'json', auth:false /* removed */, puid:true },
+          prov: { method:'GET', url:'/android/providers', format: 'json', auth:false /* removed */, puid:true },
+          recv: { method:'GET', url:'/android/receivers', format: 'json', auth:false /* removed */, puid:true },
+          perm: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true },
+          manifest: { method:'GET', url:'/android/manifest', format: 'json', auth:false /* removed */, puid:true },
         },
         anal: {
-          cmp: { method:'POST', url:'/android/component/scan', format: 'json', auth:true, puid:true },
+          cmp: { method:'POST', url:'/android/component/scan', format: 'json', auth:false /* removed */, puid:true },
         },
         dyn: {
-          dex: { method:'GET', url:'/inspector/DynamicLoader/show/refresh_dyndex', format: 'json', auth:true, puid:true},
+          dex: { method:'GET', url:'/inspector/DynamicLoader/show/refresh_dyndex', format: 'json', auth:false /* removed */, puid:true},
         },
         file: {
-          dex: { method:'GET', url:'/android/permissions', format: 'json', auth:true, puid:true},
-          libs: { method:'GET', url:'/android/permissions', format: 'json', auth:true, puid:true},
-          keystore: { method:'GET', url:'/android/permissions', format: 'json', auth:true, puid:true}
+          dex: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true},
+          libs: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true},
+          keystore: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true}
         }
       },_http,outputSvc
     );
