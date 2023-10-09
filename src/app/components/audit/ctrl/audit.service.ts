@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
-import {AppMenuService, MenuEvent} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
 import {DxcApiService} from "../../../base/DxcApiService";
 import {map} from "rxjs/operators";
 import {OutputService} from "../../output/ctrl/output.service";

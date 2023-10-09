@@ -5,8 +5,8 @@
       <ng-container *ngIf="e.__==NODE_TYPES.METHOD">
         <div class="col-lg-1">
           <ng-container *ngIf="e.name!='<clinit>'">
-            <span class="badge padge-pill badge-success" *ngIf="e.enabled">ON</span>
-            <span class="badge padge-pill badge-danger" *ngIf="!e.enabled">OFF</span>
+            <span class="badge padge-pill text-bg-success" *ngIf="e.enabled">ON</span>
+            <span class="badge padge-pill text-bg-danger" *ngIf="!e.enabled">OFF</span>
           </ng-container>
         </div>
         <!--<div class="col-lg-1">
@@ -50,7 +50,7 @@
       <ng-container *ngIf="e.__==NODE_TYPES.STRING">
         <div class="col-lg-1"  (dblclick)="openView(e)">
           <!--<ng-container *ngFor="let t of e.tags">
-            <dxc-meta [label]="t" [css]="'badge-warning'"></dxc-meta>
+            <dxc-meta [label]="t" [css]="'text-bg-warning'"></dxc-meta>
           </ng-container>-->
         </div>
         <div class="col-lg-5" (dblclick)="openView(e)">
@@ -66,10 +66,10 @@
           <dxc-icon [model]="tIcons['ACTIVITY']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
-            <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
+            <span class="badge rounded-pill  text-bg-danger">{{ t }}</span>&nbsp;
           </ng-container>
 
-          <span *ngIf="e.intentFilters.length>0" class="badge badge-pill badge-info">intent filters</span>&nbsp;
+          <span *ngIf="e.intentFilters.length>0" class="badge rounded-pill  text-bg-info">intent filters</span>&nbsp;
         </div>
       </ng-container>
 
@@ -78,10 +78,10 @@
           <dxc-icon [model]="tIcons['RECEIVER']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
-            <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
+            <span class="badge rounded-pill  text-bg-danger">{{ t }}</span>&nbsp;
           </ng-container>
 
-          <span *ngIf="e.intentFilters.length>0" class="badge badge-pill badge-info">intent filters</span>&nbsp;
+          <span *ngIf="e.intentFilters.length>0" class="badge rounded-pill  text-bg-info">intent filters</span>&nbsp;
         </div>
       </ng-container>
 
@@ -91,10 +91,10 @@
             <dxc-icon [model]="tIcons['RECEIVER']"></dxc-icon>&nbsp; {{ e.name }}
 
             <ng-container *ngFor="let t of e.__tag">
-              <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
+              <span class="badge rounded-pill  text-bg-danger">{{ t }}</span>&nbsp;
             </ng-container>
 
-            <span *ngIf="e.intentFilters.length>0" class="badge badge-pill badge-info">intent filters</span>&nbsp;
+            <span *ngIf="e.intentFilters.length>0" class="badge rounded-pill  text-bg-info">intent filters</span>&nbsp;
           </div>
       </ng-container>
 <!--
@@ -103,10 +103,10 @@
           <dxc-icon [model]="tIcons['SERVICE']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
-            <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
+            <span class="badge rounded-pill  text-bg-danger">{{ t }}</span>&nbsp;
           </ng-container>
 
-          <span *ngIf="e.intentFilters.length>0" class="badge badge-pill badge-info">intent filters</span>&nbsp;
+          <span *ngIf="e.intentFilters.length>0" class="badge rounded-pill  text-bg-info">intent filters</span>&nbsp;
         </div>
       </ng-container>
 -->
@@ -115,10 +115,10 @@
           <dxc-icon [model]="tIcons['PROVIDER']"></dxc-icon>&nbsp; {{ e.name }}
 
           <ng-container *ngFor="let t of e.__tag">
-            <span class="badge badge-pill badge-danger">{{ t }}</span>&nbsp;
+            <span class="badge rounded-pill  text-bg-danger">{{ t }}</span>&nbsp;
           </ng-container>
 
-          <span *ngIf="e.intentFilters.length>0" class="badge badge-pill badge-info">intent filters</span>&nbsp;
+          <span *ngIf="e.intentFilters.length>0" class="badge rounded-pill  text-bg-info">intent filters</span>&nbsp;
         </div>
       </ng-container>
 
@@ -126,8 +126,8 @@
       <ng-container *ngIf="e.__==NODE_TYPES.ANDROID_PROVIDER">
         <!--<div class="col-lg-1">
           <ng-container *ngIf="e.name!='<clinit>'">
-            <span class="badge padge-pill badge-success" *ngIf="e.enabled">ON</span>
-            <span class="badge padge-pill badge-danger" *ngIf="!e.enabled">OFF</span>
+            <span class="badge padge-pill text-bg-success" *ngIf="e.enabled">ON</span>
+            <span class="badge padge-pill text-bg-danger" *ngIf="!e.enabled">OFF</span>
           </ng-container>
           <dxc-icon *ngIf="e.name=='<clinit>'" [model]="cIcons['STATICB']"></dxc-icon>
           <dxc-icon *ngIf="e.name=='<init>'" [model]="cIcons['NEW']"></dxc-icon>

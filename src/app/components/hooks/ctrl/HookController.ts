@@ -163,7 +163,8 @@ export class HookController extends UiController implements IController {
     let f:any=null;
 
 
-    this.rendered.map((vItem:any) => {     console.log("[HOOK CONTROLLER][isRendered?] ",pItem, vItem);
+    this.rendered.map((vItem:any) => {
+      //console.log("[HOOK CONTROLLER][isRendered?] ",pItem, vItem);
 
       if(vItem.item == null) return;
 

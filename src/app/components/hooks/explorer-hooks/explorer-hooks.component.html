@@ -78,7 +78,7 @@
             <span *ngIf="NODE_TYPES.HOOK_SESSION==itemObj.__" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'hksess',itemObj)">
               <dxc-meta [css]="'dxc-green-fluo dxc-sz-6 mr-1'" *ngIf="itemObj.active" [label]="'LATEST'"></dxc-meta>&nbsp;
               {{ itemObj.date.toISOString() }}
-              <span class="badge badge-pill badge-danger ml-1">{{ itemObj.offset }}</span>
+              <span class="badge rounded-pill  text-bg-danger ml-1">{{ itemObj.offset }}</span>
             </span>
 
             <span *ngIf="NODE_TYPES.HOOK_JAVA==itemObj.__" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">

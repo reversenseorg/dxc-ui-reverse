@@ -2,8 +2,8 @@
   <app-subnavbar [type]="'navbar'" [parent]="this">
     <ng-container main>
       <app-subnavbar-btn (click)="controller.switchOnOff(data)">Status :
-        <span class="badge padge-pill badge-success" *ngIf="data.enable">ON</span>
-        <span class="badge padge-pill badge-danger" *ngIf="!data.enable">OFF</span>
+        <span class="badge padge-pill text-bg-success" *ngIf="data.enable">ON</span>
+        <span class="badge padge-pill text-bg-danger" *ngIf="!data.enable">OFF</span>
       </app-subnavbar-btn>
       <!-- <app-subnavbar-btn [icon]="gIcons['FILE']" (click)="saveHook()">Save</app-subnavbar-btn> -->
       <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="startApp()">Run</app-subnavbar-btn>

@@ -4,7 +4,7 @@ import {from, Observable, Subject, throwError} from 'rxjs';
 import {catchError, map, retry} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
 import DexcaliburProject from "../../../models/DexcaliburProject";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import TagCategory from "../../../models/tags/TagCategory";

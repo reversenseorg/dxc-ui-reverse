@@ -314,6 +314,7 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
   @ViewChild('mainNav', {read:ElementRef, static:true}) navEl:ElementRef;
 
   computedHeight:number = -1;
+  @Input() navbarStyle: Nullable<any> = null;
 
   constructor() {
 

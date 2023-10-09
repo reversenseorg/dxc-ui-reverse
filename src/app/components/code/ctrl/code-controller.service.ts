@@ -6,7 +6,7 @@ import {CODE_SUBVIEW} from "../explorer-code/explorer-code.const";
 import {CodeItem} from "../explorer-code/CodeItem";
 import {Message, MessageType} from "../../../cmp/Error";
 import {DxcApiService, EndpointInfo} from "../../../base/DxcApiService";
-import {AppMenuService, MenuEvent} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
 import ModelMethod from "../../../models/ModelMethod";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {IconModel} from "../../../base/icon/IconModel";

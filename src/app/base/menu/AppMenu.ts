@@ -3,6 +3,9 @@ import {MenuItem, MenuItemConstructorOptions} from "./MenuItem";
 
 let gInstance:Nullable<AppMenu> = null;
 
+/**
+ * @deprecated
+ */
 export class AppMenu {
 
     private tpl:MenuItemConstructorOptions[] = [];
@@ -12,7 +15,6 @@ export class AppMenu {
     constructor() {
 
     }
-
 
     static getInstance():AppMenu {
         if(gInstance==null){

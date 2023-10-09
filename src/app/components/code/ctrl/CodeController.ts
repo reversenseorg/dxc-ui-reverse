@@ -81,11 +81,12 @@ export class CodeController extends UiController implements IController {
       //if(vItem.item._t !== pItem._t) return null;
       if(pItem!=null && (vItem.item.__ != pItem.__)) return;
 
+      console.log('Code Controller > isAlreadyRendered > ',vItem);
 
       switch(vItem.item._t){
         case 'p':
         case 'c':
-          //console.log(vItem.item.name === pItem.name,vItem, pItem);
+          console.log(vItem.item.name === pItem.name,vItem, pItem);
           if(vItem.item.name === pItem.name){
             f = vItem;
           }
@@ -167,6 +168,9 @@ export class CodeController extends UiController implements IController {
    */
   open(pItem: any, pSrc:any = 'vp', pInstruction:Nullable<ModelInstruction> = null): void{
 
+
+    console.log("CodeController > open >  ",pItem,pSrc);
+
     let existingRef = this.isAlreadyRendered(pItem);
     let vid: string = this.id+':v'+this.rendered.length;
 
@@ -191,6 +195,7 @@ export class CodeController extends UiController implements IController {
         break;
       case NodeInternalType.CLASS:
         this.service.getClass(pItem.name).subscribe( (pObs:any)=>{
+          console.log("getClass() => ",pObs);
           pObs.data._t = 'c';
           pObs.data._icon = pItem._icon;
           this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pObs.data, uid:vid });

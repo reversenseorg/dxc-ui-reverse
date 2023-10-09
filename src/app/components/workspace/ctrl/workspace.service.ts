@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {DxcApiService} from "../../../base/DxcApiService";
 import {TerminalInfo, TerminalSessionType} from "./TerminalSession";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {Device} from "../../../models/Device";
 import {IconModel} from "../../../base/icon/IconModel";
 import {Nullable} from "../../../base/Nullable";

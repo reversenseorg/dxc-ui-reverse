@@ -24,7 +24,7 @@ import {WorkspaceService} from "./components/workspace/ctrl/workspace.service";
 import {SplashController} from "./components/project/ctrl/SplashController";
 import {ProjectService} from "./components/project/ctrl/project.service";
 import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
-import {AppMenuService} from "./core/components/appmenu/appmenu.service";
+import {AppMenuService} from "./base/appmenu/app-menu.service";
 import {DeviceManagerService} from "./components/device/ctrl/device-manager.service";
 import {DeviceController} from "./components/device/ctrl/DeviceController";
 import {ExplorerDeviceComponent} from "./components/device/explorer-device/explorer-device.component";
@@ -132,6 +132,31 @@ export class ControllerService {
     return this.helper;
   }
 
+  /**
+   *
+   */
+  hookBeforeControllersInit():void {
+
+  }
+
+  /**
+   * Hook after
+   * @param pControllers
+   */
+  hookAfterControllersInit(pControllers:IController[]):void {
+    this.appmenuService.render();
+  }
+
+
+  /**
+   * !! IMPORTANT !!
+   * ----------------
+   * This is the place where every controller/service/app menus are initialized
+   *
+   *
+   * @return {IController[]} All controllers
+   * @method
+   */
   getControllers(): IController[] {
 
     this.helper = new HelperController({
@@ -141,7 +166,9 @@ export class ControllerService {
       }
     });
 
-    return [
+    this.hookBeforeControllersInit();
+
+    const ctrls = [
       new OutputController({
         service: this.outSvc,
         terminalCmp: {
@@ -275,5 +302,9 @@ export class ControllerService {
         },
       })
     ];
+
+    this.hookAfterControllersInit(ctrls);
+
+    return ctrls;
   }
 }

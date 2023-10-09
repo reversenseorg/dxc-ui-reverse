@@ -148,6 +148,9 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
       case INFO_TYPE.DEV:
         this.activeTL = pTopic;
         break;
+      case INFO_TYPE.URL:
+        this.activeBL = pTopic;
+        break;
     }
   }
 

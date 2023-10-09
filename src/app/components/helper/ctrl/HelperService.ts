@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {DexcaliburServerService, ElectronService} from "../../../core/services";
 
 

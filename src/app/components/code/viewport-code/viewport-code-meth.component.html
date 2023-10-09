@@ -4,7 +4,7 @@
       <div class="col-lg-12">
 
         <ng-container *ngFor="let t of tags">
-          <dxc-meta [label]="t._uid" [css]="'badge-warning dxc-meta'"></dxc-meta>
+          <dxc-meta [label]="t._uid" [css]="'text-bg-warning dxc-meta'"></dxc-meta>
         </ng-container>
 
       </div>
@@ -33,7 +33,7 @@
                 {{ data.enclosingClass.package.name }}
                 </span>
               <span class="dxc-icon-folders dxc-obj" *ngIf="data.enclosingClass.package.name==''">[root]</span>
-              <!--<span class="badge badge-pill" style="background-color: #b69e53">{{ data.enclosingClass.package.absolute_size }}</span>-->
+              <!--<span class="badge rounded-pill " style="background-color: #b69e53">{{ data.enclosingClass.package.absolute_size }}</span>-->
               <!-- &gt; -->
             </span>
           </ng-container>
@@ -69,13 +69,13 @@
 
 
         <!--<ng-container *ngFor="let mod of data.modifiers">
-          <span class="badge badge-pill"></span>
+          <span class="badge rounded-pill "></span>
         </ng-container>-->
 
       </div>
 <!--
       <div class="col-lg-4">
-          <span class="badge badge-warning badge-sm dxc-meta">Hook</span><br>
+          <span class="badge text-bg-warning badge-sm dxc-meta">Hook</span><br>
           <div ngbDropdown *ngIf="data.modifiers.asbtract" class="d-inline-block">
             <button class="btn dxc-ctx-menu-btn code-abstract" id="ddAbstract" ngbDropdownToggle>abstract</button>
             <div ngbDropdownMenu class="dxc-ctx-menu" aria-labelledby="ddAbstract">
@@ -148,7 +148,7 @@
                 <span *ngIf="itemObj._t=='c'" class="border-bottom-1 border-white">
                   <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
                   <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                  <span *ngIf="itemObj._c=='p'" class="badge badge-pill badge-sm ml-2" [ngClass]="{ 'badge-secondary':data.args.length==0, 'badge-success':data.args.length>0 }">{{ data.args.length }}</span>
+                  <span *ngIf="itemObj._c=='p'" class="badge rounded-pill  badge-sm ml-2" [ngClass]="{ 'text-bg-secondary':data.args.length==0, 'text-bg-success':data.args.length>0 }">{{ data.args.length }}</span>
                 </span>
 
                 <span *ngIf="itemObj._t=='p'">
@@ -237,7 +237,7 @@
               </div>
               <div class="col-lg-1">
                 <ng-container *ngFor="let t of c.tags">
-                  <span class="badge badge-sm badge-pill" [ngClass]="getStyleForTag(t)">{{ t }}</span>
+                  <span class="badge badge-sm rounded-pill " [ngClass]="getStyleForTag(t)">{{ t }}</span>
                 </ng-container>
               </div>
               <div class="col-lg-9" (contextmenu)="controller.displayCtxMenu($event,'meth',c)">
@@ -268,7 +268,7 @@
             </div>
             <div class="col-lg-1">
               <ng-container *ngFor="let t of c.tags">
-                <span class="badge badge-sm badge-pill dxc-meta" [ngClass]="getStyleForTag(t)">{{ t }}</span>
+                <span class="badge badge-sm rounded-pill  dxc-meta" [ngClass]="getStyleForTag(t)">{{ t }}</span>
               </ng-container>
             </div>
             <div class="col-lg-9" (contextmenu)="controller.displayCtxMenu($event,'meth',c)">
@@ -303,10 +303,10 @@
               <div class="row dxc-grid-body" style="border-bottom: none">
                 <div class="col-lg-2" (click)="switchHook(hk)">
                   <ng-container *ngIf="hk.enabled; else hkOff">
-                    <span  class="badge badge-pill badge-success dxc-btn-hook">ON</span>
+                    <span  class="badge rounded-pill  text-bg-success dxc-btn-hook">ON</span>
                   </ng-container>
                   <ng-template #hkOff>
-                    <span class="badge badge-pill badge-danger dxc-btn-hook">OFF</span>
+                    <span class="badge rounded-pill  text-bg-danger dxc-btn-hook">OFF</span>
                   </ng-template>
                 </div>
                 <div class="col-lg-10" (dblclick)="openHook(hk)">

@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {DxcApiService} from "../../../base/DxcApiService";
 import {map} from "rxjs/operators";
 import {OutputService} from "../../output/ctrl/output.service";
@@ -58,28 +58,16 @@ export class AuthService extends DxcApiService{
       label: 'Team',
       enabled:false,
       submenu:[{
-        label: 'Login',
-        click: () => {
-          //this.onMenuClick.next({ item:'login', win:pBrowserWindow });
-        }
-      },{
         label: 'Logout',
         click: (pMenuItem:any, pBrowserWindow:any) => {
-          console.log(DxcApiToken.count());
-          if(DxcApiToken.count()==1){
-            const tok = DxcApiToken.getInstance(null);
-            if(tok!=null){
-              this.logout(tok.getName()).subscribe();
-            }
-
-          }else{
-            this.onMenuClick.next({ item:'logout', win:pBrowserWindow });
-          }
+          this.ssoLogout();
         }
       }]
     },8);
+  }
 
-
+  ssoLogout():void {
+    location.href = location.protocol+'://'+location.host+'/logout';
   }
 
   askAuthentication():void {

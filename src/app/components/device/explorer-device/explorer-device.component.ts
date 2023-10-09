@@ -282,13 +282,16 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     const ctn = this.explDevCtnRef.nativeElement; // document.getElementById('explorerCodeCtn');
     const navHeight: number = (this.view!=null ? (this.view as any).nav.size.height : 15);
 
-    el.style.width = pSize.width + 'px';
-    el.style.maxWidth = pSize.width + 'px';
+
+    el.style.width = '100%';
+//    el.style.width = pSize.width + 'px';
+//    el.style.maxWidth = pSize.width + 'px';
     el.style.height = pSize.height + 'px';
     el.style.maxHeight = pSize.height + 'px';
 
-    ctn.style.width = pSize.width + 'px';
-    ctn.style.maxWidth = pSize.width + 'px';
+    ctn.style.width = '100%';
+    //ctn.style.width = pSize.width + 'px';
+    //ctn.style.maxWidth = pSize.width + 'px';
     ctn.style.height = (pSize.height - navHeight) + 'px';
     ctn.style.maxHeight = (pSize.height - navHeight) + 'px';
   }

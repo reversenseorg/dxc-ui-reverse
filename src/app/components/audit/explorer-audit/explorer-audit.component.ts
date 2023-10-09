@@ -218,13 +218,17 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     const ctn = this.explCtnRef.nativeElement; //document.getElementById('explorerCodeCtn');
     const navHeight:number = (this.view.nav as NavbarSimpleView).size.height;
 
-    el.style.width = pSize.width+'px';
-    el.style.maxWidth = pSize.width+'px';
+
+    el.style.width = '100%';
+//    el.style.width = pSize.width+'px';
+//    el.style.maxWidth = pSize.width+'px';
     el.style.height = pSize.height+'px';
     el.style.maxHeight = pSize.height+'px';
 
-    ctn.style.width = pSize.width+'px';
-    ctn.style.maxWidth = pSize.width+'px';
+
+    ctn.style.width = '100%';
+//    ctn.style.width = pSize.width+'px';
+//    ctn.style.maxWidth = pSize.width+'px';
     ctn.style.height = (pSize.height-navHeight)+'px';
     ctn.style.maxHeight = (pSize.height-navHeight)+'px';
   }

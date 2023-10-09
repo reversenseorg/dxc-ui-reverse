@@ -14,10 +14,10 @@
 
 
     <ng-container *ngFor="let t of data.__tag">
-      <span *ngIf="data" class="badge badge-info dxc-meta">{{ t }}</span>
+      <span *ngIf="data" class="badge text-bg-info dxc-meta">{{ t }}</span>
     </ng-container>
-    <span *ngIf="data" class="badge badge-success dxc-meta">exported</span>
-    <span *ngIf="data" class="badge badge-warning dxc-meta">intentable</span>
+    <span *ngIf="data" class="badge text-bg-success dxc-meta">exported</span>
+    <span *ngIf="data" class="badge text-bg-warning dxc-meta">intentable</span>
     <!--
     <span *ngIf="data.modifiers.private" class="meta-access text-danger">private</span>
     <span *ngIf="data.modifiers.protected" class="meta-access text-primary">protected</span>
@@ -26,7 +26,7 @@
 
     <!--<i *ngIf="data.alias" class="text-warning">@alias: {{ data.alias }}</i>-->
     <!--<ng-container *ngFor="let mod of data.modifiers">
-      <span class="badge badge-pill"></span>
+      <span class="badge rounded-pill "></span>
     </ng-container>-->
   </div>
 
@@ -59,8 +59,8 @@
         <div class="row" *ngFor="let f of getIntentFilters()" style="margin: 10px 0;border:1px solid #6d6d3d;">
           <div class="col-lg-12">
             <div>
-              <span class="badge badge-warning">8/10</span>&nbsp;
-              <span class="badge badge-success">2/10</span>
+              <span class="badge text-bg-warning">8/10</span>&nbsp;
+              <span class="badge text-bg-success">2/10</span>
             </div>
             <div>
               <i>Action</i>

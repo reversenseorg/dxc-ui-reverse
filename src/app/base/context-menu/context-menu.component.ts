@@ -105,8 +105,8 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
     if(path && path[0]!=null){
       path[0].classList.remove('dxc-ctxm-active');
     }else{
-      if(this.event.originalTarget.classList.indexOf("dxc-ctxm-active")>-1){
-        this.event.originalTarget.remove('dxc-ctxm-active');
+      if(this.event.originalTarget.className.indexOf("dxc-ctxm-active")>-1){
+        this.event.originalTarget.classList.remove('dxc-ctxm-active');
       }else{
         console.error("Event path cannot be retrieved : ",this.event);
       }

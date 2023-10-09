@@ -3,7 +3,7 @@
 
 
     <ng-container *ngFor="let t of sections; let offset=index;">
-      <span *ngIf="data" class="badge badge-info dxc-meta" [style]="{ 'background':'#FF30'+((offset*20).toString(16)), 'border-left':'2px solid #222' }">&nbsp;</span>
+      <span *ngIf="data" class="badge text-bg-info dxc-meta" [style]="{ 'background':'#FF30'+((offset*20).toString(16)), 'border-left':'2px solid #222' }">&nbsp;</span>
     </ng-container>
 
   </div>
@@ -164,7 +164,7 @@
             </div>
             <div class="row no-gutters dxc-disass-row"  (contextmenu)="displayCtxMenu($event,id+'inst',ins)" [ngClass]="getStyleForInstr(ins, offset)">
               <div class="col-lg-2">
-                <span *ngIf="offset==12" class="badge badge-sm dxc-meta badge-success">TRACKED</span>&nbsp;
+                <span *ngIf="offset==12" class="badge badge-sm dxc-meta text-bg-success">TRACKED</span>&nbsp;
               </div>
               <div class="col-lg-2" style="color:darkgrey;font-family: 'Courier New', Courier, monospace">0x{{ ins.offset.toString(16) }}</div>
               <div class="col-lg-2" style="color:yellow;font-family: 'Courier New', Courier, monospace">{{ ins.bytes }}</div>

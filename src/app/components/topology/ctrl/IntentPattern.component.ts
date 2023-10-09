@@ -11,45 +11,45 @@ import {Nullable} from "../../../base/Nullable";
 
       <span *ngIf="_f.scheme!=null">
 
-        <span class="badge badge-secondary dxc-meta" style="line-height: 12px;">URI:</span>
+        <span class="badge text-bg-secondary dxc-meta" style="line-height: 12px;">URI:</span>
         <input class="dxc-frm-input dxc-meta" style="line-height: 12px; padding: 2px 0 1px 1em;color:#ee8f4e; font-weight:800; font-family:'Courier New', Courier, monospace; font-size:11px; width:70%;"  [(ngModel)]="uri">
       </span>
     </ng-container>
     <ng-template #tagMode>
       <span *ngIf="_f.scheme!=null">
 
-        <span class="badge badge-secondary dxc-meta">URI:</span>
-        <span class="badge badge-info dxc-meta">{{ _f.scheme }}</span>
-        <span class="badge badge-secondary dxc-meta">://</span>
+        <span class="badge text-bg-secondary dxc-meta">URI:</span>
+        <span class="badge text-bg-info dxc-meta">{{ _f.scheme }}</span>
+        <span class="badge text-bg-secondary dxc-meta">://</span>
         <span *ngIf="_f.host!=null">
-          <span class="badge badge-info dxc-meta">{{ _f.host }}</span>
-          <span class="badge badge-secondary dxc-meta" *ngIf="_f.port!=null">:</span>
-          <span class="badge badge-info dxc-meta" *ngIf="_f.port!=null">{{ _f.port }}</span>
+          <span class="badge text-bg-info dxc-meta">{{ _f.host }}</span>
+          <span class="badge text-bg-secondary dxc-meta" *ngIf="_f.port!=null">:</span>
+          <span class="badge text-bg-info dxc-meta" *ngIf="_f.port!=null">{{ _f.port }}</span>
         </span>
-        <span class="badge badge-secondary dxc-meta" *ngIf="_f.host==null">*</span>
-        <span class="badge badge-secondary dxc-meta" *ngIf="_f.port!=null">/</span>
+        <span class="badge text-bg-secondary dxc-meta" *ngIf="_f.host==null">*</span>
+        <span class="badge text-bg-secondary dxc-meta" *ngIf="_f.port!=null">/</span>
         <span *ngIf="_f.pathPattern!=null">
-          <span class="badge badge-secondary dxc-meta">pathPattern:</span>
-          <span class="badge badge-info dxc-meta">{{ _f.pathPattern }}</span>
+          <span class="badge text-bg-secondary dxc-meta">pathPattern:</span>
+          <span class="badge text-bg-info dxc-meta">{{ _f.pathPattern }}</span>
         </span>
         <span *ngIf="_f.path!='*'">
-          <span *ngIf="_f.pathPattern!=null" class="badge badge-warning dxc-meta">OR</span>
-          <span class="badge badge-secondary dxc-meta">path:</span>
-          <span class="badge badge-info dxc-meta">{{ _f.path }}</span>
+          <span *ngIf="_f.pathPattern!=null" class="badge text-bg-warning dxc-meta">OR</span>
+          <span class="badge text-bg-secondary dxc-meta">path:</span>
+          <span class="badge text-bg-info dxc-meta">{{ _f.path }}</span>
         </span>
         <span *ngIf="_f.pathPrefix!=null">
-          <span *ngIf="_f.path!=null || _f.pathPattern!=null" class="badge badge-warning dxc-meta">OR</span>
-          <span class="badge badge-secondary dxc-meta">pathPrefix:</span>
-          <span class="badge badge-info dxc-meta">{{ _f.pathPrefix }}</span>
+          <span *ngIf="_f.path!=null || _f.pathPattern!=null" class="badge text-bg-warning dxc-meta">OR</span>
+          <span class="badge text-bg-secondary dxc-meta">pathPrefix:</span>
+          <span class="badge text-bg-info dxc-meta">{{ _f.pathPrefix }}</span>
         </span>
 
-        <span class="badge badge-secondary dxc-meta" *ngIf="_f.port!=null">&nbsp;</span>
+        <span class="badge text-bg-secondary dxc-meta" *ngIf="_f.port!=null">&nbsp;</span>
       </span>
     </ng-template>
 
     <span *ngIf="_f.mimeType!=null" class="ml-1">
-      <span class="badge badge-secondary dxc-meta">MIME:</span>
-      <span class="badge badge-info dxc-meta">{{ _f.mimeType }}</span>
+      <span class="badge text-bg-secondary dxc-meta">MIME:</span>
+      <span class="badge text-bg-info dxc-meta">{{ _f.mimeType }}</span>
     </span>
   `,
   styleUrls: ['../../../forms.scss']

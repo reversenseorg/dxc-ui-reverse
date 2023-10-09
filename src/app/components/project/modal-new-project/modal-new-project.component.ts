@@ -70,7 +70,8 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   // model
   projectName = "";
   method = "fs";
-  targetFile:Nullable<string> = null;
+  targetFile:Nullable<File> = null;
+  targetFileName:Nullable<string> = null;
   targetUrl:Nullable<string> = null;
   proxyIp:Nullable<string> = null;
   proxyPort:Nullable<string> = null;
@@ -139,14 +140,21 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   }
 
   updateAppFile($event: any) {
-    const path = $event.composedPath ? $event.composedPath() : $event.path;
-    if(path){
-      this.targetFile = path[0].files[0].path;
-    }else{
-      console.error("Event path cannot be retrieved : ",$event);
+    this.targetFile = $event.target.files[0];
+
+
+    if(this.targetFile!=null){
+      this.targetFileName = this.targetFile.name;
+      // upload
+      this.projSvc.uploadFile(this.targetFile as File);
+
+      /*.subscribe((pUploadUID:string)=>{
+        console.log(" updateAppFile > ",pUploadUID)
+      })*/
+
     }
 
-    //this.targetFile = $event.path[0].files[0].path;
+
     this.displayDeviceList();
   }
 
@@ -169,9 +177,9 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
           this.projSvc.newProject({
             name: this.projectName,
             dev: this.devuid,
-            type: 'fromfs',
+            type: 'upload',
             platform: this.platform,
-            path: this.targetFile
+            file: this.targetFile
           }).subscribe( (pRes)=>{
             this.modal.hide('close');
           })

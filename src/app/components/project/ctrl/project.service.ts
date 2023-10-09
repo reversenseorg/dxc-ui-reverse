@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
+import {HttpClient, HttpEventType} from '@angular/common/http';
+import {finalize, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
 import DexcaliburProject from "../../../models/DexcaliburProject";
-import {AppMenuService, MenuEvent} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import {Device} from "../../../models/Device";
@@ -14,6 +14,7 @@ import {DxcApiToken} from "../../../base/DxcApiToken";
 import {DeviceCacheFlavor, DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {Nullable} from "../../../base/Nullable";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 export interface ProjectMenuEvent extends MenuEvent {
   win?:any
@@ -113,6 +114,8 @@ export class ProjectService extends DxcApiService {
 
   scheduler: any = null;
 
+  progressUpload:any;
+  subscriptionUpload:any;
   /**
    *
    * @param {AppMenuService} appmenuSvc
@@ -206,6 +209,11 @@ export class ProjectService extends DxcApiService {
           }
         },{
           label: 'New ...',
+          accelerator: 'CommandOrControl+Shift+N',
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
+            this.onMenuClick.next({ item:'new-project', win:pBrowserWindow });
+          }
+          /*
           submenu: [
             {
               label: 'Project',
@@ -230,7 +238,7 @@ export class ProjectService extends DxcApiService {
               click: (pMenuItem:any, pBrowserWindow:any ) => {
                 this.onMenuClick.next({ item:'new-script', win:pBrowserWindow });
               }
-            }]
+            }]*/
         },{
           label: 'Show active projects',
           enabled:true, //(this.hasMultipleActiveProject()),
@@ -542,31 +550,83 @@ export class ProjectService extends DxcApiService {
     }
 
     this.startOpening(pOptions.name, true);
+
     return this._process(
       this.endpoints['workspace']['new'], pOptions
     ).pipe(
       map((pEl:any)=>{
 
-        // unlock service
-        this.setLock(false);
+            // unlock service
+            this.setLock(false);
 
-        if(pEl.success) {
+            if(pEl.success) {
 
-          DxcApiToken.remove("puid");
-          DxcApiToken.create("puid",pEl.data.uid);
-          this.selected = new DexcaliburProject({}, pEl.data.uid );
+              DxcApiToken.remove("puid");
+              DxcApiToken.create("puid",pEl.data.uid);
+              this.selected = new DexcaliburProject({}, pEl.data.uid );
 
-          this._beforeProjectReady(pEl);
+              this._beforeProjectReady(pEl);
 //          this.onProjectReady.next(pEl);
-  //        this.appmenuSvc.onProjectOpen();
+              //        this.appmenuSvc.onProjectOpen();
 
-          return pEl;
-        }else{
-          this.stopOpening();
-          this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:pEl.msg}))
-        }
-      })
+              return pEl;
+            }else{
+              this.stopOpening();
+              this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:pEl.msg}))
+            }
+          }
+      )
     );
+  }
+
+
+  /**
+   *
+   *
+   * @param pFile
+   * @return {string} UID mapped to uploaded file
+   */
+  uploadFile( pFile:File) :Observable<string> {
+
+    const form = new FormData();
+    form.append('file', pFile);
+
+
+    console.log(form);
+
+    const req = this._processUpload(
+        this.endpoints['workspace']['upload'], form
+    ).pipe(
+        finalize(()=>{
+          console.log(" uploadFile > finalize");
+
+          this.subscriptionUpload = null;
+          this.progressUpload = null;
+        })
+    ).pipe(
+        map((pEl:any)=>{
+
+          console.log(" uploadFile > process response");
+
+          if(pEl.success) {
+            return pEl.data;
+          }else{
+            this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:pEl.msg}))
+          }
+        })
+    );
+
+    this.subscriptionUpload = req.subscribe((vEvent)=>{
+
+        console.log(vEvent);
+
+
+      if (vEvent.type == HttpEventType.UploadProgress) {
+        this.progressUpload = Math.round(100 * (vEvent.loaded / vEvent.total));
+      }
+    })
+
+    return this.subscriptionUpload;
   }
 
   getProjectInfo( pProject:DexcaliburProject) :Observable<any> {

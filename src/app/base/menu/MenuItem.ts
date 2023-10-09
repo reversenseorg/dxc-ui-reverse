@@ -1,5 +1,6 @@
 import {IconModel} from "../icon/IconModel";
 import {Menu} from "./Menu";
+import {Nullable} from "../Nullable";
 
 
 export class Accelerator extends String {
@@ -131,7 +132,7 @@ export class MenuItem {
     click: Function;
     commandId: number;
     enabled: boolean;
-    icon?: (IconModel|string);
+    icon?: Nullable<IconModel>;
     id: string;
     label: string;
     menu: Menu;

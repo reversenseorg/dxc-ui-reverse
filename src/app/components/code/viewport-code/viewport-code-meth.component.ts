@@ -376,9 +376,9 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   getStyleForTag(t: any) {
     switch(t){
       case "ds":
-        return "badge-warning";
+        return "text-bg-warning";
       default:
-        return "badge-secondary";
+        return "text-bg-secondary";
     }
   }
 

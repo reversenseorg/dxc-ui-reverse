@@ -1,5 +1,8 @@
 
 
+$dark-appmenu-btn-text: #ddd;
+
+
 $dark-topnav-bgColor: #333;
 $dark-topnav-textColor: #fff;
 $dark-nav-bgColor: #555;
@@ -59,6 +62,11 @@ $dark-scrollbar-bg: #555;
   --error-main-color: #fd2c2c;
   --error-secondary-color: white;
 
+  --appmenu-bg: #{$dark-nav-bgColor};
+  --appmenu-text: #{$dark-input-text};
+  --appmenu-btn-text: #{$dark-appmenu-btn-text};
+  --appmenu-btn-disabled: #{$dark-menu-sep};
+
   --topnav-bg: #{$dark-topnav-bgColor};
   --topnav-color: #{$dark-topnav-textColor};
   --menu-bg: #{$dark-menu-bgColor};
@@ -67,6 +75,7 @@ $dark-scrollbar-bg: #555;
   --menu-bg-hover: #{$dark-menu-bgColor-hover};
   --menu-text-dis: #{$dark-menu-textColor-dis};
   --menu-text-hover: #{$dark-menu-textColor-hover};
+
   --nav-bg: #{$dark-nav-bgColor};
   --nav-text: #{$dark-nav-textColor};
   --nav-tabbg: #{$dark-subnav-bgColor};

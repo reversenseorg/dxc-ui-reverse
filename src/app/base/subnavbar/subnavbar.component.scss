@@ -1,5 +1,9 @@
 @import "../../../themes.scss";
 
+.mainNavbar {
+  background: var(--nav-btn-bg);
+}
+
 .app-subnavbar {
   position: fixed;
   bottom:0px;

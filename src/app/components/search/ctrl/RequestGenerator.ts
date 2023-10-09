@@ -510,32 +510,32 @@ const RequestHelperMAP =  {
     "public": {
       type: RequestHelperTYPES.T_MODIFIER,
       token: "is.public",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "protected": {
       type: RequestHelperTYPES.T_MODIFIER,
       token: "is.protected",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "private": {
       type: RequestHelperTYPES.T_MODIFIER,
       token: "is.private",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "native": {
       type: RequestHelperTYPES.T_MODIFIER,
       token: "is.native",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "volatile": {
       type: RequestHelperTYPES.T_MODIFIER,
       token: "is.volatile",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "static": {
       type: RequestHelperTYPES.T_MODIFIER,
       token: "is.static",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     }
   },
   method: {
@@ -666,19 +666,19 @@ const RequestHelperMAP =  {
     "by modifiers":{
       type: RequestHelperTYPES.T_NODE,
       ref: "modifiers",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     }
   },
   string: {
     "by value": {
       type: RequestHelperTYPES.T_LITTERAL,
       token: "value",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "by tag": {
       type: RequestHelperTYPES.T_LITTERAL,
       token: "tags",
-      css: 'badge-warning'
+      css: 'text-bg-warning'
     },
     "by instruction": {
       type: RequestHelperTYPES.T_NODE,

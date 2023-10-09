@@ -4,15 +4,15 @@
 
 
     <ng-container *ngFor="let t of data.__tag">
-      <span *ngIf="data" class="badge badge-info dxc-meta">{{ t }}</span>
+      <span *ngIf="data" class="badge text-bg-info dxc-meta">{{ t }}</span>
     </ng-container>
 
     <ng-container *ngIf="data.attr.process">
-      <span *ngIf="data.attr.process[0]!='.' && data.attr.process[0]<97" class="badge badge-danger dxc-meta">external process : {{ data.attr.process }}</span>
+      <span *ngIf="data.attr.process[0]!='.' && data.attr.process[0]<97" class="badge text-bg-danger dxc-meta">external process : {{ data.attr.process }}</span>
     </ng-container>
 
-    <span *ngIf="data.attr.exported" class="badge badge-success dxc-meta">exported</span>
-    <span *ngIf="data.intentFilters.length>0" class="badge badge-warning dxc-meta">intentable</span>
+    <span *ngIf="data.attr.exported" class="badge text-bg-success dxc-meta">exported</span>
+    <span *ngIf="data.intentFilters.length>0" class="badge text-bg-warning dxc-meta">intentable</span>
     <!--
     <span *ngIf="data.modifiers.private" class="meta-access text-danger">private</span>
     <span *ngIf="data.modifiers.protected" class="meta-access text-primary">protected</span>
@@ -21,7 +21,7 @@
 
     <!--<i *ngIf="data.alias" class="text-warning">@alias: {{ data.alias }}</i>-->
     <!--<ng-container *ngFor="let mod of data.modifiers">
-      <span class="badge badge-pill"></span>
+      <span class="badge rounded-pill "></span>
     </ng-container>-->
   </div>
 
@@ -49,7 +49,7 @@
 
                 <ng-container  *ngIf="filt.data!=null && filt.data.length>0">
 
-                  <span class="badge badge-danger dxc-meta ml-1">waiting data</span>
+                  <span class="badge text-bg-danger dxc-meta ml-1">waiting data</span>
                   <br>
 
                       <ng-container *ngFor="let dat of filt.data">
@@ -60,7 +60,7 @@
                           </div>
 
                           <div class="col-lg-2 text-right">
-                            <span class="badge badge-pill badge-success" (click)="sendIntent(data, filt, dat)"><dxc-icon [model]="gIcons['PLAY']" [color1]="'dxc-text-clear100'"></dxc-icon>&nbsp;Send</span>
+                            <span class="badge rounded-pill  text-bg-success" (click)="sendIntent(data, filt, dat)"><dxc-icon [model]="gIcons['PLAY']" [color1]="'dxc-text-clear100'"></dxc-icon>&nbsp;Send</span>
                           </div>
                         </div>
                       </ng-container>

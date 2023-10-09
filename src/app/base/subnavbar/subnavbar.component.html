@@ -1,4 +1,4 @@
-<div class="container-fluid dxc-subnavbar" #mainNav>
+<div class="container-fluid dxc-subnavbar" [ngClass]="navbarStyle" #mainNav>
     <ng-container *ngIf="type=='navbar'">
       <!-- dxc-explorer-vpnav -->
       <div *ngIf="direction=='row'" class="row dxc-navbar" [ngClass]="style" #snavRef>

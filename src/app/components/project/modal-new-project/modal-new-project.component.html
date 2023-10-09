@@ -33,6 +33,7 @@
             <option value="upload">From a local file</option>
             <option value="url">From a remote location (URL)</option>
             <option value="device">From a connected device</option>
+            <option value="store">From an application store</option>
           </select>
         </div>
         <ng-container *ngIf="method=='upload'">
@@ -41,7 +42,7 @@
             Select application file (.apk, .dex, ...)
           </div>
           <div>
-            <label for="app-file" class="dxc-label-file" #appFile><span *ngIf="targetFile!=null">{{ targetFile }}</span><span *ngIf="targetFile==null">Pick a file</span></label>
+            <label for="app-file" class="dxc-label-file" #appFile><span *ngIf="targetFileName!=null">{{ targetFileName }}</span><span *ngIf="targetFile==null">Pick a file</span></label>
             <input id="app-file" type="file" class="dxc-input-file" (change)="updateAppFile($event)"/>
             <!--<dxc-preview *ngIf="targetFile!=null" [data]="targetFile" [length]="70"></dxc-preview>-->
           </div>

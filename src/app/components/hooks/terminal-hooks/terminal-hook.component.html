@@ -25,7 +25,7 @@
           <!--<ng-container *ngFor="let t of msg.tags">
             <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
           </ng-container>-->
-          <!--<span *ngFor="let t of msg.tags" class="badge badge-pill" [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
+          <!--<span *ngFor="let t of msg.tags" class="badge rounded-pill " [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
         </div>
         <div class="col-lg-1 col-msg">
           <dxc-meta *ngIf="msg.data.when==-1" [label]="'before'" [ngClass]="'text-info'"></dxc-meta>
@@ -34,7 +34,7 @@
           <!--<ng-container *ngFor="let t of msg.tags">
             <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
           </ng-container>-->
-          <!--<span *ngFor="let t of msg.tags" class="badge badge-pill" [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
+          <!--<span *ngFor="let t of msg.tags" class="badge rounded-pill " [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
         </div>
         <div class="col-lg-3 col-msg">
           <ng-container *ngFor="let n of msg.node">

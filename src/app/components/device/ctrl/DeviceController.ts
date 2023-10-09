@@ -36,7 +36,7 @@ export class DeviceController extends UiController  implements IController {
   }
 
   open(pItem: any, pSrc:any): any{
-    console.log(pItem);
+    console.log("Open device : ", pItem);
 
     this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:pItem.uid });
 

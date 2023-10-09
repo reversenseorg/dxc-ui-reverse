@@ -1,13 +1,13 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {DxcApiService} from "../../../base/DxcApiService";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
 import {Observable, Subject} from "rxjs";
 import {ExternalTool} from "../../../models/ExternalTool";
 import {map} from "rxjs/operators";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {Nullable} from "../../../base/Nullable";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 
 
 export interface Setting {

@@ -25,9 +25,9 @@
             <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon" [color1]="itemObj.connected==false ? 'text-danger' : 'text-success'"></dxc-icon>
             <span class="dxc-text-clear100">{{ itemObj.model }}</span>&nbsp;{{ itemObj.id }}&nbsp;&nbsp;&nbsp;
             <span class="text-warning">[ENROLLED]</span>
-            <!--<span class="badge badge-pill badge-danger ml-1" *ngIf="itemObj.rootMode">ROOT</span>
-            <span class="badge badge-pill badge-info ml-1" *ngIf="!itemObj.rootMode">USER</span>-->
-            <span class="badge badge-pill badge-success ml-1" *ngIf="itemObj.connected">connected</span>
+            <!--<span class="badge rounded-pill  text-bg-danger ml-1" *ngIf="itemObj.rootMode">ROOT</span>
+            <span class="badge rounded-pill  text-bg-info ml-1" *ngIf="!itemObj.rootMode">USER</span>-->
+            <span class="badge rounded-pill  text-bg-success ml-1" *ngIf="itemObj.connected">connected</span>
           </ng-template>
           <ng-template #devNotEnrolled>
             <dxc-icon [model]="gIcons['UNKNOWN']"></dxc-icon>
@@ -35,7 +35,7 @@
             <span class="dxc-text-clear75">{{ itemObj.id }}</span>
             <span class="dxc-text-blue">[{{ itemObj.bridge }}]</span>
             <span class="dxc-text-blue">[{{ itemObj.type }}]</span>
-            <span class="badge badge-pill badge-success ml-1" *ngIf="itemObj.connected">connected</span>
+            <span class="badge rounded-pill  text-bg-success ml-1" *ngIf="itemObj.connected">connected</span>
           </ng-template>
           <span *ngIf="itemObj._t=='dev'" #devTpl (contextmenu)="displayCtxMenu($event,'dev',itemObj)">
               <ng-container *ngIf="itemObj.enrolled; then devEnrolled else devNotEnrolled"></ng-container>

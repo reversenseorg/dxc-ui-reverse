@@ -2,10 +2,10 @@
   <!-- <app-explorer-navbar [explorer]="this" ></app-explorer-navbar> -->
   <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
     <ng-container opts>
-      <span [ngbTooltip]="'Access as root'" class="badge badge-pill badge-success btn-option" style="cursor: pointer" *ngIf="!privileged" (click)="setPrivileged(true)">
+      <span [ngbTooltip]="'Access as root'" class="badge rounded-pill  text-bg-success btn-option" style="cursor: pointer" *ngIf="!privileged" (click)="setPrivileged(true)">
         <dxc-icon [model]="gIcons['LOCK']"></dxc-icon>&nbsp;USER
       </span>
-      <span [ngbTooltip]="'Access as user'" class="badge badge-pill badge-danger btn-option" style="cursor: pointer" *ngIf="privileged" (click)="setPrivileged(false)">
+      <span [ngbTooltip]="'Access as user'" class="badge rounded-pill  text-bg-danger btn-option" style="cursor: pointer" *ngIf="privileged" (click)="setPrivileged(false)">
         <dxc-icon [model]="gIcons['UNLOCK']"></dxc-icon>&nbsp;ROOT
       </span>
       <!--<button class="btn-option" (click)="refresh()"><fa-icon [icon]="['fas','cog']"></fa-icon></button>-->

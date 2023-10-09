@@ -1,5 +1,5 @@
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {from, Observable, Subject} from "rxjs";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {finalize, from, Observable, Subject} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Utils} from "../cmp/Utils";
 import {Injectable} from "@angular/core";
@@ -190,9 +190,16 @@ export class DxcApiService {
    * @param pEndpoint
    * @param pConnParam
    * @param pOptions
+   * @param {any} pHttpOptions Additional options for Angular HTTP client
    * @protected
    */
-  protected _delegateProcess( pEndpoint:EndpointInfo, pConnParam:Nullable<DexcaliburConnectionParams> = null, pOptions:any = {}):Observable<any>{
+  protected _delegateProcess( pEndpoint:EndpointInfo,
+                              pConnParam:Nullable<DexcaliburConnectionParams> = null,
+                              pOptions:any = {},
+                              pHttpOptions:any = {
+                                responseType: 'json',
+                                reportProgress:false
+                              }):Observable<any>{
 
     console.log("BASE URL = ",this._baseURL);
 
@@ -259,13 +266,19 @@ export class DxcApiService {
       case "POST":
       case "PUT":
       case "DELETE":
-        body = { _t: Date.now() };
-        for(const i in pOptions){
-          if(i[0]!=':')
-            body[i] = pOptions[i];
-          else
-            extra[i.substring(1)] = pOptions[i];
+
+        if(!pHttpOptions.reportProgress){
+          body = { _t: Date.now() };
+          for(const i in pOptions){
+            if(i[0]!=':')
+              body[i] = pOptions[i];
+            else
+              extra[i.substring(1)] = pOptions[i];
+          }
+        }else{
+          body = pOptions;
         }
+
 
         if(pEndpoint.puid){
           if(DxcApiToken.exists("puid")){
@@ -302,13 +315,18 @@ export class DxcApiService {
           url += `${url.indexOf('?')>-1? '&':'?'}__f=${JSON.stringify(pEndpoint.window.and(extra).toJsonObject())}`;
         }
 
+        if(pHttpOptions.upload){
+
+        }else{
+
+        }
         // @ts-ignore
         obs = (this._http as IStringIndex<any>)[pEndpoint.method.toLowerCase()]<any>(
           url,
           body,
           {
             observe: 'body',
-            responseType: 'json' //(pEndpoint.format as string)
+            ...pHttpOptions
           }
         );
         break;
@@ -347,5 +365,21 @@ export class DxcApiService {
   protected _process( pEndpoint:EndpointInfo, pOptions:any = {}):Observable<any>{
 
     return this._delegateProcess( pEndpoint, null, pOptions);
+  }
+
+  /**
+   * To make an http request to local server
+   *
+   * @param pEndpoint
+   * @param pOptions
+   * @protected
+   */
+  protected _processUpload( pEndpoint:EndpointInfo, pOptions:FormData):Observable<any>{
+
+
+    return this._delegateProcess( pEndpoint, null, pOptions, {
+      //headers: new HttpHeaders().append('Content-Type', 'multipart/form-data'),
+      reportProgress: true,
+    });
   }
 }

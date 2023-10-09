@@ -54,7 +54,7 @@ import {Nullable} from "../../base/Nullable";
                   <div *ngIf="selectedProject.platform && selectedProject.platform.indexOf('android')>-1" class="text-success">
                     <fa-icon [icon]="['fab','android']"></fa-icon>&nbsp;{{ selectedProject.platform }}
                   </div>
-                  <div class="dxc-text-clear100"><fa-icon [icon]="['fas','mobile']"></fa-icon>&nbsp;Device : <span class="badge badge-pill badge-sm badge-info selt">{{ selectedProject.device }}</span></div>
+                  <div class="dxc-text-clear100"><fa-icon [icon]="['fas','mobile']"></fa-icon>&nbsp;Device : <span class="badge rounded-pill badge-sm text-bg-info selt">{{ selectedProject.device }}</span></div>
                 </div>
 
               <div class="row mt-2">

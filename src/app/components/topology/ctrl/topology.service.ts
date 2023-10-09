@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {merge, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
-import {AppMenuService, MenuEvent} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
 import AndroidActivity from "../../../models/android/AndroidActivity";
 import AndroidProvider from "../../../models/android/AndroidProvider";
 import AndroidService from "../../../models/android/AndroidService";

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {from, Observable, Subject, throwError} from 'rxjs';
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {AlertMessage, AlertOptions} from "../modal-alert/modal-alert.component";
 import {Nullable} from "../../../base/Nullable";

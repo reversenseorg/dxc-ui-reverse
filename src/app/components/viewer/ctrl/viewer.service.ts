@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map, retry} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 
 
 

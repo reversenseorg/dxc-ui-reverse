@@ -25,8 +25,8 @@
             <ng-template #expItem let-itemObj="item" >
 
               <span *ngIf="itemObj._t=='f'" (contextmenu)="displayCtxMenu($event,'f',itemObj)">
-                <span class="badge badge-info" *ngIf="itemObj._s>0">{{ itemObj._s }}</span>
-                <span class="badge badge-secondary" *ngIf="itemObj._s==0">-</span>&nbsp;
+                <span class="badge text-bg-info" *ngIf="itemObj._s>0">{{ itemObj._s }}</span>
+                <span class="badge text-bg-secondary" *ngIf="itemObj._s==0">-</span>&nbsp;
                 <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
                 {{ itemObj.name  }}
               </span>
@@ -39,7 +39,7 @@
                   {{ itemObj.name  }}
                 </ng-template>
                 <ng-template #otherPerm>
-                  <span class="badge badge-info dxc-meta">vendor</span>&nbsp;
+                  <span class="badge text-bg-info dxc-meta">vendor</span>&nbsp;
                   <i class="text-info">{{ itemObj.name  }}</i>
                 </ng-template>
               </span>
@@ -50,9 +50,9 @@
                 <ng-container *ngIf="itemObj.attr">
                   <br>
                   <ng-container *ngIf="itemObj.attr.process">
-                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge text-bg-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
                   </ng-container>
-                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <span *ngIf="itemObj.attr.exported" class="badge text-bg-success dxc-meta" style="margin-left:10px;">exported</span>
                   <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
                 </ng-container>
               </span>
@@ -63,9 +63,9 @@
                 <ng-container *ngIf="itemObj.attr">
                   <br>
                   <ng-container *ngIf="itemObj.attr.process">
-                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge text-bg-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
                   </ng-container>
-                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <span *ngIf="itemObj.attr.exported" class="badge text-bg-success dxc-meta" style="margin-left:10px;">exported</span>
                   <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
                 </ng-container>
               </span>
@@ -76,9 +76,9 @@
                 <ng-container *ngIf="itemObj.attr">
                   <br>
                   <ng-container *ngIf="itemObj.attr.process">
-                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge text-bg-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
                   </ng-container>
-                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <span *ngIf="itemObj.attr.exported" class="badge text-bg-success dxc-meta" style="margin-left:10px;">exported</span>
                   <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
                 </ng-container>
               </span>
@@ -89,9 +89,9 @@
                 <ng-container *ngIf="itemObj.attr">
                   <br>
                   <ng-container *ngIf="itemObj.attr.process">
-                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge badge-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
+                    <span *ngIf="itemObj.attr.process[0]!='.' && itemObj.attr.process[0]>='a'" class="badge text-bg-danger dxc-meta" style="margin-left:10px;">external process : <u>{{ itemObj.attr.process }}</u></span>
                   </ng-container>
-                  <span *ngIf="itemObj.attr.exported" class="badge badge-success dxc-meta" style="margin-left:10px;">exported</span>
+                  <span *ngIf="itemObj.attr.exported" class="badge text-bg-success dxc-meta" style="margin-left:10px;">exported</span>
                   <dxc-meta *ngIf="itemObj.intentFilters.length>0"  [css]="'dxc-purple'" [label]="'intentable'">intentable</dxc-meta>
                 </ng-container>
               </span>

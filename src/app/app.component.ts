@@ -27,6 +27,7 @@ import {DxcApiService} from "./base/DxcApiService";
 import {AuthenticationEvent} from "./components/auth/AuthenticationEvent";
 import {AuthService} from "./components/auth/ctrl/auth.service";
 import {DxcApiToken} from "./base/DxcApiToken";
+import {STAGE_ICONS} from "./components/stage/icons";
 //import {Menu} from "electron";
 //import {TranslateService} from "@ngx-translate/core";
 
@@ -88,5 +89,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
 
   }
+
+  protected readonly STAGE_ICONS = STAGE_ICONS;
 }
 

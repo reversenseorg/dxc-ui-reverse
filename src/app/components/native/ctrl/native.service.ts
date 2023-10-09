@@ -7,7 +7,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {DxcApiService} from "../../../base/DxcApiService";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import ModelFile from "../../../models/ModelFile";
 import {ModelFunction} from "../../../models/ModelFunction";

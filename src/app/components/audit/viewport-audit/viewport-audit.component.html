@@ -30,7 +30,7 @@
                   <div class="col-2">{{ i.id }}</div>
                   <div class="col-8">{{ i.name }}</div>
                   <div class="col-2">
-                    <span class="badge badge-pill badge-sm badge-info">{{ f.rules.length }}</span>
+                    <span class="badge rounded-pill  badge-sm text-bg-info">{{ f.rules.length }}</span>
                   </div>
                 </div>
               </ng-container>
@@ -80,7 +80,7 @@
                   <div class="col-2">{{ i.id }}</div>
                   <div class="col-8">{{ i.name }}</div>
                   <div class="col-2">
-                    <span class="badge badge-pill badge-sm badge-info">{{ f.rules.length }}</span>
+                    <span class="badge rounded-pill  badge-sm text-bg-info">{{ f.rules.length }}</span>
                   </div>
                 </div>
               </ng-container>
@@ -96,8 +96,8 @@
                       <div class="row no-gutters  dxc-row-table">
                         <div class="col-4 dxc-rules-ctrlassess">{{ y.name }}</div>
                         <div class="col-8">
-                          <span *ngIf="y.rules.length-5>-4" class="badge badge-pill badge-sm badge-info">{{ y.rules.length }}</span>
-                          <span *ngIf="y.rules.length>5" class="badge badge-pill badge-sm badge-danger">{{ y.rules.length }}</span>
+                          <span *ngIf="y.rules.length-5>-4" class="badge rounded-pill  badge-sm text-bg-info">{{ y.rules.length }}</span>
+                          <span *ngIf="y.rules.length>5" class="badge rounded-pill  badge-sm text-bg-danger">{{ y.rules.length }}</span>
                         </div>
                       </div>
 

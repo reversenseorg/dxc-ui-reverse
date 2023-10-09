@@ -1,32 +1,37 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {CodeItem} from "../explorer-code/CodeItem";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {CodeController} from "../ctrl/CodeController";
-import {ViewportTab} from "../../../cmp/ViewportTab";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
-import {ViewportView} from "../../../cmp/ViewportView";
-import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
 import {ViewportComponent} from "../../../base/viewport/viewport.component";
 import {CodeControllerService} from "../ctrl/code-controller.service";
-import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
-import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import ModelClass from "../../../models/ModelClass";
 import {CODE_ICONS} from "../icons";
 import {HOOK_ICONS} from "../../hooks/icons";
 import {OutputService} from "../../output/ctrl/output.service";
 import ModelMethod from "../../../models/ModelMethod";
 import {HookService} from "../../hooks/ctrl/hook.service";
-import Hook from "../../../models/Hook";
-import * as ace from "ace-builds";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {Nullable} from "../../../base/Nullable";
 import {ModelClassReference} from "../../../models/ModelReference";
+import ModelField from "../../../models/ModelField";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 @Component({
   selector: 'app-viewport-code-class',
   templateUrl: './viewport-code-class.component.html',
-  styleUrls: ['./viewport-code.component.scss']
+  styleUrls: ['./viewport-code.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewInit {
 
@@ -41,7 +46,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
 
 
-  activeLeft:string =  "";
+  activeLeft:string =  "ct";
   activeWidth: number = 70;
 
 /*
@@ -117,9 +122,13 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('data')){
       this.codeSvc.getCompleteClass((changes as any).data.currentValue.name).subscribe( (pClass:Nullable<ModelClass>)=>{
+
+        console.log("CLASS: getCompleteClass : ",pClass);
         if(pClass!=null){
           this.data = pClass;
           this.showContents();
+        }else{
+          console.log("CLASS: Cannot restore complete class ",(changes as any).data.currentValue.name,pClass);
         }
       })
     }
@@ -162,7 +171,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   }
 
   showContents(pWidth:number=-1):void{
-    console.log(this);
+    console.log(" showContents > ",this);
     this.activeLeft = 'ct';
     //this.activeWidth = pWidth;
   }
@@ -207,4 +216,28 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   }
 
   protected readonly ModelClassReference = ModelClassReference;
+
+  getClassFields(pName:Nullable<string> = null):ModelField[] {
+    const fields:ModelField[] = [];
+    if(this.data!=null){
+      for(let k in this.data.fields){
+        fields.push((this.data.fields[k]));
+      }
+    }
+    return fields;
+  }
+
+  getClassMethods(pName:Nullable<string> = null):ModelMethod[] {
+    const obj:ModelMethod[] = [];
+    if(this.data!=null){
+      for(let k in this.data.methods){
+        obj.push((this.data.methods[k]));
+      }
+    }
+    return obj;
+  }
+
+  getMethodModifiers(mt: ModelMethod):IStringIndex<boolean> {
+    return (mt as any).modifiers as IStringIndex<boolean> ;
+  }
 }

@@ -3,7 +3,7 @@ import {Device} from "../../../models/Device";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {DxcApiService} from "../../../base/DxcApiService";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";

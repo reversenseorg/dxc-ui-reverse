@@ -53,7 +53,7 @@ div::-webkit-scrollbar-corner, ul::-webkit-scrollbar-corner {
 }
 
 #appMiddleCtn {
-  position: absolute;
+ /* position: absolute; */
 }
 
 
@@ -929,10 +929,10 @@ div.row.dxc-disass-ins-hooked {
 }
 
 span.badge.dxc-btn-hook {
-  &.badge-success:hover {
+  &.text-bg-success:hover {
     border-color: greenyellow;
   }
-  &.badge-danger:hover {
+  &.text-bg-danger:hover {
     border-color: darkred;
   }
 }

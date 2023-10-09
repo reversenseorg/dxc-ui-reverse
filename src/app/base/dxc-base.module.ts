@@ -15,6 +15,8 @@ import {ModalProgressComponent} from "./modal-progress/modal-progress.component"
 import {FormsModule} from "@angular/forms";
 import {PreviewerComponent} from "./previewer/previewer.component";
 import {MetaComponent} from "./meta/meta.component";
+import {AppMenuComponent} from "./appmenu/app-menu.component";
+import {AppMenuService} from "./appmenu/app-menu.service";
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import {MetaComponent} from "./meta/meta.component";
     SubnavbarInputComponent,
     ModalProgressComponent,
     PreviewerComponent,
-    MetaComponent
+    MetaComponent,
+    AppMenuComponent
   ],
   exports: [
     ModalBaseComponent,
@@ -39,7 +42,8 @@ import {MetaComponent} from "./meta/meta.component";
     SubnavbarInputComponent,
     ModalProgressComponent,
     PreviewerComponent,
-    MetaComponent
+    MetaComponent,
+    AppMenuComponent
   ],
     imports: [
         CommonModule,

@@ -6,7 +6,7 @@ import Hook from "../../../models/Hook";
 import {map} from "rxjs/operators";
 import {Utils} from "../../../cmp/Utils";
 import {DxcApiService} from "../../../base/DxcApiService";
-import {AppMenuService} from "../../../core/components/appmenu/appmenu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import ModelMethod from "../../../models/ModelMethod";
 import {WebsocketClient} from "../../../base/WebsocketClient";
 import {HookErrorMessage, HookSession} from "./HookSession";
@@ -220,6 +220,21 @@ export class HookService extends DxcApiService {
       submenu:[{
         label: 'Custom hook',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onMenuClick.next({ item:'new-custom-hook', win:pBrowserWindow });
+        }
+      },{
+        label: 'Hook scratchpad',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onMenuClick.next({ item:'new-scratch-hook', win:pBrowserWindow });
+        }
+      },{
+        label: 'Script',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onMenuClick.next({ item:'new-script', win:pBrowserWindow });
+        }
+      }/*,{
+        label: 'Custom hook',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onNewCustomHook.next(true)
         }
       },{
@@ -227,7 +242,7 @@ export class HookService extends DxcApiService {
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onNewCustomHook.next(true)
         }
-      }, {
+      }*/, {
         type: 'separator'
       }, {
         label: 'Global options',

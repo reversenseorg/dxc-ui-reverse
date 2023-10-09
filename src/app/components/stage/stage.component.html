@@ -22,7 +22,7 @@
         <app-subnavbar-btn *ngIf="project && project.device" [icon]="icons['DEFAULT_DEVICE']" [height]="statebarHeight" (click)="showDevice(project.device)">{{ project.device.id }}&nbsp;[{{ project.device.model }}]</app-subnavbar-btn>
         <app-subnavbar-btn *ngIf="project" [icon]="gIcons['PACKAGE']" [height]="statebarHeight">{{ project.package }}</app-subnavbar-btn>
         <app-subnavbar-btn *ngIf="conn" [icon]="gIcons['NETWORK_OK']" [height]="statebarHeight"><ng-container *ngIf="conn.user">{{ conn.user.username }}</ng-container>:{{ conn.name }}</app-subnavbar-btn>
-        <app-subnavbar-btn [height]="statebarHeight" [icon]="gIcons['BELL']">&nbsp;Info&nbsp;&nbsp;<span *ngIf="alertCtr > 0" class="badge badge-pill badge-danger">{{ alertCtr }}</span></app-subnavbar-btn>
+        <app-subnavbar-btn [height]="statebarHeight" [icon]="gIcons['BELL']">&nbsp;Info&nbsp;&nbsp;<span *ngIf="alertCtr > 0" class="badge rounded-pill  text-bg-danger">{{ alertCtr }}</span></app-subnavbar-btn>
       </ng-container>
     </app-subnavbar>
   </dxc-statebar>
