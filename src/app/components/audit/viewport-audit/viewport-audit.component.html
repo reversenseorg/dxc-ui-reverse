@@ -5,25 +5,46 @@
       <ng-container nav-left>
         <app-subnavbar [type]="'navbar'"  [parent]="this">
           <ng-container main>
-            <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Result</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['INFO']" (click)="showDetail('in')">Info</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='rl'"  [icon]="gIcons['LIST']" (click)="showDetail('rl')">Rules</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Result</app-subnavbar-btn>
           </ng-container>
         </app-subnavbar>
       </ng-container>
       <ng-container body-left>
         <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
+          <h3>{{ data.name }}</h3>
+          <div class="row">
+            <div class="col-4 model-details">
+              <dxc-icon class="mr-1" [model]="gIcons['ATTACH_HOOK']"></dxc-icon>
+              <span class="badge rounded-pill badge-sm text-bg-info">Controls: {{ data.controls.length }}</span>
+            </div>
+          </div>
+
+          <h4>Description</h4>
+          <p>
+            {{ data.description }}
+          </p>
+
+          <h4>Resources</h4>
+          <p>
+            -
+          </p>
         </div>
 
         <div class="container-fluid p-0" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rl')">
           <ng-container *ngIf="data">
             <ng-container  *ngFor="let i of data.controls">
+
               <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat">
                 <div class="col-10 pl-2">{{ i.name }}</div>
                 <div class="col-2 text-center">
-                  <dxc-icon [model]="gIcons['SPINNER']" [color1]="'#fff'"></dxc-icon>
+                  <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
+                  <!--<span class="image-text ml-2" *ngIf="i.country">{{i.country.name}}</span>-->
                 </div>
               </div>
+
+              <!--
 
               <ng-container  *ngFor="let f of i.assessments">
                 <div class="row no-gutters dxc-text-clear75 dxc-row-table dxc-rules-ctrl1">
@@ -48,6 +69,9 @@
                   </div>
                 </ng-container>
 
+              </ng-container>
+                -->
+
                 <!--
                 <div class="row no-gutters dxc-text-std dxc-row-table">
                   <div class="col-1">
@@ -63,12 +87,12 @@
                   </div>
                 </div>-->
 
-              </ng-container>
             </ng-container>
           </ng-container>
         </div>
 
         <div class="container-fluid p-0" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rs')">
+
           <ng-container *ngIf="data">
             <ng-container  *ngFor="let i of data.controls">
               <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat" style="border-bottom: 2px;border-color: yellow" >

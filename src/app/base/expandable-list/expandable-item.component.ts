@@ -283,12 +283,12 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
     if(this.expandableFn(this.item)){
 
-//      if(this.item.children == null){
+
       if(this.provider.itemHasChildren(this.item)){
         this.provider.expand( this.item, this.itemType ).subscribe( (pData:any) => {
           //this.item.children = pData;
           //console.log(this.item.children);
-          this.renderChildren();//this.item.children); // pData
+          this.renderChildren();
         });
       }
       //else if(this.item.children.length==1 && this.item.children[0]._t=="wait"){
@@ -296,6 +296,8 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
         this.renderChildren();
         this.provider.expand( this.item, this.itemType ).subscribe( (pData:any) => {
           //this.item.children = pData;
+
+          // we expect provider has updated children with fresh data
           this.renderChildren();//this.item.children); //pData
         });
       }else{

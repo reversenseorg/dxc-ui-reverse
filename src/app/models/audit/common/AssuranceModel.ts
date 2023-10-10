@@ -1,8 +1,9 @@
 import Asset from "./Asset";
 import Threat from "./Threat";
+import CodeThreat from "./CodeThreat";
+import CodeConstraint from "./CodeConstraint";
 import Control from "./Control";
-import ControlAssessment from "./ControlAssessment";
-import {IStringIndex} from "../../../base/IStringIndex";
+import {Metadata} from "./Metadata";
 
 export enum AssuranceModelType {
     SECURITY="sec",
@@ -32,6 +33,7 @@ export default class AssuranceModel {
 
     links: string[] = [];
 
+    modified:Date = (new Date());
     /**
      * The assurance model source helps to differenciate
      * who create the models
@@ -44,52 +46,49 @@ export default class AssuranceModel {
 
     secondaryAssets:Asset[] = [];
 
+    /**
+     * @deprecated
+     */
     globalThreats:Threat[] = [];
-
 
     controls:Control[] = [];
 
+    metadata:Metadata[] = [];
+
+    _meta:any = {};
     protected _ready = false;
 
 
-    constructor( pConfig:any = null) {
-        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
+    constructor( pConfig:any = {}) {
+        this.update(pConfig);
     }
+    /**
+     * To update properties
+     *
+     * @param pObject
+     */
+    update(pObject:any, pUpdateChildren = false):void {
+        if(pObject.id!=null) this.id = pObject.id;
+        if(pObject.scannerID!=null) this.scannerID = pObject.scannerID;
+        if(pObject.name!=null) this.name = pObject.name;
+        if(pObject.description!=null) this.description = pObject.description;
+        if(pObject.links!=null) this.links = pObject.links;
+        if(pObject.generic!=null) this.generic = pObject.generic;
+        if(pObject.metadata!=null) this.metadata = pObject.metadata;
 
-    static fromJsonObject(pOpts:any):AssuranceModel {
-      const a = new AssuranceModel(pOpts);
 
-      if(pOpts.globalThreats!=null && Array.isArray(pOpts.globalThreats)){
-          pOpts.globalThreats.map( (x:Threat,i:number) => {
-              a.globalThreats[i] = new Threat(x);
-          });
-      }
-
-
-    if(pOpts.primaryAssets!=null && Array.isArray(pOpts.primaryAssets)){
-        pOpts.primaryAssets.map( (x:Asset,i:number) => {
-            a.primaryAssets[i] = new Asset(x);
+        this._meta = {};
+        this.metadata.map(x => {
+            this._meta[x.key] = x;
         });
-    }
 
-
-    if(pOpts.secondaryAssets!=null && Array.isArray(pOpts.secondaryAssets)){
-        pOpts.secondaryAssets.map( (x:Asset,i:number) => {
-            a.secondaryAssets[i] = new Asset(x);
-        });
-    }
-
-
-      const ctrls:Control[] = [];
-        if(pOpts.controls!=null && Array.isArray(pOpts.controls)){
-            pOpts.controls.map( (x:Control) => {
-                ctrls.push(Control.fromJsonObject(x));
-            });
-            a.controls = ctrls;
+        if(pUpdateChildren){
+            if(pObject.primaryAssets!=null) this.primaryAssets = pObject.primaryAssets;
+            if(pObject.secondaryAssets!=null) this.secondaryAssets = pObject.secondaryAssets;
+            if(pObject.globalThreats!=null) this.globalThreats = pObject.globalThreats;
+            if(pObject.controls!=null) this.controls = pObject.controls;
         }
 
-
-      return a;
     }
 
     /**
@@ -103,13 +102,49 @@ export default class AssuranceModel {
         return  this.scannerID;
     }
 
+    /**
+     *
+     * @deprecated
+     */
     getThreats():Threat[] {
         return this.globalThreats;
     }
 
+    /**
+     *
+     * @deprecated
+     */
+    getCodeThreats():CodeThreat[] {
+        const ths:CodeThreat[] = [];
+
+        this.globalThreats.map( x => {
+            if(x.isCodeCheckable()){
+                if(x instanceof CodeThreat){
+                    ths.push(x as CodeThreat);
+                }else{
+                    ths.push(new CodeThreat({
+                        ...x,
+                        signature: x.signature as CodeConstraint[]
+                    }));
+                }
+
+            }
+        });
+
+        return ths;
+    }
+
+    /**
+     *
+     */
     getPrimaryAssets():Asset[] {
         return this.primaryAssets;
     }
+
+    /**
+     * Secondary assets are involved into transformations of primary assets
+     *
+     */
     getSecondaryAssets():Asset[] {
         return this.secondaryAssets;
     }
@@ -128,7 +163,55 @@ export default class AssuranceModel {
         return this._ready;
     }
 
+    /**
+     * To instanciate AssuranceModel from a poor object
+     *
+     * Default way to unserialize models stored into DB
+     *
+     * @param {any} pData Poor object
+     * @return {AssuranceModel} Fresh instance
+     * @method
+     * @static
+     */
+    static fromJsonObject(pData:any):AssuranceModel {
+        const o = new AssuranceModel(pData);
 
+        if(pData.globalThreats!=null){
+            pData.globalThreats.map( (x:any,i:number) => {
+                o.globalThreats[i] = new Threat(x);
+            });
+        }
+
+        if(pData.primaryAssets!=null){
+            pData.primaryAssets.map( (x:any,i:number) => {
+                o.primaryAssets[i] = new Asset(x);
+            });
+        }
+
+        if(pData.secondaryAssets!=null){
+            pData.secondaryAssets.map( (x:any,i:number) => {
+                o.secondaryAssets[i] = new Asset(x);
+            });
+        }
+
+
+
+
+        pData.controls.map( (x:any,i:number) => {
+            o.controls[i] = Control.fromJsonObject(x);
+        });
+
+
+
+        return o;
+    }
+
+    /**
+     * To prepare an instance to be serialized
+     *
+     * @return {any} Poor object with no cyclic references
+     * @method
+     */
     toJsonObject():any {
         const o:any = {};
 
@@ -138,22 +221,24 @@ export default class AssuranceModel {
         o.scannerID = this.scannerID;
         o.generic = this.generic;
         o.links = this.links;
+        o.metadata = this.metadata;
 
         o.controls = [];
-        this.controls.map((x:any) => {
+        this.controls.map( x => {
             o.controls.push(x.toJsonObject());
-        })
+        });
+
         o.globalThreats = [];
-        this.globalThreats.map((x:any) => {
+        this.globalThreats.map( x => {
             o.globalThreats.push(x.toJsonObject());
         });
         o.primaryAssets = [];
-        this.primaryAssets.map((x:any) => {
-            o.primaryAssets.push(x);//.toJsonObject());
+        this.primaryAssets.map( x => {
+            //o.primaryAssets.push(x.toJsonObject());//.toJsonObject());
         });
         o.secondaryAssets = [];
-        this.secondaryAssets.map((x:any) => {
-            o.secondaryAssets.push(x);//.toJsonObject());
+        this.secondaryAssets.map( x => {
+            //o.secondaryAssets.push(x);//.toJsonObject());
         });
 
         return o;
@@ -161,5 +246,9 @@ export default class AssuranceModel {
 
     isGeneric():boolean {
         return this.generic;
+    }
+
+    getMetadata():Metadata[] {
+        return this.metadata;
     }
 }

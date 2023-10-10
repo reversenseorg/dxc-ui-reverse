@@ -5,7 +5,7 @@ import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
 import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {SubExplorerComponent} from "../../../base/explorer/subexplorer.component";
 import {ExplorerTab} from "../../../cmp/ExplorerTab";
-import {empty, Observable, Subject} from "rxjs";
+import {empty, from, Observable, Subject} from "rxjs";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {
   ContextMenuComponent,
@@ -248,11 +248,11 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _c: NodeInternalType.ANDROID_PROVIDER, _icon: TOPO_ICONS['PROVIDER'] };
     this.data[this.SUBVIEW.RECV] = { _t: 'f', _s:0, children: [], name: 'Receivers', _c: NodeInternalType.ANDROID_RECEIVER, _icon: TOPO_ICONS['RECEIVER'] };
     this.data[this.SUBVIEW.SRV] = { _t: 'f', _s:0, children: [], name: 'Services', _c: NodeInternalType.ANDROID_SERVICE, _icon: TOPO_ICONS['SERVICE'] };
-    this.data[this.SUBVIEW.KS] = { _t: 'f', _s:0, children: [], name: 'Key Store', _c: NodeInternalType.FILE, _icon: TOPO_ICONS['KS'] };
+    this.data[this.SUBVIEW.KS] = { _t: 'f', _s:0, children: [], name: 'Key Store', id:"ks", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['KS'] };
     //this.data[this.SUBVIEW.DATA] = { _t: 'f', _s:0, children: [], name: 'Data', _icon: TOPO_ICONS['DB'] };
-    this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', _c: NodeInternalType.FILE, _icon: TOPO_ICONS['DEX'] };
+    this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', id:"dex", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['DEX'] };
     this.data[this.SUBVIEW.PERM] = { _t: 'f', _s:0, children: [], name: 'Permissions', _c: NodeInternalType.ANDROID_PERM, _icon: TOPO_ICONS['PERM'] };
-    this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', _c: NodeInternalType.FILE, _icon: TOPO_ICONS['LIBS'] };
+    this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', id:"libs", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['LIBS'] };
     //this.data[this.SUBVIEW.TA] = { _t: 'f', children: [], name: 'Trusted Apps', _icon: GLOBAL_ICONS['FOLDER'] };
     this.filtered = this.data;
   }
@@ -399,10 +399,15 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getActivities()
       .subscribe((pActs:AndroidActivity[]) => {
 
-        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_ACTIVITY;
-          vChild._icon = this.icons['ACTIVITY'];
-          // TODO : add intent filter as children
-        });
+        if(pActs!=null){
+          pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_ACTIVITY;
+            vChild._icon = this.icons['ACTIVITY'];
+            // TODO : add intent filter as children
+          });
+        }else{
+          pActs = [];
+        }
+
 
         this.data[this.SUBVIEW.ACT].children = pActs;
         this.data[this.SUBVIEW.ACT]._s = pActs.length;
@@ -414,10 +419,16 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getProviders()
       .subscribe((pActs:AndroidProvider[]) => {
 
-        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_PROVIDER;
-          vChild._icon = this.icons['PROVIDER'];
-          // TODO : add intent filter as children
-        });
+        if(pActs!=null){
+          pActs.map((vChild:any) => {
+            vChild.__ = NodeInternalType.ANDROID_PROVIDER;
+            vChild._icon = this.icons['PROVIDER'];
+            // TODO : add intent filter as children
+          });
+        }else{
+          pActs = [];
+        }
+
 
         this.data[this.SUBVIEW.PROV].children = pActs;
         this.data[this.SUBVIEW.PROV]._s = pActs.length;
@@ -430,10 +441,15 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getServices()
       .subscribe((pActs:AndroidService[]) => {
 
-        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_SERVICE;
-          vChild._icon = this.icons['SERVICE'];
-          // TODO : add intent filter as children
-        });
+        if(pActs!=null){
+          pActs.map((vChild:any) => {
+            vChild.__ = NodeInternalType.ANDROID_SERVICE;
+            vChild._icon = this.icons['SERVICE'];
+            // TODO : add intent filter as children
+          });
+        }else{
+          pActs = [];
+        }
 
         this.data[this.SUBVIEW.SRV].children = pActs;
         this.data[this.SUBVIEW.SRV]._s = pActs.length;
@@ -446,8 +462,16 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getReceivers()
       .subscribe((pActs:AndroidReceiver[]) => {
 
-        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_RECEIVER;
-        });
+        if(pActs!=null){
+          pActs.map((vChild:any) => {
+            vChild.__ = NodeInternalType.ANDROID_RECEIVER;
+            //vChild._icon = this.icons['SERVICE'];
+            // TODO : add intent filter as children
+          });
+        }else{
+          pActs = [];
+        }
+
 
         this.data[this.SUBVIEW.RECV].children = pActs;
         this.data[this.SUBVIEW.RECV]._s = pActs.length;
@@ -459,10 +483,15 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getPermissions()
       .subscribe((pActs:any[]) => {
 
-        pActs.map((vChild:any) => {         vChild.__ = NodeInternalType.ANDROID_PERM;
-          vChild._icon = this.icons['PERM'];
-          // TODO : add intent filter as children
-        });
+
+        if(pActs!=null){
+          pActs.map((vChild:any) => {
+            vChild.__ = NodeInternalType.ANDROID_PERM;
+            vChild._icon = this.icons['PERM'];
+          });
+        }else{
+          pActs = [];
+        }
 
         this.data[this.SUBVIEW.PERM].children = pActs;
         this.data[this.SUBVIEW.PERM]._s = pActs.length;
@@ -474,11 +503,15 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .subscribe((pFiles:ModelFile[]) => {
 
         console.log(pFiles);
+        if(pFiles!=null){
+          pFiles.map((vFile:any) => {
+            vFile._t = NodeInternalType.FILE;
+            vFile._icon = this.data[this.SUBVIEW.DEX]._icon;
+          });
+        }else{
+          pFiles = [];
+        }
 
-        pFiles.map( (vFile:any) => {
-          vFile._t = NodeInternalType.FILE;
-          vFile._icon = this.data[this.SUBVIEW.DEX]._icon;
-        });
 
         this.data[this.SUBVIEW.DEX].children = pFiles;
         this.data[this.SUBVIEW.DEX]._s = pFiles.length;
@@ -555,11 +588,13 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   }
 
   expand( pItem:any, pType:string): Observable<any[]> {
-    let data:any = null;
+      return from([pItem.children]);
+  }
 
+    /*
     console.log('Expand : ',pItem);
     switch(pType){
-      /*case 'p':
+      case 'p':
         data = this.controller.service
           .listPackages( this.selected, '^'+pItem.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+'$')
           .pipe(
@@ -625,14 +660,14 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
               return children;
             })
           )
-        break;*/
+        break;
       default:
         data = empty();
         break;
     }
 
     return data;
-  }
+  }*/
 
   open( pItem:any): any {
     this.controller.open( pItem, 'expl');
@@ -648,23 +683,19 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   }
 
   itemHasChildren( pItem:any, pType='p'): boolean {
-    return (pType=='c'||pType=='p');
+    console.log("TOPO > itemHasChildren > ",pItem,(pItem._t=='f'||pType=='c'||pType=='p'));
+    return (pItem._t=='f'||pType=='c'||pType=='p');
   }
 
   itemHasLazyChildren( pItem:any, pType ='p'): boolean {
-    return (pItem.children.length==1 && pItem.children[0]._t=="wait");
+    console.log("TOPO > itemHasLazyChildren > ",pItem,(pItem.children!=null && pItem.children.length==1 && pItem.children[0]._t=="wait"));
+    return (pItem.children!=null && pItem.children.length==1 && pItem.children[0]._t=="wait");
   }
 
 
   itemGetChildren( pItem:any):any{
+    console.log("TOPO > itemGetChildren > ",pItem.children);
     return pItem.children;
-  }
-
-  onExpand( pItem:any):void {
-    console.log("OnExpand : ",pItem);
-  }
-
-  onCollapse( pItem:any):void {
   }
 
   onItemFocus( pEvent:any):void{

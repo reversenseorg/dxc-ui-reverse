@@ -132,6 +132,33 @@ export class AuditService extends DxcApiService{
 
       if(pEl.success){
 
+        const model = AssuranceModel.fromJsonObject( pEl.data);
+        this.outputSvc.print(OutputMessage.newSuccess({
+          src: "Audit",
+          msg: `Assurance model has been retrieved`
+        }));
+
+        return model;
+      }else{
+        this.outputSvc.print(OutputMessage.newError({
+          src: "Audit",
+          msg: `Assurance model cannot be retrieved`
+        }));
+
+        return null;
+      }
+    }));
+  }
+
+  getReportOf(pModelId:string):Observable<Nullable<AssuranceModel>> {
+    return this._process(
+        this.endpoints['audit']['reportByModel'],
+        { model: pModelId }
+    ).pipe(map( (pEl:any) => {
+
+      console.log("Audit service > getReportOf > ", pModelId, pEl);
+      if(pEl.success){
+
         const model = new AssuranceModel(pEl.data);
 
         this.outputSvc.print(OutputMessage.newSuccess({

@@ -161,7 +161,7 @@ export class SubnavbarButtonComponent implements AfterViewInit {
         <!--&nbsp;<fa-icon *ngIf="icon" [icon]="[iconView.type,iconView.name]" [ngClass]="iconView.color1"  class="pl-1 pr-1"></fa-icon>-->
         <dxc-icon *ngIf="icon" [model]="icon"></dxc-icon>
         <span *ngIf="label" [ngClass]="color">&nbsp;{{ label}}</span>
-        &nbsp;<fa-icon *ngIf="closable" [icon]="['fas','xmark']" (click)="onCloseTab()" class="ml-2 pl-1 pr-1 btn-close"></fa-icon>
+        &nbsp;<fa-icon *ngIf="closable" [icon]="['fas','xmark']" (click)="onCloseTab()" class="ml-2 pl-1 pr-1"></fa-icon>
       </a>
     </li>
   `,

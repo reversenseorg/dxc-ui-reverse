@@ -216,7 +216,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
           path:pItem.p,
          // app:this.projectSvc.getPackageID(),
           type:(this.privileged? 'privileged':'user')
-        });
+        })
         /*if(data!=null){
           data = data.pipe( map((pObs:any)=>{
             return this.sortFiles(pObs, pItem.dev);
@@ -237,9 +237,16 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
         break;
     }
 
+    console.log("FS > expand > ",data)
+
     if(data!=null){
         data = data.pipe( map((pObs:any)=>{
-          return this.sortFiles(pObs);
+
+          console.log("FS > expand > pipe > before sort",pObs);
+          pItem.children = this.sortFiles(pObs);
+          console.log("FS > expand > pipe > after sort",pObs);
+
+          return pObs;
         }));
     }
 
@@ -255,26 +262,37 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
     return (pItem._t=='d' || pItem._t=='l');
   }
 
-
+  /**
+   * it should return true is the node has children to download
+   * but false if a spin must be displayed while download
+   *
+   * @param pItem
+   * @param pType
+   */
   itemHasChildren( pItem:any, pType='p'): boolean {
-    return (pType=='d');
+    console.log("FS > itemHasChildren > ", pItem);
+    return (pItem._t=='d');
   }
 
+  /**
+   * it should return true is the node has custom children while download
+   *
+   * @param pItem
+   * @param pType
+   */
   itemHasLazyChildren( pItem:any, pType ='p'): boolean {
-    return (pItem.children.length==1 && pItem.children[0]._t=="wait");
+    console.log("FS > itemHasLazyChildren > ", pItem);
+    return (pItem._t=='d' && pItem.children!=null && pItem.children.length==1); // && pItem.children[0]._t=="wait");
   }
 
 
 
   itemGetChildren( pItem:any):any{
+
+    console.log("FS > itemGetChildren > ", pItem);
     return pItem.children;
   }
 
-  onExpand( pItem:any):void {
-  }
-
-  onCollapse( pItem:any):void {
-  }
 
   onItemFocus( pEvent:any):void{
 

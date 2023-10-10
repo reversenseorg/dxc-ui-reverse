@@ -5,7 +5,7 @@
         <a ngbNavLink [class.active]="activeCtn && vp.instance.id == activeCtn.id">
           <dxc-icon [model]="vp.instance.view.tab.icon" [ngClass]="['pl-1','pr-1']"></dxc-icon>
           <span [ngClass]="vp.instance.view.tab.color">{{ vp.instance.view.tab.label }}</span>
-          &nbsp;<fa-icon [icon]="['fas','xmark']" (click)="close($event, vp.instance)" class="ml-2 pl-1 pr-1 btn-close"></fa-icon>
+          &nbsp;<fa-icon [icon]="['fas','xmark']" (click)="close($event, vp.instance)" class="ml-2 pl-1 pr-1"></fa-icon>
         </a>
       </li>
     </ng-container>

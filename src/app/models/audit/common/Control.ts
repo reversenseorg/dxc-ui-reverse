@@ -1,14 +1,35 @@
+import {AssetOptions} from "./Asset";
 import ControlAssessment from "./ControlAssessment";
-import {Nullable} from "../../../base/Nullable";
+import {Metadata} from "./Metadata";
 import {IStringIndex} from "../../../base/IStringIndex";
 
-export interface ControlOptions extends IStringIndex<any>{
+export interface ControlOptions {
     id?:string;
     name?:string;
     description?:string;
     links?:string[];
     children?:Control[];
     assessments?:ControlAssessment[];
+    metadata?:Metadata[]
+}
+
+
+export interface TrackerCategory {
+    name:string;
+    occurences:number;
+    styles?:any;
+}
+
+export enum ControlMetadataType {
+    TEXT,
+    ANY,
+    URI
+}
+
+export interface ControlMetadata {
+    key:string;
+    type:ControlMetadataType;
+    value:any;
 }
 
 /**
@@ -17,20 +38,75 @@ export interface ControlOptions extends IStringIndex<any>{
 export default class Control {
 
 
+
+
+    _meta:any = {}
+
+    /**
+     * Unique control ID
+     * @type {string}
+     * @field
+     */
     id:string;
 
+    /**
+     * Control point name
+     * @type {string}
+     * @field
+     */
     name:string;
 
     description:string;
 
-    links:string;
+    metadata:Metadata[] = [];
+
+    category:string[] = []
+
+    links:IStringIndex<any>;
 
     children:Control[] = [];
 
+    country:any = null;
+
     assessments:ControlAssessment[] = []
 
-    constructor( pConfig:Nullable<ControlOptions> = null) {
-        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
+    tags:number[] = [];
+
+
+    // local
+    verified = true;
+
+
+    catTags:TrackerCategory[] = [];
+
+    addDate:Date = (new Date(2023,4,15,2));
+
+    constructor( pConfig:ControlOptions = {}) {
+        this.update(pConfig);
+    }
+
+
+
+    update(pConfig:any, pUpdateChildren = false):void {
+        if(pConfig.id!=null) this.id = pConfig.id;
+        if(pConfig.name!=null) this.name = pConfig.name;
+        if(pConfig.description!=null) this.description = pConfig.description;
+        if(pConfig.links!=null) this.links = pConfig.links;
+        if(pConfig.metadata!=null) this.metadata = pConfig.metadata;
+        if(pConfig.country!=null) this.country = pConfig.country;
+        if(pConfig.category!=null) this.category = pConfig.category;
+
+
+
+        this._meta = {};
+        this.metadata.map(x => {
+            this._meta[x.key] = x;
+        });
+
+        if(pUpdateChildren){
+            if(pConfig.children!=null) this.children = pConfig.children;
+            if(pConfig.assessments!=null) this.assessments = pConfig.assessments;
+        }
     }
 
     hasChildren():boolean {
@@ -48,45 +124,57 @@ export default class Control {
             description: this.description,
             links: this.links,
             children: [],
-            assessments: []
+            assessments: [],
+            metadata: this.metadata,
+            category: this.category,
+            country: this.country
         };
+
 
         if(this.hasChildren()){
             this.children.map(x => {
-                o.children.push(x.toJsonObject())
+
+                if(x.toJsonObject!=null){
+                    o.children.push(x.toJsonObject());
+                }else{
+                    o.children.push(x);
+                }
             });
         }
 
         if(this.hasAssessments()){
             this.assessments.map(x => {
-                o.assessments.push(x.toJsonObject())
+                if(x.toJsonObject!=null){
+                    o.assessments.push(x.toJsonObject());
+                }else{
+                    o.assessments.push(x);
+                }
+
             });
         }
 
         return o;
     }
 
-    static fromJsonObject(pOpts:any):Control {
-      const a = new Control(pOpts);
 
-      let ctrls:any[] = [];
-      if(pOpts.children!=null && Array.isArray(pOpts.children)){
-          pOpts.children.map( (x:any) => {
-              ctrls.push(Control.fromJsonObject(x));
-          });
-      }
 
-      a.children = ctrls;
+    static fromJsonObject(pObject:any):Control {
+        const control = new Control(pObject);
+        control.update(pObject,true);
 
-      ctrls = []
-        if(pOpts.assessments!=null && Array.isArray(pOpts.assessments)){
-            pOpts.assessments.map( (x:any) => {
-                ctrls.push(ControlAssessment.fromJsonObject(x));
+        if(control.hasChildren()){
+            control.children.map((vChild,index)=>{
+                control.children[index] = Control.fromJsonObject(vChild);
             });
         }
 
-      a.assessments = ctrls;
+        if(control.hasAssessments()){
+            control.assessments.map((vChild,index)=>{
+                control.assessments[index] = ControlAssessment.fromJsonObject(vChild);
+            });
+        }
 
-      return a;
+        return control;
     }
+
 }

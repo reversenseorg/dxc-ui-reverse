@@ -133,60 +133,54 @@ export class DeviceManagerService extends DxcApiService {
       },{
         label: 'Record touch events',
         enabled: false
+      },{type:'separator'},{
+        label: 'Search Permissions',
+        click: ()=>{
+          const dev=this.electronSvc.getSelectionManager().getNewest().el;
+          this.doProfiling(dev,'perm').subscribe((vProfile)=>{
+            this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.PERM });
+          });
+        }
       },{
-        label: 'Analyze device ...',
-        submenu: [{
-            label: 'Permissions',
-            click: ()=>{
-              const dev=this.electronSvc.getSelectionManager().getNewest().el;
-              this.doProfiling(dev,'perm').subscribe((vProfile)=>{
-                this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.PERM });
-              });
-            }
-          },{
-            label: 'Certificates',
-            click: ()=>{
-              const dev=this.electronSvc.getSelectionManager().getNewest().el;
-              this.doProfiling(dev,'trust').subscribe((vProfile)=>{
-                this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.CERT });
-              });
-            }
-          },{
-            label: 'System calls',
-            click: ()=>{
-              const dev=this.electronSvc.getSelectionManager().getNewest().el;
-              this.doProfiling(dev,'sc').subscribe((vProfile)=>{
-                this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.SYSCALL });
-              });
-            }
-          },{
-            label: 'Mounted FileSystems',
-            click: ()=>{
-              const dev=this.electronSvc.getSelectionManager().getNewest().el;
-              this.doProfiling(dev,'mounts').subscribe((vProfile)=>{
-                this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.MOUNTS });
-              });
-            }
-          },{
-              label: 'USB / ADB',
-              click: ()=>{
-                const dev=this.electronSvc.getSelectionManager().getNewest().el;
-                this.doProfiling(dev,'usb').subscribe((vProfile)=>{
-                  this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.USB });
-                });
-              }
-          },{
-            type: 'separator'
-          },{
-            label: 'All',
-            click: ()=>{
-              const dev=this.electronSvc.getSelectionManager().getNewest().el;
-              this.doProfiling(dev,'all').subscribe(()=>{
-                this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.SYSTEM });
-              });
-            }
-          }
-        ]
+        label: 'Search CA Certificates',
+        click: ()=>{
+          const dev=this.electronSvc.getSelectionManager().getNewest().el;
+          this.doProfiling(dev,'trust').subscribe((vProfile)=>{
+            this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.CERT });
+          });
+        }
+      },{
+        label: 'Supported System calls',
+        click: ()=>{
+          const dev=this.electronSvc.getSelectionManager().getNewest().el;
+          this.doProfiling(dev,'sc').subscribe((vProfile)=>{
+            this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.SYSCALL });
+          });
+        }
+      },{
+        label: 'List Mounted FileSystems',
+        click: ()=>{
+          const dev=this.electronSvc.getSelectionManager().getNewest().el;
+          this.doProfiling(dev,'mounts').subscribe((vProfile)=>{
+            this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.MOUNTS });
+          });
+        }
+      },{
+        label: 'Search USB / ADB keys',
+        click: ()=>{
+          const dev=this.electronSvc.getSelectionManager().getNewest().el;
+          this.doProfiling(dev,'usb').subscribe((vProfile)=>{
+            this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.USB });
+          });
+        }
+      },{
+        label: 'Profile the device',
+        click: ()=>{
+          const dev=this.electronSvc.getSelectionManager().getNewest().el;
+          this.doProfiling(dev,'all').subscribe(()=>{
+            this.onMenuClick.next({ item:'show-dev', dev:dev, tab:DEVICE_PANEL.SYSTEM });
+          });
+        }
       },{
         type: 'separator'
       },{

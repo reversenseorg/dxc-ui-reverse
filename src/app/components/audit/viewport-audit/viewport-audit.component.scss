@@ -90,12 +90,14 @@ div.splitted {
 
 .dxc-rules-topCat {
   border: 0px;
-  background-color: var(--list-border-color);
-  color: var(--text-100);
-  font-size: 1.2em;
-  font-weight: 700;
+  border-bottom: 1px solid var(--list-entry-border);
+  background-color: var(--list-bg);
+  color: var(--text-75);
+  font-size: 1.1em;
+  font-weight: 500;
   padding: 0 2px 0 0;
   width:100%;
+  margin:0;
 }
 .dxc-rules-ctrl1 {
   border: 0px;

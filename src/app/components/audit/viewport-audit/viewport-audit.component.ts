@@ -48,7 +48,7 @@ export const AUDIT_PANEL = {
 @Component({
   selector: 'app-viewport-audit',
   templateUrl: './viewport-audit.component.html',
-  styleUrls: ['./viewport-audit.component.scss','../../../forms.scss']
+  styleUrls: ['./viewport-audit.component.scss','../../../forms.scss',"../../../../../node_modules/flag-icons/css/flag-icons.min.css" ]
 })
 export class ViewportAuditComponent implements AfterViewInit, IViewportContainer {
 
@@ -262,18 +262,19 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
     switch (pType){
       case AUDIT_PANEL.INFO:
         this.activeLeft = AUDIT_PANEL.INFO;
+        this.activeWidth = 100;
         break;
       case AUDIT_PANEL.RESULT:
         this.activeLeft = AUDIT_PANEL.RESULT;
-        /*this.dmService.getSystemCalls(this.data).subscribe((pSyscalls)=>{
-          this.data.syscalls = pSyscalls;
-          console.log(pSyscalls);
-          this.activeLeft = pType;
-          this.activeRight = pType;
-        });*/
+        this.activeWidth = 80;
+        this.auditService.getReportOf(this.data.getID()).subscribe((vResults:any)=>{
+            console.log(vResults);
+        })
         break;
       case AUDIT_PANEL.RULES:
+        console.log("Audit > rules > ",this.data);
         this.activeLeft = AUDIT_PANEL.RULES;
+        this.activeWidth = 30;
         break;
       default:
         /*this.dmService.getProfile(this.data).subscribe((pProfile)=>{

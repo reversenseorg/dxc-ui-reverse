@@ -296,28 +296,38 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     ctn.style.maxHeight = (pSize.height - navHeight) + 'px';
   }
 
+  /**
+   * Implementation of expand, this function istrigged when a user click
+   * on an expandable-item
+   *
+   * Important : this method must update 'children' array of pItem, or have a
+   * behavior compatible with "itemGetChildren".
+   *
+   * @param {any} pItem Expandable item where the user clicked
+   * @param {string} pType An item type
+   * @return {Observable<DeviceItem[]>} An array of item renderable into ExplorerDevice view
+   * @method
+   */
   expand( pItem: any, pType: string): Observable<DeviceItem[]> {
     let data: any = null;
-
     console.log('expanding ...', pItem);
     switch (pItem._t){
       case 'app':
         data = this.dmService.getApplications(pItem.dev).pipe(
           map( (pObs: any) => {
-            // pObs.data._icon = this.icons['CLASS'];
-            console.log(pObs);
-
+            const children:any[] = [];
             if(pObs != null){
-              pObs.map((pApp:any) => {                pApp._t = 'apkg';
+              pObs.map((pApp:any) => {
+                pApp._t = 'apkg';
                 pApp._e = false ;
                 pApp.tag = (pApp.packagePath.split('/')[1]);
                 pApp.dev = pItem.dev;
+                children.push(pApp);
               });
 
+              // replace "wait" placeholder item, append fresh children
+              pItem.children = children;
             }
-
-
-
 
             return pObs;
           })
@@ -326,14 +336,16 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       case 'ps':
         data = this.dmService.getProcesses(pItem.dev, (pItem.dev.rootMode? 'privileged':'user')).pipe(
           map( (pObs: any) => {
+            const children:any[] = [];
             if(pObs!=null){
               pObs.map((pApp:any) => {               pApp._t = 'p';
                 pApp._e = false ;
                 pApp.dev = pItem.dev;
+                children.push( pApp);
               });
-              console.log(pObs);
-            }
 
+            }
+            pItem.children = children;
             return pObs;
           })
         );
@@ -359,6 +371,10 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
         });
         if(data!=null){
           data = data.pipe( map((pObs:any)=>{
+            console.log("Explorer-device > ")
+            if(pObs!=null){
+
+            }
             return this.sortFiles(pObs, pItem.dev);
           }));
         }
@@ -511,18 +527,10 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   itemGetChildren( pItem: any): any{
-
+    console.log("explorer-device > itemGetChildren > ",pItem);
     return pItem.children;
   }
 
-  onExpand( pItem: any): void {
-    // TODO
-
-  }
-
-  onCollapse( pItem: any): void {
-    // todo
-  }
 
   private _retrieveShortForm( pEl:any):string {
 

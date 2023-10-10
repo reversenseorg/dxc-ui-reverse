@@ -1,4 +1,4 @@
-<div class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
+<div  [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"   class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
   <div #metadata style="border-bottom:1px solid #777;line-height: 1">
 
 

@@ -74,7 +74,7 @@ export class TopologyController extends UiController implements IController {
       this.rendered.push({ item:pItem, uid:vid });
     }
 
-    console.log(pItem);
+    console.log("TOPO > Controller > open ",pItem,vid);
 
     switch(pItem.__){
       case NodeInternalType.ANDROID_SERVICE:

@@ -50,12 +50,19 @@
           <ng-container *ngIf="msg.isHookMessage()">
             <ng-container *ngFor="let d of msg.getHookMessageData() | keyvalue">
 
+
+              <ng-container *ngIf="msg.isRootDetectionData(d.value)">
+                <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>&nbsp;
+                <span class="text-warning">Root detection</span>
+              </ng-container>
+
               <ng-container [ngSwitch]="getProperty(d.value,'__')">
                 <ng-container *ngSwitchCase="NODE_TYPE.CLASS">
                   <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d.value,NODE_TYPE.CLASS)" class="actionable">{{ getProperty(d.value,'fqcn') }}</span>
                 </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.METHOD">
-                  <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+                  <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;
+                  <span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
                 </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.FILE">
                   <dxc-icon [model]="cIcons['FILE']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>

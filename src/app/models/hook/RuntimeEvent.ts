@@ -4,6 +4,7 @@ import BusEvent from "../BusEvent";
 import {NodeInternalType} from "../NodeInternalType";
 import {Nullable} from "../../base/Nullable";
 import {IStringIndex} from "../../base/IStringIndex";
+import HookMessageV2 from "./HookMessageV2";
 
 export enum RuntimeEventType {
   HOOK= 'h',
@@ -30,6 +31,18 @@ export interface HookRawMessage {
  * @class
  */
 export class RuntimeEvent<P> extends BusEvent implements INode{
+
+  static rootPatterns:string[] = [
+      '/su',
+      'Superuser.apk',
+      'magisk',
+      '/system/app/Superuser.apk',
+      '/system/xbin/su',
+      '/proc/meminfo'
+  ];
+  static rootPattern:RegExp = /(\/su|Superuser\.apk|magisk|\/system\/app\/Superuser\.apk|\/system\/xbin\/su)/g;
+
+
 
   __:NodeInternalType = NodeInternalType.RUNTIME_EVENT;
 
@@ -63,7 +76,7 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
 
   isHookMessage(){
-    return (this.type==RuntimeEventType.HOOK);
+    return (this.data!=null && this.data.hook!=null); //(this.type==RuntimeEventType.HOOK||this.data);
   }
 
   getHookMessage():HookRawMessage {
@@ -72,6 +85,26 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
   getHookMessageData():IStringIndex<any> {
     return (this.data.data==null ? {} : this.data.data);
+  }
+
+  isRootDetection():boolean {
+    let f = false;
+    if(this.data.data==null) return false;
+
+    for(let arg in this.data.data){
+      if(typeof this.data.data[arg]!='string') continue;
+
+      if(this.data.data[arg].match(RuntimeEvent.rootPattern)!=null){
+        f = true;
+        break;
+      }
+    }
+    return f;
+  }
+
+  isRootDetectionData(pData:string):boolean {
+    if(typeof pData!='string' || pData==null) return false;
+    return (pData.match(RuntimeEvent.rootPattern)!=null);
   }
 
   setNodes(pNodes:INode[]){
@@ -111,6 +144,14 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
     return this.tags;
   }
 
+
+  static fromHookMessage(pHMsg:HookMessageV2):RuntimeEvent<HookMessageV2> {
+    const msg:RuntimeEvent<HookMessageV2> = new RuntimeEvent({
+
+    });
+    msg.raw = pHMsg;
+    return msg;
+  }
 
   /**
    * To make an instance of Object which not contain circular reference
