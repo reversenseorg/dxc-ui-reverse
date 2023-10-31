@@ -83,6 +83,27 @@ export class DxcApiToken {
     return _TOKENS[pName] as DxcApiToken;
   }
 
+  /**
+   * To create a temporay tokean not persisted into local storage
+   *
+   * Typically use case are a user browsing a code reference from
+   * scan report. A user could explore several report of different project
+   * in same time.
+   *
+   * @param {string} pName The token name
+   * @param {string} pValue the token value
+   * @return {DxcApiToken} The token instance
+   * @method
+   * @static
+   */
+  static createTemporary( pName = "local", pValue:string):DxcApiToken {
+    if(_TOKENS.hasOwnProperty(pName)==false){
+      _TOKENS[pName] = new DxcApiToken(pName, pValue);
+    }
+
+    return _TOKENS[pName] as DxcApiToken;
+  }
+
   static getInstance( pName:Nullable<string> = "local"):Nullable<DxcApiToken> {
     if(pName==null && DxcApiToken.count()==1){
       return Object.values(_TOKENS)[0];

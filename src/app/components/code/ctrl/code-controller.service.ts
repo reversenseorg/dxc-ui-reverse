@@ -21,6 +21,7 @@ import ModelPackage from "../../../models/ModelPackage";
 import {InfiniteScrollOpts} from "../../../cmp/InfiniteScrollOpts";
 import {Nullable} from "../../../base/Nullable";
 import ModelBasicBlock from "../../../models/ModelBasicBlock";
+import {DexcaliburConnectionParams} from "../../../models/remote/DexcaliburConnectionParams";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -437,6 +438,26 @@ export class CodeControllerService extends DxcApiService{
 
       }));
     }
+  }
+
+  getConnectionStringFromURI():DexcaliburConnectionParams|null {
+    const url = new URL(location.href);
+    if(url.searchParams.has("__") && url.searchParams.has("__")){
+      const m = OutputMessage.newError({
+        src: "Authentication",
+        msg: `Connection params not found. See docs.`
+      });
+      this.outputSvc.print(m);
+      return null;
+    }
+
+    return DexcaliburConnectionParams.fromPoorObject(
+        JSON.parse(
+            atob(
+                url.searchParams.get("auth") as string
+            )
+        )
+    );
   }
 
   getCompleteClass( pQuery:string):Observable<Nullable<ModelClass>> {
