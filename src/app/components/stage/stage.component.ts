@@ -41,6 +41,7 @@ import {DxcApiService} from "../../base/DxcApiService";
 import {WebsocketEvent, WebsocketEventType} from "../../base/websocket/WebsocketEvent";
 import {Nullable} from "../../base/Nullable";
 import {UIException} from "../../base/error/UIException";
+import {ActivatedRoute} from "@angular/router";
 
 
 // size restriction (percent)
@@ -216,15 +217,27 @@ export class StageComponent implements OnInit, AfterViewInit {
     private authSvc:AuthService,
     private kbSvc:KeyboardNavigationService,
     private eSvc: ElectronService,
+    private _activatedRoute:ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector:ChangeDetectorRef) {
-
 
     // try to restore default conenction
    // this.authSvc.getConnectionStringFromURI();
     //const port = this.settingsService.getWsPort();
 
+    this._activatedRoute
+        .params.subscribe((c)=> {
 
+        console.log(c);
+
+        if (c.id != "") {
+          this.authSvc.onLogin$.next({
+            project:c.id,
+            node_id: c.node_id,
+            node: c.node
+          })
+        }
+    });
 
 
     this.settingsService.listNetworkSettings().subscribe((vSettings)=>{

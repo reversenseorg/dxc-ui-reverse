@@ -6,7 +6,10 @@ import {StageComponent} from "./components/stage/stage.component";
 
 @NgModule({
   imports: [RouterModule.forRoot([{
-      path: 'home',
+      path: 'home/:id',
+      component: StageComponent
+  },{
+      path: 'home/:id/code/:node/:node_uid',
       component: StageComponent
   }, {
       path: '**',

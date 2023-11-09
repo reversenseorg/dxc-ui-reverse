@@ -33,6 +33,8 @@ export class AuthService extends DxcApiService{
    */
   onMenuClick:Subject<any> = new Subject<any>();
 
+  onLogin$:Subject<any> = new Subject<any>();
+
   onLogout:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
   onAuthentication:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
 
@@ -64,6 +66,18 @@ export class AuthService extends DxcApiService{
         }
       }]
     },8);
+
+    this.onLogin$.subscribe((vEvent:any)=>{
+      if(vEvent.project!=null){
+        const tok = DxcApiToken.getInstance("puid");
+        if(tok!=null){
+          tok.updateToken(vEvent.project);
+        }else{
+          DxcApiToken.create('puid', vEvent.project);
+        }
+        this.onAuthentication.next(AuthenticationEvent.refresh(vEvent));
+      }
+    });
   }
 
   ssoLogout():void {

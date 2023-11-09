@@ -22,6 +22,9 @@ import {InfiniteScrollOpts} from "../../../cmp/InfiniteScrollOpts";
 import {Nullable} from "../../../base/Nullable";
 import ModelBasicBlock from "../../../models/ModelBasicBlock";
 import {DexcaliburConnectionParams} from "../../../models/remote/DexcaliburConnectionParams";
+import {DxcApiToken} from "../../../base/DxcApiToken";
+import {AuthenticationEvent, AuthenticationEventType} from "../../auth/AuthenticationEvent";
+import {AuthService} from "../../auth/ctrl/auth.service";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -50,6 +53,7 @@ export class CodeControllerService extends DxcApiService{
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
   constructor( private appmenuSvc:AppMenuService,
+               private authSvc:AuthService,
                private projectSvc:ProjectService,
                private tagSvc:TagService,
                private outputSvc:OutputService,
@@ -130,6 +134,15 @@ export class CodeControllerService extends DxcApiService{
     }, http, outputSvc);
     //let ser:SerializeFilter = new SerializeFilter();
     //ser.prepare('name,children<ModelClass>[name:simpleName=>sname],children<ModelPackage>[sname:name]');
+
+
+    this.authSvc.onAuthentication.subscribe( (pEvent:AuthenticationEvent)=>{
+      switch (pEvent.type) {
+        case AuthenticationEventType.REFRESH:
+
+          break;
+      }
+    })
 
 
     this.appmenuSvc.addMenu({

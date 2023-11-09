@@ -131,6 +131,16 @@ export class DxcApiToken {
       throw new Error("Authentication token is null");
     }
   }
+
+  /**
+   *
+   * @param {string} pValue
+   * @method
+   */
+  updateToken(pValue:string):void {
+    this._t = pValue;
+    DxcApiToken.updateLocalStorage();
+  }
 }
 
 
