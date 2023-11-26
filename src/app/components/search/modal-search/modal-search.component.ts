@@ -317,7 +317,7 @@ export class ModalSearchComponent implements OnInit {
     this.helper.execute(req).subscribe( (pObs:any) => {
       this.msg = "Executed : ";
       if(pObs.data != null){
-        this.msg += pObs.data.length+" results";
+        this.msg += pObs.data.length+" results (50 per pages)";
         if(pObs.data.length>50){
           this.results = pObs.data.slice(0,50);
         }else

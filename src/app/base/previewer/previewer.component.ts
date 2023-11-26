@@ -13,8 +13,8 @@ import {IStringIndex} from "../IStringIndex";
   template: `
     <ng-container *ngIf="inline">
       <div (mouseover)="extendPreview($event)" (click)="select()" (mouseout)="collapsePreview($event)" class="dxc-preview">
-        <pre *ngIf="!expanded" class="text-white mb-0 mt-0">{{ preview }}</pre>
-        <pre *ngIf="expanded" class="text-white mb-0 mt-0 dxc-preview-exp">{{ data }}</pre>
+        <pre *ngIf="!expanded" class="text-white mb-0 mt-0 dxc-preview-noscroll">{{ preview }}</pre>
+        <pre *ngIf="expanded" class="text-white mb-0 mt-0 dxc-preview-noscroll dxc-preview-exp">{{ data }}</pre>
       </div>
     </ng-container>
   `,

@@ -200,7 +200,6 @@ export class SelectionManager {
 
       siblingEl = anchor.childNodes[i];
 
-      console.log({e:siblingEl});
       switch (siblingEl.nodeName) {
         case 'TEXTAREA':
           if(siblingEl.className=="ace_text-input"){

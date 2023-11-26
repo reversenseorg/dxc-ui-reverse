@@ -27,6 +27,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Tag} from "../../../models/tags/Tag";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {Nullable} from "../../../base/Nullable";
+import ModelMethod from "../../../models/ModelMethod";
 
 
 const INITIAL_MSG = "Type something to search ... Visit documentation to see more.";
@@ -145,7 +146,25 @@ export class SearchResultListComponent implements OnInit {
     this.codeService.displayContextMenu(pEvent, type, pResultItem);
   }
 
+  openLazyView(pSubject:string, pPurpose:string):void {
+    switch (pPurpose){
+      case 'setter':
+      case 'getter':
+      case 'invoke':
+        this.codeService.getModelMethod(pSubject).subscribe((vMethod:Nullable<ModelMethod>)=>{
+          console.log(vMethod);
+          if(vMethod!=null){
+            this.openView(vMethod);
+          }
+        });
+        break;
+    }
+  }
+
+
+
   openView(e: any, opts:number = 0) {
+
     switch (e.__) {
       case NodeInternalType.PACKAGE:
       case NodeInternalType.CLASS:

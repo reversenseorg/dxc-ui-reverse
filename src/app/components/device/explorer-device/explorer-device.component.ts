@@ -866,12 +866,12 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
         this.outputSvc.print(new OutputMessage({
           src: 'Device Manager',
           msg: 'Target application [' + pDevice.packageIdentifier + '] has been successfully downloaded from [' +
-            pDevice.dev.id + '] into [' + pObs.data.tmp + '] temporary file'
+            pDevice.uid + '] into [' + pObs.data.tmp + '] temporary file'
         }));
       }else{
         this.outputSvc.print(new OutputMessage({
           src: 'Device Manager',
-          msg: 'Downloading application [' + pDevice.packageIdentifier + '] from [' + pDevice.dev.id + '] device failed.'
+          msg: 'Downloading application [' + pDevice.packageIdentifier + '] from [' + pDevice.uid + '] device failed.'
         }));
       }
     });

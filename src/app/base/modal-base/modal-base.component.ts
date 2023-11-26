@@ -102,7 +102,7 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
     }
 
     //this._time = (new Date()).getTime();
-    console.log("[modal-base] show ",pOptions,this.display, this.delegateConfigure, this.modalEl);
+    //console.log("[modal-base] show ",pOptions,this.display, this.delegateConfigure, this.modalEl);
     if(this.display){
       if((pOptions==null) || (pOptions!=null && this.options==pOptions)){
         //this._time = (new Date()).getTime();

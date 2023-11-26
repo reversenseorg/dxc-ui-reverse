@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
 import {ExplorerView} from "../../../cmp/ExplorerView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
@@ -14,7 +24,6 @@ import {
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
 import {from, Observable} from "rxjs";
-import {NodeInternalType} from "../../../models/NodeInternalType";
 import {ElectronService} from "../../../core/services";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {CodeControllerService, ContextMenuEvent} from "../../code/ctrl/code-controller.service";
@@ -24,8 +33,8 @@ import AssuranceModel from "../../../models/audit/common/AssuranceModel";
 import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import Control from "../../../models/audit/common/Control";
 import {UIException} from "../../../base/error/UIException";
-import {Nullable} from "../../../base/Nullable";
 import {ICON_TYPE} from "../../../base/icon/IconModel";
+
 export enum AUDIT_SUBVIEW {
   THREATS="threat",
   PII='pii',
@@ -36,7 +45,8 @@ export enum AUDIT_SUBVIEW {
   selector: 'app-explorer-audit',
   templateUrl: './explorer-audit.component.html',
   styleUrls: ['./explorer-audit.component.scss'],
-  providers: [NgbTooltipConfig]
+  providers: [NgbTooltipConfig],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplorerAuditComponent extends SubExplorerComponent<AuditController> implements OnInit, AfterViewInit, ExpandableProvider {
 
@@ -90,7 +100,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
                private codeSvc:CodeControllerService,
                private electronSvc:ElectronService,
                private projectSvc:ProjectService,
-
+               private changeDetectorRef:ChangeDetectorRef,
                ngbTooltipConfig:NgbTooltipConfig) {
 
     super();
@@ -129,15 +139,15 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   ngOnInit(): void {
 
-    this.auditSvc.getModels().subscribe( (pModels)=>{
+    /*this.auditSvc.getModels().subscribe( (pModels)=>{
       this.dataPool[AUDIT_SUBVIEW.MODEL] = pModels;
       return ;
-    });
+    });*/
 
     this.projectSvc.onProjectReady.subscribe( (pProject:DexcaliburProject)=>{
       this.projectReady = true;
 
-      this.auditSvc.getModels().subscribe( (pModels)=>{
+      /*this.auditSvc.getModels().subscribe( (pModels)=>{
         this.dataPool[AUDIT_SUBVIEW.MODEL] = pModels;
         return ;
       });
@@ -145,11 +155,11 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
       this.auditSvc.getReports().subscribe( (pReports)=>{
         this.dataPool[AUDIT_SUBVIEW.REPORT] = pReports;
         return ;
-      });
+      });*/
 
 
 
-      this.refresh();
+      //this.refresh();
     });
 
     this.projectSvc.onProjectClose.subscribe( (pProject:DexcaliburProject)=>{
@@ -210,6 +220,8 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
           });
         break;
     }
+
+    this.changeDetectorRef.detectChanges();
   }
 
   drawExplorer(pSize:any):void {

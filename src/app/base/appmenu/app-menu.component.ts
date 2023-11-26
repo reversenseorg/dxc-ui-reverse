@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy, ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -13,7 +14,7 @@ import {AppMenuService, MenuTemplate, MenuTemplateEntry} from "./app-menu.servic
     selector: 'app-menu',
     templateUrl: './app-menu.component.html',
     styleUrls: ['./app-menu.component.scss'],
-    //changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppMenuComponent {
 
@@ -29,11 +30,9 @@ export class AppMenuComponent {
     entries:any[] = [];
 
 
-    constructor( protected appmenuSvc:AppMenuService) {
+    constructor( protected appmenuSvc:AppMenuService, private changeDetectorRef:ChangeDetectorRef) {
         this.appmenuSvc.onTemplateUpdate$.subscribe((pTemplate:MenuTemplate[])=>{
             this.render(pTemplate);
-            // re render
-            console.log("App Menu Template updated : ",pTemplate);
         })
     }
 
@@ -51,8 +50,6 @@ export class AppMenuComponent {
     }
 
     isSeparatorEntry(pItem:MenuTemplate):boolean {
-
-        console.log(pItem, (pItem as any).type, ((pItem as any).type!=null && (pItem as any).type=='separator'))
         return ((pItem as any).type!=null && (pItem as any).type=='separator');
     }
 
@@ -75,7 +72,6 @@ export class AppMenuComponent {
                     subEntry.type = 'separator';
                 }else{
                     if(sub.label==null){
-                        console.log("Menu entry has not label : ",sub);
                         return;
                     }
                     subEntry.enable = !(sub.enabled===false);
@@ -93,7 +89,7 @@ export class AppMenuComponent {
         });
 
         this.entries = newRender;
-        console.log("Entries to render : ",this.entries)
+        this.changeDetectorRef.detectChanges();
     }
 
 }

@@ -2,6 +2,44 @@
   <ng-container *ngIf="results.length>0;else noResults">
     <div class="row results" *ngFor="let e of results; let offset=index;" (dblclick)="open($event, e)" (contextmenu)="displayCtxMenu($event, e)" (click)="selectResult(e, offset)" [class.active]="selectedResult==offset">
 
+      <ng-container *ngIf="e.callee && e.instr">
+        <ng-container [ngSwitch]="e.instr">
+          <ng-container *ngSwitchCase="'SETTER'">
+            <div class="col-lg-1" >
+              <span class="badge padge-pill text-bg-success">SET</span>
+            </div>
+            <div class="col-lg-6" (dblclick)="openLazyView(e.caller,'setter')">
+              <dxc-preview [length]="50" [data]="e.caller"></dxc-preview>
+            </div>
+            <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;">
+              <dxc-preview [length]="50" [data]="e.callee"></dxc-preview>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'GETTER'">
+            <div class="col-lg-1" >
+              <span class="badge padge-pill text-bg-success">GET</span>
+            </div>
+            <div class="col-lg-6" (dblclick)="openLazyView(e.caller,'getter')">
+              <dxc-preview [length]="50" [data]="e.caller"></dxc-preview>
+            </div>
+            <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;">
+              <dxc-preview [length]="50" [data]="e.callee"></dxc-preview>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'INVOKE'">
+            <div class="col-lg-1" >
+                <span class="badge padge-pill text-bg-success">CALL</span>
+            </div>
+            <div class="col-lg-6" (dblclick)="openLazyView(e.callee,'invoke')">
+              <dxc-preview [length]="50" [data]="e.callee"></dxc-preview>
+            </div>
+            <div class="col-lg-5"  (dblclick)="openLazyView(e.caller,'invoke')" style="white-space: nowrap; text-align: right;color:#bbb;">
+              <dxc-preview [length]="50" [data]="e.caller"></dxc-preview>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
       <ng-container *ngIf="e.__==NODE_TYPES.METHOD">
         <div class="col-lg-1">
           <ng-container *ngIf="e.name!='<clinit>'">
@@ -48,16 +86,11 @@
       </ng-container>
 
       <ng-container *ngIf="e.__==NODE_TYPES.STRING">
-        <div class="col-lg-1"  (dblclick)="openView(e)">
-          <!--<ng-container *ngFor="let t of e.tags">
-            <dxc-meta [label]="t" [css]="'text-bg-warning'"></dxc-meta>
-          </ng-container>-->
-        </div>
-        <div class="col-lg-5" (dblclick)="openView(e)">
+        <div class="col-lg-6" (dblclick)="openView(e)">
           <dxc-preview [type]="'s'" [data]="e.value" [length]="32"></dxc-preview>
         </div>
-        <div class="col-lg-4" style="white-space: nowrap; text-align: right;color:#bbb;">
-          -
+        <div class="col-lg-6" (dblclick)="openLazyView(e.instr.method,'invoke')">
+          <dxc-preview *ngIf="e.instr" [length]="50" [data]="e.instr.method"></dxc-preview>
         </div>
       </ng-container>
 

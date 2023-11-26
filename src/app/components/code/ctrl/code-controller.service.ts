@@ -121,7 +121,7 @@ export class CodeControllerService extends DxcApiService{
         edit: {method: 'PUT', url: '/native/func/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       finder: {
-        search: {method: 'GET', url: '/code/finder?search=:query', format: 'json', auth:false /* removed */, puid: true},
+        search: {method: 'GET', url: '/code/finder', format: 'json', auth:false /* removed */, puid: true},
         androidXref: {method: 'GET', url: '/code/android/xref/:type/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       vm: {
@@ -502,7 +502,7 @@ export class CodeControllerService extends DxcApiService{
       return this._process(
         this.endpoints['finder']['search'],
         {
-          ':query': encodeURIComponent(btoa(`get.method("${pQuery}")`))
+          'search': encodeURIComponent(btoa(`get.method("${pQuery}")`))
         }
       );
     }

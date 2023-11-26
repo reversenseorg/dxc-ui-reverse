@@ -985,6 +985,13 @@ div.dxc-list {
   overflow: hidden;
   position: relative;
 }
+.dxc-preview-noscroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.dxc-preview-noscroll::-webkit-scrollbar {
+  display:none;
+}
 
 .dxc-preview-exp {
   position: absolute;
