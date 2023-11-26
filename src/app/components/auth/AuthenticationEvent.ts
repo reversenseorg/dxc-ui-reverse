@@ -10,7 +10,8 @@ export enum AuthenticationEventType {
   AUTH_NEW,
   ASK_LOGOUT,
   LOGOUT_SUCCESS,
-  LOGOUT_FAILURE
+  LOGOUT_FAILURE,
+  REFRESH
 }
 
 export class AuthenticationEvent {
@@ -20,6 +21,7 @@ export class AuthenticationEvent {
   username: Nullable<string>;
   token: Nullable<DxcApiToken>;
   conn: DexcaliburConnectionParams;
+  extra: any = {};
 
   constructor() {
 
@@ -36,6 +38,13 @@ export class AuthenticationEvent {
   static newLogoutSuccess():AuthenticationEvent{
     let o:AuthenticationEvent = new AuthenticationEvent();
     o.type = AuthenticationEventType.LOGOUT_SUCCESS;
+    return o;
+  }
+
+  static refresh(pExtra:any):AuthenticationEvent{
+    let o:AuthenticationEvent = new AuthenticationEvent();
+    o.type = AuthenticationEventType.REFRESH;
+    o.extra = pExtra;
     return o;
   }
 
