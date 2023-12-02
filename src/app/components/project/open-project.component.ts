@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {ProjectService} from "./ctrl/project.service";
 import DexcaliburProject from "../../models/DexcaliburProject";
@@ -74,6 +74,7 @@ import {Nullable} from "../../base/Nullable";
     </div>
   `,
   styleUrls: ['./project.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OpenProjectComponent implements OnInit {
 
@@ -89,6 +90,7 @@ export class OpenProjectComponent implements OnInit {
   prjList:Observable<DexcaliburProject[]>;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private activeRoute:ActivatedRoute,
     private outputSvc:OutputService,
     private projectService:ProjectService,
@@ -108,6 +110,7 @@ export class OpenProjectComponent implements OnInit {
     if (this.projectsCount == 0) {
       this.selectedProject = null;
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   refresh(){

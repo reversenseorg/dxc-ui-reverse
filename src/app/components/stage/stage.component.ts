@@ -60,6 +60,13 @@ interface ModalMap {
   [name: string]: ModalBaseComponent
 }
 
+interface DxcMouseEvent {
+  x?:number;
+  y?:number;
+  delta?: number;
+  clientX?:number;
+  clientY?:number;
+}
 
 @Component({
   selector: 'dxc-stage',
@@ -236,6 +243,8 @@ export class StageComponent implements OnInit, AfterViewInit {
             node_id: c.node_id,
             node: c.node
           })
+        }else{
+          this.authSvc.onLogin$.next({});
         }
     });
 
@@ -467,7 +476,8 @@ export class StageComponent implements OnInit, AfterViewInit {
         this.progressModal.progress = 30;
         this.progressModal.show();
       }
-    });*/
+    });
+    */
 
     this.projectSvc.onProjectReady.subscribe( (pEvent: any) => {
       this.projectReady = true;
@@ -497,8 +507,6 @@ export class StageComponent implements OnInit, AfterViewInit {
           break;
       }
     });
-
-
 
     this.projectSvc.onProjectSettingsChange.subscribe( (pSetting: ProjectSetting[]) => {
       this.project = this.projectSvc.getSelectedProject();
@@ -562,7 +570,7 @@ export class StageComponent implements OnInit, AfterViewInit {
     this.drag.current = null;
   }
 
-  startDrag(pName: string, pObject: any): void {
+  startDrag(pName: string, pEvent: DxcMouseEvent): void {
 /*
     if(pName!='ataw')
       console.log("[STAGE] Start resize by dragging ..");
@@ -570,13 +578,15 @@ export class StageComponent implements OnInit, AfterViewInit {
       console.log("[STAGE] Move by drag & drop");
 */
     this.drag[pName].dragging = true;
-    this.drag[pName].el = pObject;
+    this.drag[pName].el = pEvent;
 
-    if(!pObject.hasOwnProperty('delta'))
+    if(!pEvent.hasOwnProperty('delta'))
       this.drag[pName].el.delta = 0;
 
     this.drag.active = true;
     this.drag.current = this.drag[pName];
+
+    this.onPanelResize(pEvent, false);
 
     return this.drag.current.sources;
   }
@@ -630,11 +640,11 @@ export class StageComponent implements OnInit, AfterViewInit {
 
         if(!pCollapsing) {
           if (pEvent.y > ((window.innerHeight * MAX_BODY_H) / 100)) {
-            console.error('Resize out of max bound. Expected <=  ' + ((window.innerHeight * MAX_BODY_H) / 100) + ', but ' + pEvent.y + ' encountered');
+            //console.error('Resize out of max bound. Expected <=  ' + ((window.innerHeight * MAX_BODY_H) / 100) + ', but ' + pEvent.y + ' encountered');
             break;
           }
           if (pEvent.y < MIN_BODY_H) {
-            console.error('Resize out of min bound. Expected >=  ' + ((window.innerHeight * MAX_BODY_H) / 100) + ', but ' + pEvent.y + ' encountered');
+            //console.error('Resize out of min bound. Expected >=  ' + ((window.innerHeight * MAX_BODY_H) / 100) + ', but ' + pEvent.y + ' encountered');
             break;
           }
         }
@@ -839,18 +849,6 @@ export class StageComponent implements OnInit, AfterViewInit {
   onEnter(pEvent:any){
     this.kbSvc.dispatch(pEvent);
   }
-
-  @HostListener('document:mousemove',['$event'])
-  onMouseMove(pEvent:any):void{
-    if (this.drag.active) {
-
-      this.onPanelResize({
-        x:pEvent.clientX,
-        y:pEvent.clientY
-      });
-    }
-  }
-
 
   @HostListener('document:mouseup',['$event'])
   onMouseUp(pEvent:any, pCollapsing=false):void{

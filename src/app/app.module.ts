@@ -67,7 +67,6 @@ import {TerminalOutputComponent} from "./components/output/terminal-output/termi
 import {ProjectMgtComponent} from "./components/project/project-mgt.component";
 import {NewProjectComponent} from "./components/project/new-project.component";
 import {OpenProjectComponent} from "./components/project/open-project.component";
-import {LatestProjectComponent} from "./components/project/latest-project.component";
 import {SvcStatusComponent} from "./components/project/SvcStatus.component";
 import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 import {ModalActiveProjectComponent} from "./components/project/modals/active-project.component";
@@ -162,7 +161,6 @@ import {CommonModule} from "@angular/common";
     ProjectMgtComponent,
     NewProjectComponent,
     OpenProjectComponent,
-    LatestProjectComponent,
     SvcStatusComponent,
     ViewportSplashComponent,
     ViewportProjectDashboardComponent,

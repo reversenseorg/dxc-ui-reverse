@@ -182,24 +182,63 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
 
   onMouseDown( pEvent:any):void{
 
+
     // mouse down = click -> must focus active element
     // console.log('mouse down');
-    this.mainController.focus(this);
+    if(this.mainController.focus != null){
+      this.mainController.focus(this);
+      console.log(this.mainController);
+    }
 
+    // dimm of dialog box
     this.width = parseFloat(window.getComputedStyle(this.modalEl.nativeElement).width);
     this.height = parseFloat(window.getComputedStyle(this.modalEl.nativeElement).height);
+    // x:y of top left corner
     this.y = parseFloat(window.getComputedStyle(this.modalEl.nativeElement).top);
     this.x = parseFloat(window.getComputedStyle(this.modalEl.nativeElement).left);
 
+    const target = this.modalEl.nativeElement;
+
+    // position of mouse relatively to dialog top left corner
     this.rPos = {
       x: pEvent.clientX-this.x,
       y: pEvent.clientY-this.y
     };
 
-    this._dragging = true;
+    target.moving = true;
 
-    // this.changeDetector.detectChanges();
-    this.mainController.startDrag('ataw', this);
+    const dr = (vEvent:any)=>{
+      vEvent.preventDefault();
+
+      if (!target.moving) {
+        return;
+      }
+
+      if (vEvent.clientX) {
+        target.distX = vEvent.clientX - this.rPos.x;
+        target.distY = vEvent.clientY - this.rPos.y;
+      } else {
+        target.distX = vEvent.touches[0].clientX - this.rPos.x;
+        target.distY = vEvent.touches[0].clientY - this.rPos.y;
+      }
+      //NOTICE THIS 👆
+
+      target.style.left = target.distX + "px";
+      target.style.top = target.distY + "px";
+
+
+      console.log(vEvent);
+    }
+
+    const endDrag = ()=>{
+      target.moving = false;
+    }
+
+    document.onmousemove = dr;
+    document.ontouchmove = dr;
+
+    pEvent.target.onmouseup = endDrag;
+    pEvent.target.ontouchend = endDrag;
   }
 
 

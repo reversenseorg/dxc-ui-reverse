@@ -56,7 +56,6 @@ const PKG_INFO = require("../../../../package.json");
             </div>
           </div>
           <div class="col menu-view">
-            <!--<dxc-project-latest *ngIf="active=='recents'"></dxc-project-latest>-->
             <dxc-project-open *ngIf="active=='open'"></dxc-project-open>
             <dxc-svc-status *ngIf="active=='infp'"></dxc-svc-status>
           </div>

@@ -12,11 +12,6 @@ const routes: Routes = [{
     component: SplashComponent,
     children: [
       {
-        path: 'recents',
-        component: LatestProjectComponent,
-        outlet: 'splash'
-      },
-      {
         path: 'new',
         component: NewProjectComponent,
         outlet: 'splash'

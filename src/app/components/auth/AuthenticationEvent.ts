@@ -27,7 +27,7 @@ export class AuthenticationEvent {
 
   }
 
-  static newSuccess( pToken:DxcApiToken, pAccount:UserAccount ):AuthenticationEvent{
+  static newSuccess( pToken:Nullable<DxcApiToken>, pAccount:UserAccount ):AuthenticationEvent{
     let o:AuthenticationEvent = new AuthenticationEvent();
     o.token = pToken;
     o.type = AuthenticationEventType.AUTH_SUCCESS;

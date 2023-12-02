@@ -43,6 +43,7 @@ export class AuthService extends DxcApiService{
       super({
         auth: {
           passwd: { method: 'POST', url:'/remote/auth', format:'json'},
+          check: { method: 'GET', url:'/remote/check', format:'json'},
           logout: { method: 'GET', url:'/remote/logout', format:'json', auth:false /* removed */},
         },
         connections: {
@@ -67,7 +68,9 @@ export class AuthService extends DxcApiService{
       }]
     },8);
 
+
     this.onLogin$.subscribe((vEvent:any)=>{
+      // a specifi project is requested
       if(vEvent.project!=null){
         const tok = DxcApiToken.getInstance("puid");
         if(tok!=null){
@@ -76,9 +79,20 @@ export class AuthService extends DxcApiService{
           DxcApiToken.create('puid', vEvent.project);
         }
         this.onAuthentication.next(AuthenticationEvent.refresh(vEvent));
+      }else{
+        // if no projects are requested, else check authentication an pull projects from workspace
+        this.getUserInfo().subscribe((pInfo:Nullable<UserAccount>)=>{
+            if(pInfo!=null){
+                // authentication is ok
+              this.onAuthentication.next(AuthenticationEvent.newSuccess(null, pInfo));
+            }else{
+              location.href = "https://www.reversense.com";
+            }
+        })
       }
     });
   }
+
 
   ssoLogout():void {
     location.href = location.protocol+'://'+location.host+'/logout';

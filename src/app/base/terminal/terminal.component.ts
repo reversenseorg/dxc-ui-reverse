@@ -191,18 +191,54 @@ export class TerminalComponent implements OnInit, OnChanges {
     return (this.activeCtn!=null) && (pView.id === this.activeCtn.id);
   }
 
+
+
+  expanding = false;
+
   onDragToResize(pEvent: any): void {
+
     if(pEvent.target.classList.value.indexOf("tabnav")==-1){
       // prevent default
       pEvent.preventDefault();
-    }else{
-      this.parent.startDrag('terminal', {
-        clientY: pEvent.clientY,
-        clientX: pEvent.clientX,
-        delta:(pEvent.clientY-(window.innerHeight-pEvent.target.offsetParent.offsetHeight))
-      });
     }
+
+    let e:any = {};
+    this.expanding = true;
+
+    const dr = (vEvent:any)=>{
+      vEvent.preventDefault();
+      if (!this.expanding) {
+        return;
+      }
+
+      if (vEvent.clientX) {
+        e.x = vEvent.clientX;
+        e.y = vEvent.clientY;
+      } else {
+        e.x = vEvent.touches[0].clientX;
+        e.y = vEvent.touches[0].clientY;
+      }
+
+      e.delta = 0;
+
+      this.parent.startDrag('terminal', e);
+    }
+
+    document.onmousemove = dr;
+    document.ontouchmove = dr;
+
+    const stopDrag = ()=>{
+      this.expanding = false;
+      document.onmousemove = null;
+      document.ontouchmove = null;
+      document.onmouseup = null;
+      document.ontouchend = null;
+    }
+
+    document.onmouseup = stopDrag;
+    document.ontouchend = stopDrag;
   }
+
 
   /**
    * To load sub component and inject it into view

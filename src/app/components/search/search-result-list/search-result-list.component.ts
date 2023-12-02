@@ -1,6 +1,13 @@
-import {ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input, OnChanges,
+  OnInit, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Message} from "../../../cmp/Error";
-import {FormControl} from "@angular/forms";
 import {SearchController} from "../ctrl/SearchController";
 import {SearchService} from "../ctrl/search.service";
 import {SEARCH_ICONS} from "../icons";
@@ -8,23 +15,11 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import {ModalBaseComponent} from "../../../base/modal-base/modal-base.component";
 import {StageComponent} from "../../stage/stage.component";
-import {IconModel} from "../../../base/icon/IconModel";
 import {CODE_ICONS} from "../../code/icons";
-import {
-  RequestHelper, RequestHelperTYPES,
-  RequestNode,
-  SearchNode,
-  SearchNodeList,
-  SearchScope,
-  SearchScopeList
-} from "../ctrl/RequestGenerator";
 import {SubnavbarInputComponent} from "../../../base/subnavbar/subnavbar.component";
-import {Subject} from "rxjs";
 import {TOPO_ICONS} from "../../topology/icons";
-import {map} from "rxjs/operators";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {Tag} from "../../../models/tags/Tag";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {Nullable} from "../../../base/Nullable";
 import ModelMethod from "../../../models/ModelMethod";
@@ -48,7 +43,8 @@ const BINDING = {
 @Component({
   selector: 'dxc-search-result-list',
   templateUrl: './search-result-list.component.html',
-  styleUrls: ['./search-result-list.component.scss','../../../modal.scss']
+  styleUrls: ['./search-result-list.component.scss','../../../modal.scss'],
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchResultListComponent implements OnInit {
 
@@ -107,6 +103,13 @@ export class SearchResultListComponent implements OnInit {
       this.mainController = this.controller.app;
     }
   }
+
+  /*ngOnChanges(changes: SimpleChanges) {
+    if(changes.results != null){
+      this.results = changes.results.currentValue;
+      //this.changeDetectorRef.detectChanges();
+    }
+  }*/
 
 
   reset(){

@@ -1,26 +1,13 @@
-import {
-  AfterContentInit, ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import {Message} from "../../../cmp/Error";
 import {ModalBaseComponent} from "../../../base/modal-base/modal-base.component";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
-import {NgbProgressbarConfig} from "@ng-bootstrap/ng-bootstrap";
 import {ProjectService} from "../ctrl/project.service";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
-import {IKeyboardNavigable} from "../../../base/keyboard/IKeyboardNavigable";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
-import {ControllerService} from "../../../controller.service";
 import {AppIcon} from "../../../models/AppIcon";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
@@ -36,6 +23,7 @@ interface EventSources {
   selector: 'dxc-modal-open-project',
   templateUrl: './modal-open-project.component.html',
   styleUrls: ['../../../modal.scss','../../../forms.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalOpenProjectComponent extends AbstractKeyboardNavigable implements OnInit {
 
@@ -72,7 +60,8 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
 
   onKeyboardEvent:Subject<any> = new Subject<any>();
 
-  constructor(private changeDetectorRef: ChangeDetectorRef,
+  constructor(
+              private changeDetectorRef: ChangeDetectorRef,
               private projSvc:ProjectService,
               private outputSvc:OutputService,
               public kbSvc: KeyboardNavigationService ) {
@@ -103,6 +92,7 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
     this.modal.show();
     //this.kbSvc.focus()
     console.log("[MODAL PROJECT OPEN] show()");
+    this.changeDetectorRef.detectChanges();
   }
 
   close():void{

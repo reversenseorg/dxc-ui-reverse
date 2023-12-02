@@ -64,6 +64,7 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
   activeExpl:Nullable<SubExplorerComponent<any>> = null;
   prevExpl:Nullable<SubExplorerComponent<any>> = null;
 
+  expanding  = false;
 
   @ViewChild('explorerCtn', {read:ElementRef, static:true}) ctnEl:ElementRef;
   @ViewChild('explorerNav', {read:ElementRef, static:true}) explorerNav:ElementRef;
@@ -233,7 +234,48 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
    * @since 1.0.0
    */
   onDragToResize(pEvent: any): void {
-    this.parent.startDrag('explorer', pEvent);
+
+    let e:any = {};
+    this.expanding = true;
+
+    const dr = (vEvent:any)=>{
+      vEvent.preventDefault();
+      if (!this.expanding) {
+        return;
+      }
+
+      if (vEvent.clientX) {
+        e.x = vEvent.clientX;
+        e.y = vEvent.clientY;
+      } else {
+        e.x = vEvent.touches[0].clientX;
+        e.y = vEvent.touches[0].clientY;
+      }
+
+      this.parent.startDrag('explorer', e);
+    }
+
+    document.onmousemove = dr;
+    document.ontouchmove = dr;
+
+    const stopDrag = ()=>{
+      this.expanding = false;
+      document.onmousemove = null;
+      document.ontouchmove = null;
+      document.onmouseup = null;
+      document.ontouchend = null;
+    }
+
+    document.onmouseup = stopDrag;
+    document.ontouchend = stopDrag;
+  }
+
+  stopDrag(pEvent:any){
+    if(this.expanding){
+      this.expanding = false;
+      document.onmousemove = null;
+      document.ontouchmove = null;
+    }
   }
 
   /**

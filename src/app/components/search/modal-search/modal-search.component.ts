@@ -178,7 +178,7 @@ export class ModalSearchComponent implements OnInit {
 
   @HostListener('document:keydown.escape')
   onEscape(){
-    if(this.modal.isDisplayed()){
+    if(this.modal && this.modal.isDisplayed()){
       this.close();
     }
   }

@@ -110,7 +110,7 @@ export class ModalSendIntentComponent  extends AbstractKeyboardNavigable impleme
 
 
   // TODO : remove
-  @HostListener('document:keydown.escape')
+  // @HostListener('document:keydown.escape')
   onEscape(){
     if(this.modal.isDisplayed()){
       this.close();

@@ -14,7 +14,7 @@
       <!--<router-outlet name="explorer-view"></router-outlet>-->
       <ng-template explorerHost></ng-template>
     </div>
-    <div class="explorer-resize" id="explorerResize" (mousedown)="onDragToResize($event)" #explorerBorder>
+    <div class="explorer-resize" id="explorerResize" (mouseup)="stopDrag($event)" (mousedown)="onDragToResize($event)" #explorerBorder>
       &nbsp;
     </div>
   </div>

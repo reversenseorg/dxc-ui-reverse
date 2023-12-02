@@ -1,14 +1,24 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input, OnChanges,
+  OnInit,
+  Output, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {SubExplorerComponent} from "../explorer/subexplorer.component";
-import {ItemEvent} from "../expandable-list/expandable-item.component";
 import {Nullable} from "../Nullable";
 
 @Component({
   selector: 'app-explorer-navbar',
   templateUrl: './explorer-navbar.component.html',
-  styleUrls: ['./explorer-navbar.component.scss']
+  styleUrls: ['./explorer-navbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExplorerNavbarComponent implements OnInit, AfterViewInit {
+export class ExplorerNavbarComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() explorer:SubExplorerComponent<any>;
   @Input() id:Nullable<string> = null;
@@ -19,10 +29,18 @@ export class ExplorerNavbarComponent implements OnInit, AfterViewInit {
 
   selectedItem:string = '';
 
-  constructor() { }
+  constructor(
+      private changeDetectionRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     //this.explorer.parent.resizeSrc.subscribe(this.onPanelResize);
+  }
+
+  ngOnChanges(pChanges: SimpleChanges) {
+    if(pChanges.explorer!=null){
+      this.changeDetectionRef.detectChanges();
+    }
   }
 
   ngAfterViewInit():void {

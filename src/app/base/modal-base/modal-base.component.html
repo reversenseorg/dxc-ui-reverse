@@ -1,4 +1,4 @@
-<div [class.dxc-hidden]="isActive()" [class.dxc-ztop]="isOnZTop()" class="dxc-modal" [ngStyle]="{'display':'none'}" #modalComp (mousedown)="onMouseDown($event)">
+<div [class.dxc-hidden]="isActive()" [class.dxc-ztop]="isOnZTop()" class="dxc-modal draggable" [ngStyle]="{'display':'none'}" #modalComp (mousedown)="onMouseDown($event)">
   <div *ngIf="!headless" class="container-fluid row head" #head>
     <!--<div *ngIf="closable" class="col-lg-8 title"><ng-content select="[title]"></ng-content></div>-->
     <div class="col-lg-12 title">

@@ -53,7 +53,7 @@ export interface ItemEvent<T> {
     <!-- expandable <ng-template expandedHost></ng-template>-->
   `,
   styleUrls: ['./expandable-list.component.scss'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
@@ -249,8 +249,6 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
       // [PERF] If ChangeDetectionStrategy.OnPush enabled on parents
       //itemCmp.changeDetectorRef.detectChanges();
-
-
       itemCmp.instance.changeDetection$enable();
 
       this.children.push(itemCmp);
@@ -264,6 +262,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
     if((this.provider as any).changeDetectorRef!=null){
       (this.provider as any).changeDetectorRef.markForCheck();
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   /**
