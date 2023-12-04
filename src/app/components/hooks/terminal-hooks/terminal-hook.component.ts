@@ -20,6 +20,7 @@ import {TagService} from "../../tag/ctrl/tag.service";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
 
 
 interface SelectedMessage {
@@ -99,6 +100,8 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
 
       this._current = pSession;
       (this._current as HookSession).active = true;
+
+      this.navbar.checkForChanges();
 
       this.parent.selectTab(this);
     });
@@ -228,7 +231,11 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   }
 
   getProperty( d:any, pSubPpt:string ):string {
-    return (d as IStringIndex<any>)[pSubPpt] as string;
+    if(d==null){
+      return "";
+    }else{
+      return (d as IStringIndex<any>)[pSubPpt] as string;
+    }
   }
 
   open(pObj: any, pNodeType:number, pSubPpt:Nullable<string>=null) {
@@ -258,6 +265,16 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
 
 
   save() {
+
+  }
+
+  /**
+   * To display stack trace of the method hooked
+   *
+   * @param pMsg
+   * @param pTrace
+   */
+  openTrace(pMsg: RuntimeEvent<any>, pTrace: IStringIndex<any>[]) {
 
   }
 }

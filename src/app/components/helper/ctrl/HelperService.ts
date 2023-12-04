@@ -141,7 +141,6 @@ export class HelperService {
    * @method
    */
   loadDoc(pDocumentID:string) {
-    console.log(this.eSvc.isElectron);
     if(this.eSvc.isElectron){
       // load over IPC
       // this.eSvc.ipcRenderer.send('help',[{ cmd:'get-doc', data:{ id:pDocumentID }}]);

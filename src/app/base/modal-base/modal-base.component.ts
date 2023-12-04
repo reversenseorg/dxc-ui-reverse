@@ -182,12 +182,12 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
 
   onMouseDown( pEvent:any):void{
 
+    if(pEvent.buttons!=1) return;
 
     // mouse down = click -> must focus active element
     // console.log('mouse down');
     if(this.mainController.focus != null){
       this.mainController.focus(this);
-      console.log(this.mainController);
     }
 
     // dimm of dialog box
@@ -225,9 +225,6 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
 
       target.style.left = target.distX + "px";
       target.style.top = target.distY + "px";
-
-
-      console.log(vEvent);
     }
 
     const endDrag = ()=>{

@@ -69,7 +69,6 @@ export class GridCellComponent implements OnInit {
 
   onEnter(pEvent: any) {
     pEvent.stopPropagation();
-    console.log( "Enter up : ", pEvent);
     this.editState = false;
     this.edit.emit({ name: this.name, value: this.data });
   }

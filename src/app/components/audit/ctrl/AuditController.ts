@@ -78,7 +78,6 @@ export class AuditController implements IController {
     let f:any=null;
 
     this.rendered.map( (pView:any) => {
-      console.log(pView);
       if(pView.__signature__ === pItem.__signature__){
         f = pView;
       }

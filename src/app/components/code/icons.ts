@@ -72,6 +72,12 @@ export const CODE_ICONS = {
     name: 'route',
     color1: 'dxc-icon-field'
   }),
+  TRACE: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'layer-group',
+    color1: 'dxc-icon-field'
+  }),
   XREF_FROM: new IconModel({
     iconType: ICON_TYPE.TEXT,
     label: 'XF: ',

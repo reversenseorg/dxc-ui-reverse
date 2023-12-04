@@ -173,6 +173,7 @@ export class HookService extends DxcApiService {
             kill: { method: 'POST', url:'/hook/app/kill', format:'json', auth:false /* removed */, puid:true},
             exec: { method: 'POST', url:'/hook/frida/exec', format:'json', auth:false /* removed */, puid:true},
             buildScript: { method: 'GET', url:'/hook/frida/build', format:'json', auth:false /* removed */, puid:true},
+            flushGeneratedCode: { method: 'GET', url:'/hook/flush/:type', format:'json', auth:false /* removed */, puid:true},
           },
           session: {
             show: { method: 'GET', url:'/hook/session/:id', format:'json', auth:false /* removed */, puid:true}
@@ -327,10 +328,18 @@ export class HookService extends DxcApiService {
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_KEYSTORE_OPE });
         }
+      }, {
+        type: 'separator'
       },{
         label: 'Clear Dynamic DEX bytecode',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.clearDynamicDex().subscribe();
+        }
+      },{
+        label: 'Flush script cache',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.flushCache("all").subscribe(()=> {
+          });
         }
       }, {
         type: 'separator'
@@ -1607,6 +1616,17 @@ export class HookService extends DxcApiService {
         console.log(pEl);
         return pEl;
       })
+    );
+  }
+
+  flushCache(pType = "all") {
+    return this._process(
+        this.endpoints['hook']['flushGeneratedCode'],
+        { type: pType }
+    ).pipe(
+        map((pEl:any)=>{
+          return pEl.success;
+        })
     );
   }
 }

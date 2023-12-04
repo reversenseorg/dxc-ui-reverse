@@ -197,6 +197,8 @@ export class TerminalComponent implements OnInit, OnChanges {
 
   onDragToResize(pEvent: any): void {
 
+    if(pEvent.buttons!=1) return;
+
     if(pEvent.target.classList.value.indexOf("tabnav")==-1){
       // prevent default
       pEvent.preventDefault();

@@ -20,12 +20,21 @@
   <div #termHookCtn style="overflow-y:auto;">
     <ng-container *ngIf="_current">
       <div *ngFor="let msg of _current.messages; let index = index;" class="row no-gutters hmsg" (click)="hookMsgFocus(index)" [ngClass]="(_current_selected==index ? 'selected' : '')">
-        <div *ngIf="msg.hasTag(tags.HOOK)" class="col-lg-1 col-msg">
-          <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
-          <!--<ng-container *ngFor="let t of msg.tags">
-            <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
-          </ng-container>-->
-          <!--<span *ngFor="let t of msg.tags" class="badge rounded-pill " [ngStyle]="{'backgroundColor':t.style}">{{ t.text }}</span>-->
+        <div class="col-lg-1 col-msg">
+          <ng-container *ngIf="msg.type" [ngSwitch]="msg.type" >
+            <ng-container *ngSwitchCase="'h'">
+              <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+            </ng-container>
+            <ng-container *ngSwitchCase="'he'">
+              <dxc-meta [label]="'ERROR'" [ngClass]="'dxc-salmon'"></dxc-meta>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+            </ng-container>
+          </ng-container>
+
+          <dxc-meta *ngIf="!msg.type" [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+
         </div>
         <div class="col-lg-1 col-msg">
           <dxc-meta *ngIf="msg.data.when==-1" [label]="'before'" [ngClass]="'text-info'"></dxc-meta>
@@ -51,10 +60,10 @@
             <ng-container *ngFor="let d of msg.getHookMessageData() | keyvalue">
 
 
-              <ng-container *ngIf="msg.isRootDetectionData(d.value)">
+              <!--<ng-container *ngIf="msg.isRootDetectionData(d.value)">
                 <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>&nbsp;
                 <span class="text-warning">Root detection</span>
-              </ng-container>
+              </ng-container>-->
 
               <ng-container [ngSwitch]="getProperty(d.value,'__')">
                 <ng-container *ngSwitchCase="NODE_TYPE.CLASS">
@@ -62,14 +71,14 @@
                 </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.METHOD">
                   <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;
-                  <span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
+                  <span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value!=null ? d.value : "null" }}</span>
                 </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.FILE">
                   <dxc-icon [model]="cIcons['FILE']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.FILE)" class="actionable">{{ d.value.path }}</span>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
                   <div *ngIf="d.key[0]!='_'">
-                    <span>{{ d.key }}</span>&nbsp;:&nbsp;<span>{{ d.value }}</span>
+                    <span>{{ d.key }}</span>&nbsp;:&nbsp;<span>{{ d.value!=null ? d.value : "null" }}</span>
                   </div>
                   <div *ngIf="d.key=='__class__'">
                     <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.CLASS)" class="actionable">{{ d.value }}</span>
@@ -77,7 +86,14 @@
                   <div *ngIf="d.key=='__meth__'">
                     <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(d,NODE_TYPE.METHOD)" class="actionable">{{ d.value }}</span>
                   </div>
+                  <div *ngIf="d.key=='__msg__'">
+                    {{ d.value }}
+                  </div>
+                  <div *ngIf="d.key=='__trace__'">
+                    <span (click)="openTrace(msg,d.value)" class="actionable"><dxc-icon [model]="cIcons['TRACE']"></dxc-icon>Trace</span>
+                  </div>
                 </ng-container>
+
               </ng-container>
 
             </ng-container>

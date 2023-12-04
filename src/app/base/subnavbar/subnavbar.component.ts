@@ -1,7 +1,7 @@
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
@@ -277,7 +277,8 @@ export class SubnavbarMenuComponent implements OnInit, AfterViewInit{
 @Component({
   selector: 'app-subnavbar',
   templateUrl: './subnavbar.component.html',
-  styleUrls: ['./subnavbar.component.scss']
+  styleUrls: ['./subnavbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubnavbarComponent implements OnInit, AfterContentInit {
 
@@ -316,7 +317,9 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
   computedHeight:number = -1;
   @Input() navbarStyle: Nullable<any> = null;
 
-  constructor() {
+  constructor(
+      private changeDetectionRef:ChangeDetectorRef
+  ) {
 
   }
 
@@ -395,5 +398,9 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
     }
 
     return this.navtab.tab.closable;
+  }
+
+  checkForChanges(){
+    this.changeDetectionRef.detectChanges();
   }
 }

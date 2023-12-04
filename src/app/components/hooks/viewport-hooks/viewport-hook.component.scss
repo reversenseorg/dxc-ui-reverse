@@ -24,12 +24,16 @@
   }
 }
 
+div.host-right {
+  background-color: var(--editor-bg);
+}
 
 .dxc-editable-block {
-  border-radius: 0px;
+  border-radius: 15px;
   border: 1px solid var(--text-75);
   padding:10px;
   margin-bottom: 15px;
+  background-color: var(--nav-bg);
 
   &:hover {
     background-color: var(--text-50);

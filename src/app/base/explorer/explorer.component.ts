@@ -235,6 +235,9 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
    */
   onDragToResize(pEvent: any): void {
 
+
+    if(pEvent.buttons!=1) return;
+
     let e:any = {};
     this.expanding = true;
 

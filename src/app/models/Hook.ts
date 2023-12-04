@@ -87,7 +87,6 @@ export default class Hook
 
 
     isEnable():boolean{
-        console.log(this);
         return this.enabled;
     }
 

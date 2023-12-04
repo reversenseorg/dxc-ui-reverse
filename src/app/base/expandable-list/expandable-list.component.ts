@@ -55,7 +55,6 @@ export class ExpandableListComponent<T> implements OnInit, AfterViewInit {
   r = 0;
   checkRendering(){
     this.r++;
-    console.log(this.r);
     return '';
   }
 

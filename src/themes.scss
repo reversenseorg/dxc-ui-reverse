@@ -1,7 +1,7 @@
 
 
 $dark-appmenu-btn-text: #ddd;
-
+$dark-editor-bg: #272822;
 
 $dark-topnav-bgColor: #333;
 $dark-topnav-textColor: #fff;
@@ -61,6 +61,8 @@ $dark-scrollbar-bg: #555;
   --warning-secondary-color: black;
   --error-main-color: #fd2c2c;
   --error-secondary-color: white;
+
+  --editor-bg: #{$dark-editor-bg};
 
   --appmenu-bg: #{$dark-nav-bgColor};
   --appmenu-text: #{$dark-input-text};

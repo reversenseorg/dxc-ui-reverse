@@ -54,8 +54,6 @@ export class SerializeFilter {
             }
         });
 
-        console.log(this);
-
         return this;
     }
 

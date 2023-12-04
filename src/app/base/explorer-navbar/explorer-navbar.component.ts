@@ -39,6 +39,7 @@ export class ExplorerNavbarComponent implements OnInit, OnChanges, AfterViewInit
 
   ngOnChanges(pChanges: SimpleChanges) {
     if(pChanges.explorer!=null){
+      console.log("Detecting change in app-explorer-navbar");
       this.changeDetectionRef.detectChanges();
     }
   }

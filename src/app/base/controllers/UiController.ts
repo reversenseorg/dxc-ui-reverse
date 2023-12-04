@@ -45,7 +45,6 @@ export class UiController {
   }
 
   displayCtxMenu(pEvent:any, pType:string, pObject:any):void{
-    console.log(pEvent);
     if(this._ctxMenu.hasOwnProperty(pType)){
       this._ctxMenu[pType].displayCtxMenu(pEvent, pType, pObject);
     }
