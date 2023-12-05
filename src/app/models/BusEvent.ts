@@ -7,6 +7,7 @@ export default class BusEvent
 {
   type:Nullable<string> = null;
   data:any = {};
+  __i:string[] = [];
 
   constructor(pConfig:any=null) {
     if(pConfig!=null)
