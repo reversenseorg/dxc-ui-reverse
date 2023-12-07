@@ -268,7 +268,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
         this.projectReady = true;
 
-        /*this.controller.service
+        this.controller.service
           .listPackages(CODE_SUBVIEW.ALL)
           .subscribe((packages:any) => {
             const frames = Math.round(packages.length/1000);
@@ -284,7 +284,9 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
               console.log('update package');
               this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(i*1000,(i*1000)+1000));
-              //this.changeDetectorRef.markForCheck();
+
+
+              this.changeDetectorRef.markForCheck();
               //console.log("mark for changes",i*1000);
             }
             if(packages.length%1000>0){
@@ -293,7 +295,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               //this.changeDetectorRef.markForCheck();
               //console.log("mark for changes LAST");
             }
-            this.changeDetectorRef.markForCheck();
+            this.changeDetectorRef.detectChanges();
 
             console.log("ExplorerCode : Rendering : ",((new Date()).getTime()-t1)/1000,"s ");
             //this.changeDetectorRef.detectChanges();
@@ -301,7 +303,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
             this.changeDetectorRef.reattach();
             // console.log(this.packages[this.selected]);
 
-          });*/
+          });
       });
 
 
@@ -836,4 +838,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   }
 
+  doSmartRename(pSubject: any) {
+    
+  }
 }

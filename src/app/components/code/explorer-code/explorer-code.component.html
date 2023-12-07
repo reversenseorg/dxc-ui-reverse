@@ -191,6 +191,7 @@
   <app-context-item [label]="'New KeyPoint on first new instance'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_new_1st' })"></app-context-item>
   <app-context-item [label]="'New KeyPoint on any new instance'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_new_any' })"></app-context-item>
   <app-context-item [label]="'New KeyPoint ...'" (itemclick)="newKP(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Smart renaming'" (itemclick)="doSmartRename(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <app-context-menu [name]="'par'"  [width]="300">
@@ -231,6 +232,7 @@
   <app-context-item [label]="'Copy package'" (itemclick)="copyObj(ctxMenuState.subject, 'name')"></app-context-item>
   <app-context-item [separator]="true" [label]="'New KeyPoint on class loaded from'" (itemclick)="newKP(ctxMenuState.subject, {condition:'pkgkp_load'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint ...'" (itemclick)="newKP(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Smart renaming'" (itemclick)="doSmartRename(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <app-context-menu [name]="'bin'"  [width]="300">
