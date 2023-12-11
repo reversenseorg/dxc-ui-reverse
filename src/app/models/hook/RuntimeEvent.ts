@@ -43,10 +43,9 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
   static rootPattern:RegExp = /(\/su|Superuser\.apk|magisk|\/system\/app\/Superuser\.apk|\/system\/xbin\/su)/g;
 
 
+  rt_type:RuntimeEventType;
 
   __:NodeInternalType = NodeInternalType.RUNTIME_EVENT;
-
-  override type:Nullable<RuntimeEventType> = null;
 
   id:any = null;
 

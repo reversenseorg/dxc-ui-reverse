@@ -21,24 +21,25 @@
     <ng-container *ngIf="_current">
       <div *ngFor="let msg of _current.messages; let index = index;" class="row no-gutters hmsg" (click)="hookMsgFocus(index)" [ngClass]="(_current_selected==index ? 'selected' : '')">
         <div class="col-lg-1 col-msg">
-          <ng-container *ngIf="msg.type" [ngSwitch]="msg.type" >
+          <ng-container *ngIf="msg.rt_type" [ngSwitch]="msg.rt_type" >
             <ng-container *ngSwitchCase="'h'">
-              <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+              <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow dxc-text-black'"></dxc-meta>
             </ng-container>
             <ng-container *ngSwitchCase="'he'">
               <dxc-meta [label]="'ERROR'" [ngClass]="'dxc-salmon'"></dxc-meta>
             </ng-container>
             <ng-container *ngSwitchDefault>
-              <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+              <dxc-meta [label]="'HOOK'" [ngClass]="'dxc-yellow dxc-text-black'"></dxc-meta>
             </ng-container>
           </ng-container>
 
-          <dxc-meta *ngIf="!msg.type" [label]="'HOOK'" [ngClass]="'dxc-yellow'"></dxc-meta>
+          <dxc-meta *ngIf="!msg.rt_type" [label]="'HOOK'" [ngClass]="'dxc-yellow dxc-text-black'"></dxc-meta>
+
 
         </div>
         <div class="col-lg-1 col-msg">
           <dxc-meta *ngIf="msg.data.when==-1" [label]="'before'" [ngClass]="'text-info'"></dxc-meta>
-          <dxc-meta *ngIf="msg.data.when==1" [label]="'after'" [ngClass]="'dxc-azur'"></dxc-meta>
+          <dxc-meta *ngIf="msg.data.when==1" [label]="'after'" [ngClass]="'dxc-azur  dxc-text-black'"></dxc-meta>
           <dxc-meta *ngIf="msg.data.when==0" [label]="'replace'" [ngClass]="'dxc-pink'"></dxc-meta>
           <!--<ng-container *ngFor="let t of msg.tags">
             <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
@@ -55,7 +56,12 @@
             </ng-container>
           </ng-container>
         </div>
-        <div class="col-lg-7 ppt">
+        <div class="col-lg-1 col-msg">
+          <ng-container *ngIf="msg.__i">
+            <code class="dxc-text-yellow" *ngFor="let t of msg.__i">{{ t }}</code><br>
+          </ng-container>
+        </div>
+        <div class="col-lg-6 ppt">
           <ng-container *ngIf="msg.isHookMessage()">
             <ng-container *ngFor="let d of msg.getHookMessageData() | keyvalue">
 
