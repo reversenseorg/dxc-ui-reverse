@@ -62,7 +62,7 @@
               <ng-template #stdFld>
                   {{ itemObj.name  }}
               </ng-template>
-              <i class="text-warning">&nbsp;:{{itemObj.type.name}}</i>
+              <i class="text-warning" *ngIf="itemObj.type">&nbsp;:{{itemObj.type.name}}</i>
             </span>
 
             <span *ngIf="NODE_TYPES.METHOD==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'meth',itemObj)">
