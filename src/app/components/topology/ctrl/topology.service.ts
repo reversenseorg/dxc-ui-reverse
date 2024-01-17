@@ -73,9 +73,9 @@ export class TopologyService extends DxcApiService {
           dex: { method:'GET', url:'/inspector/DynamicLoader/show/refresh_dyndex', format: 'json', auth:false /* removed */, puid:true},
         },
         file: {
-          dex: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true},
-          libs: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true},
-          keystore: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true}
+          dex: { method:'GET', url:'/file/search?scope=PKG&type=\.dex$', format: 'json', auth:false /* removed */, puid:true},
+          libs: { method:'GET', url:'/file/search?scope=PKG&type=ELF', format: 'json', auth:false /* removed */, puid:true},
+          ks: { method:'GET', url:'/file/search?scope=PKG&type=KS', format: 'json', auth:false /* removed */, puid:true}
         }
       },_http,outputSvc
     );
@@ -337,27 +337,68 @@ export class TopologyService extends DxcApiService {
     switch(pType){
       case 'dex':
         // merge event stream (dex from apk and dex discovered dynamically)
-        return merge(
-          this.searchSvc.executeRaw('file("name:\.dex$")').pipe( map( (pData)=>{
-            let f:ModelFile[] = [];
-            pData.data.map((vFile:any) => { f.push(new ModelFile(vFile)); });
-            return f;
+        obs = merge(
+
+          this._process(
+              this.endpoints['file']['dex'], {uid:1}
+          ).pipe(map((vData:any)=>{
+            if(vData.success){
+              return vData.data;
+            }else{
+              this.outputSvc.print(OutputMessage.newWarning({
+                src:'Topology',
+                msg:'No DEX files found'
+              }));
+              return [];
+            }
           })),
+
           this._process(
             this.endpoints['dyn']['dex'],
             { action:'refresh_dex' }
-            ).pipe(map( vFile => {
-              console.log("Dyn Dex : ",vFile);
-
-              if(vFile.error==null) return vFile.data.refs;
-            }))
+          ).pipe(map((vData:any)=>{
+            if(vData.success){
+              return vData.data;
+            }else{
+              this.outputSvc.print(OutputMessage.newWarning({
+                src:'Topology',
+                msg:'No DEX files loaded dynamically or caught at runtime yet'
+              }));
+              return [];
+            }
+          }))
         );
         break;
       case 'ks':
-        obs = this.searchSvc.executeRaw('file("type:KS")');
+
+        obs = this._process(
+            this.endpoints['file']['ks'], {uid:1}
+        ).pipe(map((vData:any)=>{
+          if(vData.success){
+            return vData.data;
+          }else{
+            this.outputSvc.print(OutputMessage.newWarning({
+              src:'Topology',
+              msg:'No Key Store found'
+            }));
+            return [];
+          }
+        }));
         break;
       case 'libs':
-        obs = this.searchSvc.executeRaw('file("type:ELF")');
+        obs = this._process(
+            this.endpoints['file']['libs'], {uid:1}
+        ).pipe(map((vData:any)=>{
+            if(vData.success){
+              return vData.data;
+            }else{
+              this.outputSvc.print(OutputMessage.newWarning({
+                src:'Topology',
+                msg:'No compatible native libs found'
+              }));
+              return [];
+            }
+        }));
         break;
       default:
         throw new Error("TODO EXC");

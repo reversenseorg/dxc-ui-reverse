@@ -585,10 +585,12 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
    */
   refresh( pSelected:Nullable<string> = null) {
 
+
     if(pSelected == null){
       pSelected = this.selected;
     }
 
+    console.log(pSelected);
     switch(pSelected){
       case HOOK_VIEW.HOOK:
         this.controller.service
@@ -611,7 +613,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
           });
         break;
       case HOOK_VIEW.INSPECTOR:
-        this.inspSvc.getAll().subscribe( (pInsps:Inspector[])=>{
+        this.inspSvc.getAll(true).subscribe( (pInsps:Inspector[])=>{
           console.log(pInsps)
           this.hookPools[HOOK_VIEW.INSPECTOR].app = pInsps;
           this.activePool = this.hookPools[HOOK_VIEW.INSPECTOR];

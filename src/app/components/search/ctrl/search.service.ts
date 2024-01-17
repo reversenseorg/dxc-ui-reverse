@@ -5,6 +5,7 @@ import {catchError, map, retry} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {AppMenuService} from "../../../base/appmenu/app-menu.service";
+import ModelFile from "../../../models/ModelFile";
 
 
 // @ts-ignore
@@ -29,6 +30,7 @@ export class SearchService extends DxcApiService {
       },_http
     );
   }
+
 
   executeRaw( pRequest:string, pResultType:string='' ):Observable<any> {
     console.log("[SEARCH] Request : "+pRequest);

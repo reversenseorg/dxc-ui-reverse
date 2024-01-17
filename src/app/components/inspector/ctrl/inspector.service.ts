@@ -33,7 +33,7 @@ export class InspectorService extends DxcApiService {
     super({
       inspector: {
         list: { method:'GET', url:'/plugin/inspector/list', format:'json', auth:false /* removed */, puid:true},
-        show: { method:'GET', url:'/plugin/inspectors/:uid', format:'json'}
+        show: { method:'GET', url:'/plugin/inspectors/:uid', format:'json'},
       },
       hook: {
         byInspector: { method:'GET', url:'/hook/getBy/inspector', format:'json', auth:false /* removed */, puid:true},
@@ -48,8 +48,8 @@ export class InspectorService extends DxcApiService {
    * @method
    * @since v1.0.0
    */
-  getAll():Observable<Inspector[]>{;
-    if(this.needRefresh){
+  getAll(pForceRefresh=false):Observable<Inspector[]>{;
+    if(this.needRefresh||pForceRefresh){
       this._cache = [];
       return this
         ._process(this.endpoints['inspector']['list'])
@@ -68,15 +68,23 @@ export class InspectorService extends DxcApiService {
     }
   }
 
+    /**
+     *
+     * @param pId
+     */
   getInspectorByID( pId:string):Observable<Nullable<Inspector>>{
-    return this.getAll().pipe(
-      map( vInsp => {
-        console.log(vInsp);
-        let o: Nullable<Inspector> = null;
-        vInsp.map(x => {
-          if(x.id == pId) o=x;
-        });
-        return o;
+
+    return this._process(
+            this.endpoints['inspector']['show'],
+        { uid: pId }
+        )
+        .pipe(
+      map( (vRes:any) => {
+          if(vRes.success){
+              return new Inspector(vRes.data);
+          }else{
+              return null;
+          }
       })
     );
   }

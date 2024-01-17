@@ -798,6 +798,8 @@ export class StageComponent implements OnInit, AfterViewInit {
    */
   @HostListener('document:keydown.escape',['$event'])
   onEscape(pEvent:any){
+    pEvent.stopPropagation();
+    pEvent.preventDefault();
     this.kbSvc.dispatch(pEvent);
 
     // if a modal is displayed, close the top level modal
