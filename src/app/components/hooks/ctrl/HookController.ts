@@ -309,6 +309,7 @@ export class HookController extends UiController implements IController {
     if(this.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
     }
+
     (this.app.getController('ctrl:inspector') as InspectorController)._show(pInspector);
   }
 

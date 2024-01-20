@@ -117,7 +117,7 @@ export class InspectorController implements IController {
     }
 
 
-    this.service.getInspectorByID(pItem.id as string).subscribe( (pInspector:any)=>{
+    this.service.getInspectorState(pItem.id as string).subscribe( (pInspector:any)=>{
       console.log(pInspector);
       if(pInspector==null) return;
       pInspector._icon = GLOBAL_ICONS['FIND'];

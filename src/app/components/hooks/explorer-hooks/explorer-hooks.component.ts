@@ -494,6 +494,11 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   }
 
 
+  /**
+   * To start or stop hooking
+   *
+   * @param pStatus
+   */
   turnHooking( pStatus: boolean) {
 
 
@@ -528,7 +533,13 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   }
 
   /**
-   * To
+   * To reset the state of the explorer.
+   *
+   * The purpose of this method is to clean explorer state when the user
+   * close the active project or switch to another project.
+   *
+   * @return {void}
+   * @method
    */
   reset():void {
     this.hookPools = {
@@ -549,6 +560,16 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     this.selected = HOOK_VIEW.KP;
   }
 
+  /**
+   * To prepare a list of key points to be rendered
+   *
+   * The purpose of this method is to add some extra content
+   * to keypoints object to customize its render
+   *
+   * @param pKPS {KeyPoint[]} List of keypoints
+   * @return {void}
+   * @private
+   */
   private _refreshKeyPointList( pKPS:KeyPoint[]):void {
     console.log(pKPS);
     this.hookPools[HOOK_VIEW.KP].app = pKPS;
@@ -582,6 +603,8 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
   /**
    * To refresh the data and to displayed it into hook explorer
+   *
+   * @method
    */
   refresh( pSelected:Nullable<string> = null) {
 

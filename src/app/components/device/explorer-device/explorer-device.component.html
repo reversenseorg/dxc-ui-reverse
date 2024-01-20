@@ -147,6 +147,7 @@
   <app-context-item [label]="'Open shell'"  [icon]="gIcons['TERMINAL']" (itemclick)="openShell(ctxMenuState.subject, false)"></app-context-item>
   <app-context-item [label]="'Show processes'" (itemclick)="showProcess(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Browse filesystem'"  (itemclick)="showDevFs(ctxMenuState)"></app-context-item>
+  <app-context-item [label]="'Acquire device'" [icon]="gIcons['DOWNLOAD']" (itemclick)="acquire(ctxMenuState.subject,'all')"></app-context-item>
   <app-context-item [label]="'Root access'"  [icon]="gIcons['UNLOCK']" (itemclick)="usePrivilegedMode(ctxMenuState.subject, true)"></app-context-item>
   <app-context-item [label]="'User access'"  [icon]="gIcons['LOCK']" (itemclick)="usePrivilegedMode(ctxMenuState.subject, false)"></app-context-item>
   <app-context-item [label]="'Remove'"  [icon]="gIcons['TRASH']" (itemclick)="removeDevice(ctxMenuState.subject)"></app-context-item>

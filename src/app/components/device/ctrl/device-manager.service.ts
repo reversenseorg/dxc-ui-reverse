@@ -16,7 +16,10 @@ import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
 
-
+export interface AppAcquisitionOpts {
+  type:"all"|"single";
+  uids?:string[];
+}
 interface DeviceManagerCache {
   devices: Device[],
   app: IStringIndex<AppPackage[]>,
@@ -88,6 +91,7 @@ export class DeviceManagerService extends DxcApiService {
           getApp: { method: 'GET', url:'/device/applications', format:'json', auth:AUTH_ENFORCE},
           getSyscalls: { method: 'GET', url:'/device/syscalls', format:'json', auth:AUTH_ENFORCE},
           pullApp: { method: 'POST', url:'/device/application/pull', format:'json', auth:AUTH_ENFORCE},
+          acquire: { method: 'POST', url:'/device/acquire', format:'json', auth:AUTH_ENFORCE},
           installApp: { method: 'POST', url:'/device/application/install/app', format:'json', auth:AUTH_ENFORCE},
           installProject: { method: 'POST', url:'/device/application/install/project', format:'json', auth:AUTH_ENFORCE, puid:true},
           uninstallApp: { method: 'POST', url:'/device/application/uninstall', format:'json'},
@@ -728,6 +732,29 @@ export class DeviceManagerService extends DxcApiService {
 
     return this._process(
       this.endpoints['device']['admin'], opts
+    ).pipe(map( (pRes: any) => {
+      if(!pRes.success){
+        this.outputSvc.alert( OutputMessage.newError({ msg: pRes.msg }));
+        return pRes;
+      }else{
+        //his.outputSvc.print( OutputMessage.newSuccess({ msg: 'The application ['+opts.opts.pkg+'] has been uninstalled on device ['+opts.uid+'] ' }));
+        return pRes;
+      }
+    }));
+  }
+
+  /**
+   * To acquire one or more app from a device
+   *
+   * @param pDevice
+   * @param {App}
+   */
+  acquireApp(pDevice: Device, pOptions:AppAcquisitionOpts = {type:"all"}) {
+    return this._process(
+        this.endpoints['device']['acquire'], {
+          device: pDevice.uid,
+          opts: pOptions
+        }
     ).pipe(map( (pRes: any) => {
       if(!pRes.success){
         this.outputSvc.alert( OutputMessage.newError({ msg: pRes.msg }));

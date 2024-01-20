@@ -33,7 +33,9 @@ export class InspectorService extends DxcApiService {
     super({
       inspector: {
         list: { method:'GET', url:'/plugin/inspector/list', format:'json', auth:false /* removed */, puid:true},
+        showEnabled: { method:'GET', url:'/plugin/inspectors/:uid', format:'json', puid:true},
         show: { method:'GET', url:'/plugin/inspectors/:uid', format:'json'},
+        state: { method:'GET', url:'/plugin/inspector/state', format:'json', puid:true},
       },
       hook: {
         byInspector: { method:'GET', url:'/hook/getBy/inspector', format:'json', auth:false /* removed */, puid:true},
@@ -75,7 +77,7 @@ export class InspectorService extends DxcApiService {
   getInspectorByID( pId:string):Observable<Nullable<Inspector>>{
 
     return this._process(
-            this.endpoints['inspector']['show'],
+            this.endpoints['inspector']['showEnabled'],
         { uid: pId }
         )
         .pipe(
@@ -100,6 +102,24 @@ export class InspectorService extends DxcApiService {
       })
     );
   }
+
+    getInspectorState( pId:string):Observable<Nullable<Inspector>>{
+
+        return this._process(
+            this.endpoints['inspector']['state'],
+            { insp: pId }
+        )
+            .pipe(
+                map( (vRes:any) => {
+                    if(vRes.success){
+                        let insp = new Inspector(vRes.data.state);
+                        return insp;
+                    }else{
+                        return null;
+                    }
+                })
+            );
+    }
 
   getHooksFrom( pInsp:Inspector):Observable<AbstractHook[]>{
     return this._process(this.endpoints['hook']['byInspector'],{

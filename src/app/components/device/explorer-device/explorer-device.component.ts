@@ -1118,4 +1118,11 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   doDeviceAction(pItem: any, pAction: string) {
     return null;
   }
+
+    acquire(pDevice: Device, pType: "all"|"single") {
+      this.dmService.acquireApp(pDevice, {type:pType}).subscribe((vProf)=>{
+
+
+      })
+    }
 }

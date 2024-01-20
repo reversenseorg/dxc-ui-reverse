@@ -184,6 +184,12 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               icon: GLOBAL_ICONS['WINDOW']
             }),
             new MenuItem<CodeItem>({
+              id:CODE_SUBVIEW.APP,
+              label:'Application Libs',
+              color: 'dxc-text-clear75',
+              icon: GLOBAL_ICONS['WINDOW']
+            }),
+            new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.ANDROID_API,
               label:'Android API',
               color: 'dxc-text-clear75',
