@@ -24,6 +24,7 @@
 
             <ng-template #expItem let-itemObj="item" >
 
+
               <span *ngIf="itemObj._t=='f'" (contextmenu)="displayCtxMenu($event,'f',itemObj)">
                 <span class="badge text-bg-info" *ngIf="itemObj._s>0">{{ itemObj._s }}</span>
                 <span class="badge text-bg-secondary" *ngIf="itemObj._s==0">-</span>&nbsp;
@@ -96,7 +97,12 @@
                 </ng-container>
               </span>
 
-              <span *ngIf="itemObj.__==NODE_TYPES.FILE" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+              <span *ngIf="itemObj.__==NODE_TYPES.FILE && itemObj.type=='dex'" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                {{ itemObj.name  }}
+              </span>
+
+              <span *ngIf="itemObj.__==NODE_TYPES.FILE && itemObj.type=='ELF'" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
                 <dxc-icon [model]="itemObj._icon"></dxc-icon>
                 {{ itemObj.name  }}
               </span>

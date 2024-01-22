@@ -387,7 +387,7 @@ export class TopologyService extends DxcApiService {
         break;
       case 'libs':
         obs = this._process(
-            this.endpoints['file']['libs'], {uid:1}
+            this.endpoints['file']['libs']
         ).pipe(map((vData:any)=>{
             if(vData.success){
               return vData.data;
@@ -406,17 +406,13 @@ export class TopologyService extends DxcApiService {
 
     return obs.pipe( map( (pData:any)=>{
 
-      if(pData.success){
         let f:ModelFile[] = [];
-        pData.data.map((vFile:any) => {f.push(new ModelFile(vFile)); });
+
+        if(pData != null){
+          pData.map((vFile:any) => {f.push(new ModelFile(vFile)); });
+        }
+
         return f;
-      }else{
-        this.outputSvc.print(OutputMessage.newError({
-          src: "Topology",
-          msg: pData.msg
-        }));
-        return [];
-      }
 
     }));
   }

@@ -209,6 +209,7 @@ export class HookService extends DxcApiService {
           },
           inspector: {
             list: { method: 'GET', url:'/inspector', format:'json', auth:false /* removed */, puid:true},
+            //dyn: { method: 'GET', url:'/inspectors/DynamicLoader', format:'json', auth:false /* removed */, puid:true}
             dyn: { method: 'GET', url:'/inspectors/DynamicLoader', format:'json', auth:false /* removed */, puid:true}
           }
         },_http, outputSvc

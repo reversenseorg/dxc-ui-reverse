@@ -502,7 +502,6 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getFiles('dex')
       .subscribe((pFiles:ModelFile[]) => {
 
-        console.log(pFiles);
         if(pFiles!=null){
           pFiles.map((vFile:any) => {
             vFile._t = NodeInternalType.FILE;
@@ -522,6 +521,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       .getFiles('libs')
       .subscribe((pFiles:ModelFile[]) => {
 
+        console.log("LIBS FILES : ",pFiles);
         pFiles.map( (vFile:any) => {
           vFile._t = NodeInternalType.FILE;
           vFile._icon = this.data[this.SUBVIEW.LIB]._icon;

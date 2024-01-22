@@ -98,7 +98,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
       this.viewportTabnav.nativeElement.style.height = this.size.nav_height+'px';
       this.viewportTabnav.nativeElement.style.width = pEvent.width+'px';
 
-      this.viewportCtn.nativeElement.style.height =ctnH+'px';
+      this.viewportCtn.nativeElement.style.height = (ctnH-this.size.nav_height)+'px';
 /*
       tabNav.style.height = this.size.nav_height+'px';
       tabNav.style.maxHeight = this.size.nav_height+'px';
@@ -126,6 +126,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
 
     let h = parseFloat(viewPortEl.style.height);
 
+    console.log(h, tabNav.clientHeight);
     this.ctnHeight = (h - tabNav.clientHeight);
     ctn.style.height = this.ctnHeight+'px';
     ctn.style.maxHeight = this.ctnHeight+'px';
