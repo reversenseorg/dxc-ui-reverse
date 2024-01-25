@@ -210,9 +210,8 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
       this.prevExpl = this.activeExpl;
     }
 
-    this.activeExpl = this.elements[this.active];
+    //this.activeExpl = this.elements[this.active];
     this.selectTab(this.active, null);
-
   }
 
   ngAfterContentInit() {
@@ -297,6 +296,15 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
     }
 
     this.active = pId;
+    this.activeExpl = this.elements[this.active];
+
+    if(this.activeExpl != null){
+      this.activeExpl.onDisplay$.next({
+        src: 'expl-tab',
+        evt: 'show',
+        data: null
+      });
+    }
 
     if(this.prevExpl!=null){
       this.prevExpl.afterHide();

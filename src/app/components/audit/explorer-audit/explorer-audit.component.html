@@ -21,17 +21,18 @@
       <ng-container *ngFor="let file of dataPool[selected]">
 
         <ng-template #expFileItem let-itemObj="item">
-          <span class="dxc-text-std" *ngIf="itemObj.scannerID!=null" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
+
+          <span class="dxc-text-std" *ngIf="itemObj.__==_NODE.ASSURANCE_MODEL" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
             <dxc-icon [model]="gIcons['LIBS']"></dxc-icon>
-            {{ itemObj.id  }}
+            {{ itemObj.name  }}
           </span>
 
-          <span class="dxc-text-std" *ngIf="(itemObj.assessments!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
+          <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.assessments!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
             <dxc-icon [model]="gIcons['LIBS']" [color1]="'text-warning'"></dxc-icon>
             {{ itemObj.name }} [ {{ itemObj.assessments.length }} ]
           </span>
 
-          <span class="dxc-text-std" *ngIf="(itemObj.rules!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
+          <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.rules!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
             <dxc-icon [model]="gIcons['TARGET']" [color1]="'text-warning'"></dxc-icon>
             {{ itemObj.name }}
           </span>
@@ -45,8 +46,6 @@
           [itemType]="file._t"
           [expandableFn]="isExpendable"
           (itemFocus)="onItemFocus($event)"
-          (collapse)="onCollapse($event)"
-          (expand)="onExpand($event)"
         >
 
         </app-expandable-item>

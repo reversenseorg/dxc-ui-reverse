@@ -6,6 +6,9 @@ import {AppComponent} from "../../app.component";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../Nullable";
 import {IconModelCollection} from "../icon/IconModel";
+import {DisplayEvent} from "../common/DisplayEvent";
+
+
 
 export abstract class SubExplorerComponent<T> {
 
@@ -36,6 +39,8 @@ export abstract class SubExplorerComponent<T> {
   icons: IconModelCollection = {};
 
   resize$: Subject<any>;
+
+  onDisplay$: Subject<DisplayEvent> = new Subject<DisplayEvent>();
 
   getTab(): ExplorerTab {
     return this.tab;

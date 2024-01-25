@@ -4,6 +4,7 @@ import CodeThreat from "./CodeThreat";
 import CodeConstraint from "./CodeConstraint";
 import Control from "./Control";
 import {Metadata} from "./Metadata";
+import {NodeInternalType} from "../../NodeInternalType";
 
 export enum AssuranceModelType {
     SECURITY="sec",
@@ -14,6 +15,8 @@ export enum AssuranceModelType {
 
 
 export default class AssuranceModel {
+
+    __:NodeInternalType = NodeInternalType.ASSURANCE_MODEL;
 
 
     /**

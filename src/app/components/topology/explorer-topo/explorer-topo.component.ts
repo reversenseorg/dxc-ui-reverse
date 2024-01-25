@@ -162,7 +162,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
     this._cuid = nextCUID();
 
-    this.offset = 5;
+    this.offset = 4;
 
 
     this.tab = new ExplorerTab({

@@ -1,5 +1,5 @@
 import {HttpClient} from "@angular/common/http";
-import {Observable, Subject} from "rxjs";
+import {from, Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
 import {DxcApiService} from "../../../base/DxcApiService";
@@ -14,12 +14,17 @@ import {CodeMenuEvent, ContextMenuEvent} from "../../code/ctrl/code-controller.s
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";
 import AssuranceReport from "../../../models/audit/common/AssuranceReport";
 import {Nullable} from "../../../base/Nullable";
+import Control from "../../../models/audit/common/Control";
+import {IStringIndex} from "../../../base/IStringIndex";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditService extends DxcApiService{
+
+
+  private _cache:Record<string, AssuranceModel> = {};
 
   /**
    * Event stream.
@@ -46,7 +51,8 @@ export class AuditService extends DxcApiService{
           models: { method: 'GET', url:'/audit/models', format:'json', auth:false, puid:false},
           dashboard: { method: 'GET', url:'/audit/dashboard/:model', format:'json', auth:false /* removed */, puid:true},
           scan: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:false /* removed */, puid:true},
-          scanInfo: { method: 'POST', url:'/audit/scanInfo', format:'json', auth:false /* removed */, puid:true}
+          scanInfo: { method: 'POST', url:'/audit/scanInfo', format:'json', auth:false /* removed */, puid:true},
+          controls: { method: 'POST', url:'/audit/controls/:model', format:'json', auth:false /* removed */, puid:true}
         }
       }, _http, outputSvc);
 
@@ -124,7 +130,11 @@ export class AuditService extends DxcApiService{
     }));
   }
 
-  getModel(pModelId:string):Observable<Nullable<AssuranceModel>> {
+  getModel(pModelId:string, pRefresh = false):Observable<Nullable<AssuranceModel>> {
+    if(this._cache[pModelId]!=null && !pRefresh){
+      return from([this._cache[pModelId]]);
+    }
+
     return this._process(
       this.endpoints['audit']['model'],
       { model: pModelId }
@@ -133,6 +143,8 @@ export class AuditService extends DxcApiService{
       if(pEl.success){
 
         const model = AssuranceModel.fromJsonObject( pEl.data);
+        this._cache[pModelId] = model;
+
         this.outputSvc.print(OutputMessage.newSuccess({
           src: "Audit",
           msg: `Assurance model has been retrieved`
@@ -232,5 +244,18 @@ export class AuditService extends DxcApiService{
       }
     }));
   }
+
+
+  getControlsOf(pModelID:string, pRefresh = false){
+    return this.getModel(pModelID, pRefresh).pipe(map((vModel:Nullable<AssuranceModel>)=>{
+        if(vModel!=null){
+          console.log("CONTROLS > ",vModel.controls);
+          return vModel.controls;
+        }else{
+          return [];
+        }
+    }));
+  }
+
 
 }

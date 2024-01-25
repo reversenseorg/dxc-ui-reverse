@@ -166,7 +166,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     super();
     this.id = 'explorerDevice';
     this.icons  = DEV_ICONS;
-    this.offset = 4;
+    this.offset = 3;
     this.devices[DEV_SUBVIEW.ALL] = [];
     this.devices[DEV_SUBVIEW.ANDROID] = [];
     this.devices[DEV_SUBVIEW.APPLE] = [];

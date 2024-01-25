@@ -49,11 +49,23 @@ export enum NodeInternalType {
   INSPECTOR,
   HOOK_SESSION,
   RUNTIME_EVENT,
-
   HOOK_SYSCALL,
   TEST_CREDS,
   LIB_FP,
-  DASHBOARD
+  DASHBOARD,
+  CALL,
+  NONE,
+  ASSURANCE_MODEL,
+  CONTROL,
+  CASE,
+  BRAND,
+  DEVICE_MODEL,
+  DEVICE,
+  PROJECT,
+  TOOL,
+  INSPECTOR_PLUGIN,
+  SCAN_ORDER,
+  LOG
 }
 
 export const NodeInternalTypeName = {
@@ -105,10 +117,24 @@ export const NodeInternalTypeName = {
   [NodeInternalType.HOOK_SESSION]: "HOOK_SESSION",
   [NodeInternalType.RUNTIME_EVENT]: "RUNTIME_EVENT",
   [NodeInternalType.HOOK_SYSCALL]: "HOOK_SYSCALL",
-  [NodeInternalType.TEST_CREDS]: "TEST_CREDS",
   [NodeInternalType.LIB_FP]: "LIB_FP",
-  [NodeInternalType.DASHBOARD]: "DASHBOARD"
+  [NodeInternalType.TEST_CREDS]: "TEST_CREDS",
+  [NodeInternalType.DASHBOARD]: "DASHBOARD",
+  [NodeInternalType.CALL]: "CALL",
+  [NodeInternalType.NONE]: "NONE",
+  [NodeInternalType.ASSURANCE_MODEL]: "ASSURANCE_MODEL",
+  [NodeInternalType.CONTROL]: "CONTROL",
+  [NodeInternalType.CASE]: "CASE",
+  [NodeInternalType.BRAND]: "BRAND",
+  [NodeInternalType.DEVICE_MODEL]: "DEVICE_MODEL",
+  [NodeInternalType.DEVICE]: "DEVICE",
+  [NodeInternalType.PROJECT]: "PROJECT",
+  [NodeInternalType.TOOL]: "TOOL",
+  [NodeInternalType.INSPECTOR_PLUGIN]: "INSPECTOR_PLUGIN",
+  [NodeInternalType.SCAN_ORDER]: "SCAN_ORDER",
+  [NodeInternalType.LOG]: "LOG",
 }
+
 
 /**
  * Helper to handle "not typed" object representing node

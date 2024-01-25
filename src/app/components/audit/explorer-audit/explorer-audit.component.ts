@@ -34,6 +34,7 @@ import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import Control from "../../../models/audit/common/Control";
 import {UIException} from "../../../base/error/UIException";
 import {ICON_TYPE} from "../../../base/icon/IconModel";
+import {NodeInternalType} from "../../../models/NodeInternalType";
 
 export enum AUDIT_SUBVIEW {
   THREATS="threat",
@@ -51,6 +52,8 @@ export enum AUDIT_SUBVIEW {
 export class ExplorerAuditComponent extends SubExplorerComponent<AuditController> implements OnInit, AfterViewInit, ExpandableProvider {
 
 
+  _NODE = NodeInternalType;
+
   @Input() override controller!:AuditController;
   @Input() override parent!:any;
 
@@ -64,7 +67,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   override gIcons: any = GLOBAL_ICONS;
 
-  override offset = 6;
+  override offset = 5;
 
 
 
@@ -170,6 +173,14 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     this.auditSvc.displayCtxMenu$.subscribe( (pObs:ContextMenuEvent)=>{
       this.displayCtxMenu(pObs.event, pObs.type, pObs.obj);
     });
+
+    this.onDisplay$.subscribe( (vEvent:any)=>{
+      switch (vEvent.evt){
+        case 'show':
+          this.refresh(this.selected);
+          break;
+      }
+    });
   }
 
 
@@ -202,6 +213,9 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     if (pSelected == null) {
       pSelected = this.selected;
     }
+    if (pSelected == null) {
+      pSelected = AUDIT_SUBVIEW.MODEL;
+    }
 
 
     switch (pSelected) {
@@ -209,6 +223,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
         this.controller.service
           .getModels()
           .subscribe((vModel) => {
+            console.log(vModel);
             this.dataPool[AUDIT_SUBVIEW.MODEL] = vModel;
           });
         break;
@@ -250,7 +265,8 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
     if(pItem instanceof AssuranceModel){
       console.log("audit > assurance model");
-      data =  pItem.controls;
+      //data =  pItem.controls;
+      return this.auditSvc.getControlsOf((pItem as AssuranceModel).getID());
     }
     else if(pItem instanceof Control){
       console.log("audit > control");
