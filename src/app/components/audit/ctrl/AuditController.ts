@@ -6,6 +6,7 @@ import {StageComponent} from "../../stage/stage.component";
 import { AuditService } from "./audit.service";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {NodeInternalType} from "../../../models/NodeInternalType";
 
 
 export class AuditController implements IController {
@@ -78,7 +79,8 @@ export class AuditController implements IController {
     let f:any=null;
 
     this.rendered.map( (pView:any) => {
-      if(pView.__signature__ === pItem.__signature__){
+      console.log("AUDIT > isAlreadyRendered > ",pView.uid, pItem.uid)
+      if(pView.uid === pItem.uid){
         f = pView;
       }
     });
@@ -86,7 +88,26 @@ export class AuditController implements IController {
     return f;
   }
 
+
+  /**
+   * To open a model in to a new tab or focus the tab is it is already rendered
+   *
+   * @param pItem
+   * @param pSrc
+   * @method
+   */
   open(pItem: any, pSrc:any): void{
-    this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:pItem.time, focus:'rl' });
+    console.log("Audit Controller > id  ", pItem, pSrc);
+
+    let existingRef = this.isAlreadyRendered(pItem);
+
+    if(existingRef != null){
+      console.log('item is already rendered>', existingRef,pItem,existingRef.uid);
+      this.focusView.next( existingRef.uid);
+      return;
+    }else{
+      console.log('rendering > ',pItem,pItem.id);
+      this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:pItem.id, focus:'in' });
+    }
   }
 }

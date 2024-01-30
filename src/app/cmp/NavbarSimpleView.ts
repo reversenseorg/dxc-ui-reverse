@@ -12,7 +12,7 @@ export interface NavbarSimpleViewOptions extends IStringIndex<any> {
   label?:string;
   color?:string;
   icon?:IconModel;
-  menu:MenuView;
+  menu?:MenuView;
   listeners?:any;
   selected?:any;
   entries?:MenuItem<any>[];
@@ -67,7 +67,7 @@ export class NavbarSimpleView {
         }
       }
     }else{
-      throw new Error(("UIException : NavbarSimpleView : menu is not defined"));
+      //throw new Error(("UIException : NavbarSimpleView : menu is not defined"));
     }
 
 
@@ -76,7 +76,7 @@ export class NavbarSimpleView {
   selectItemByID( pName:string):any {
 
     if(this.menu==null){
-      throw new Error(("UIException : NavbarSimpleView : selectItemByID : menu is not defined"));
+      //throw new Error(("UIException : NavbarSimpleView : selectItemByID : menu is not defined"));
     }
 
     const el = this.menu.getItemByID(this.selected);

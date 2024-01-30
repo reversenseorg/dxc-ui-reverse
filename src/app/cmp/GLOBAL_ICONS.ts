@@ -58,6 +58,12 @@ export const GLOBAL_ICONS:IconModelCollection = {
     name: 'binary',
     color1: 'dxc-text-clear75',
   }),
+  TAG: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'tag',
+    color1: 'dxc-text-clear75',
+  }),
   HOOKS: new IconModel({
     iconType: ICON_TYPE.ICON,
     type: 'fas',

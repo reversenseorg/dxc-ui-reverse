@@ -1,7 +1,8 @@
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
@@ -151,6 +152,24 @@ export class SubnavbarButtonComponent implements AfterViewInit {
   }
 }
 
+
+@Component({
+  selector: 'app-subnavbar-label',
+  template: `
+    <div class="nav-item dxc-text-std">
+      {{ label}}
+    </div>
+  `,
+  styleUrls: ['./subnavbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SubnavbarLabelComponent  {
+
+  @Input() label:string = "";
+  constructor( public parent: SubnavbarComponent) {
+
+  }
+}
 
 
 @Component({

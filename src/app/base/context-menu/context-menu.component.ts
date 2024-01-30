@@ -85,6 +85,7 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
     const path = this.event.composedPath ? this.event.composedPath() : this.event.path;
     if(path){
       path[0].classList.add('dxc-ctxm-active');
+      console.log(path[0]);
     }else{
       console.error("Event path cannot be retrieved : ",this.event);
     }

@@ -120,6 +120,9 @@ import {CodeEditorModule} from "./components/code-editor/code-editor.module";
 import {MenuComponent} from "./base/menu/menu.component";
 import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/modal-select-hook.component";
 import {CommonModule} from "@angular/common";
+import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
+import {TagBadgeComponent} from "./components/tag/tag-badge/tag-badge.component";
+import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -267,8 +270,11 @@ import {CommonModule} from "@angular/common";
     // audit
     ExplorerAuditComponent,
     ViewportAuditComponent,
-    ButtonComponent
+    ButtonComponent,
 
+    ExplorerTagComponent,
+    TagBadgeComponent,
+    ModalTagEditorComponent
 
   ],
   imports: [

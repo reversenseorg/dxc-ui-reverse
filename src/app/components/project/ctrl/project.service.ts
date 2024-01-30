@@ -388,13 +388,12 @@ export class ProjectService extends DxcApiService {
    * @private
    */
   private _beforeProjectReady( pEl:any, pRefreshAppMenu = true){
-    this.tagSvc.listTags().subscribe(()=>{
+    this.tagSvc.listTags().subscribe((vtags)=>{
       this.onProjectReady.next(pEl);
       if(pRefreshAppMenu){
         this.appmenuSvc.onProjectOpen();
       }
     });
-
   }
 
   openProject( pProject:DexcaliburProject) :Observable<any> {

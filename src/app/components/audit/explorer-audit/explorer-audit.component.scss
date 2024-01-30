@@ -49,3 +49,31 @@
 .hidden {
   display: none;
 }
+
+
+.model-btn-grad {
+  border: 1px solid #aaa;
+}
+
+/*
+.model-btn-grad:hover {
+  border: 1px solid #06beb6;
+  cursor: pointer;
+}*/
+
+.model-btn-grad:hover {
+  cursor: pointer;
+  background-image: linear-gradient(to right, #06beb6 0%, #48b1bf  51%, #06beb6  100%);
+  transition: 0.5s;
+  background-size: 200% auto;
+  border: 1px solid #06beb6;
+  color: #000;
+}
+
+/*
+.model-btn-grad:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}*/
+

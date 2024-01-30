@@ -47,7 +47,7 @@ export enum AUDIT_SUBVIEW {
   templateUrl: './explorer-audit.component.html',
   styleUrls: ['./explorer-audit.component.scss'],
   providers: [NgbTooltipConfig],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplorerAuditComponent extends SubExplorerComponent<AuditController> implements OnInit, AfterViewInit, ExpandableProvider {
 
@@ -72,7 +72,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
 
   ctxMenu: ContextMenuList = {};
-
   ctxMenuState:ContextMenuState = { subject: null };
 
   activeItem: any = null;
@@ -147,6 +146,8 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
       return ;
     });*/
 
+
+
     this.projectSvc.onProjectReady.subscribe( (pProject:DexcaliburProject)=>{
       this.projectReady = true;
 
@@ -175,7 +176,10 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     });
 
     this.onDisplay$.subscribe( (vEvent:any)=>{
+
+      console.log("EXPL > Audit > onDisplay$ > ",vEvent);
       switch (vEvent.evt){
+        default:
         case 'show':
           this.refresh(this.selected);
           break;
@@ -216,7 +220,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     if (pSelected == null) {
       pSelected = AUDIT_SUBVIEW.MODEL;
     }
-
 
     switch (pSelected) {
       case AUDIT_SUBVIEW.MODEL:
@@ -288,8 +291,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   }
 
   open( pItem:any): any {
-
-    console.log('Audit > OPEN > ',pItem);
     this.controller.open( pItem , 'expl');
     return null;
   }
@@ -342,13 +343,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     else{
       return [];
     }
-  }
-
-
-  onExpand( pItem:any):void {
-  }
-
-  onCollapse( pItem:any):void {
   }
 
   onItemFocus( pEvent:any):void{
@@ -408,4 +402,9 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   }
 
     protected readonly ICON_TYPE = ICON_TYPE;
+
+  showModel(pModel: any, pEvent:any) {
+    //console.log()
+    this.open(pModel)
+  }
 }

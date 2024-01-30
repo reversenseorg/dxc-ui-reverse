@@ -72,6 +72,8 @@ import {ViewportTopoActivityComponent} from "./components/topology/viewport-topo
 import {ViewportTopoReceiverComponent} from "./components/topology/viewport-topo/viewport-topo-receiver.component";
 import {ViewportTopoProviderComponent} from "./components/topology/viewport-topo/viewport-topo-provider.component";
 import {ViewportTopoServiceComponent} from "./components/topology/viewport-topo/viewport-topo-service.component";
+import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
+import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
 
 
 interface StageSet {
@@ -274,9 +276,6 @@ export class ControllerService {
           main: ViewportNativeMainComponent
         },
       }),
-      new TagController({
-        service: this.tagSvc
-      }),
       new PlatformController({
         service: this.pltfSvc
       }),
@@ -300,7 +299,16 @@ export class ControllerService {
         viewCmp: {
           main: ViewportAuditComponent
         },
-      })
+      }),
+      new TagController({
+        service: this.tagSvc,
+        explorerCmp: {
+          main: ExplorerTagComponent
+        },
+        modalCmp: {
+          edit: ModalTagEditorComponent
+        }
+      }),
     ];
 
     this.hookAfterControllersInit(ctrls);

@@ -258,6 +258,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
     console.log('render list items (after)>', (new Date()).getTime()-t, 'ms');
     //t2.map((vT:any) => {3 += vT; });
     console.log('create item avg>',  t3 /*t3/t2.length*/, 'ms');
+    console.log(this);
 
     if((this.provider as any).changeDetectorRef!=null){
       (this.provider as any).changeDetectorRef.markForCheck();

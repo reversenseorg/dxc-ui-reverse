@@ -283,6 +283,8 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
    */
   selectTabByUID2(pUID: string): void {
 
+    console.log("selectTabByUID2 > ",pUID);
+
     let v:Nullable<ComponentRef<any>> = null;
     for(let i=0; i<this.cmps.length; i++){
       v = this.cmps[i];
@@ -310,6 +312,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
       if(v==null) continue;
 
       if(v.instance.id === pId){
+        console.log("selectTabByID2 > ",v.instance.id,pId)
         this.selectTab2(v, pEvent);
       }
     }
@@ -344,7 +347,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     if(oldCmp!=null) oldCmp.hostView.detectChanges();
     //pCmp.hostView.detectChanges();
 
-    console.log(oldCmp,pCmp)
+    console.log("SelectTab2 > ",oldCmp,pCmp)
     /*
     if(this.activeCmp != null  && pCmp.instance._viewRef!=null){
       console.log("[new]",this.activeCmp.instance.id);
@@ -381,6 +384,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     this.cmps.push(cmpRef);
     //this.views.push(cmpRef.instance);
 
+    console.log("VP > addTab > ",cmpRef.instance.uid);
 
     //this.selectTab( cmpRef.instance, null);
     this.selectTab2( cmpRef, null);

@@ -6,7 +6,7 @@ import {ModalBaseComponent} from "./modal-base/modal-base.component";
 import {IconComponent} from "./icon/icon.component";
 import {
   SubnavbarButtonComponent,
-  SubnavbarComponent, SubnavbarInputComponent,
+  SubnavbarComponent, SubnavbarInputComponent, SubnavbarLabelComponent,
   SubnavbarMenuComponent,
   SubnavbarTabComponent
 } from "./subnavbar/subnavbar.component";
@@ -17,6 +17,7 @@ import {PreviewerComponent} from "./previewer/previewer.component";
 import {MetaComponent} from "./meta/meta.component";
 import {AppMenuComponent} from "./appmenu/app-menu.component";
 import {AppMenuService} from "./appmenu/app-menu.service";
+import {BoxComponent} from "./box/box.component";
 
 @NgModule({
   declarations: [
@@ -27,9 +28,11 @@ import {AppMenuService} from "./appmenu/app-menu.service";
     SubnavbarTabComponent,
     SubnavbarMenuComponent,
     SubnavbarInputComponent,
+    SubnavbarLabelComponent,
     ModalProgressComponent,
     PreviewerComponent,
     MetaComponent,
+    BoxComponent,
     AppMenuComponent
   ],
   exports: [
@@ -40,10 +43,12 @@ import {AppMenuService} from "./appmenu/app-menu.service";
     SubnavbarTabComponent,
     SubnavbarMenuComponent,
     SubnavbarInputComponent,
+    SubnavbarLabelComponent,
     ModalProgressComponent,
     PreviewerComponent,
     MetaComponent,
-    AppMenuComponent
+    AppMenuComponent,
+      BoxComponent,
   ],
     imports: [
         CommonModule,

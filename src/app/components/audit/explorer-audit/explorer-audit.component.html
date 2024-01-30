@@ -15,44 +15,64 @@
   </ul>
 
   <div class="explorer-list-root" #explAuditCtnRef>
-    <app-expandable-list>
+
+    <ng-container *ngIf="selected!='model'">
+      <app-expandable-list>
 
 
-      <ng-container *ngFor="let file of dataPool[selected]">
+        <ng-container *ngFor="let file of dataPool[selected]">
 
-        <ng-template #expFileItem let-itemObj="item">
+          <ng-template #expFileItem let-itemObj="item">
 
-          <span class="dxc-text-std" *ngIf="itemObj.__==_NODE.ASSURANCE_MODEL" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
-            <dxc-icon [model]="gIcons['LIBS']"></dxc-icon>
-            {{ itemObj.name  }}
-          </span>
+            <span class="dxc-text-std" style="border-radius: 2rem; margin-top:2px; border: 2px solid white; padding: 1em;" *ngIf="itemObj.__==_NODE.ASSURANCE_MODEL" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
+              <dxc-icon [model]="gIcons['LIBS']"></dxc-icon>
+              <span class="margin-left:1em;font-size:1.2em;">{{ itemObj.name }}</span>
+            </span>
 
-          <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.assessments!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
-            <dxc-icon [model]="gIcons['LIBS']" [color1]="'text-warning'"></dxc-icon>
-            {{ itemObj.name }} [ {{ itemObj.assessments.length }} ]
-          </span>
+            <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.assessments!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
+              <dxc-icon [model]="gIcons['LIBS']" [color1]="'text-warning'"></dxc-icon>
+              {{ itemObj.name }} [ {{ itemObj.assessments.length }} ]
+            </span>
 
-          <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.rules!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
-            <dxc-icon [model]="gIcons['TARGET']" [color1]="'text-warning'"></dxc-icon>
-            {{ itemObj.name }}
-          </span>
+            <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.rules!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
+              <dxc-icon [model]="gIcons['TARGET']" [color1]="'text-warning'"></dxc-icon>
+              {{ itemObj.name }}
+            </span>
 
-        </ng-template>
+          </ng-template>
 
-        <app-expandable-item
-          [itemTpl]="expFileItem"
-          [item]="file"
-          [provider]="this"
-          [itemType]="file._t"
-          [expandableFn]="isExpendable"
-          (itemFocus)="onItemFocus($event)"
-        >
+          <app-expandable-item
+            [itemTpl]="expFileItem"
+            [item]="file"
+            [provider]="this"
+            [itemType]="file._t"
+            [expandableFn]="isExpendable"
+            (itemFocus)="onItemFocus($event)"
+          >
 
-        </app-expandable-item>
+          </app-expandable-item>
 
+        </ng-container>
+
+      </app-expandable-list>
+    </ng-container>
+
+    <ng-container *ngIf="selected=='model'">
+      <ng-container *ngFor="let model of dataPool[selected]">
+          <div class="row dxc-no-gutters dxc-text-clear75 model-btn-grad" style="border-radius: 5px; margin:5px 10px; border: 1px solid #aaaaaa; padding: 1em;" *ngIf="model.__==_NODE.ASSURANCE_MODEL" (click)="showModel(model,$event)" (contextmenu)="displayCtxMenu($event,'audit_model',model)">
+            <div class="col-1 text-center">
+              <dxc-icon [model]="gIcons['LIBS']"></dxc-icon>
+            </div>
+            <div class="col-9 text-left">
+              <span class="font-size:1.2em; dxc-text-std ">{{ model.name }}</span>
+            </div>
+            <div class="col-1 text-center">
+              <dxc-icon [model]="gIcons['EDIT']"></dxc-icon>
+            </div>
+          </div>
       </ng-container>
+    </ng-container>
 
-    </app-expandable-list>
 
     <div *ngIf="!dataPool[selected]" class="text-center dxc-text-clear100 pt-4">
       There is not entry.

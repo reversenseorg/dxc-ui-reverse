@@ -65,7 +65,9 @@ export enum NodeInternalType {
   TOOL,
   INSPECTOR_PLUGIN,
   SCAN_ORDER,
-  LOG
+  LOG,
+  REMOTE_TAG_CATEGORY= 100000,
+  REMOTE_TAG= 100001
 }
 
 export const NodeInternalTypeName = {

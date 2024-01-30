@@ -26,6 +26,7 @@ interface ExplorerElement {
 const cls = ["wrap-outer", "wrap-inner", "nav-item", "nav-link"];
 
 const BORDER_WIDTH = 5;
+
 /**
  * This class represents the Explorer Area (left panel)
  *
@@ -299,6 +300,7 @@ export class ExplorerComponent implements OnInit, OnChanges, AfterContentInit {
     this.activeExpl = this.elements[this.active];
 
     if(this.activeExpl != null){
+      console.log("EXPl :: selectTab > ",pId, this.activeExpl);
       this.activeExpl.onDisplay$.next({
         src: 'expl-tab',
         evt: 'show',
