@@ -9,68 +9,102 @@
             <app-subnavbar-btn [active]="activeLeft=='rl'"  [icon]="gIcons['LIST']" (click)="showDetail('rl')">Rules</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Result</app-subnavbar-btn>
           </ng-container>
+          <ng-container options>
+            <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['TAG']" (click)="updateTags()"></app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['PLUS']" (click)="newControl()"></app-subnavbar-btn>
+          </ng-container>
         </app-subnavbar>
       </ng-container>
       <ng-container body-left>
         <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
-          <h3>{{ data.name }}</h3>
           <div class="row">
-            <div class="col-4 model-details">
-              <dxc-icon class="mr-1" [model]="gIcons['ATTACH_HOOK']"></dxc-icon>
-              <span class="badge rounded-pill badge-sm text-bg-info">Controls: {{ data.controls.length }}</span>
+            <div class="col-8">
+              <h3 class="dxc-text-std">{{ data.name }}</h3>
+              <div class="row mt-2 mb-2">
+                <div class="col-4 model-details">
+                  <ng-container *ngFor="let meta of data.metadata">
+                    <span class="badge rounded-pill badge-sm text-bg-info dxc-text-std ml-2">{{ meta.key }}: {{ meta.value  }}</span>
+                  </ng-container>
+                </div>
+              </div>
+
+
+              <p class="dxc-text-std w-full">
+                {{ data.description }}
+              </p>
+
+              <h4>Resources</h4>
+              <ul>
+                <li *ngFor="let lnk of data.links">
+                  <a [href]="lnk" target="_blank">{{ lnk }}<dxc-icon [model]="gIcons['ATTACH_HOOK']" class="ml-2"></dxc-icon></a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <div class="card mt-2" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Author</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">REVERSENSE</h6>
+                  <p class="card-text">
+                    {{ data.modified | date: 'MM/dd/yyyy' }}
+                  </p>
+                  <p class="card-text">DxPrivacy built'in referential.</p>
+                  <a href="#" class="card-link"><dxc-icon [model]="gIcons['MSG']" class="mr-2 dxc-text-darker"></dxc-icon>&nbsp;Contact</a>
+                  <a href="#" class="card-link"><dxc-icon [model]="gIcons['HELPER']" class="mr-2 dxc-text-darker"></dxc-icon>&nbsp;Help</a>
+                </div>
+              </div>
+
+
             </div>
           </div>
 
-          <h4>Description</h4>
-          <p>
-            {{ data.description }}
-          </p>
-
-          <h4>Resources</h4>
-          <p>
-            -
-          </p>
         </div>
 
         <div class="container-fluid p-0" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rl')">
           <ng-container *ngIf="data">
-            <ng-container  *ngFor="let i of data.controls">
+            <ng-container *ngIf="loadingLeft==false; else loadingLeftCtrl">
+              <ng-container  *ngFor="let i of data.controls">
 
-              <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat">
-                <div class="col-10 pl-2">{{ i.name }}</div>
-                <div class="col-2 text-center">
-                  <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
-                  <!--<span class="image-text ml-2" *ngIf="i.country">{{i.country.name}}</span>-->
-                </div>
-              </div>
-
-              <!--
-
-              <ng-container  *ngFor="let f of i.assessments">
-                <div class="row no-gutters dxc-text-clear75 dxc-row-table dxc-rules-ctrl1">
-                  <div class="col-2">{{ i.id }}</div>
-                  <div class="col-8">{{ i.name }}</div>
-                  <div class="col-2">
-                    <span class="badge rounded-pill  badge-sm text-bg-info">{{ f.rules.length }}</span>
+                <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat" (click)="showControl(i,$event)">
+                  <div class="col-2 text-center">
+                    <input type="checkbox" [ngModel]="checkedCtrls" [value]="i.id"/>
+                    <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
+                  </div>
+                  <div class="col-7 pl-2">{{ i.name }}</div>
+                  <div class="col-3 text-center">
+                    <ng-container *ngFor="let cat of i.category">
+                      <dxc-meta [label]="cat" [css]="'text-bg-info dxc-meta'"></dxc-meta>
+                    </ng-container>
                   </div>
                 </div>
-              </ng-container>
-              <ng-container  *ngFor="let f of i.children">
-                <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-ctrl1">
-                  <div class="col-12 pl-4"><i>{{ f.id }}</i></div>
-                </div>
-                <ng-container  *ngFor="let y of f.assessments">
-                  <div class="row no-gutters  dxc-row-table dxc-rules-ctrl2 m-0 p-0" (click)="showControlAssessm(y)">
-                    <div class="col-1 text-center" >
-                      <dxc-icon [model]="gIcons['INFO']"></dxc-icon>
+
+                <!--
+
+                <ng-container  *ngFor="let f of i.assessments">
+                  <div class="row no-gutters dxc-text-clear75 dxc-row-table dxc-rules-ctrl1">
+                    <div class="col-2">{{ i.id }}</div>
+                    <div class="col-8">{{ i.name }}</div>
+                    <div class="col-2">
+                      <span class="badge rounded-pill  badge-sm text-bg-info">{{ f.rules.length }}</span>
                     </div>
-                    <div class="col-9 pl-2" >{{ y.name }}</div>
-                    <div class="col-2 text-center" [ngStyle]="{'background-color': getScoreBg(y), 'color': getScoreColor(y)}">{{ y.rules.length }}</div>
                   </div>
                 </ng-container>
+                <ng-container  *ngFor="let f of i.children">
+                  <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-ctrl1">
+                    <div class="col-12 pl-4"><i>{{ f.id }}</i></div>
+                  </div>
+                  <ng-container  *ngFor="let y of f.assessments">
+                    <div class="row no-gutters  dxc-row-table dxc-rules-ctrl2 m-0 p-0" (click)="showControlAssessm(y)">
+                      <div class="col-1 text-center" >
+                        <dxc-icon [model]="gIcons['INFO']"></dxc-icon>
+                      </div>
+                      <div class="col-9 pl-2" >{{ y.name }}</div>
+                      <div class="col-2 text-center" [ngStyle]="{'background-color': getScoreBg(y), 'color': getScoreColor(y)}">{{ y.rules.length }}</div>
+                    </div>
+                  </ng-container>
 
-              </ng-container>
-                -->
+                </ng-container>
+                  -->
 
                 <!--
                 <div class="row no-gutters dxc-text-std dxc-row-table">
@@ -87,7 +121,15 @@
                   </div>
                 </div>-->
 
+              </ng-container>
             </ng-container>
+            <ng-template #loadingLeftCtrl>
+                <div class="row">
+                  <div class="col-12 text-center pt-5 pb-5">
+                    <dxc-icon [model]="gIcons['SPINNER']" class="mr-2"></dxc-icon>Loading rules ...
+                  </div>
+                </div>
+            </ng-template>
           </ng-container>
         </div>
 
@@ -161,13 +203,13 @@
       </ng-container>
       <ng-container body-right>
 
-        <div class="container-fluid p-2" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rl')">
-          <ng-container *ngIf="selectedData">
-            <h4>{{ selectedData.name }}</h4>
+        <div class="container-fluid p-2 " [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rl')">
+          <ng-container *ngIf="selectedData && (selectedType=='cass')">
+            <h4 class=" dxc-text-std">{{ selectedData.name }}</h4>
             <i>( <span class="dxc-text-yellow">#{{selectedData.id}}</span> )</i>
 
 
-            <p>{{ selectedData.description }}</p>
+            <p class=" dxc-text-std">{{ selectedData.description }}</p>
 
             <div class="row no-gutters dxc-text-std dxc-text-100">
               <div class="col-11 pl-1"><b>Rules</b></div>
@@ -191,6 +233,108 @@
               <div class="col-11 pl-1"><b>Results</b></div>
             </div>
             <div class="row no-gutters">
+              <div class="col-12 pl-1 pt-1">
+                <div class="dxc-list dxc-rules-list">
+                  <dxc-search-result-list *ngIf="searchCtrl.app" [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>
+                </div>
+              </div>
+            </div>
+
+          </ng-container>
+
+          <ng-container *ngIf="selectedData && (selectedType=='control')">
+            <div class="row">
+              <div class="col-8 dxc-text-std">
+                <h4>{{ selectedData.name }}</h4>
+                <i>( <span class="dxc-text-yellow">#{{selectedData.id}}</span> )</i>
+                <div>
+                  <ng-container *ngFor="let cat of selectedData.category">
+                    <dxc-meta [label]="cat" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
+                  </ng-container>
+                </div>
+
+
+                <p>{{ selectedData.description }}</p>
+                <h5>Ressources</h5>
+                <ng-container *ngFor="let lk of selectedData.links">
+                  <a [href]="lk">{{ lk }}</a>
+                </ng-container>
+              </div>
+              <div class="col-4">
+                <div class="card">
+                  <b>Company :</b><span>{{ selectedData.name }}</span>
+                  <span *ngIf="selectedData?.country" class="fi" [ngClass]="'fi-'+selectedData?.country.code"></span>
+
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row  g-0 dxc-text-std dxc-text-100">
+              <div class="col-11 pl-1"><b>Rules</b></div>
+            </div>
+            <div class="row g-0">
+              <div class="col-12 pl-1 pt-1">
+                    <dxc-box>
+                      <ng-container nav-main>
+                        <app-subnavbar [type]="'navbar'"  [parent]="this" [opts]="true">
+                          <ng-container main>
+                            <app-subnavbar-label [label]="'Rules'"></app-subnavbar-label>
+                          </ng-container>
+                          <ng-container opts>
+                            <dxc-helper-btn [docid]="'model.rules.list'"></dxc-helper-btn>
+                            <app-subnavbar-btn [active]="selectedData.rules==null"  [icon]="gIcons['PLUS']" (click)="newControl(selectedData)">New control</app-subnavbar-btn>
+                            <app-subnavbar-btn [active]="selectedData.children==null"  [icon]="gIcons['PLUS']" (click)="newRule(selectedData)">New rules</app-subnavbar-btn>
+                          </ng-container>
+                        </app-subnavbar>
+                      </ng-container>
+                      <ng-container body>
+                        <ng-container  *ngFor="let a of selectedData.children">
+                            <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0">
+                              <div class="col-1 text-center" >
+                                <dxc-icon [model]="gIcons['ANALYZE']"></dxc-icon>
+                              </div>
+                              <div class="col-10 dxc-text-75">{{ a.name }}</div>
+                              <div class="col-1">
+                                <dxc-meta [label]="a.category.length" [css]="'text-bg-info dxc-meta'" [ngbTooltip]="a.category.join(' ')"></dxc-meta>
+                              </div>
+                            </div>
+                        </ng-container>
+                        <ng-container  *ngFor="let a of selectedData.assessments">
+                          <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0">
+                            <div class="col-11 dxc-text-75">
+                              <dxc-meta [label]="a.testType" [css]="'dxc-text-std dxc-salmon'" [ngbTooltip]="getTooltipFor(a.testType)"></dxc-meta>
+                              {{ a.name }}
+                              <b>[<span class="ml-2 dxc-text-yellow">{{ a.rules.length }}</span>]</b>
+                            </div>
+                            <div class="col-1 text-center" >
+                              <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
+                            </div>
+                          </div>
+                          <ng-container  *ngFor="let r of a.rules">
+                            <div *ngIf="r!=null" class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0"  (click)="dryRunRule(a,r)">
+                              <div class="col-1">&nbsp;</div>
+                              <div class="col-10 dxc-text-75">
+                                <dxc-meta [label]="r.o.targetOS" [css]="'dxc-text-std dxc-herb'"></dxc-meta>
+                                <dxc-meta *ngIf="r.emulate" [label]="'emulation allowed'" [css]="'dxc-text-std dxc-yellow'"></dxc-meta>
+                                {{ r.request.__stringified }}
+                              </div>
+                              <div class="col-1 text-center" >
+                                <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </dxc-box>
+
+                </div>
+            </div>
+
+            <div class="row g-0 dxc-text-std dxc-text-100 pt-1">
+              <div class="col-11 pl-1 dxc-text-std"><b>Results</b></div>
+            </div>
+            <div class="row g-0">
               <div class="col-12 pl-1 pt-1">
                 <div class="dxc-list dxc-rules-list">
                   <dxc-search-result-list *ngIf="searchCtrl.app" [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>

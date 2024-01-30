@@ -1,33 +1,17 @@
-import {
-  AfterContentInit, AfterViewInit,
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  Input,
-  OnInit,
-  QueryList, ViewChild
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild} from '@angular/core';
 import {ViewportTab} from "../../../cmp/ViewportTab";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
 import {ViewportComponent} from "../../../base/viewport/viewport.component";
 import {Subject} from "rxjs";
-import ModelClass from "../../../models/ModelClass";
-import {CodeController} from "../../code/ctrl/CodeController";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
-import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
-import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
-import {Device} from "../../../models/Device";
-import {IconModel} from "../../../base/icon/IconModel";
 import {TOPO_ICONS} from "../../topology/icons";
 import {OutputService} from "../../output/ctrl/output.service";
-import {HookService} from "../../hooks/ctrl/hook.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import ModelSyscall from "../../../models/ModelSyscall";
 import {ElectronService} from "../../../core/services";
-import { AuditController } from '../ctrl/AuditController';
+import {AuditController} from '../ctrl/AuditController';
 import {AuditService} from "../ctrl/audit.service";
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";
 import ControlAssessment from "../../../models/audit/common/ControlAssessment";
@@ -36,7 +20,8 @@ import {ProjectService} from "../../project/ctrl/project.service";
 import {SearchController} from "../../search/ctrl/SearchController";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
-
+import Control from "../../../models/audit/common/Control";
+import {ContextMenuList, ContextMenuState} from "../../../base/context-menu/context-menu.component";
 
 
 export const AUDIT_PANEL = {
@@ -48,7 +33,8 @@ export const AUDIT_PANEL = {
 @Component({
   selector: 'app-viewport-audit',
   templateUrl: './viewport-audit.component.html',
-  styleUrls: ['./viewport-audit.component.scss','../../../forms.scss',"../../../../../node_modules/flag-icons/css/flag-icons.min.css" ]
+  styleUrls: ['./viewport-audit.component.scss','../../../forms.scss',"../../../../../node_modules/flag-icons/css/flag-icons.min.css" ],
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportAuditComponent implements AfterViewInit, IViewportContainer {
 
@@ -65,13 +51,13 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
 
   searchCtrl: SearchController;
   id = -1;
-  activeLeft =  AUDIT_PANEL.RESULT;
+  activeLeft =  AUDIT_PANEL.INFO;
   //activeRight:Nullable<string> = null;
   defaultWidth = 70;
   defaultWidths = {
     [AUDIT_PANEL.RULES]: 30,
     [AUDIT_PANEL.RESULT]: 30,
-    [AUDIT_PANEL.INFO]: 30
+    [AUDIT_PANEL.INFO]: 100
   };
   activeWidth = 70;
 
@@ -153,16 +139,25 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   selectedSyscall:Nullable<ModelSyscall> = null;
 
   activeItem:any = null;
-  selectedData: Nullable<ControlAssessment> = null;
+  selectedData: any = null; /*Nullable<ControlAssessment|Control>*/
   execResults: any[] = []
+  loadingLeft = false;
+  selectedType: string = 'none';
 
+  ctxMenu: ContextMenuList = {};
+  ctxMenuState:ContextMenuState = {
+    subject: null
+  };
+  selectedCtrl: any = {};
+  checkedCtrls: any = {};
 
   constructor(
     private auditService: AuditService,
     private projectService: ProjectService,
     private searchService: SearchService,
     private electronSvc:ElectronService,
-    private outputSvc:OutputService) {
+    private outputSvc:OutputService/*,
+    private _changeRef:ChangeDetectorRef*/) {
 
     this.height = 300;
   }
@@ -188,9 +183,12 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
    * @public
    */
   configure( pData:any, pFocus:any):void {
+
+    console.log("Configure WP audit : ",pData);
+
+
     this.data = pData;
 
-    console.log('configure device viewport>',pData);
 
     this.view.tab.icon = this.gIcons['HOOKS'];
     this.view.tab.label = pData.id;
@@ -272,9 +270,16 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
         })
         break;
       case AUDIT_PANEL.RULES:
-        console.log("Audit > rules > ",this.data);
         this.activeLeft = AUDIT_PANEL.RULES;
         this.activeWidth = 30;
+        this.loadingLeft = true;
+        this.auditService.getControlsOf(this.data.getID()).subscribe((vResults:any)=>{
+
+          this.data.controls = vResults;
+          this.loadingLeft = false;
+          console.log("Audit > rules > ",vResults, this.data);
+          //this._changeRef.detectChanges();
+        });
         break;
       default:
         /*this.dmService.getProfile(this.data).subscribe((pProfile)=>{
@@ -347,14 +352,16 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
 
   showControlAssessm(pAssess: ControlAssessment) {
     this.selectedData = pAssess;
+    this.selectedType = "cass";
   }
 
   dryRunRule(pAssess: ControlAssessment, pRule: any) {
+    console.log(pAssess);
     if(!this.projectService.isProjectIsOpen()){
       this.outputSvc.alert(OutputMessage.newError({msg:"Open a project first"}));
       return;
     }else{
-      this.searchService.executeRaw(pRule.__stringified.substring(1)).subscribe((res)=>{
+      this.searchService.executeRaw(pRule.request.__stringified.substring(1)).subscribe((res)=>{
         console.log("Execute MERLIN Request",res);
         if(res.success){
           this.execResults = res.data;
@@ -362,5 +369,47 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
 
       })
     }
+  }
+
+  /**
+   *
+   * @param pControl
+   * @param pEvent
+   */
+  showControl(pControl: any, pEvent: MouseEvent) {
+    this.selectedData = pControl;
+    this.selectedType = "control";
+  }
+
+  getTooltipFor(pValue: any) {
+
+    if(typeof pValue==='string'){
+      switch (pValue){
+        case "iast":
+          return "Interactive Testing";
+        case "dast":
+          return "Dynamic Testing";
+        case "sast":
+          return "Static Code Analysis";
+      }
+    }
+
+    return "";
+  }
+
+  newControl(pParent: any = null) {
+
+  }
+
+  newRule(pParent: any = null) {
+
+  }
+
+  /**
+   * Add/remove tags for a selection of controls
+   * 
+   */
+  updateTags() {
+    console.log(this.checkedCtrls);
   }
 }
