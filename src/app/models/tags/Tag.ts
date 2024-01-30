@@ -106,8 +106,8 @@ export class Tag implements INode
         o.name = this.name;
         o.label = this.label;
         o.descr = this.descr;
-        o.category = (this.category!=null ? this.category.getUID() : null);
-
+        o.category = (this.category!=null ? this.category.name : null);
+        o.styles = this.styles;
 
         return o;
     }

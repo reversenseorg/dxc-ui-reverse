@@ -19,7 +19,7 @@ export default class TagCategory implements INode
     /**
      * Category name
      */
-    name:Nullable<string> = null;
+    name:string;
     descr:Nullable<string> = null;
     tags:number[] = [];
 

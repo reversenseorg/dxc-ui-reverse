@@ -1,0 +1,26 @@
+.explorer-topo {
+  max-height: 100%;
+  height: 100%;
+}
+
+.explorer-list-root {
+  max-width: 100%;
+  height:100%;
+ /* overflow-y: scroll;
+  overflow-x: scroll; */
+}
+
+.explorer-list-root li {
+  white-space: nowrap;
+}
+
+.explorer-list-root li:hover {
+  cursor:pointer;
+  background-color: #1a2238;
+}
+
+
+.hidden {
+  display: none;
+}
+

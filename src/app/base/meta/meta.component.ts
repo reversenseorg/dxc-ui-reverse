@@ -15,27 +15,20 @@ import {Nullable} from "../Nullable";
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MetaComponent extends DxcComponent implements OnInit, OnChanges {
+export class MetaComponent extends DxcComponent  {
 
 
   @Input() style:Nullable<{ [klass:string]:any }> = null;
 
   @Input() css:string = '';
 
-  @Input() label:any = null
+  @Input() label:any = null;
 
-  @Input() gutters:boolean = true
+  @Input() gutters:boolean = true;
 
   constructor() {
     super();
   }
 
-  ngOnInit() {
-  }
-
-  ngOnChanges(pChanges: SimpleChanges) {
-
-
-  }
 }
 

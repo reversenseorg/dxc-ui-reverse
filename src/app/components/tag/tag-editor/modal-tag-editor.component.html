@@ -1,0 +1,73 @@
+<app-modal-base [name]="'tag_editor'" (open)="onOpen($event)" [closable]="true"  [width]="500" [height]="400" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    {{ title }}
+  </div>
+  <div body class="dxc-modal-body">
+      <div class="dxc-form dxc-text-100">
+        <div class="dxc-frm-desc mb-1 text-center">
+          For Built-in tags, only styles/data can be edited. The name of a tag acts like an UID an must
+          be unique for the project.
+        </div>
+        <div class="row g-0">
+          <div class="col-4">
+            Category:
+          </div>
+          <div class="col-8">
+            <input type="text" name="catName" id="cat" [(ngModel)]="catName"  value="0">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col-4">
+            Name:
+          </div>
+          <div class="col-8">
+            <input type="text" name="name" id="name" [(ngModel)]="name" [disabled]="_editMode" (change)="updateRender($event)">
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col-4">
+            Description:
+          </div>
+          <div class="col-8">
+            <textarea rows="3" [(ngModel)]="descr"  name="descr" id="descr"  class="dxc-frm-input p-2" style="width:100%" (change)="updateRender($event)"></textarea>
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col-4">
+            Background color :
+          </div>
+          <div class="col-8">
+            <input type="color" name="bgcolor" id="bgcolor"  [(ngModel)]="bgColor" (change)="updateRender($event)"/>
+          </div>
+        </div>
+        <div class="row g-0">
+          <div class="col-4">
+            Text color :
+          </div>
+          <div class="col-8">
+            <input type="color" name="txtcolor" id="txtcolor"  [(ngModel)]="txtColor" (input)="updateRender($event)"/>
+          </div>
+        </div>
+        <div class="row g-0 mt-2">
+          <div class="col-4">
+            Preview :
+          </div>
+          <div class="col-7">
+            <dxc-tag-badge *ngIf="tag" [tag]="tag"  [editable]="false"></dxc-tag-badge>
+          </div>
+          <div class="col-1">
+            <dxc-icon [model]="gIcons['REFRESH']" (click)="renderTag()"></dxc-icon>
+          </div>
+        </div>
+
+
+
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+    <button class="dxc-frm-btn default" (click)="save()">
+      <dxc-icon [model]="gIcons['GEN_HOOK']"></dxc-icon>&nbsp;Save
+    </button>
+  </div>
+</app-modal-base>

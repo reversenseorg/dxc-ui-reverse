@@ -1,16 +1,14 @@
-import {ViewportView} from "../../../cmp/ViewportView";
-import {ExplorerCodeComponent} from "../../code/explorer-code/explorer-code.component";
+
 import {IController, IControllerOptions, ViewCmpMap} from "../../../base/controllers/IController.interface";
-import {Observable, Subject} from "rxjs";
-import {ComponentFactoryResolver} from "@angular/core";
 import {StageComponent} from "../../stage/stage.component";
 import {TagService} from "./tag.service";
 import {Nullable} from "../../../base/Nullable";
-import {IStringIndex} from "../../../base/IStringIndex";
+import {UiController} from "../../../base/controllers/UiController";
+import {ExplorerTagComponent} from "../explorer-tag/explorer-tag.component";
 
 
 
-export class TagController implements IController {
+export class TagController extends UiController implements IController {
 
   /**
    * Controller unique name
@@ -23,51 +21,23 @@ export class TagController implements IController {
 
   service: TagService;
 
-  explorerCmp: any = null;
-  viewCmp: ViewCmpMap = {};
-  terminalCmp: any = null;
-  modalCmp: any = null;
 
-  componentFactoryResolver:Nullable<ComponentFactoryResolver> = null;
-
-  views:ViewportView[] = [];
-  explorer:Nullable<ExplorerCodeComponent>;
+  explorer:Nullable<ExplorerTagComponent>;
   rendered:any = [];
-
-  openView: Subject<any> = new Subject<any>();
-  closeView: Subject<any> = new Subject<any>();
-  focusView: Subject<any> = new Subject<any>();
   //viewComp: ViewportCodeComponent = null;
 
   constructor(pConfig:IControllerOptions) {
+    super();
     this.configure(pConfig);
   }
 
-  configure( pConfig:IControllerOptions):void {
-    if(pConfig==null) return;
+  close(pItem: any, pSrc: any): any {
+  }
 
-    for(let i in pConfig){
-       (this as IStringIndex<any>)[i] = pConfig[i];
+  open(pItem: any, pSrc: any): any {
+  }
+
+    editTag(ctxMenuState: any, $event: any) {
+        this.app?.showModal('tag_editor', ctxMenuState.subject);
     }
-  }
-
-  getExplorerCmp():any {
-    return this.explorerCmp.main;
-  }
-
-  getViews():ViewportView[]{
-    return this.views;
-  }
-
-  close(pItem: any, pSrc:any): any {
-    // nothing to do
-  }
-
-  isAlreadyRendered(pItem:any):any {
-    // nothing to do
-  }
-
-  open(pItem: any, pSrc:any): void{
-    // nothing to do
-  }
 }

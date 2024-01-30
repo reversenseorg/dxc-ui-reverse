@@ -1,0 +1,59 @@
+<div [class.dxc-hidden]="offset != parent.active" class="explorer-tag" #explRef>
+
+
+    <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
+      <!--<ng-container main>
+        <app-subnavbar-label>Tags</app-subnavbar-label>
+      </ng-container>-->
+      <ng-container opts>
+        <button class="btn-option" [ngbTooltip]="'Create a new tag category'" (click)="filter()"><fa-icon [icon]="['fas','plus']"></fa-icon></button>
+        <button class="btn-option" [ngbTooltip]="'Refresh list'" (click)="refresh()" ><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
+        <button class="btn-option" [ngbTooltip]="'Filter tags'" (click)="filter()"><fa-icon [icon]="['fas','filter']"></fa-icon></button>
+      </ng-container>
+    </app-explorer-navbar>
+
+
+    <div class="explorer-list-root" #explCtnRef>
+
+      <ng-container *ngIf="projectReady">
+        <app-expandable-list>
+
+
+          <ng-container *ngFor="let cat of data.children">
+            <ng-template #expItem let-itemObj="item" >
+              <span *ngIf="itemObj.__==NODE_TYPES.TAG_CATEGORY" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
+                <dxc-icon [model]="itemObj._icon"></dxc-icon>
+                <i class="text-info">{{ itemObj.name  }}</i>
+              </span>
+
+              <span *ngIf="itemObj._tags==null" (contextmenu)="displayCtxMenu($event,'tag_menu',itemObj)">
+                <dxc-tag-badge [tag]="itemObj" [editable]="false"></dxc-tag-badge>
+              </span>
+            </ng-template>
+
+            <app-expandable-item
+              [itemTpl]="expItem"
+              [item]="cat"
+              [provider]="this"
+              [expandableFn]="isExpandable"
+              (itemFocus)="onItemFocus($event)"
+            >
+
+            </app-expandable-item>
+          </ng-container>
+        </app-expandable-list>
+      </ng-container>
+      <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
+        Loading ...
+      </div>
+    </div>
+</div>
+
+
+<app-context-menu [name]="'tag_menu'" [width]="300">
+  <app-context-item [label]="'Info'" [icon]="gIcons['HELPER']" (itemclick)="showInfo($event)"></app-context-item>
+  <app-context-item [label]="'Remove tag'" [icon]="gIcons['TRASH']" [disabled]="true"></app-context-item>
+  <app-context-item [label]="'Edit'" [separator]="true" [icon]="gIcons['EDIT']" (itemclick)="controller.editTag(ctxMenuState, $event)" ></app-context-item>
+</app-context-menu>
+
+<dxc-tag-editor [controller]="controller"></dxc-tag-editor>
