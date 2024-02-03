@@ -74,6 +74,7 @@ import {ViewportTopoProviderComponent} from "./components/topology/viewport-topo
 import {ViewportTopoServiceComponent} from "./components/topology/viewport-topo/viewport-topo-service.component";
 import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
 import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
+import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.component";
 
 
 interface StageSet {
@@ -306,7 +307,8 @@ export class ControllerService {
           main: ExplorerTagComponent
         },
         modalCmp: {
-          edit: ModalTagEditorComponent
+          edit: ModalTagEditorComponent,
+          info: ModalTagInfoComponent
         }
       }),
     ];

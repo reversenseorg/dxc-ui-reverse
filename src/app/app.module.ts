@@ -123,6 +123,7 @@ import {CommonModule} from "@angular/common";
 import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
 import {TagBadgeComponent} from "./components/tag/tag-badge/tag-badge.component";
 import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
+import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -274,7 +275,8 @@ import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-edi
 
     ExplorerTagComponent,
     TagBadgeComponent,
-    ModalTagEditorComponent
+    ModalTagEditorComponent,
+    ModalTagInfoComponent
 
   ],
   imports: [

@@ -1,0 +1,18 @@
+<app-modal-base [name]="'tag_info'" (open)="onOpen($event)" [closable]="true"  [width]="500" [height]="200" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    Tag Info
+  </div>
+  <div body class="dxc-modal-body">
+    <div class="row g-0">
+      <div class="col-2 text-center" style="vertical-align: middle">
+        <dxc-icon [model]="gIcons['HELPER']" [color1]="'text-warning'"></dxc-icon>
+      </div>
+      <div class="col-10 p-2 dxc-text-std">
+        {{ description }}
+      </div>
+    </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Close</button>
+  </div>
+</app-modal-base>

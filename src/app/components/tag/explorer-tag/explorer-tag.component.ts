@@ -369,9 +369,6 @@ import TagCategory from "../../../models/tags/TagCategory";
     this.filtered = this.data.children;
   }
 
-  showInfo(pEvent: any) {
-    console.log("EXPL Tag > ShowInfo > ",pEvent);
-  }
 
   editTag(pState:any, $event: any) {
 
