@@ -123,6 +123,7 @@ import {CommonModule} from "@angular/common";
 import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
 import {TagBadgeComponent} from "./components/tag/tag-badge/tag-badge.component";
 import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
+import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.component";
 import {RuleRowComponent} from "./components/audit/misc/rule-row.component";
 import {AssessmentRowComponent} from "./components/audit/misc/assessment-row.component";
 import {ControlRowComponent} from "./components/audit/misc/control-row.component";
@@ -278,6 +279,7 @@ import {ControlRowComponent} from "./components/audit/misc/control-row.component
     ExplorerTagComponent,
     TagBadgeComponent,
     ModalTagEditorComponent,
+    ModalTagInfoComponent,
     RuleRowComponent,
     AssessmentRowComponent,
     ControlRowComponent

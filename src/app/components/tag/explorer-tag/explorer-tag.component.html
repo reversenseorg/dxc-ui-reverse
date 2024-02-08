@@ -51,9 +51,10 @@
 
 
 <app-context-menu [name]="'tag_menu'" [width]="300">
-  <app-context-item [label]="'Info'" [icon]="gIcons['HELPER']" (itemclick)="showInfo($event)"></app-context-item>
+  <app-context-item [label]="'Info'" [icon]="gIcons['HELPER']" (itemclick)="controller.showInfo(ctxMenuState, $event)"></app-context-item>
   <app-context-item [label]="'Remove tag'" [icon]="gIcons['TRASH']" [disabled]="true"></app-context-item>
   <app-context-item [label]="'Edit'" [separator]="true" [icon]="gIcons['EDIT']" (itemclick)="controller.editTag(ctxMenuState, $event)" ></app-context-item>
 </app-context-menu>
 
 <dxc-tag-editor [controller]="controller"></dxc-tag-editor>
+<dxc-tag-info [controller]="controller"></dxc-tag-info>

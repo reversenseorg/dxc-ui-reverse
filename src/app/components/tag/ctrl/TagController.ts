@@ -40,4 +40,11 @@ export class TagController extends UiController implements IController {
     editTag(ctxMenuState: any, $event: any) {
         this.app?.showModal('tag_editor', ctxMenuState.subject);
     }
+
+
+  showInfo(ctxMenuState: any, $event: any) {
+    this.app?.showModal('tag_info', ctxMenuState.subject);
+  }
+
+
 }
