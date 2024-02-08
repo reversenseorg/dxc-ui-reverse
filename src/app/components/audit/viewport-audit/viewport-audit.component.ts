@@ -22,6 +22,7 @@ import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import Control from "../../../models/audit/common/Control";
 import {ContextMenuList, ContextMenuState} from "../../../base/context-menu/context-menu.component";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 
 export const AUDIT_PANEL = {
@@ -139,7 +140,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   selectedSyscall:Nullable<ModelSyscall> = null;
 
   activeItem:any = null;
-  selectedData: any = null; /*Nullable<ControlAssessment|Control>*/
+  selectedData: any = {}; /*Nullable<ControlAssessment|Control>*/
   execResults: any[] = []
   loadingLeft = false;
   selectedType: string = 'none';
@@ -150,13 +151,15 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   };
   selectedCtrl: any = {};
   checkedCtrls: any = {};
+  safeHTML: Nullable<SafeHtml> = null;
 
   constructor(
     private auditService: AuditService,
     private projectService: ProjectService,
     private searchService: SearchService,
     private electronSvc:ElectronService,
-    private outputSvc:OutputService/*,
+    private outputSvc:OutputService,
+    private domSanitizer:DomSanitizer/*,
     private _changeRef:ChangeDetectorRef*/) {
 
     this.height = 300;
@@ -355,22 +358,6 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
     this.selectedType = "cass";
   }
 
-  dryRunRule(pAssess: ControlAssessment, pRule: any) {
-    console.log(pAssess);
-    if(!this.projectService.isProjectIsOpen()){
-      this.outputSvc.alert(OutputMessage.newError({msg:"Open a project first"}));
-      return;
-    }else{
-      this.searchService.executeRaw(pRule.request.__stringified.substring(1)).subscribe((res)=>{
-        console.log("Execute MERLIN Request",res);
-        if(res.success){
-          this.execResults = res.data;
-        }
-
-      })
-    }
-  }
-
   /**
    *
    * @param pControl
@@ -378,6 +365,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
    */
   showControl(pControl: any, pEvent: MouseEvent) {
     this.selectedData = pControl;
+    this.safeHTML = this.domSanitizer.bypassSecurityTrustHtml(this.selectedData);
     this.selectedType = "control";
   }
 

@@ -88,6 +88,18 @@ div.splitted {
   }
 }
 
+div.dxc-control {
+
+  &.dxc-row-table {
+    padding-left: 1rem !important;
+  }
+
+  &.dxc-entry {
+    border-radius: 5px;
+    /*margin: 0.5em 0.5em 0.5em 0.2em;*/
+    padding: 1em 0em;
+  }
+}
 .dxc-rules-topCat {
   border: 0px;
   border-bottom: 1px solid var(--list-entry-border);

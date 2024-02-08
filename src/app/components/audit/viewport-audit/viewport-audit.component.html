@@ -65,18 +65,36 @@
             <ng-container *ngIf="loadingLeft==false; else loadingLeftCtrl">
               <ng-container  *ngFor="let i of data.controls">
 
-                <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat" (click)="showControl(i,$event)">
-                  <div class="col-2 text-center">
-                    <input type="checkbox" [ngModel]="checkedCtrls" [value]="i.id"/>
-                    <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
+                <ng-container *ngIf="i.hasStyle(); else noStyles">
+                    <div class="row g-0 p-2 dxc-text-std dxc-row-table" (click)="showControl(i,$event)">
+                      <div class="col-12 p-2 dxc-control dxc-entry"  [ngStyle]="{ 'backgroundColor':i.getStyle().bgColor,'color':i.getStyle().color, 'fontWeight':i.getStyle().fontWeight }"  >
+                        {{ i.id }}
+                      </div>
+                    </div>
+
+                  <ng-container *ngFor="let o of i.children">
+                    <div class="row g-0 p-2 dxc-control dxc-text-std dxc-row-table" (click)="showControl(o,$event)">
+                      <div class="col-12 p-2 dxc-control dxc-entry"  [ngStyle]="{ 'backgroundColor':o.getStyle().bgColor,'color':o.getStyle().color, 'fontWeight':o.getStyle().fontWeight }"  >
+                        {{ o.id }}
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <ng-template #noStyles>
+                  <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat" (click)="showControl(i,$event)">
+                    <div class="col-2 text-center">
+                      <input type="checkbox" [ngModel]="checkedCtrls" [value]="i.id"/>
+                      <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
+                    </div>
+                    <div class="col-7 pl-2">{{ i.name }}</div>
+                    <div class="col-3 text-center">
+                      <ng-container *ngFor="let cat of i.category">
+                        <dxc-meta [label]="cat" [css]="'text-bg-info dxc-meta'"></dxc-meta>
+                      </ng-container>
+                    </div>
                   </div>
-                  <div class="col-7 pl-2">{{ i.name }}</div>
-                  <div class="col-3 text-center">
-                    <ng-container *ngFor="let cat of i.category">
-                      <dxc-meta [label]="cat" [css]="'text-bg-info dxc-meta'"></dxc-meta>
-                    </ng-container>
-                  </div>
-                </div>
+                </ng-template>
+
 
                 <!--
 
@@ -150,6 +168,7 @@
                   </div>
                 </div>
               </ng-container>
+
               <ng-container  *ngFor="let f of i.children">
                 <div class="row no-gutters dxc-text-std dxc-row-table">
                   <div class="col-1">&nbsp;</div>
@@ -218,12 +237,7 @@
               <div class="col-8 pl-1 pt-1">
                 <div class="dxc-list dxc-rules-list">
                   <ng-container  *ngFor="let r of selectedData.rules">
-                    <div class="row no-gutters dxc-text-100 dxc-rule-req" style="padding:0"  (click)="dryRunRule(selectedData,r)">
-                      <div class="col-11 dxc-text-75">{{ r.__stringified }}</div>
-                      <div class="col-1 text-center" >
-                        <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
-                      </div>
-                    </div>
+                    <dxc-audit-rule [rule]="r" (onDryRunSuccess)="execResults=$event"></dxc-audit-rule>
                   </ng-container>
                 </div>
               </div>
@@ -244,7 +258,7 @@
 
           <ng-container *ngIf="selectedData && (selectedType=='control')">
             <div class="row">
-              <div class="col-8 dxc-text-std">
+              <div class="dxc-text-std" [ngClass]="(selectedData!=null && selectedData.country==null)? 'col-8' : 'col-12' ">
                 <h4>{{ selectedData.name }}</h4>
                 <i>( <span class="dxc-text-yellow">#{{selectedData.id}}</span> )</i>
                 <div>
@@ -253,15 +267,16 @@
                   </ng-container>
                 </div>
 
+                <div [innerHTML]="selectedData.description"></div>
 
-                <p>{{ selectedData.description }}</p>
                 <h5>Ressources</h5>
                 <ng-container *ngFor="let lk of selectedData.links">
                   <a [href]="lk">{{ lk }}</a>
                 </ng-container>
               </div>
-              <div class="col-4">
+              <div *ngIf="selectedData!=null && selectedData.country!=null" class="col-4">
                 <div class="card">
+
                   <b>Company :</b><span>{{ selectedData.name }}</span>
                   <span *ngIf="selectedData?.country" class="fi" [ngClass]="'fi-'+selectedData?.country.code"></span>
 
@@ -290,40 +305,10 @@
                       </ng-container>
                       <ng-container body>
                         <ng-container  *ngFor="let a of selectedData.children">
-                            <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0">
-                              <div class="col-1 text-center" >
-                                <dxc-icon [model]="gIcons['ANALYZE']"></dxc-icon>
-                              </div>
-                              <div class="col-10 dxc-text-75">{{ a.name }}</div>
-                              <div class="col-1">
-                                <dxc-meta [label]="a.category.length" [css]="'text-bg-info dxc-meta'" [ngbTooltip]="a.category.join(' ')"></dxc-meta>
-                              </div>
-                            </div>
+                            <dxc-audit-control [control]="a" (onDryRunSuccess)="execResults=$event"></dxc-audit-control>
                         </ng-container>
                         <ng-container  *ngFor="let a of selectedData.assessments">
-                          <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0">
-                            <div class="col-11 dxc-text-75">
-                              <dxc-meta [label]="a.testType" [css]="'dxc-text-std dxc-salmon'" [ngbTooltip]="getTooltipFor(a.testType)"></dxc-meta>
-                              {{ a.name }}
-                              <b>[<span class="ml-2 dxc-text-yellow">{{ a.rules.length }}</span>]</b>
-                            </div>
-                            <div class="col-1 text-center" >
-                              <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
-                            </div>
-                          </div>
-                          <ng-container  *ngFor="let r of a.rules">
-                            <div *ngIf="r!=null" class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0"  (click)="dryRunRule(a,r)">
-                              <div class="col-1">&nbsp;</div>
-                              <div class="col-10 dxc-text-75">
-                                <dxc-meta [label]="r.o.targetOS" [css]="'dxc-text-std dxc-herb'"></dxc-meta>
-                                <dxc-meta *ngIf="r.emulate" [label]="'emulation allowed'" [css]="'dxc-text-std dxc-yellow'"></dxc-meta>
-                                {{ r.request.__stringified }}
-                              </div>
-                              <div class="col-1 text-center" >
-                                <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
-                              </div>
-                            </div>
-                          </ng-container>
+                          <dxc-audit-assessment [assessement]="a" (onDryRunSuccess)="execResults=$event"></dxc-audit-assessment>
                         </ng-container>
                       </ng-container>
                     </dxc-box>

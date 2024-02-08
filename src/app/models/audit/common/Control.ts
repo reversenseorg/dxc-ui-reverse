@@ -72,6 +72,8 @@ export default class Control {
 
     tags:number[] = [];
 
+    _styles:Record<string, string> = {};
+
 
     // local
     verified = true;
@@ -85,7 +87,21 @@ export default class Control {
         this.update(pConfig);
     }
 
+    private _loadStyles():void {
+        this.metadata.map(x => {
+            if(x.key.startsWith("styles.")){
+                this._styles[x.key.substring(7)] = x.value;
+            }
+        });
+    }
 
+    hasStyle():boolean {
+        return Object.keys(this._styles).length>0;
+    }
+
+    getStyle():Record<string, string> {
+        return this._styles;
+    }
 
     update(pConfig:any, pUpdateChildren = false):void {
         if(pConfig.id!=null) this.id = pConfig.id;
@@ -107,6 +123,8 @@ export default class Control {
             if(pConfig.children!=null) this.children = pConfig.children;
             if(pConfig.assessments!=null) this.assessments = pConfig.assessments;
         }
+
+        this._loadStyles();
     }
 
     hasChildren():boolean {

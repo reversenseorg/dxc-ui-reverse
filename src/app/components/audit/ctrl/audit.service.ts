@@ -246,7 +246,7 @@ export class AuditService extends DxcApiService{
   }
 
 
-  getControlsOf(pModelID:string, pRefresh = false){
+  getControlsOf(pModelID:string, pRefresh = false):Observable<Control[]>{
     return this.getModel(pModelID, pRefresh).pipe(map((vModel:Nullable<AssuranceModel>)=>{
         if(vModel!=null){
           console.log("CONTROLS > ",vModel.controls);
