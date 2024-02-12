@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TerminalNavbarComponent } from './terminal-navbar.component';
+import { TerminalAuditComponent } from './terminal-audit.component';
 
-describe('TerminalNavbarComponent', () => {
-  let component: TerminalNavbarComponent;
-  let fixture: ComponentFixture<TerminalNavbarComponent>;
+describe('TerminalHookComponent', () => {
+  let component: TerminalAuditComponent;
+  let fixture: ComponentFixture<TerminalAuditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TerminalNavbarComponent ]
+      declarations: [ TerminalAuditComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TerminalNavbarComponent);
+    fixture = TestBed.createComponent(TerminalAuditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

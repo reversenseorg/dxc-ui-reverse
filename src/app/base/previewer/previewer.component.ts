@@ -51,7 +51,7 @@ export class PreviewerComponent implements OnInit, OnChanges {
     }
 
     if (pChanges.hasOwnProperty('data')) {
-      console.log("Change data", pChanges['data'].currentValue);
+      //console.log("Change data", pChanges['data'].currentValue);
       this.data = pChanges['data'].currentValue;
       switch (this.type) {
         case 's':

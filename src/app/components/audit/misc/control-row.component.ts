@@ -28,16 +28,20 @@ import Control from "../../../models/audit/common/Control";
 @Component({
   selector: 'dxc-audit-control',
   template: `
-    <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0">
-      <div class="col-10 dxc-text-100">{{ control.name }}</div>
-      <div class="col-1">
-        <dxc-meta [label]="control.category.length" [css]="'text-bg-info dxc-meta'" [ngbTooltip]="control.category.join(' ')"></dxc-meta>
+    <div class="row g-0 dxc-text-100 dxc-text-std dxc-control-row" [ngStyle]="style" style="padding:0">
+      <div class="col-12 dxc-text-100">
+        {{ control.name }}
       </div>
     </div>
     <ng-container  *ngFor="let a of control.assessments">
-      <dxc-audit-assessment *ngIf="a!=null" [assessement]="a" (onDryRunSuccess)="onDryRunSuccess.emit($event)"></dxc-audit-assessment>
+      <dxc-audit-assessment *ngIf="a!=null" [assessement]="a" (onScanning)="onScanning.emit($event)"  (onDryRunSuccess)="onDryRunSuccess.emit($event)"></dxc-audit-assessment>
     </ng-container>
   `,
+  styles:[`
+    .dxc-control-row {
+      font-weight: bold;
+    }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ControlRowComponent extends DxcComponent  {
@@ -46,8 +50,12 @@ export class ControlRowComponent extends DxcComponent  {
   @Input() control:Control|any;
   @Input() style:Nullable<Record<string, any>> = null;
 
+  @Input() collapsible = false;
+  @Input() collapsed = false;
+
   @Output() onDryRunSuccess:EventEmitter<any> = new EventEmitter<any>();
   @Output() onDryRunFailed:EventEmitter<any> = new EventEmitter<any>();
+  @Output() onScanning:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   gIcons:any = GLOBAL_ICONS;

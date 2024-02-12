@@ -450,4 +450,10 @@ export const GLOBAL_ICONS:IconModelCollection = {
     name: 'location-dot',
     color1: 'dxc-text-75'
   }),
+  PLAY_ALL: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'forward',
+    color1: 'dxc-icon-android', //'dxc-text-75',
+  }),
 };

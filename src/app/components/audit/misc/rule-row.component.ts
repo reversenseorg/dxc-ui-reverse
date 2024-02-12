@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output,} from "@angular/core";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import {OutputMessage} from "../../../cmp/OutputMessage";
@@ -13,6 +7,7 @@ import {OutputService} from "../../output/ctrl/output.service";
 import {SearchService} from "../../search/ctrl/search.service";
 import {Nullable} from "../../../base/Nullable";
 import {DxcComponent} from "../../../base/DxcComponent";
+import {AuditService, CheckEventState} from "../ctrl/audit.service";
 
 /**
  * Represent a Merlin rule as a single row
@@ -27,7 +22,7 @@ import {DxcComponent} from "../../../base/DxcComponent";
       <div class="col-10 dxc-text-75">
         <dxc-meta [label]="rule.o.targetOS" [css]="'dxc-text-std dxc-herb'"></dxc-meta>
         <dxc-meta *ngIf="rule.emulate" [label]="'emulation allowed'" [css]="'dxc-text-std dxc-yellow'"></dxc-meta>
-        {{ rule.request.__stringified }}
+        <span *ngIf="rule.request!=null">{{ rule.request.__stringified }}</span> 
       </div>
       <div class="col-1 text-center" >
         <dxc-icon *ngIf="idle; else running" [model]="gIcons['PLAY']"></dxc-icon>
@@ -35,7 +30,6 @@ import {DxcComponent} from "../../../base/DxcComponent";
           <dxc-icon [model]="gIcons['SPINNER']"></dxc-icon>
           <!-- todo: ADD TIMER -->
         </ng-template>
-        
       </div>
     </div>
   `,
@@ -54,6 +48,7 @@ export class RuleRowComponent extends DxcComponent  {
 
   @Output() onDryRunSuccess:EventEmitter<any> = new EventEmitter<any>();
   @Output() onDryRunFailed:EventEmitter<any> = new EventEmitter<any>();
+  @Output() onScanning:EventEmitter<boolean> = new EventEmitter<boolean>();
 
   idle = true;
 
@@ -61,6 +56,7 @@ export class RuleRowComponent extends DxcComponent  {
 
   constructor(
       private _projectSvc: ProjectService,
+      private _auditSvc: AuditService,
       private _outputSvc: OutputService,
       private _searchSvc: SearchService,
       private _changeDetector:ChangeDetectorRef
@@ -74,24 +70,29 @@ export class RuleRowComponent extends DxcComponent  {
    * @param pRule
    */
   dryRunRule(pAssess: ControlAssessment, pRule: any) {
-    console.log(pAssess);
+
     if(!this._projectSvc.isProjectIsOpen()){
       this._outputSvc.alert(OutputMessage.newError({msg:"Open a project first"}));
       return;
-    }else{
-      this.idle = false;
-      this._changeDetector.detectChanges();
-      this._searchSvc.executeRaw(pRule.request.__stringified.substring(1)).subscribe((res)=>{
-        console.log("Execute MERLIN Request",res);
-        this.idle = true;
-        this._changeDetector.detectChanges();
-        if(res.success){
-          this.onDryRunSuccess.emit(res.data);
-        }else{
-          this.onDryRunFailed.emit(res.data);
-        }
-      })
     }
+
+    this.idle = false;
+    this.onScanning.emit(this.idle);
+    this._changeDetector.detectChanges();
+
+    this._auditSvc.runRule(pAssess,pRule).subscribe((res)=>{
+      console.log("Execute MERLIN Request",res);
+
+      this.idle = true;
+      this.onScanning.emit(this.idle);
+
+      this._changeDetector.detectChanges();
+      if(res.event.state==CheckEventState.SUCCESS){
+        this.onDryRunSuccess.emit(res.results);
+      }else{
+        this.onDryRunFailed.emit(null);
+      }
+    });
   }
 }
 

@@ -33,7 +33,6 @@ import { ViewportMainComponent } from './viewport-main/viewport-main.component';
 import {ControllerService} from "./controller.service";
 import {ViewportDirective} from "./base/viewport/viewport.directive";
 import { TerminalWorkspaceComponent } from './components/workspace/terminal-workspace/terminal-workspace.component';
-import { TerminalNavbarComponent } from './base/terminal-navbar/terminal-navbar.component';
 import {TerminalDirective} from "./base/terminal/terminal.directive";
 import { TerminalExecComponent } from './components/workspace/terminal-exec/terminal-exec.component';
 import { ContextMenuComponent } from './base/context-menu/context-menu.component';
@@ -127,6 +126,7 @@ import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.co
 import {RuleRowComponent} from "./components/audit/misc/rule-row.component";
 import {AssessmentRowComponent} from "./components/audit/misc/assessment-row.component";
 import {ControlRowComponent} from "./components/audit/misc/control-row.component";
+import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal-audit.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -200,7 +200,6 @@ import {ControlRowComponent} from "./components/audit/misc/control-row.component
 
     TerminalWorkspaceComponent,
     TerminalOutputComponent,
-    TerminalNavbarComponent,
     TerminalDirective,
     TerminalExecComponent,
     TerminalHelperComponent,
@@ -274,6 +273,7 @@ import {ControlRowComponent} from "./components/audit/misc/control-row.component
     // audit
     ExplorerAuditComponent,
     ViewportAuditComponent,
+    TerminalAuditComponent,
     ButtonComponent,
 
     ExplorerTagComponent,

@@ -16,11 +16,11 @@
         </app-subnavbar>
       </ng-container>
       <ng-container body-left>
-        <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
+        <div class="container-fluid dxc-model-info" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
           <div class="row">
             <div class="col-8">
-              <h3 class="dxc-text-std">{{ data.name }}</h3>
-              <div class="row mt-2 mb-2">
+              <h3 class="dxc-text-std p-3">{{ data.name }}</h3>
+              <div class="row mt-2 mb-2 ps-2">
                 <div class="col-4 model-details">
                   <ng-container *ngFor="let meta of data.metadata">
                     <span class="badge rounded-pill badge-sm text-bg-info dxc-text-std ml-2">{{ meta.key }}: {{ meta.value  }}</span>
@@ -28,8 +28,7 @@
                 </div>
               </div>
 
-
-              <p class="dxc-text-std w-full">
+              <p class="dxc-text-std description">
                 {{ data.description }}
               </p>
 
@@ -40,21 +39,30 @@
                 </li>
               </ul>
             </div>
-            <div class="col-4">
-              <div class="card mt-2" style="width: 18rem;">
-                <div class="card-body">
-                  <h5 class="card-title">Author</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">REVERSENSE</h6>
-                  <p class="card-text">
-                    {{ data.modified | date: 'MM/dd/yyyy' }}
-                  </p>
-                  <p class="card-text">DxPrivacy built'in referential.</p>
-                  <a href="#" class="card-link"><dxc-icon [model]="gIcons['MSG']" class="mr-2 dxc-text-darker"></dxc-icon>&nbsp;Contact</a>
-                  <a href="#" class="card-link"><dxc-icon [model]="gIcons['HELPER']" class="mr-2 dxc-text-darker"></dxc-icon>&nbsp;Help</a>
+            <div class="col-4 p-3">
+              <div class="card" style="width: 18rem;">
+                  <img src="..." class="card-img-top" alt="...">
+                  <div class="card-body">
+
+                      <h5 class="card-title">Author</h5>
+                      <h6 class="card-subtitle mb-2 text-body-secondary">REVERSENSE</h6>
+                      <p class="card-text">
+                        {{ data.modified | date: 'MM/dd/yyyy' }}
+                      </p>
+                      <p class="card-text">DxPrivacy built'in referential.</p>
+                      <a href="#" class="card-link"><dxc-icon [model]="gIcons['MSG']" class="mr-2 dxc-text-darker"></dxc-icon>&nbsp;Contact</a>
+                      <a href="#" class="card-link"><dxc-icon [model]="gIcons['HELPER']" class="mr-2 dxc-text-darker"></dxc-icon>&nbsp;Help</a>
                 </div>
+                  <ul class="list-group list-group-flush">
+                      <li class="list-group-item">An item</li>
+                      <li class="list-group-item">A second item</li>
+                      <li class="list-group-item">A third item</li>
+                  </ul>
+                  <div class="card-body">
+                      <a href="#" class="card-link">Website</a>
+                      <a href="#" class="card-link">Download</a>
+                  </div>
               </div>
-
-
             </div>
           </div>
 
@@ -269,10 +277,16 @@
 
                 <div [innerHTML]="selectedData.description"></div>
 
-                <h5>Ressources</h5>
-                <ng-container *ngFor="let lk of selectedData.links">
-                  <a [href]="lk">{{ lk }}</a>
-                </ng-container>
+                <h5 class="m-1">Ressources</h5>
+                  <ng-container *ngIf="selectedData.links != null && selectedData.links.length>0;else noRes">
+                      <ng-container *ngFor="let lk of selectedData.links">
+                          <a [href]="lk">{{ lk }}</a>
+                      </ng-container>
+                  </ng-container>
+                  <ng-template #noRes>
+                      <span> No resource</span>
+                  </ng-template>
+
               </div>
               <div *ngIf="selectedData!=null && selectedData.country!=null" class="col-4">
                 <div class="card">
@@ -285,9 +299,6 @@
             </div>
 
 
-            <div class="row  g-0 dxc-text-std dxc-text-100">
-              <div class="col-11 pl-1"><b>Rules</b></div>
-            </div>
             <div class="row g-0">
               <div class="col-12 pl-1 pt-1">
                     <dxc-box>
@@ -305,7 +316,7 @@
                       </ng-container>
                       <ng-container body>
                         <ng-container  *ngFor="let a of selectedData.children">
-                            <dxc-audit-control [control]="a" (onDryRunSuccess)="execResults=$event"></dxc-audit-control>
+                            <dxc-audit-control [control]="a" [style]="{'backgroundColor':selectedData.getStyle().bgColor}" (onDryRunSuccess)="execResults=$event"></dxc-audit-control>
                         </ng-container>
                         <ng-container  *ngFor="let a of selectedData.assessments">
                           <dxc-audit-assessment [assessement]="a" (onDryRunSuccess)="execResults=$event"></dxc-audit-assessment>
@@ -322,7 +333,7 @@
             <div class="row g-0">
               <div class="col-12 pl-1 pt-1">
                 <div class="dxc-list dxc-rules-list">
-                  <dxc-search-result-list *ngIf="searchCtrl.app" [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>
+                  <!--<dxc-search-result-list *ngIf="searchCtrl.app" [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>-->
                 </div>
               </div>
             </div>

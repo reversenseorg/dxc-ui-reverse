@@ -2,7 +2,6 @@ import {RouterModule, Routes} from "@angular/router";
 import {SplashComponent} from "./splash.component";
 import {NgModule} from "@angular/core";
 
-import {LatestProjectComponent} from "./latest-project.component";
 import {NewProjectComponent} from "./new-project.component";
 import {OpenProjectComponent} from "./open-project.component";
 import {SvcStatusComponent} from "./SvcStatus.component";

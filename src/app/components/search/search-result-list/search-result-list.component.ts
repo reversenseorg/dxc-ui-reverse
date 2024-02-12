@@ -51,6 +51,7 @@ export class SearchResultListComponent implements OnInit {
   @Input() mainController:StageComponent;
   @Input() controller:SearchController;
   @Input() results:any[] = [];
+  @Input() hFull = false;
 
   error:Nullable<Message> = null;
 
@@ -79,6 +80,7 @@ export class SearchResultListComponent implements OnInit {
    */
   selectedResult = -1;
   searching = false;
+  height:string = "220px";
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
               private searchSvc:SearchService,
@@ -89,6 +91,8 @@ export class SearchResultListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.height = this.hFull ? '100%' : '220px';
 
     this.projectSvc.onProjectReady.subscribe(()=>{
       this.TAGS = {

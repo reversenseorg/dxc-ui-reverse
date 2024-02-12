@@ -1,0 +1,23 @@
+<div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-hook" #termRes>
+  <app-subnavbar [type]="'navtab'" [navtab]="this.view.navtab" [items]="getTabItems()" [parent]="this"
+                 (closeTab)="onResultClose($event)" (selectTab)="switchResults($event)" #termResNav>
+    <span class="nav-label pt-2" navLabel>Results :</span>
+  </app-subnavbar>
+
+  <div #termResCtn style="overflow-y:auto;">
+      <ng-container *ngFor="let results of getTabItems()">
+          <div class="row g-0" [ngStyle]="{ 'display':isDisplayed(results) }">
+              <div *ngIf="results.data?.event?.state!='new'; else scanning" class="col-12">
+                  <dxc-search-result-list *ngIf="searchCtrl.app && results.data" [hFull]="true" [results]="results.data.results" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>
+              </div>
+              <ng-template #scanning>
+                  <div class="col-12" >
+                      <dxc-icon [model]="gIcons['SPINNER']"></dxc-icon>
+                  </div>
+              </ng-template>
+          </div>
+      </ng-container>
+  </div>
+</div>
+
+

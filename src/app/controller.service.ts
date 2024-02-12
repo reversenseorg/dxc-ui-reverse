@@ -75,6 +75,7 @@ import {ViewportTopoServiceComponent} from "./components/topology/viewport-topo/
 import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
 import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
 import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.component";
+import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal-audit.component";
 
 
 interface StageSet {
@@ -300,6 +301,9 @@ export class ControllerService {
         viewCmp: {
           main: ViewportAuditComponent
         },
+        terminalCmp: {
+          main: TerminalAuditComponent
+        }
       }),
       new TagController({
         service: this.tagSvc,

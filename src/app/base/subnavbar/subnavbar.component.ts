@@ -24,6 +24,14 @@ import {ElectronService} from "../../core/services";
 import {Nullable} from "../Nullable";
 import {IStringIndex} from "../IStringIndex";
 
+export interface TabItem<T> {
+  icon?:Nullable<IconModel>;
+  label?:Nullable<string>;
+  color?:Nullable<string>;
+  active?:boolean;
+  uid:string;
+  data?:T;
+}
 
 //  class="btn-label"
 @Component({

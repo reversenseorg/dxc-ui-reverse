@@ -6,7 +6,6 @@ import {DxcApiService} from "../../../base/DxcApiService";
 import {map} from "rxjs/operators";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
-import {PrivacyReport} from "../../../models/audit/privacy/PrivacyReport";
 import {DashBoard} from "../../../models/audit/common/DashBoard";
 import {TopologyService} from "../../topology/ctrl/topology.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
@@ -16,7 +15,28 @@ import AssuranceReport from "../../../models/audit/common/AssuranceReport";
 import {Nullable} from "../../../base/Nullable";
 import Control from "../../../models/audit/common/Control";
 import {IStringIndex} from "../../../base/IStringIndex";
+import ControlAssessment from "../../../models/audit/common/ControlAssessment";
+import {SearchService} from "../../search/ctrl/search.service";
 
+export enum CheckEventState {
+  NEW= 'new',
+  SUCCESS='success',
+  FAIL='fail'
+}
+
+export interface CheckEvent {
+  rule?: any;
+  assessment?: ControlAssessment;
+  model?: AssuranceModel;
+  startTime:number;
+  time?:number;
+  state: CheckEventState;
+}
+
+export interface CheckResult {
+  event: CheckEvent
+  results: any[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +60,13 @@ export class AuditService extends DxcApiService{
 
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
-  constructor( private appmenuSvc:AppMenuService, private topoSvc:TopologyService, private outputSvc:OutputService, protected override _http:HttpClient) {
+  onCheckAction$:Subject<CheckResult> = new Subject<CheckResult>();
+
+  constructor( private appmenuSvc:AppMenuService,
+               private topoSvc:TopologyService,
+               private _searchSvc:SearchService,
+               private outputSvc:OutputService,
+               protected override _http:HttpClient) {
 
       super({
         audit: {
@@ -257,5 +283,52 @@ export class AuditService extends DxcApiService{
     }));
   }
 
+  /**
+   * To execute a rule and show results
+   *
+   * @param pAssess
+   * @param pRule
+   */
+  runRule(pAssess: ControlAssessment, pRule: any):Observable<CheckResult> {
+    const evt:any = {
+      rule: pRule,
+      assessment: pAssess,
+      startTime: (new Date()).getTime()
+    };
 
+    this.onCheckAction$.next({
+      event: {
+        state:CheckEventState.NEW,
+        ...evt
+      },
+      results: []
+    });
+
+    return this._searchSvc.executeRaw(pRule.request.__stringified.substring(1)).pipe(map((pRes:any)=>{
+      let checkEvt:CheckResult;
+      if(pRes.success){
+        checkEvt = {
+          event:{
+            state:CheckEventState.SUCCESS,
+            time: (new Date()).getTime(),
+            ...evt
+          },
+          results: pRes.data
+        };
+      }else{
+        checkEvt = {
+          event:{
+            state:CheckEventState.FAIL,
+            time: (new Date()).getTime(),
+            ...evt
+          },
+          results: []
+        };
+      }
+
+      this.onCheckAction$.next(checkEvt);
+
+      return checkEvt;
+    }));
+  }
 }

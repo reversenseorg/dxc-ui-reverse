@@ -240,9 +240,13 @@ export class CodeController extends UiController implements IController {
     }
   }
 
-  showClass( pName:any):void{
-    console.log('show class>', pName);
-    this.open({ _t:'c', name:pName}, 'ctxm');
+  showClass( pClass:any):void{
+
+    console.log('show class>', pClass);
+    if(typeof pClass==='string')
+      this.open({ _t:'c', name:pClass}, 'ctxm');
+    else
+      this.open({ _t:'c', name:pClass.name}, 'ctxm');
   }
 
   renameMeth( pObj:any ):void{
@@ -264,8 +268,10 @@ export class CodeController extends UiController implements IController {
   showXref(pSubject: any, pOptions:any = null) {
     if(pSubject===null || pSubject===undefined) return;
 
+    console.log('showXref > ',pSubject, pOptions);
     if(typeof pSubject==='object'){
-      switch(pSubject._t){
+      switch(pSubject.__){
+        case NodeInternalType.FIELD:
         case 'f':
           if(pOptions.type==='read'){
             this.app?.doSearch(`byID().field('${pSubject.__signature__}').select('_getters')`,'m');
@@ -273,13 +279,15 @@ export class CodeController extends UiController implements IController {
             this.app?.doSearch(`byID().field('${pSubject.__signature__}').select('_setters')`,'m');
           }
           break;
+        case NodeInternalType.METHOD:
         case 'm':
           if(pOptions.type==='to'){
             this.app?.doSearch(`byID().method('${pSubject.__signature__}').select('_callers')`,'m');
           }else if(pOptions.type==='from'){
-            this.app?.doSearch(`call('callers.__signature__:${pSubject.__signature__}')`,'m');
+            this.app?.doSearch(`call('caller.__signature__:${pSubject.__signature__}')`,'m');
           }
           break;
+        case NodeInternalType.CLASS:
         case 'c':
           if(pOptions.type==='new'){
           //  this.app.doSearch(`call('__signature__:${pSubject.__signature__}')`);

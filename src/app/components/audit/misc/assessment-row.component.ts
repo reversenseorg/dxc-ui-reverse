@@ -24,16 +24,16 @@ import {DxcComponent} from "../../../base/DxcComponent";
   template: `
     <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0">
       <div class="col-11 dxc-text-75">
-        <dxc-meta [label]="assessement.testType" [css]="'dxc-text-std dxc-salmon'" [ngbTooltip]="getTooltipFor(assessement.testType)"></dxc-meta>
-        {{ assessement.name }}
+        <dxc-meta [label]="getUpperCase(assessement.testType)" [css]="'dxc-text-std '+getTestTypeStyle(assessement.testType)" [ngbTooltip]="getTooltipFor(assessement.testType)"></dxc-meta>
+        <span class="dxc-text-std dxc-text-white"><b>{{ assessement.name }}</b></span>
         <b>[<span class="ml-2 dxc-text-yellow">{{ assessement.rules.length }}</span>]</b>
       </div>
       <div class="col-1 text-center" >
-        <dxc-icon [model]="gIcons['PLAY']"></dxc-icon>
+        <dxc-icon [model]="gIcons['PLAY_ALL']" (click)="runAll()"></dxc-icon>
       </div>
     </div>
     <ng-container  *ngFor="let r of assessement.rules">
-      <dxc-audit-rule *ngIf="r!=null" [rule]="r" [assessement]="assessement" (onDryRunSuccess)="onDryRunSuccess.emit($event)"></dxc-audit-rule>
+      <dxc-audit-rule *ngIf="r!=null" [rule]="r" [assessement]="assessement" (onScanning)="onScanning.emit($event)" (onDryRunSuccess)="onDryRunSuccess.emit($event)"></dxc-audit-rule>
     </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,6 +46,7 @@ export class AssessmentRowComponent extends DxcComponent  {
 
   @Output() onDryRunSuccess:EventEmitter<any> = new EventEmitter<any>();
   @Output() onDryRunFailed:EventEmitter<any> = new EventEmitter<any>();
+  @Output() onScanning:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   gIcons:any = GLOBAL_ICONS;
@@ -97,6 +98,27 @@ export class AssessmentRowComponent extends DxcComponent  {
     }
 
     return "";
+  }
+
+  runAll() {
+
+  }
+
+  getUpperCase(pStr: any):string {
+    return pStr.toUpperCase();
+  }
+
+  getTestTypeStyle(pTest:any):string {
+      switch (pTest){
+        case "iast":
+          return "dxc-azur";
+        case "dast":
+          return "dxc-yellow";
+        case "sast":
+          return "dxc-salmon";
+      }
+
+    return "dxc-salmon";
   }
 }
 

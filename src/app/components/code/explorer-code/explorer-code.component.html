@@ -163,6 +163,7 @@
   <app-context-item [label]="'Copy class name'" (itemclick)="copyAttr(ctxMenuState.subject, 'enclosingClass')"></app-context-item>
   <!--<app-context-item [label]="'Copy package name'" (itemclick)="copyAttr(ctxMenuState.subject, 'enclosingClass.pkg.name')"></app-context-item>-->
   <app-context-item [separator]="true" [label]="'Rename method'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
+    <app-context-item [label]="'Show declaring class'" [icon]="gIcons['FIND']" (itemclick)="controller.showClass(ctxMenuState.subject.enclosingClass)"></app-context-item>
   <app-context-item [label]="'Show method'" [icon]="gIcons['FIND']" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Xref from'" (itemclick)="controller.showXref(ctxMenuState.subject, {type:'from'})"></app-context-item>
   <app-context-item [label]="'Xref to'" (itemclick)="controller.showXref(ctxMenuState.subject, {type:'to'})"></app-context-item>
@@ -211,6 +212,7 @@
 
 
 <app-context-menu [name]="'fld'" [width]="300">
+    <app-context-item [label]="'Show declaring class'" [icon]="gIcons['FIND']" (itemclick)="controller.showClass(ctxMenuState.subject.enclosingClass)"></app-context-item>
   <app-context-item [label]="'Search Read'" (itemclick)="controller.showXref(ctxMenuState.subject,{ type:'read' })"></app-context-item>
   <app-context-item [label]="'Search Write'" (itemclick)="controller.showXref(ctxMenuState.subject,{ type:'write' })"></app-context-item>
   <app-context-item [label]="'Rename field'" [icon]="gIcons['EDIT']" (itemclick)="controller.renameItem(ctxMenuState.subject)"></app-context-item>
