@@ -18,7 +18,7 @@ import {
 } from '../../../base/context-menu/context-menu.component';
 import {DEV_ICONS} from '../icons';
 import {Utils} from '../../../cmp/Utils';
-import {ProjectService} from '../../project/ctrl/project.service';
+import {ProjectAnalyzerConfiguration, ProjectService} from '../../project/ctrl/project.service';
 import DexcaliburProject from '../../../models/DexcaliburProject';
 import {DeviceCacheFlavor, DeviceManagerService} from '../ctrl/device-manager.service';
 import {DeviceController} from '../ctrl/DeviceController';
@@ -42,6 +42,7 @@ import {FILE_ICONS} from "../../file/icons";
 import {ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
+import {DeviceBindedData} from "../common";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -314,14 +315,15 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     switch (pItem._t){
       case 'app':
         data = this.dmService.getApplications(pItem.dev).pipe(
-          map( (pObs: any) => {
-            const children:any[] = [];
+          map( (pObs: DeviceBindedData<AppPackage>[]) => {
+            const children:DeviceBindedData<AppPackage>[] = [];
             if(pObs != null){
-              pObs.map((pApp:any) => {
+              pObs.map((pApp:DeviceBindedData<AppPackage>) => {
                 pApp._t = 'apkg';
                 pApp._e = false ;
-                pApp.tag = (pApp.packagePath.split('/')[1]);
-                pApp.dev = pItem.dev;
+                if(pApp.packagePath != null){
+                  pApp.tag = (pApp.packagePath.split('/')[1]);
+                }
                 children.push(pApp);
               });
 
@@ -765,7 +767,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     this.modalDm.show();
   }
 
-  enroll(pItemObj: any, pForce = false): void {
+  enroll(pItemObj: any, pOptions:any, pForce = false): void {
     let dev: Nullable<Device> = null;
 
     if(pItemObj.enrolled && !pForce){
@@ -787,7 +789,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     if(dev != null){
       this.enrolling = true;
-      this.dmService.enroll(dev as Device).subscribe((pObs: any) => {
+      this.dmService.enroll(dev as Device, pOptions).subscribe((pObs: any) => {
         console.log('enroll started : ', pObs);
         this.dmService.enrollStatus(dev as Device).subscribe(( pObs2) => {
           console.log('status : ', pObs2);
@@ -797,32 +799,20 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
   }
 
+  /**
+   * To filter applications
+   *
+   * @param pItem
+   * @param pFilter
+   */
   filterApp(pItem: any, pFilter: any) {
     if(pFilter == null){
       this.refreshApp(pItem);
     }
-    /*
-    switch (pOpts.type) {
-      case 'u':
-        filter = {tag:['data']};
-        break;
-      case 'v':
-        filter = {tag:['vendor','oem']};
-        break;
-      case 's':
-        filter = {tag:['system']};
-        break;
-      case '*':
-        this.refreshApp(pItem);
-        break;
-      default:
-        this._printError('Applications cannot be filtered by this type.');
-        return;
-    }*/
 
     const itm = this._getItemByDevice( pItem.dev, 'app');
     if(itm != null){
-      itm.filterChildren(pFilter)
+      itm.filterChildren(pFilter);
     }
   }
 
@@ -940,23 +930,37 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     });
   }
 
-  analyzeApp(subject: any) {
+  /**
+   * To start a new project from an application of this device
+   *
+   * @param subject
+   */
+  analyzeApp(pApp: DeviceBindedData<AppPackage>) {
+    console.log("analyzeApp > ",pApp);
     this.projectService.onAnalysisConfig.next( {
       force_native: false,
-      callback: (pConfig:any)=>{
+      origin: 'device:app',
+      data: pApp,
+      onStart: (pConfig:ProjectAnalyzerConfiguration)=>{
+
+        if(pApp.packageIdentifier==null){
+          this.outputSvc.print(new OutputMessage({ src: 'ProjectManager', msg: 'The application cannot be analyzed : package identifier is null.' }));
+          return;
+        }
+
         this.projectService
-          .isAvailable('uid', subject.packageIdentifier)
+          .isAvailable('uid', pApp.packageIdentifier)
           .subscribe( (pAvailable: boolean) => {
             if (pAvailable){
               try {
                 this.projectService.newProject({
                   type: 'select',
-                  dev: subject.dev.uid,
-                  path: subject.packagePath,
-                  name: subject.packageIdentifier,
+                  dev: pApp.dev.uid,
+                  path: pApp.packagePath,
+                  name: pApp.packageIdentifier,
                   cfg: pConfig
                 }).subscribe( (pProject: DexcaliburProject) => {
-                  this.outputSvc.print(new OutputMessage({ src: 'ProjectManager', msg: 'Creating a new project for app [' + subject.packageIdentifier + ']' }));
+                  this.outputSvc.print(new OutputMessage({ src: 'ProjectManager', msg: 'Creating a new project for app [' + pApp.packageIdentifier + ']' }));
                 });
               }catch (err){
                 this.outputSvc.alert(new OutputMessage({ msg: (err as Error).message }));

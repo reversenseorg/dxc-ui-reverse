@@ -53,28 +53,21 @@
           <div class="dxc-frm-label dxc-text-100">
             <b class="dxc-text-100">Splitted APK :</b>
           </div>
-          <div class="row no-gutters dxc-text-100 pt-2">
-            <div class="col-4 dxc-text-75 pl-2">
-              <input type="checkbox" value="yes" [(ngModel)]="ssa_auto" name="ssa_auto" id="ssa_auto_yes" class="mr-1" [checked]="(ssa_auto)"><label>Search</label>
+          <div class="row g-0 dxc-text-100 pt-2">
+            <div class="col-1 dxc-text-75 pl-2">
+              <input type="checkbox" value="yes" [(ngModel)]="ssa_auto" name="ssa_auto" id="ssa_auto_yes" class="mr-1" [checked]="(ssa_auto)">
             </div>
-
-            <!--<div class="col-3">
-              <input type="checkbox" value="yes" name="ssa_auto" id="ssa_auto_yes" checked="checked"><span class=" pl-1 pr-3">Yes</span>
-            </div>
-            <div class="col-3">
-              <input type="radio" value="no" name="ssa_auto" id="ssa_auto_no" ><span class=" pl-1">No</span>
-            </div>-->
+              <div class="col-10 dxc-text-75 pl-2">
+                  <label for="ssa_auto_yes">Search splitted APKs</label>
+              </div>
           </div>
-          <div class="row no-gutters dxc-text-100">
-            <div class="col-4  dxc-text-75 pl-2">
-              <input type="checkbox" value="yes" [(ngModel)]="msa_auto" name="msa_auto" id="msa_auto_yes" class="mr-1" [checked]="(msa_auto)"><label>Merge</label>
+          <div class="row g-0 dxc-text-100">
+            <div class="col-1  dxc-text-75 pl-2">
+              <input type="checkbox" value="yes" [(ngModel)]="msa_auto" name="msa_auto" id="msa_auto_yes" class="mr-1" [checked]="(msa_auto)">
             </div>
-            <!--<div class="col-3">
-              <input type="radio" value="yes" name="msa_auto" id="msa_auto_yes" checked="checked"><span class=" pl-1 pr-3">Yes</span>
-            </div>
-            <div class="col-3">
-              <input type="radio" value="no" name="msa_auto" id="msa_auto_no" ><span class=" pl-1">No</span>
-            </div>-->
+              <div class="col-10 dxc-text-75 pl-2">
+                  <label for="ssa_auto_yes">Merge split APKs to single APK</label>
+              </div>
           </div>
         </ng-container>
 
@@ -82,31 +75,60 @@
         <div class="dxc-frm-label dxc-text-100">
           <b class="dxc-text-100">Native libraries :</b>
         </div>
-        <div class="dxc-frm-label dxc-text-100 pl-2">
-          <input type="checkbox" value="yes" [(ngModel)]="na_force" name="na_auto" id="na_auto" class="mr-1" [checked]="(na_force?'checked':'')">
-          <label>Analyze all native libraries detected (not recommended for huge app)</label>
+        <div class="row g-0 dxc-text-100">
+            <div class="col-1  dxc-text-75 pl-2">
+                <input type="checkbox" value="yes" [(ngModel)]="na_force" name="na_auto" id="na_auto" class="mr-1" [checked]="(na_force?'checked':'')">
+            </div>
+            <div class="col-10 dxc-text-75 pl-2">
+                <label for="na_auto">Analyze all native libraries detected (not recommended for huge app)</label>
+            </div>
         </div>
-        <!--<div  class="dxc-text-75 pl-1 pt-2" *ngIf="!na_force">
-            <input type="radio" value="auto" name="na_auto" id="na_auto_yes" checked="checked"><span class=" pl-1 pr-3">Yes</span>
-            <input type="radio" value="manual" name="na_auto" id="na_auto_no" ><span class=" pl-1">No</span>
-        </div>-->
 
+          <div class="dxc-frm-label dxc-text-100">
+              <b  class="dxc-text-100">Dynamic Analysis :</b>
+          </div>
+          <div  class="dxc-text-75 pl-1 pt-2">
+              <div class="row g-0 dxc-text-100">
+                  <div class="col-1  dxc-text-75 pl-2">
+                      <input type="radio" [(ngModel)]="da_target" value="same"  name="dev_type" id="dev_same" class="mr-1">
+                  </div>
+                  <div class="col-10 dxc-text-75 pl-2">
+                      <label for="dev_same">Perform dynamic analysis on the same device</label>
+                  </div>
+              </div>
+              <div class="row g-0 dxc-text-100">
+                  <div class="col-1  dxc-text-75 pl-2">
+                      <input type="radio" [(ngModel)]="da_target" value="another"  name="dev_type" id="dev_another" class="mr-1">
+                  </div>
+                  <div class="col-10 dxc-text-75 pl-2">
+                      <label for="dev_another">Perform dynamic analysis on the another device</label>
+                  </div>
+              </div>
+          </div>
 
-        <div class="dxc-frm-label dxc-text-100">
-          <b  class="dxc-text-100">Target ABI :</b>
-        </div>
-        <div  class="dxc-text-75 pl-1 pt-2">
-          <select [(ngModel)]="abi" class="dxc-input">
-            <option value="_devabi" selected>Use ABI of configured device</option>
-            <option value="_any">any (not recommended)</option>
-            <optgroup label="Available">
-              <ng-container *ngFor="let sabi of supportedAbi">
-                <option [value]="sabi.name">{{ sabi.name  }}</option>
-              </ng-container>
-            </optgroup>
+          <ng-container *ngIf="da_target=='another'">
+              <div class="dxc-frm-label dxc-text-100">
+                  <b  class="dxc-text-100">Target ABI :</b>
+              </div>
+              <div  class="dxc-text-75 pl-1 pt-2">
 
-          </select>
-        </div>
+                  <select [(ngModel)]="abi" class="dxc-input" #selectABI>
+                      <option value="_devabi" selected>Use ABI of configured device</option>
+                      <option value="_any">any (not recommended)</option>
+                      <optgroup label="Available">
+                          <ng-container *ngFor="let sabi of supportedAbi">
+                              <option [value]="sabi.name">{{ sabi.name  }}</option>
+                          </ng-container>
+                      </optgroup>
+                      <div class="mb-2 dxc-legend">
+                          <p style="font-size:1rem">
+                              Select the ABI to use. If you create a project using data from a connected device and you expect to perform dynamic analysis with
+                              this device, then choose "Perform dynamic analysis on the same device" button radio above.
+                          </p>
+                      </div>
+                  </select>
+              </div>
+          </ng-container>
 
       </div>
   </div>

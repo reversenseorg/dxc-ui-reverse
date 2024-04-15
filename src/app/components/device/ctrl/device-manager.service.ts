@@ -15,16 +15,19 @@ import {DEVICE_PANEL} from "../viewport-device/viewport-device.component";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {DeviceBindedData} from "../common";
 
+export type DeviceUID = string;
 export interface AppAcquisitionOpts {
   type:"all"|"single";
   uids?:string[];
 }
+
 interface DeviceManagerCache {
   devices: Device[],
-  app: IStringIndex<AppPackage[]>,
-  profiles: IStringIndex<any>,
-  syscalls: IStringIndex<ModelSyscall[]>
+  app: Record<DeviceUID, DeviceBindedData<AppPackage>[]>,
+  profiles: Record<string,any>,
+  syscalls: Record<DeviceUID,ModelSyscall[]>
 }
 
 export enum DeviceCacheFlavor {
@@ -455,14 +458,23 @@ export class DeviceManagerService extends DxcApiService {
     );
   }
 
-  getApplications( pDevice:Device, pRefresh = false):Observable<AppPackage[]>{
+
+  /**
+   * To get the list of packages installed on the specified device
+   *
+   * @param {Device} pDevice Target device
+   * @param {boolean} pRefresh Default FALSE. Turn to TRUE to force refresh, else it pull apps from local cache
+   * @returns {Observable<DeviceBindedData<AppPackage>[]>}
+   * @method
+   */
+  getApplications( pDevice:Device, pRefresh = false):Observable<DeviceBindedData<AppPackage>[]>{
 
 
     if(pDevice.uid==null){
       throw UIException.DEVICE_IS_NOT_SELECTED("device-manager","getApplications");
     }
 
-    let appCache:AppPackage[] = this._cache.app[pDevice.uid];
+    let appCache:DeviceBindedData<AppPackage>[] = this._cache.app[pDevice.uid];
 
     if(appCache != null && appCache.length>0 && !pRefresh){
       return from([ appCache ]);
@@ -475,8 +487,12 @@ export class DeviceManagerService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           appCache = []
-          pEl.data.apps.map((x:any) => {           appCache.push( new AppPackage(x))
+          pEl.data.apps.map((x:any) => {
+            const app = new AppPackage(x);
+            (app as DeviceBindedData<any>).dev = pDevice;
+            appCache.push(app as DeviceBindedData<AppPackage>);
           });
+
 
           this._cache.app[pDevice.uid as string] = appCache;
 
@@ -551,7 +567,7 @@ export class DeviceManagerService extends DxcApiService {
    *    - randomName : true/false
    * @param pDevice
    */
-  enroll( pDevice:Device):Observable<any> {
+  enroll( pDevice:Device, pOptions:any = {rooted:true}):Observable<any> {
 
     return this._process(
       this.endpoints['device']['enroll'],
@@ -559,7 +575,7 @@ export class DeviceManagerService extends DxcApiService {
         uid:pDevice.uid,
         opts: {
           profiling:{
-
+            unprivileged: !pOptions.rooted
           },
           frida:{
             devicePath: '/data/local/tmp/frida-server'
@@ -569,7 +585,8 @@ export class DeviceManagerService extends DxcApiService {
             downloadURL: ''
             randomName: ''
              */
-          }
+          },
+          ...pOptions
         }
       }
     ).pipe(

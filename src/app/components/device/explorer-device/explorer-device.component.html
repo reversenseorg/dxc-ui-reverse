@@ -90,7 +90,7 @@
           </span>
 
 
-          <span *ngIf="itemObj._t=='enrollnow'" (dblclick)="enroll(itemObj)" >
+            <span *ngIf="itemObj._t=='enrollnow'" (dblclick)="enroll(itemObj, {rooted:true})" >
               <dxc-icon [model]="enrolling ? gIcons['SPINNER'] : gIcons['ERROR']" ></dxc-icon>&nbsp;
               <span class="text-danger" style="font-weight: 800">This device is not enrolled. Double-click to start ...</span>
             </span>
@@ -154,7 +154,8 @@
   <app-context-item [label]="'Install project app'" [separator]="true"  [icon]="gIcons['DOWNLOAD']" (itemclick)="installApp(ctxMenuState.subject,'proj')"></app-context-item>
   <app-context-item [label]="'Uninstall project app'"  [icon]="gIcons['TRASH']" (itemclick)="uninstallProjectApp(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Select as default'" [separator]="true"  [icon]="gIcons['STAR']" (itemclick)="setAsDefaultDev(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Enroll'"  (itemclick)="enroll(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [label]="'Enroll'"  (itemclick)="enroll(ctxMenuState.subject,{rooted:true})"></app-context-item>
+  <app-context-item [label]="'Enroll (unprivileged)'"  (itemclick)="enroll(ctxMenuState.subject, {rooted:false})"></app-context-item>
   <app-context-item [label]="'Analyze'"  (itemclick)="analyze(ctxMenuState.subject)"></app-context-item>
 
   <!--<app-context-item [label]="'Frida server'" (itemclick)="controller.startFridaSer(ctxMenuState.subject)"></app-context-item>-->

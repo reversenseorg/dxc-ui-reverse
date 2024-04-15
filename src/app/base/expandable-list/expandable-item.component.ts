@@ -98,6 +98,10 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
 
   }
 
+  detectChanges():void {
+    this.changeDetectorRef.detectChanges();
+  }
+
   ngOnInit(): void {
     this.e = this.expandableFn(this.item);
     // detach from change detector
@@ -148,7 +152,9 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
       if(Array.isArray(pCondition[p])){
         filt[p] = (x)=>{ return (pCondition[p].indexOf(x) > -1);}
       }else{
-        filt[p] = (x)=>{ return (pCondition[p] === x);}
+        filt[p] = (x)=>{
+          return (pCondition[p] === x);
+        }
       }
     }
 
@@ -169,6 +175,8 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
       }else{
         vChild.instance.show();
       }
+
+      vChild.instance.detectChanges();
     });
   }
 

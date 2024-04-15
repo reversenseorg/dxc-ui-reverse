@@ -15,13 +15,15 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {SplashController} from "../ctrl/SplashController";
 import {SPLASH_ICONS} from "../icons";
 import {Subject} from "rxjs";
-import {ProjectService} from "../ctrl/project.service";
+import {NewProjectRequest, ProjectService} from "../ctrl/project.service";
 import {ModalNewProjectComponent} from "../modal-new-project/modal-new-project.component";
 import {ModalOpenProjectComponent} from "../modal-open-project/modal-open-project.component";
 import {ModalProjectSettingsComponent} from "../modal-project-settings/modal-project-settings.component";
 import {AuthService} from "../../auth/ctrl/auth.service";
 import {ModalProjectAnalConfigComponent} from "../modal-project-anal-config/modal-project-anal-config.component";
 import {Nullable} from "../../../base/Nullable";
+import {DeviceBindedData} from "../../device/common";
+import AppPackage from "../../../models/AppPackage";
 
 @Component({
   selector: 'app-viewport-splash',
@@ -86,8 +88,16 @@ export class ViewportSplashComponent implements OnInit, AfterViewInit, IViewport
           break;
       }
     });
-    this.projSvc.onAnalysisConfig.subscribe( (pEvent:any) => {
-      this.modalAnal.show( pEvent.force_native, pEvent.callback );
+
+    this.projSvc.onAnalysisConfig.subscribe( (pEvent:NewProjectRequest<any>) => {
+      // switch cases must match origin of t he "new project" request
+      switch (pEvent.origin){
+        case 'device:app':
+          this.modalAnal.showFromApp( pEvent as NewProjectRequest<DeviceBindedData<AppPackage>>); // pEvent.force_native, pEvent.callback );
+          break;
+        default:
+          break;
+      }
     });
   }
 

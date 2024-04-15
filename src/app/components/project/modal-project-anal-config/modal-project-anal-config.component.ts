@@ -1,6 +1,6 @@
 import {
   ChangeDetectorRef,
-  Component,
+  Component, ElementRef,
   Input,
   OnInit,
   ViewChild
@@ -9,13 +9,16 @@ import {Observable, Subject} from "rxjs";
 import {Message} from "../../../cmp/Error";
 import {ModalBaseComponent} from "../../../base/modal-base/modal-base.component";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
-import {ProjectService} from "../ctrl/project.service";
+import {NewProjectRequest, ProjectAnalyzerConfiguration, ProjectService} from "../ctrl/project.service";
 import {DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {PlatformService} from "../../platform/ctrl/platform.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {Nullable} from "../../../base/Nullable";
+import {DeviceBindedData} from "../../device/common";
+import AppPackage from "../../../models/AppPackage";
+import {Device} from "../../../models/Device";
 
 
 
@@ -47,12 +50,15 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
   @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
+  @ViewChild("selectABI", {read: ElementRef}) selectABIref: ElementRef;
 
   gIcons:any = GLOBAL_ICONS;
 
+  device:Nullable<Device>  = null;
+
   item: any = null;
 
-  private onStart:any = null;
+  private onStart:Nullable<((vOpts:ProjectAnalyzerConfiguration)=>any)> = null;
   // model
 
 
@@ -75,7 +81,7 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
    * @type {boolean}
    * @field
    */
-  ssa_auto = false;
+  ssa_auto = true;
 
   @Input() na_force = false;
 
@@ -104,6 +110,11 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
    */
   supportedAbi:any[] = [];
 
+  /**
+   * Device to use to perform dynamic analysis target
+   */
+  da_target: string = "another";
+
   constructor( private changeDetectorRef: ChangeDetectorRef,
                private devSvc:DeviceManagerService,
                private platformSvc:PlatformService,
@@ -117,7 +128,9 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
     this.kbSvc.register(this);
     this.projSvc.listSupportedAbi().subscribe((ABIs)=>{
       this.supportedAbi = ABIs;
-    })
+    });
+    console.log("selectABIref",this.selectABIref);
+    this.selectABIref.nativeElement.onMouseDown(()=>{});
   }
 
 
@@ -133,6 +146,32 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
   show( pForceNative:boolean, pStartCallback:any = null){
     this.na_force = pForceNative;
     this.onStart = pStartCallback;
+    this.modal.show();
+  }
+
+  /**
+   * To display configuration modal when an app package is
+   * picked from a connected device.
+   *
+   * Origin : 'device:app'
+   *
+   *
+   * @param pRequest
+   */
+  showFromApp( pRequest:NewProjectRequest<DeviceBindedData<AppPackage>>){
+    this.na_force = pRequest.force_native;
+    this.onStart = pRequest.onStart;
+
+    if(pRequest.data!=null){
+      if(pRequest.data.dev!=null){
+        this.device = pRequest.data.dev;
+        // IMPORTANT : Do not change, `this.platform` must be null, if the device platformù is unknow
+        this.platform = pRequest.data.dev.platform;
+
+        this.da_target = "same";
+      }
+    }
+
     this.modal.show();
   }
 
@@ -160,25 +199,38 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
         fa_mode: this.fa_mode,
         msa_auto: this.msa_auto,
         ssa_auto: this.ssa_auto,
+        da_target: this.da_target,
         abi: this.abi
       });
     }
   }
 
   /**
+   * To check if the new project  is an Android app
+   *
+   * Depending on available data, various checks can be done :
+   * - platform
+   * - bridge name
    *
    * @method
    */
   isAndroid() {
-    return (this.platform === 'android');
+    return (this.platform === 'android')
+        ||(this.device!=null && this.device.bridge.startsWith("adb+"));
   }
 
   /**
+   * To check if the new project  is an Android app
+   *
+   * Depending on available data, various checks can be done :
+   * - platform
+   * - bridge name
    *
    * @method
    */
   isTizen() {
-    return (this.platform === 'tizen');
+    return (this.platform === 'tizen')
+        ||(this.device!=null && this.device.bridge.startsWith("sdb+"));
   }
 
   /**

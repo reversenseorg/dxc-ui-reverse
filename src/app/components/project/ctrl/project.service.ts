@@ -14,7 +14,6 @@ import {DxcApiToken} from "../../../base/DxcApiToken";
 import {DeviceCacheFlavor, DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {Nullable} from "../../../base/Nullable";
-import {IStringIndex} from "../../../base/IStringIndex";
 
 export interface ProjectMenuEvent extends MenuEvent {
   win?:any
@@ -23,6 +22,53 @@ export interface ProjectMenuEvent extends MenuEvent {
 export interface ProjectSetting {
   name:string,
   value:any
+}
+
+export interface  ProjectAnalyzerConfiguration {
+    na_auto: boolean,
+    fa_mode: string,
+    msa_auto: boolean,
+    ssa_auto: boolean,
+    da_target: string,
+    abi: string
+}
+
+/**
+ *  Represent a request to create a new project
+ *
+ *  Such events are used to trigger "new project" from various data
+ *  (native libs, applications from device, process, memory region ...)
+ *
+ *  @interface
+ */
+export interface NewProjectRequest<T> {
+    /**
+     * Flag to force native analysis only
+     * @type {boolean}
+     */
+
+    force_native:boolean,
+
+    /**
+     * A string to uniquely identify the origin of the event.
+     * It must allow to retrieve the type of data to analysis
+     *
+     * @type {string}
+     */
+    origin:string,
+
+    /**
+     * A callback function called the configuration has been fulfilled and submitted
+     * by the user
+     *
+     * @type {((vConfig:any)=>any)}
+     */
+    onStart:((vConfig:ProjectAnalyzerConfiguration)=>any),
+
+    /**
+     * To interprent
+     */
+    data?:T;
 }
 
 /**
@@ -101,7 +147,7 @@ export class ProjectService extends DxcApiService {
 
   onProjectHaltOpening:Subject<any> = new Subject<any>();
 
-  onAnalysisConfig:Subject<any> = new Subject<any>();
+  onAnalysisConfig:Subject<NewProjectRequest<any>> = new Subject<NewProjectRequest<any>>();
 
   /**
    * A list of  all projects available in the remote workspace
@@ -616,9 +662,6 @@ export class ProjectService extends DxcApiService {
     );
 
     this.subscriptionUpload = req.subscribe((vEvent)=>{
-
-        console.log(vEvent);
-
 
       if (vEvent.type == HttpEventType.UploadProgress) {
         this.progressUpload = Math.round(100 * (vEvent.loaded / vEvent.total));
