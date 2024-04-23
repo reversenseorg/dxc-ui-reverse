@@ -20,6 +20,7 @@ import {Nullable} from "../../../base/Nullable";
 })
 export class AuthService extends DxcApiService{
 
+  static IGNORE_PUID = '-';
   override token: Nullable<DxcApiToken> = null;
   account: Nullable<UserAccount> = null;
 
@@ -70,26 +71,31 @@ export class AuthService extends DxcApiService{
 
 
     this.onLogin$.subscribe((vEvent:any)=>{
+
       // a specifi project is requested
-      if(vEvent.project!=null){
-        const tok = DxcApiToken.getInstance("puid");
-        if(tok!=null){
-          tok.updateToken(vEvent.project);
-        }else{
-          DxcApiToken.create('puid', vEvent.project);
-        }
-        this.onAuthentication.next(AuthenticationEvent.refresh(vEvent));
+      if(vEvent.project!=null && vEvent.project!=AuthService.IGNORE_PUID){
+          console.log("[AUTH SERVICE] ProjectUID found, retrieve authentication token. ");
+          const tok = DxcApiToken.getInstance("puid");
+          if(tok!=null){
+            tok.updateToken(vEvent.project);
+          }else{
+            DxcApiToken.create('puid', vEvent.project);
+          }
       }else{
+        console.log("[AUTH SERVICE] ProjectUID not found, retrieving from user info ... ");
         // if no projects are requested, else check authentication an pull projects from workspace
-        this.getUserInfo().subscribe((pInfo:Nullable<UserAccount>)=>{
-            if(pInfo!=null){
-                // authentication is ok
-              this.onAuthentication.next(AuthenticationEvent.newSuccess(null, pInfo));
-            }else{
-              location.href = "https://www.reversense.com";
-            }
-        })
+
       }
+
+      this.getUserInfo().subscribe((pInfo:Nullable<UserAccount>)=>{
+        if(pInfo!=null){
+          // authentication is ok
+          console.log("[AUTH SERVICE] Authentication done.");
+          this.onAuthentication.next(AuthenticationEvent.newSuccess(new DxcApiToken("local",""), pInfo));
+        }else{
+          location.href = "https://www.reversense.com";
+        }
+      })
     });
   }
 
@@ -140,7 +146,6 @@ export class AuthService extends DxcApiService{
     ).pipe(map((pEl:any)=>{
       if(pEl.success){
         const data = pEl.data;
-        console.log('raw user', pEl.data);
         const u:UserAccount = new UserAccount({
           username:data.username,
           uid:data.uid

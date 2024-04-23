@@ -14,6 +14,7 @@ import {DxcApiToken} from "../../../base/DxcApiToken";
 import {DeviceCacheFlavor, DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {Nullable} from "../../../base/Nullable";
+import {Location} from "@angular/common";
 
 export interface ProjectMenuEvent extends MenuEvent {
   win?:any
@@ -162,6 +163,12 @@ export class ProjectService extends DxcApiService {
 
   progressUpload:any;
   subscriptionUpload:any;
+
+    /**
+     * An observable to trigger switch and rendering of a another project
+     */
+  showProject$:Subject<DexcaliburProject> = new Subject();
+
   /**
    *
    * @param {AppMenuService} appmenuSvc
@@ -174,6 +181,7 @@ export class ProjectService extends DxcApiService {
                private devSvc:DeviceManagerService,
                private tagSvc:TagService,
                private outputSvc:OutputService,
+               private _location: Location,
                protected override _http:HttpClient) {
     super(
       {
@@ -331,11 +339,72 @@ export class ProjectService extends DxcApiService {
 
       this.authSvc.onAuthentication.subscribe( (pEvent:AuthenticationEvent) => {
         switch(pEvent.type){
-          case AuthenticationEventType.AUTH_SUCCESS:
-            this.listProjects().subscribe( (pEvent)=>{
-              this.projects = pEvent;
-              this.onRefreshAll.next(this.projects );
-            });
+            case AuthenticationEventType.AUTH_SUCCESS:
+              // if authentication success, retrieve project list
+
+                // if PUID is null, search remote active project and load it
+                /*
+                if(!DxcApiToken.exists("puid")){
+                    this.getActiveProject("project-svc:on-auth").subscribe((vProjects)=>{
+                        if(vProjects!=null && vProjects.length==1){
+                            // change project
+                            this.showProject$.next(vProjects[0])
+                        }
+                    });
+                }else{
+                    const proj = new DexcaliburProject(
+                        {},
+                        (DxcApiToken.getInstance("puid") as any).getToken()
+                    );
+
+
+                    this.getProjectInfo(proj)
+                        .subscribe((vProject)=>{
+                            for(let k in vProject) (proj as any)[k]=vProject[k];
+
+                            console.log("[PROJECT SVC] Project onAuthentication SUCCESS > ",proj);
+                            this.showProject$.next(proj)
+                    });
+                }*/
+
+
+                this.getActiveProject("project-svc:on-auth").subscribe((vProjects)=>{
+
+                    if(vProjects==null) return;
+
+                    if(!DxcApiToken.exists("puid")){
+                        if(vProjects.length==1){
+                            // change project
+                            this.showProject$.next(vProjects[0])
+                        }
+                    }else{
+                        const proj = new DexcaliburProject(
+                            {},
+                            (DxcApiToken.getInstance("puid") as any).getToken()
+                        );
+
+                        if(vProjects.map(x => x.uid).indexOf(proj.uid)>-1){
+                            // if the specified project is active (remotely opened), then open it
+                            this.getProjectInfo(proj)
+                                .subscribe((vProject)=>{
+                                    for(let k in vProject) (proj as any)[k]=vProject[k];
+
+                                    console.log("[PROJECT SVC] Project onAuthentication SUCCESS > ",proj);
+                                    this.showProject$.next(proj)
+                                });
+                        }else{
+                            // TODO : load / open project
+                        }
+                    }
+                });
+
+                this.listProjects().subscribe( (pEvent)=>{
+                  this.projects = pEvent;
+                  console.log("[PROJECT SVC] List of projects ",pEvent);
+                  this.onRefreshAll.next(this.projects );
+                });
+
+
             break;
           case AuthenticationEventType.LOGOUT_SUCCESS:
             this.projects = [];
@@ -355,7 +424,32 @@ export class ProjectService extends DxcApiService {
             }
           })
         }
-      })
+      });
+
+      this.showProject$.subscribe((vProject:DexcaliburProject)=>{
+
+          console.log("[PROJECT SVC] Showing project > ",vProject);
+
+          this.switchTo(vProject).subscribe((vData:DexcaliburProject)=>{
+              console.log('[PROJECT SVC] switched to project: ', vProject);
+              this._location.replaceState('/home/'+vProject.uid,'');
+          })
+
+          /*
+          DxcApiToken.remove("puid");
+          DxcApiToken.create("puid",vProject.uid);
+
+          this.getProjectInfo(vProject).subscribe((pEvent)=>{
+
+
+              this.outputSvc.print(OutputMessage.newSuccess({ msg:"Displaying project  : "+vProject.uid, src:'' }));
+              this._refreshDefaultDeviceFor(pEvent);
+              this.selected = pEvent;
+              this._beforeProjectReady(pEvent);
+              //this.onProjectReady.next(pEl);
+              // this.appmenuSvc.onProjectOpen();
+          });*/
+      });
   }
 
 
@@ -428,18 +522,23 @@ export class ProjectService extends DxcApiService {
   }
 
   /**
+   * To prepare UI prior to display a project
    *
    * @param pEl
    * @param pRefreshAppMenu
    * @private
    */
   private _beforeProjectReady( pEl:any, pRefreshAppMenu = true){
-    this.tagSvc.listTags().subscribe((vtags)=>{
-      this.onProjectReady.next(pEl);
-      if(pRefreshAppMenu){
-        this.appmenuSvc.onProjectOpen();
+      if(DxcApiToken.exists("puid")){
+          this.tagSvc.listTags().subscribe((vtags)=>{
+              this.onProjectReady.next(pEl);
+              if(pRefreshAppMenu){
+                  this.appmenuSvc.onProjectOpen();
+              }
+          });
+      }else{
+          throw new Error("Cannot prepare project : PUID is null.")
       }
-    });
   }
 
   openProject( pProject:DexcaliburProject) :Observable<any> {
@@ -490,6 +589,8 @@ export class ProjectService extends DxcApiService {
     );
   }
 
+
+
   private _refreshSelectedProject():any {
     if(this.selected!=null){
       this.getProjectInfo(this.selected).subscribe((pEvent)=>{
@@ -522,7 +623,7 @@ export class ProjectService extends DxcApiService {
           }
 
           // refresh activeProject list
-          this.getActiveProject().subscribe(()=>{ return; });
+          this.getActiveProject("project-svc:close").subscribe(()=>{ return; });
         }else{
           this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:"Project has not been closed. Cause : "+pEl.msg}));
         }
@@ -708,18 +809,23 @@ export class ProjectService extends DxcApiService {
    *
    * It should be called only when a new window pops or when a project is closed.
    */
-  getActiveProject():Observable<DexcaliburProject[]> {
+  getActiveProject(pSource = ""):Observable<DexcaliburProject[]> {
     return this._process(
       this.endpoints['project']['active']
     ).pipe(
       map((pEl:any)=>{
-        console.log('Project service > getActiveProject > ',pEl);
+        console.log('Project service > getActiveProject [from='+pSource+'] > ',pEl);
 
         if(pEl.success){
-          if(pEl.data != null && pEl.data.length==1){
+          /*if(pEl.data != null && pEl.data.length==1){
 
             this.activeProject = [];
             const project = pEl.data[0];
+
+
+
+            DxcApiToken.remove("puid");
+            DxcApiToken.create("puid", project.uid);
 
             this._refreshDefaultDeviceFor(project);
 
@@ -729,7 +835,7 @@ export class ProjectService extends DxcApiService {
             //this.appmenuSvc.onProjectOpen();
 
             this._beforeProjectReady(project);
-          }
+          }*/
 
           return pEl.data;
         }
@@ -737,6 +843,10 @@ export class ProjectService extends DxcApiService {
     );
   }
 
+    /**
+     * To select another active project
+     * @param pProject
+     */
   selectActiveProject(pProject:DexcaliburProject): Observable<any> {
     return this._process(
       this.endpoints['project']['set_active'],
@@ -745,23 +855,38 @@ export class ProjectService extends DxcApiService {
       }
     ).pipe( map( (pData:any)=>{
         if(pData.success){
-//          this.onProjectReady.next( pProject );
-
           this._beforeProjectReady(pProject, false);
+          return pData;
         }else{
           this.outputSvc.print( OutputMessage.newError({ msg:pData.msg, src:"Project Manager"}));
+          return null;
         }
-        return pData;
     }));
   }
 
-  switchTo(pProject:DexcaliburProject) {
-    this._refreshDefaultDeviceFor(pProject);
-    this.selected = pProject;
-    // select remotely for the current user
-    this.selectActiveProject(pProject).subscribe();
-//    this.onProjectReady.next( pProject );
-    this._beforeProjectReady( pProject);
+/**
+ * To switch
+ * @param pProject
+ */
+  switchTo(pProject:DexcaliburProject):Observable<any> {
+
+      console.log("Switch to > ",pProject);
+
+        /*this.getProjectInfo(pProject).subscribe((pEvent)=>{
+            this._refreshDefaultDeviceFor(pEvent);
+            this.selected = pEvent;
+            this._beforeProjectReady(pEl);
+            //this.onProjectReady.next(pEl);
+            // this.appmenuSvc.onProjectOpen();
+        });*/
+
+        DxcApiToken.remove("puid");
+        DxcApiToken.create("puid", pProject.uid)
+
+        this._refreshDefaultDeviceFor(pProject);
+        this.selected = pProject;
+        // select remotely for the current user
+        return this.selectActiveProject(pProject);
   }
 
   /**
@@ -829,7 +954,6 @@ export class ProjectService extends DxcApiService {
   }
 
   isProjectIsOpen() {
-    console.log("Is a project open. ? ",this.selected);
     return (this.selected != null);
   }
 

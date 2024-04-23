@@ -184,7 +184,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               icon: GLOBAL_ICONS['WINDOW']
             }),
             new MenuItem<CodeItem>({
-              id:CODE_SUBVIEW.APP,
+              id:CODE_SUBVIEW.APP_LIBS,
               label:'Application Libs',
               color: 'dxc-text-clear75',
               icon: GLOBAL_ICONS['WINDOW']
@@ -660,6 +660,54 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
             //this.changeDetectorRef.detectChanges();
 
             break;
+          case CODE_SUBVIEW.APP_LIBS:
+            this.packages[CODE_SUBVIEW.APP_LIBS] = [];
+            packages.map( (pPkg:any,pIndex:number)=> {
+
+              if (p > 0 && (p % 200 === 0)) {
+                console.log("detect changes", p);
+                //this.changeDetectorRef.detectChanges();
+                //this.changeDetectorRef.markForCheck();
+              }
+
+
+              this.packages[CODE_SUBVIEW.APP_LIBS].push(pPkg);
+            });
+              /*
+              if( this.tags.STATIC.match(pPkg) || this.tags.DYNAMIC.match(pPkg)){
+
+                if(pPkg._t=='c'){
+                  // it happens when a class is not contaiend into a package
+                  pPkg._icon = this.icons['CLASS'];
+                  this.packages[CODE_SUBVIEW.APP].push(pPkg);
+                  p++;
+
+                  return ;
+                }
+
+                c = [];
+                pPkg._icon = this.icons['PKG'];
+
+                pPkg.children.map( (vChild:any)=>{
+                  if( this.tags.STATIC.match(vChild) || this.tags.DYNAMIC.match(vChild)){
+                    if(vChild._t=='c'){
+                      vChild._icon = this.icons['CLASS'];
+                    }else{
+                      vChild._icon = this.icons['PKG'];
+                    }
+                    vChild._e = true;
+                    c.push(vChild);
+                  }
+                });
+                pPkg.children = c;
+                this.packages[CODE_SUBVIEW.APP].push(pPkg);
+                p++;
+              }
+            });*/
+
+            //this.changeDetectorRef.detectChanges();
+
+            break;
           case CODE_SUBVIEW.ANDROID_API:
           case CODE_SUBVIEW.ANDROID_FWK:
             this.packages[pEvent.item.id] = [];
@@ -701,6 +749,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   reset():void {
     this.packages[CODE_SUBVIEW.APP] = [];
+    this.packages[CODE_SUBVIEW.APP_LIBS] = [];
     this.packages[CODE_SUBVIEW.ALL] = [];
     this.packages[CODE_SUBVIEW.VENDOR] = [];
     this.packages[CODE_SUBVIEW.ANDROID_FWK] = [];

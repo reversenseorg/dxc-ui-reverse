@@ -67,6 +67,13 @@ export class CodeControllerService extends DxcApiService{
           auth:false /* removed */,
           puid: true
         },
+        app_libs: {
+          method: 'GET',
+          url: '/code/package?format=tree&filter2=tags:ds&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
+          format: 'json',
+          auth:false /* removed */,
+          puid: true
+        },
         app_dyn: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:dd&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
@@ -293,6 +300,9 @@ export class CodeControllerService extends DxcApiService{
     switch(pName){
       case CODE_SUBVIEW.APP:
         endpoint = this.endpoints['package']['app'];
+        break;
+      case CODE_SUBVIEW.APP_LIBS:
+        endpoint = this.endpoints['package']['app_libs'];
         break;
       case CODE_SUBVIEW.ANDROID_API:
         endpoint = this.endpoints['package']['android_api'];

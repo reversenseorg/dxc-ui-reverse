@@ -165,6 +165,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
       this.view.tab.label = pData.name as string;
     }
 
+    console.log("View Inspector > ",this.data);
   }
 
   onClose(): boolean {
@@ -200,11 +201,23 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   showEventsRegistered(pWidth:number):void{
     this.activeLeft = 'er';
     this.activeWidth = pWidth;
+
+    console.log(this.data);
   }
 
   showEventsCaptured(pWidth:number):void{
     this.activeLeft = 'ec';
     this.activeWidth = pWidth;
+
+    console.log(this.data);
+  }
+
+
+  showActions(pWidth: number) {
+    this.activeLeft = 'ac';
+    this.activeWidth = pWidth;
+
+    console.log(this.data);
   }
 
   showStrategy(pWidth:number, pStrat:Nullable<HookStrategy> = null) {
@@ -257,6 +270,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
         // refresh editor ref before to populate it
         this._viewRef.detectChanges();
 
+
         break;
     }
   }
@@ -293,4 +307,5 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     this.fragEditor.value = pFrag.tpl;
     this.fragEditor.getEditor().resize();
   }
+
 }

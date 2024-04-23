@@ -65,7 +65,7 @@ export class Inspector
     hookset: Nullable<HookSet> = null;
     staticTasks:StaticTask[] = [];
     running:boolean = false;
-    listener:ListenerList = {};
+    listener:Record<string,any>/*ListenerListμ*/= {};
 
     events:string[] = [];
 
@@ -90,6 +90,11 @@ export class Inspector
                 switch(i){
                   case 'hooks':
                     this.hookset = new HookSet(config[i]);
+                    break;
+                case 'preRegisteredTags':
+                    this.preRegisteredTags = [];
+                    //= new HookSet(config[i]);
+
                     break;
                   default:
                     (this as IStringIndex<any>)[i] = config[i];

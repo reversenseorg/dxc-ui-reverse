@@ -94,7 +94,7 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
   ngAfterViewInit() {
 
     console.log(this.modals);
-    this.projectSvc.getActiveProject().subscribe( (pProjects:DexcaliburProject[]) => {
+    this.projectSvc.getActiveProject("active-project:after-view-init").subscribe( (pProjects:DexcaliburProject[]) => {
       if(pProjects.length<1) return;
       if(pProjects.length==1) {
         this.project = pProjects[0];
@@ -116,7 +116,7 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
 
     this.projectSvc.onMenuClick.subscribe( (pEvent:any)=>{
       if(pEvent.item=="active"){
-        this.projectSvc.getActiveProject().subscribe( (pProjects:DexcaliburProject[]) => {
+        this.projectSvc.getActiveProject("active-project:proj-menu-click").subscribe( (pProjects:DexcaliburProject[]) => {
           this.projects = pProjects;
 
 
@@ -159,7 +159,7 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
       console.log(pSuccess);
       if(pSuccess){
         //if(this.projects.length-1>1){
-          this.projectSvc.getActiveProject().subscribe( (pProjects:DexcaliburProject[]) => {
+          this.projectSvc.getActiveProject("active-project:proj-close").subscribe( (pProjects:DexcaliburProject[]) => {
             if(pProjects.length<2) {
               this.projects = [];
               if(pProjects.length==1)

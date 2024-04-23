@@ -67,12 +67,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     document.documentElement.setAttribute('data-theme', 'dark');
     this.elementRef = elementRef;
 
-    this.authService.getUserInfo().subscribe((pUser)=>{
-      console.log("USer account ",pUser);
+    /*this.authService.getUserInfo().subscribe((pUser)=>{
       if(pUser != null){
         this.authService.onAuthentication.next(AuthenticationEvent.newSuccess( new DxcApiToken("local",""), pUser))
       }
-    });
+    });*/
   }
 
   ngOnInit() {

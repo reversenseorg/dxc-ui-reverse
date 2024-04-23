@@ -319,7 +319,7 @@
                             <dxc-audit-control [control]="a" [style]="{'backgroundColor':selectedData.getStyle().bgColor}" (onDryRunSuccess)="execResults=$event"></dxc-audit-control>
                         </ng-container>
                         <ng-container  *ngFor="let a of selectedData.assessments">
-                          <dxc-audit-assessment [assessement]="a" (onDryRunSuccess)="execResults=$event"></dxc-audit-assessment>
+                            <dxc-audit-assessment [assessement]="a" (onDryRunSuccess)="execResults=$event"></dxc-audit-assessment>
                         </ng-container>
                       </ng-container>
                     </dxc-box>

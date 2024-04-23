@@ -17,8 +17,6 @@
 
       <ng-container *ngIf="projectReady">
         <app-expandable-list>
-
-
           <ng-container *ngFor="let cat of data.children">
             <ng-template #expItem let-itemObj="item" >
               <span *ngIf="itemObj.__==NODE_TYPES.TAG_CATEGORY" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
@@ -38,7 +36,6 @@
               [expandableFn]="isExpandable"
               (itemFocus)="onItemFocus($event)"
             >
-
             </app-expandable-item>
           </ng-container>
         </app-expandable-list>

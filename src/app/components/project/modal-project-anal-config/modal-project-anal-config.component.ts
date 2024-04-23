@@ -50,7 +50,7 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
   @Input() message:Nullable<Message> = null;
 
   @ViewChild(ModalBaseComponent) modal:ModalBaseComponent;
-  @ViewChild("selectABI", {read: ElementRef}) selectABIref: ElementRef;
+  //@ViewChild("selectABI", {read: ElementRef}) selectABIref: ElementRef;
 
   gIcons:any = GLOBAL_ICONS;
 
@@ -129,8 +129,8 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
     this.projSvc.listSupportedAbi().subscribe((ABIs)=>{
       this.supportedAbi = ABIs;
     });
-    console.log("selectABIref",this.selectABIref);
-    this.selectABIref.nativeElement.onMouseDown(()=>{});
+    //console.log("selectABIref",this.selectABIref);
+    //this.selectABIref.nativeElement.onMouseDown(()=>{});
   }
 
 
@@ -194,6 +194,7 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
    */
   startAnalysis(){
     if(this.onStart != null){
+      this.close();
       (this.onStart)({
         na_auto: this.na_auto,
         fa_mode: this.fa_mode,

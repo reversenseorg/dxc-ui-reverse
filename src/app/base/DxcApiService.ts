@@ -201,8 +201,6 @@ export class DxcApiService {
                                 reportProgress:false
                               }):Observable<any>{
 
-    console.log("BASE URL = ",this._baseURL);
-
     let url:string = this._baseURL; //this.getBaseUrl(); //environment.apiUrl ;
     const extra:any = {};
 
@@ -230,6 +228,7 @@ export class DxcApiService {
             url += `&_puid=${(DxcApiToken.getInstance( "puid") as DxcApiToken).getToken()}`;
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"ProjectUID token is required but not set."}));
+            console.log("ProjectUID token is required but not set. [method="+pEndpoint.method+"][url="+url+"]");
             return from([]);
           }else{
             throw new Error("ProjectUID token is required but not set.");
@@ -245,6 +244,7 @@ export class DxcApiService {
 
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"API token is required but not set."}));
+            console.log("API token is required but not set. [method="+pEndpoint.method+"][url="+url+"]");
             return from([]);
           }else{
             throw new Error("API token is required but not set.");
@@ -288,6 +288,7 @@ export class DxcApiService {
             }
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"ProjectUID token is required but not set."}));
+            console.log("ProjectUID token is required but not set. [method="+pEndpoint.method+"][url="+url+"]");
             return from([]);
           }else{
             throw new Error("ProjectUID token is required but not set.");
@@ -305,6 +306,7 @@ export class DxcApiService {
 
           }else if (this._output != null){
             this._output.print( OutputMessage.newError({msg:"API token is required but not set."}));
+            console.log("API token is required but not set. [method="+pEndpoint.method+"][url="+url+"]");
             return from([]);
           }else{
             throw new Error("API token is required but not set.");

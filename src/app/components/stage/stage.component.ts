@@ -235,11 +235,26 @@ export class StageComponent implements OnInit, AfterViewInit {
     this._activatedRoute
         .params.subscribe((c)=> {
 
-        console.log(c);
+        if(!DxcApiToken.ready){
+          DxcApiToken.importLocalStorage();
+        }
 
-        if (c.id != "") {
+        let puid = null;
+        if(c.id!=null && c.id!=AuthService.IGNORE_PUID){
+          puid = c.id;
+          console.log("PUID token retrieve from URL.")
+        }else if(DxcApiToken.exists("puid")){
+          try{
+            puid = DxcApiToken.getInstance("puid")?.getToken();
+            console.log("PUID token found in local storage.")
+          }catch(e){ /* trigged if PUID token not exists */ }
+        }else{
+          console.log("PUID token not found.")
+        }
+
+        if (puid != null) {
           this.authSvc.onLogin$.next({
-            project:c.id,
+            project: puid,
             node_id: c.node_id,
             node: c.node
           })
@@ -454,17 +469,21 @@ export class StageComponent implements OnInit, AfterViewInit {
 
     this.authSvc.onAuthentication.subscribe( (pEvent:AuthenticationEvent)=>{
       if(pEvent.type == AuthenticationEventType.AUTH_SUCCESS){
-        console.log(pEvent);
+        console.log("[STAGE] Authentication successful. ", pEvent);
 
         if(pEvent.token==null){
-          throw UIException.AUTH_ERROR("Channel cannot be established because token is missing");
+          return;
+          //throw UIException.AUTH_ERROR("Channel cannot be established because token is missing");
         }
 
         this.conn = {
           name: pEvent.token.getName(),
           user: pEvent.user
         };
+
         this.initStatusChannel();
+
+
       }
     });
 

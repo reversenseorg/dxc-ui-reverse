@@ -1,4 +1,5 @@
-<div  [class.dxc-hidden]="hiddenForce" class="container-fluid viewport-inspector" [ngStyle]="{ 'padding':'0px'}">
+<div [class.dxc-hidden]="hiddenForce" class="container-fluid viewport-inspector" [ngStyle]="{ 'padding':'0px'}"
+     xmlns="http://www.w3.org/1999/html">
 
  <!-- <dxc-breadcrumb>
     <dxc-breadcrumb-item [fixed]="true">Inspector :</dxc-breadcrumb-item>
@@ -19,6 +20,8 @@
           <app-subnavbar-btn [active]="activeLeft=='st'"  (click)="showStrategy(30)">Strategies</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='hk'"  (click)="showHooks(100)">Hooks</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='er'"  (click)="showEventsRegistered(30)">Pipes</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='er'"  (click)="showActions(30)">Actions</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='tg'"  (click)="showActions(30)">Tags</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='ec'"  (click)="showEventsCaptured(50)">Events</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
@@ -47,47 +50,60 @@
         </ng-container>
       </div>
 
+
+        <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='tg')">
+            <ng-container *ngFor="let h of hooks">
+                <div class="row hook-row" (click)="openNode(h, h.__)">
+                    <div class="col-lg-1">
+                        <dxc-icon [model]="h.enable? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
+                    </div>
+                    <div class="col-lg-9 hook-label">
+                        <span *ngIf="h.method">{{ h.method.__signature__ }}</span>
+                        <span *ngIf="h.func">{{ h.func.__signature__ }}</span>
+                    </div>
+                    <div class="col-lg-2">
+                        <dxc-icon [model]="gIcons['START_OBSERVE']" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
+                        <dxc-icon [model]="gIcons['EDIT']" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
+                        <dxc-icon [model]="gIcons['HELPER']" [color1]="'ml-2 dxc-text-darker'"></dxc-icon>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
       <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='er')">
         <div class="row category">
           <div class="col-lg-12">
-            <b>Input pipes</b>
+            <b>Filtered events</b>
           </div>
         </div>
         <ng-container *ngFor="let l of data.listener | keyvalue">
           <div class="row hook-row">
-            <div class="col-lg-10">
-              {{ l.key }}
+            <div class="col-lg-10" *ngIf="l.value != null">
+              {{ l.value.n }}
             </div>
             <div class="col-lg-2">
-              <dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>
+              <!--<dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>-->
             </div>
           </div>
         </ng-container>
         <div class="row category">
           <div class="col-lg-12">
-            <b>Output pipes</b>
+            <b>Emitted events</b>
           </div>
         </div>
-        <ng-container *ngIf="data.events.length>0; then pipeOut else noPipeOut"></ng-container>
-        <ng-template #pipeOut>
-          <ng-container *ngFor="let e of data.events" >
-            <div class="row">
-              <div class="col-lg-10">
-                {{ e }}
-              </div>
-              <div class="col-lg-2">
-                <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
-              </div>
-            </div>
+          <ng-container *ngIf="data.hookset!=null">
+              <ng-container *ngFor="let e of data.hookset.strats" >
+                  <div class="row hook-row">
+                      <div class="col-lg-10">
+                          {{ e.emitEvent }}
+                      </div>
+                      <div class="col-lg-2">
+                          <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
+                      </div>
+                  </div>
+              </ng-container>
           </ng-container>
-        </ng-template>
-        <ng-template #noPipeOut>
-          <div class="row">
-            <div class="col-lg-12">
-              <i class="dxc-warning-icon">This inspector has not output pipes.</i>
-            </div>
-          </div>
-        </ng-template>
+
       </div>
 
       <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='st')">
@@ -98,18 +114,29 @@
           </div>
         </div>
         -->
-        <ng-container *ngIf="data.hookset">
+        <ng-container *ngIf="data.hookset && data.hookset.strats.length>0; else noStrategy">
           <ng-container *ngFor="let e of data.hookset.strats" >
             <div class="row hook-row" (click)="showDetail(NODE_TYPES.HOOK_STRATEGY, e)">
-              <div class="col-lg-10">
+              <div class="col-lg-6">
                 {{ e.name }}
               </div>
-              <div class="col-lg-2">
-                <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
+              <div class="col-lg-6">
+                  <dxc-meta [label]="e.emitEvent" [css]="'text-bg-info dxc-meta'"></dxc-meta>
               </div>
             </div>
           </ng-container>
         </ng-container>
+          <ng-template #noStrategy>
+              <div class="row g-0 mt-2">
+                  <div class="col-lg-2 offset-2">
+                      <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
+                  </div>
+                  <div class="col-lg-6 text-center">
+                      This Inspector doesn't have hooking strategy. See
+                      documentation or add a new one.
+                  </div>
+              </div>
+          </ng-template>
 
       </div>
 

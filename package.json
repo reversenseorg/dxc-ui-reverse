@@ -8,7 +8,8 @@
     "build:pro": "ng build --base-href /pro/",
     "build:pro-dev": "ln -s $PWD/dist/dxc-ui-reverse",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "skip": ""
   },
   "private": true,
   "dependencies": {
