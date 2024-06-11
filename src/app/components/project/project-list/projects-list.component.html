@@ -1,0 +1,81 @@
+<div>
+    <h5 *ngIf="title">{{ title }}</h5>
+
+    <div *ngIf="description!=null">
+        <p>{{ description }}</p>
+    </div>
+
+    <app-subnavbar  [type]="'navbar'"  [opts]="true" [parent]="this">
+        <ng-container options>
+            <!--app-subnavbar-btn  (click)="showModel()">Details</app-subnavbar-btn>-->
+            <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refreshProjects()"></app-subnavbar-btn>
+            <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
+            <app-subnavbar-btn  [icon]="gIcons['PLUS']" (click)="newProject()"></app-subnavbar-btn>
+            <app-subnavbar-btn  [icon]="gIcons['TRASH']" (click)="removeProject()"></app-subnavbar-btn>
+        </ng-container>
+    </app-subnavbar>
+
+
+    <div class="dxc-grid-body" [ngStyle]="{'height':height+'px', 'border-bottom':'none'}" style="overflow-y: auto">
+        <div *ngIf="projectList.length==0">
+
+            Loading projects ...
+        </div>
+        <ng-container *ngFor="let project of window; let index = index">
+            <div class="row g-0" [ngStyle]="{'height':rowHeight+'px'}" [ngClass]="{'focus':(project.uid==selected?.uid)}" (click)="selectProject(project, 'click')">
+                <div class="col-lg-7 ps-1">
+                        <ng-container [ngSwitch]="project.os">
+                            <dxc-icon *ngSwitchCase="'fireos'" [model]="gIcons['FIREOS']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'android'" [model]="gIcons['ANDROID']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'android2'" [model]="gIcons['ANDROID']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'ios'" [model]="gIcons['IOS']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'macos'" [model]="gIcons['IOS']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'tizen'" [model]="gIcons['ANDROID']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'webos'" [model]="gIcons['ANDROID']"></dxc-icon>
+                            <dxc-icon *ngSwitchCase="'window'" [model]="gIcons['ANDROID']"></dxc-icon>
+                        </ng-container>
+                    <b class="dxc-text-100 dxc-noselect">&nbsp;{{ project.uid }}</b>
+                </div>
+                <div class="col-lg-2">
+                    <dxc-meta [label]="project.archs[0]"> </dxc-meta>
+                </div>
+                <div class="col-lg-3">
+                    <ng-container *ngIf="project.meta.lastOpenDate">{{ project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'}}</ng-container>
+                    <ng-container *ngIf="!project.meta.lastOpenDate">{{ project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'}}</ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div *ngIf="pagignation" class="dxc-navbar">
+        <div class="col-lg-6 offset-6">
+            <dxc-paginator [rows]="rows"  [totalRecords]="projectList.length" (onPageChange)="onPageChange($event)"></dxc-paginator>
+        </div>
+
+        <!--<div class="flex align-items-center justify-content-end">
+            <span class="mx-1 text-color">Items per page: </span>
+            <p-dropdown [options]="pagingOpts" optionLabel="label" optionValue="value" [(ngModel)]="windowSize" (ngModelChange)="windowStartAt = 0"></p-dropdown>
+            <p-paginator [first]="windowStartAt" [rows]="windowSize" [totalRecords]="projectList.length" (onPageChange)="pageChange($event)" [showCurrentPageReport]="true"
+                         currentPageReportTemplate="{first} - {last} of {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false"></p-paginator>
+        </div>-->
+    </div>
+</div>
+
+<!--
+<p-toast></p-toast>
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless">
+        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+            <div class="border-circle bg-red-600 inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+                <i class="pi pi-question text-5xl text-white"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-4">Are you sure to drop this project ?</span>
+            <p class="mb-0">To confirm, please enter the name of the project : </p>
+            <input pInputText type="text" class="p-inputtext-sm w-full mt-2"  placeholder="Small" [(ngModel)]="confirmInput" (change)="onConfirmInput($event)" />
+            <div class="flex align-items-center gap-2 mt-4">
+                <button pButton label="Yes" [disabled]="!canDrop"  (click)="cd.accept()" class="p-button-danger w-8rem"></button>
+                <button pButton label="No" (click)="cd.reject()" class="p-button-outlined w-8rem "></button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>
+-->

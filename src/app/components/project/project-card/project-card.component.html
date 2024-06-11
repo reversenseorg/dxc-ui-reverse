@@ -1,0 +1,23 @@
+<div class="project-card" [ngStyle]="{ 'height':height+'px'}">
+    <div class="row">
+        <div *ngIf="project.icon!=null" class="col-lg-3">
+            &nbsp;
+        </div>
+        <div [ngClass]="['col-lg-'+(project.icon!=null?'6':'9')]">
+            <h5 class="project-name">{{ project.uid }}</h5>
+            <i class="project-app">{{ project.pkg }}</i>
+        </div>
+        <div class="col-lg-3">
+            <dxc-meta [label]="project.os" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
+            <p>
+                {{ project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'}}
+            </p>
+            <p>
+                {{ project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'}}
+            </p>
+        </div>
+    </div>
+    <div>
+        <dxc-meta [label]="'Engine Version : '+project.engineVersion" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
+    </div>
+</div>

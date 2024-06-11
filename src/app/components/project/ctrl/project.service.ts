@@ -201,7 +201,8 @@ export class ProjectService extends DxcApiService {
           info: { method: 'GET', url:'/project/info/:uid', format:'json', auth:false /* removed */ },
           active: { method: 'GET', url:'/project/active', format:'json', auth:false /* removed */ },
           set_active: { method: 'POST', url:'/project/active', format:'json', auth:false /* removed */},
-          close: { method: 'POST', url:'/project/close', format:'json', auth:false /* removed */, puid:true }
+          close: { method: 'POST', url:'/project/close', format:'json', auth:false /* removed */, puid:true },
+            list: { method: 'GET', url:'/project/list', format:'json', auth:false, puid:false }
         },
         settings: {
           list_abi: { method:'GET', url:'/native/public/settings/abi', format:'json'}
@@ -398,7 +399,7 @@ export class ProjectService extends DxcApiService {
                     }
                 });
 
-                this.listProjects().subscribe( (pEvent)=>{
+                this.listProjects2().subscribe( (pEvent)=>{
                   this.projects = pEvent;
                   console.log("[PROJECT SVC] List of projects ",pEvent);
                   this.onRefreshAll.next(this.projects );
@@ -492,7 +493,35 @@ export class ProjectService extends DxcApiService {
     );
   }
 
-  removeProject( pProject:DexcaliburProject) :Observable<any> {
+
+    /**
+     * To list all project from local server
+     *
+     * @return {Observable<DexcaliburProject[]>} An array containing all projects
+     * @method
+     */
+    listProjects2():Observable<DexcaliburProject[]>{
+        return this._process(
+            this.endpoints.project.list, {}
+        ).pipe(
+            map((pEl:any)=>{
+
+                console.log('listProjects2 > ',pEl);
+                if(pEl.success){
+                    const proj:DexcaliburProject[] = [];
+                    const p = pEl.data;
+                    p.map( (x:any) => proj.push(  DexcaliburProject.fromJsonObject( x)));
+                    return proj;
+                }else{
+                    this.outputSvc.print( OutputMessage.newError({ msg:"List of projects cannot be retrieved" }));
+                    return [];
+                }
+            })
+        );
+    }
+
+
+    removeProject( pProject:DexcaliburProject) :Observable<any> {
 
 
     // lock service, prevent concurrent exec
