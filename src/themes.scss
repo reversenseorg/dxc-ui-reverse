@@ -127,6 +127,11 @@ $dark-scrollbar-bg: #555;
   --input-text: #{$dark-input-text};
 
 
+  --card-bg: #{$dark-input-bg};
+  --card-text: #{$dark-explorer-textColor};
+  --card-text-high: yellow;
+  --card-border-radius: 5px;
+
   --info-color: #fff;
   --info-bg: #28428d;
   --warning-color: #000000;

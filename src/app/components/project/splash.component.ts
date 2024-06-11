@@ -31,15 +31,16 @@ const PKG_INFO = require("../../../../package.json");
       <span class="dxcanim"></span>
       <span class="dxcanim"></span>
       <span class="dxcanim"></span>
-      <div class="row banner" #banner>
-        <div class="col-lg-6 offset-2">
-          <h1>DEXCALIBUR PRO</h1>
-        </div>
-        <div class="col-lg-2">
-          <img height="128" src="assets/icons/dexcalibur_256.png" />
-        </div>
-      </div>
+      
       <div class="container-fluid menu-ctn" #body>
+        <div class="row banner" #banner>
+          <div class="col-lg-6 offset-2">
+            <h1>DEXCALIBUR PRO</h1>
+          </div>
+          <div class="col-lg-2">
+            <img height="128" src="assets/icons/dexcalibur_256.png" />
+          </div>
+        </div>
         <div class="row menu">
           <div class="fixed menu-entry">
             <!--<div class="action" (click)="showRecents()" [routerLinkActive]="active" [class.active]="active=='recents'">
@@ -50,9 +51,6 @@ const PKG_INFO = require("../../../../package.json");
             </div>
             <div class="action" (click)="showNewProject()"  [class.active]="active=='new'">
               <fa-icon [icon]="['fas','plus']" class="icon"></fa-icon>
-            </div>
-            <div class="action" (click)="showInfo()"  [class.active]="active=='info'">
-              <fa-icon [icon]="['fas','info']" class="icon"></fa-icon>
             </div>
           </div>
           <div class="col menu-view">

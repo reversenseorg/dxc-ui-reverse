@@ -15,37 +15,40 @@ import {Nullable} from "../../base/Nullable";
   selector: 'dxc-project-open',
   template: `
     <div class="splash-panel openproject">
-      <div class="header">
-        <h4>Open project</h4>
-      </div>
       <div class="container-fluid body">
+        <h5>Workspace</h5>
         <div class="row ml-0 mr-0">
           <div class="col-lg-6">
+            <dxs-projects-list [height]="300" [pagignation]="true" (selectOne)="selectedProject = $event" (refreshed)="updateRender()"></dxs-projects-list>
+            <!--
             <div class=" row project-menu">
               <div class="col-lg-8">
                 {{ projectsCount }} projects found.
               </div>
               <div class="col-4"><button class="btn dxc-text-clear100">
-                <!--<fa-icon [icon]="['fas','download']"></fa-icon>&nbsp;import-->
               </button></div>
             </div>
             <div class="project-list">
               <ng-container *ngFor="let proj of projects; let i = index;">
                 <div class="row project" [ngClass]="{ 'selected': (selectedUid==proj.uid) }" (click)="showProjectInfo(proj)" (dblclick)="openProject(proj)">
-                  <!--<div class="col-2 logo">
-                    <img height="32" src="/assets/icons/dexcalibur_16.png"/>
-                  </div>-->
-                  <div class="col-10 label">
+                  
+                  <div class="col-8 label">
                     <h4 class="dxc-noselect">{{ proj.uid }}</h4>
                   </div>
+                  
+                  <div class="col-2 label">
+                    {{ proj.meta.lastOpenDate | date:'dd/MM/yyyy HH:mm:ss'}} 
+                  </div>
                   <div class="col-2 opts">
-                    <fa-icon [icon]="['fab','android']" class="text-success"></fa-icon>
+                    <fa-icon *ngIf="proj.os=='android'" [icon]="['fab','android']" class="text-success"></fa-icon>
                   </div>
                 </div>
               </ng-container>
-            </div>
+            </div>-->
           </div>
           <div class="col-lg-6">
+            <dxs-project-card *ngIf="selectedProject" [project]="selectedProject" [height]="200"></dxs-project-card>
+            <!--
             <div *ngIf="selectedProject != null" class="project-details">
               <img height="32" [src]="selectedProject.icon.localPath" style="user-select:none"/>
                 <div class="label">
@@ -65,7 +68,7 @@ import {Nullable} from "../../base/Nullable";
                   </button>
                 </div>
               </div>
-            </div>
+            </div>-->
           </div>
         </div>
 
@@ -73,8 +76,8 @@ import {Nullable} from "../../base/Nullable";
       </div>
     </div>
   `,
-  styleUrls: ['./project.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./project.component.scss']
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OpenProjectComponent implements OnInit {
 
@@ -105,7 +108,14 @@ export class OpenProjectComponent implements OnInit {
   }
 
   private _updateProjectList(pProjects:DexcaliburProject[]):void {
-    this.projects = pProjects;
+
+    // sort project by time by default
+    this.projects = pProjects.sort((vProjA, vProjB)=>{
+        return (vProjA.meta.lastOpenDate > vProjB.meta.lastOpenDate)? 1 : -1;
+    });
+
+    console.log(pProjects);
+
     this.projectsCount = pProjects.length;
     if (this.projectsCount == 0) {
       this.selectedProject = null;
@@ -114,7 +124,7 @@ export class OpenProjectComponent implements OnInit {
   }
 
   refresh(){
-    this.projectService.listProjects().subscribe( (pProjects:DexcaliburProject[])=>{
+    this.projectService.listProjects2().subscribe( (pProjects:DexcaliburProject[])=>{
       this._updateProjectList(pProjects);
     });
   }
@@ -169,5 +179,9 @@ export class OpenProjectComponent implements OnInit {
       this.selectedProject = pEvent;
       this.selectedProject.icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
     });
+  }
+
+  updateRender() {
+    this.changeDetectorRef.detectChanges();
   }
 }
