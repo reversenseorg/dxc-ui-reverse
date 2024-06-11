@@ -20,6 +20,30 @@ export const GLOBAL_ICONS:IconModelCollection = {
     name: 'android',
     color1: 'dxc-icon-android'
   }),
+  FIREOS: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fab',
+    name: 'amazon',
+    color1: 'dxc-text-100'
+  }),
+  IOS: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fab',
+    name: 'apple',
+    color1: 'dxc-text-100'
+  }),
+  MACOS: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fab',
+    name: 'apple',
+    color1: 'dxc-text-100'
+  }),
+  MS_WINDOWS: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'windows',
+    color1: 'dxc-text-100'
+  }),
   INTERNAL: new IconModel({
     iconType: ICON_TYPE.ICON,
     type: 'fas',
@@ -454,6 +478,36 @@ export const GLOBAL_ICONS:IconModelCollection = {
     iconType: ICON_TYPE.ICON,
     type: 'fas',
     name: 'forward',
-    color1: 'dxc-icon-android', //'dxc-text-75',
+    color1: 'dxc-text-75d', //'dxc-text-75',
+  }),
+  SORT_A_Z: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'arrow-down-z-a',
+    color1: 'dxc-text-75', //'dxc-text-75',
+  }),
+  SORT_Z_A: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'arrow-down-a-z',
+    color1: 'dxc-text-75', //'dxc-text-75',
+  }),
+  SORT_0_9: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'arrow-down-1-9',
+    color1: 'dxc-text-75', //'dxc-text-75',
+  }),
+  SORT_9_1: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'arrow-down-9-1',
+    color1: 'dxc-text-75', //'dxc-text-75',
+  }),
+  MENU_EXTRA: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'ellipsis-vertical',
+    color1: 'dxc-text-75', //'dxc-text-75',
   }),
 };

@@ -2,17 +2,21 @@
  * @class
  * @author Georges-B. MICHEL
  */
-import {Inspector} from "./Inspector";
 import DexcaliburEngine from "./DexcaliburEngine";
 import {AppIcon} from "./AppIcon";
-import {Nullable} from "../base/Nullable";
 
 interface DigestSet {
-  [type:string] :string
+    [type:string] :string
 }
 
 export default class DexcaliburProject
 {
+
+    archs:string[]=[];
+
+    engineVersion:string = "?";
+
+    favorite:any= null;
 
     apk?:any = null;
 
@@ -32,23 +36,19 @@ export default class DexcaliburProject
      * @type {String}
      * @field Package name of the target
      */
-    pkg:Nullable<string> = null;
-    package:Nullable<string> = null;
+    pkg:string = "";
+    package:string = "";
 
     /**
      * @field Instance of project's configuration
      */
-    config:any = null;
+    config:any = {};
 
-    /**
-     * @field Flag
-     */
-    nofrida:boolean = false;
 
     /**
      * @field the default android API version to use.
      */
-    apiVersion:Nullable<string> = null;
+    apiVersion:string = "";
 
     // set the Search API which allow the user to perform search
     /**
@@ -64,17 +64,6 @@ export default class DexcaliburProject
      * @field The static analyzer for this project
      */
     analyze:any = null;
-
-    // dex helper
-    dexHelper:any = null;
-
-    //package Patcher
-    // packagePatcher:PackagePatcher = null;
-
-    // hook, deprecated here ?
-    hook:any = null;
-
-    // set the workspace API
     /**
      * @type {Workspace}
      * @field Project workspace
@@ -100,11 +89,11 @@ export default class DexcaliburProject
      */
     appAnalyzer = null;
 
-    /**
+    /*
      * @type {Inspector[]}
      * @field All inspectors
      */
-    inspectors:Inspector[] = [];
+    //inspectors:Inspector[] = null;
 
     // FridaBuilder make Frida script chunk from cls
     fridaBuilder:any = null;
@@ -137,12 +126,25 @@ export default class DexcaliburProject
     application:any = null; // AndroidApplication
 
     /**
+     * @type {*}
+     * @field Connector
+     */
+    connector:any = null;
+
+    /**
+     * @field
+     */
+    simplifier:any = null;
+
+    saveManager:any = null;
+
+    /**
      * Application Icon
      *
      * @type {AppIcon}
      * @field
      */
-    icon:Nullable<AppIcon> = null;
+    icon:AppIcon|null = null;
 
     /**
      * A set of package checksum
@@ -152,6 +154,9 @@ export default class DexcaliburProject
      */
     checksum:DigestSet = {};
 
+    meta:Record<string,number> = {};
+
+    os:string = "";
 
     /**
      *
@@ -163,6 +168,84 @@ export default class DexcaliburProject
 
         this.engine = pEngine;
         this.uid = pUID;
+    }
+
+
+    /**
+     * To select the way to store the internal data
+     *
+     * @param {String} pConnectorType Connector type
+     * @method
+     */
+    /*
+    setConnector( pConnectorType:string):void{
+        this.connector = ConnectorFactory.getInstance().newConnector( pConnectorType, this);
+    }*/
+
+    /**
+     * @return {boolean}
+     * @method
+     */
+    hasVM():boolean{
+        return this.platform.isVmSupported();
+    }
+
+    /**
+     * @return {DexcaliburVM}
+     * @method
+     */
+    getVM():any {
+        return this.platform.getNewDexcaliburVM(this);
+    }
+
+    /**
+     * @return {Simplifier}
+     * @method
+     */
+    getSimplifier():any{
+        // refresh binding
+        return this.simplifier;
+    }
+    /**
+     * To get DexcaliburEngine instance associated to this project
+     *
+     * @returns {DexcaliburEngine} DexcaliburEngine instance
+     * @method
+     */
+    getContext():DexcaliburEngine{
+        return this.engine;
+    }
+
+    /**
+     * To suggest a new project name
+     *
+     * @param {*} pUID
+     * @method
+     */
+    static suggests( pUID:string):string{
+        // bind suggest
+        return "";
+    }
+
+    /**
+     * To detect if there is a project with the specified UID
+     *
+     * @param {String} pUID Project UID
+     * @returns {Boolean} TRUE if a project exists, else FALSE
+     * @method
+     */
+    static exists( pUID:string):boolean{
+        /*
+        // refresh
+          let proj = DexcaliburWorkspace.getInstance().listProjects();
+          let status = false;
+
+          proj.map((vProject)=>{
+              if(vProject === pUID)
+                  status = true;
+          });
+  */
+        return false;
     }
 
 
@@ -179,20 +262,12 @@ export default class DexcaliburProject
     /**
      * To get the inspector with specified name
      *
-     * @param {string} pName name
-     * @returns {Nullable<Inspector>} Inspector instance
+     * @param {String} Inspector name
+     * @returns {Inspector} Inspector instance
      * @method
      */
-    getInspector( pName:string):Nullable<Inspector>{
-        const res = this.inspectors.filter((vInspector:Inspector)=>{
-            return (vInspector.name===pName);
-        });
-
-        if(res.length > 0){
-            return res[0];
-        }else{
-            return null;
-        }
+    getInspector( pName:string):any{
+        return null; //this.inspectors[pName];
     }
 
     /**
@@ -216,6 +291,25 @@ export default class DexcaliburProject
 
 
     /**
+     *
+     * @param {*} pPath
+     */
+    useAPK( pPath:string):void{
+        // remote binding
+    }
+
+    /**
+     * To synchronize project platform used during analysis with device and APK
+     *
+     * @param {*} pName
+     * @method
+     * @async
+     */
+    async synchronizePlatform( pName:string):Promise<boolean>{
+        // remote binding
+        return true;
+    }
+    /**
      * To get Search Engine
      *
      * @returns {Finder.SearchAPI} Search engine for this project
@@ -225,6 +319,39 @@ export default class DexcaliburProject
         return this.find;
     }
 
+
+    /**
+     * To open an existing project
+     *
+     * Read `project.json` file
+     *
+     * @method
+     */
+    async open(){
+        //throw new Error('[DEXCALIBUR PROJECT] open() : Not implemented');
+        // re-scan
+        return this.fullscan();
+    }
+
+    /**
+     *
+     * @param {*} pContext
+     * @param {*} pProjectUID
+     * @param {*} pConfigPath
+     */
+    static load( pEngine:DexcaliburEngine, pProjectUID:string, pConfigPath:string = ""):DexcaliburProject|null{
+        // remote binding
+        return null;
+    }
+
+    /**
+     * To save project metadata into 'project.json'
+     *
+     * @param {*} pExportPath
+     */
+    save( pExportPath:string = ""):void{
+        // remote binding
+    }
 
     /**
      * To get the data analyzer.
@@ -258,6 +385,47 @@ export default class DexcaliburProject
         return this.analyze;
     }
 
+    /**
+     * To set target platform to use during analysis
+     *
+     * Replace `Project.useAPI()`
+     *
+     * @param {String} pVersion
+     */
+    async usePlatform( pVersion:string){
+        // remote binding
+        return this;
+    };
+
+
+    /**
+     * To perform a scan of the application byetcode only.
+     *
+     * All reference to Android system classes will be tagged MissingReference or VMBinding
+     *
+     * @param {string} path Optional, the path of the folder containing the decompiled smali code.
+     * @returns {Project} Returns the instance of this project
+     * @deprecated ?
+     * @method
+     */
+    scan( pPath:string):void{
+        // app scan
+        return ;
+    }
+
+    /**
+     * To perform a fullsacn of the application. It  performs :
+     *      - Android API bytecode scan (for the specified API version - by default it's API 25)
+     *      - Application bytecode scan
+     *      - Application package scan
+     * @param {string} path Optional, the path of the folder containing the decompiled smali code.
+     * @returns {Project} Returns the instance of this project
+     * @method
+     */
+    fullscan( pPath:string=""):DexcaliburProject|null{
+        // bind fullscan
+        return null;
+    };
 
     /**
      * To get 'ready' status
@@ -276,12 +444,25 @@ export default class DexcaliburProject
      * @returns {String} Applciation package name
      * @function
      */
-    getPackageName():Nullable<string>{
+    getPackageName():string{
         return this.pkg;
     }
 
     setPackageName( pPackageName:string){
         this.pkg = pPackageName;
+    }
+
+    getPlatform():any {
+        return this.platform;
+    }
+
+    static fromJsonObject(pOptions:any):DexcaliburProject{
+        const o = new DexcaliburProject(null, pOptions.uid);
+        for(let p in pOptions){
+            (o as any)[p] = pOptions[p] as any;
+        }
+
+        return o;
     }
 }
 
