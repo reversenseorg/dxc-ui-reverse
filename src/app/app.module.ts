@@ -110,7 +110,7 @@ import {ExplorerAuditComponent} from "./components/audit/explorer-audit/explorer
 import {TargetOsListComponent} from "./components/device/target-list.component";
 import {VirtualDeviceSettingsComponent} from "./components/device/virtual-device.component";
 import {PlatformListComponent} from "./components/device/platform-list.component";
-import {ButtonComponent} from "./base/button/btn.component";
+//import {ButtonComponent} from "./base/button/btn.component";
 import {ButtonRefreshComponent} from "./base/button/btn-refresh.component";
 import {DeviceListComponent} from "./components/device/device-list.component";
 import {ViewportAuditComponent} from "./components/audit/viewport-audit/viewport-audit.component";
@@ -127,6 +127,7 @@ import {RuleRowComponent} from "./components/audit/misc/rule-row.component";
 import {AssessmentRowComponent} from "./components/audit/misc/assessment-row.component";
 import {ControlRowComponent} from "./components/audit/misc/control-row.component";
 import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal-audit.component";
+import {ProjectModule} from "./components/project/project.module";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -274,7 +275,7 @@ import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal
     ExplorerAuditComponent,
     ViewportAuditComponent,
     TerminalAuditComponent,
-    ButtonComponent,
+    //ButtonComponent,
 
     ExplorerTagComponent,
     TagBadgeComponent,
@@ -299,6 +300,8 @@ import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal
     NgTerminalModule,
     DxcBaseModule,
     DxcClientModule,
+
+    ProjectModule
     //ProjectManagementModule
   ],
   providers: [
