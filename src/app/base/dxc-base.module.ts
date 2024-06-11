@@ -18,6 +18,8 @@ import {MetaComponent} from "./meta/meta.component";
 import {AppMenuComponent} from "./appmenu/app-menu.component";
 import {AppMenuService} from "./appmenu/app-menu.service";
 import {BoxComponent} from "./box/box.component";
+import {PaginatorComponent} from "./paging/dxc-paginator.component";
+import {DxcButtonComponent} from "./button/btn.component";
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import {BoxComponent} from "./box/box.component";
     PreviewerComponent,
     MetaComponent,
     BoxComponent,
-    AppMenuComponent
+    AppMenuComponent,
+    PaginatorComponent,
+    DxcButtonComponent
   ],
   exports: [
     ModalBaseComponent,
@@ -48,7 +52,8 @@ import {BoxComponent} from "./box/box.component";
     PreviewerComponent,
     MetaComponent,
     AppMenuComponent,
-      BoxComponent,
+    BoxComponent,
+    PaginatorComponent,
   ],
     imports: [
         CommonModule,
