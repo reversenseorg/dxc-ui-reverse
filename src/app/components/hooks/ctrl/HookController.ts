@@ -202,9 +202,7 @@ export class HookController extends UiController implements IController {
    */
   switchOnOff( pHook:AbstractHook):void {
     this.service.enableHook( pHook, !pHook._enabled).subscribe( (pStatus:boolean) => {
-      console.log(pHook);
-      (pHook as any)._enabled = pStatus;
-      console.log(pHook);
+      (pHook as any).enable = pStatus;
     });
   }
 

@@ -6,48 +6,22 @@
         <ng-container nav-top>
           <app-subnavbar>
             <ng-container main>
-              <app-subnavbar-btn [active]="activeTL==TOPIC.APP"  (click)="showInfo(TOPIC.APP)">Application</app-subnavbar-btn>
-              <app-subnavbar-btn [active]="activeTL==TOPIC.PRJ"  (click)="showInfo(TOPIC.PRJ)">Project</app-subnavbar-btn>
-              <app-subnavbar-btn [active]="activeTL==TOPIC.ANA"  (click)="showInfo(TOPIC.ANA)">Analysis Unit</app-subnavbar-btn>
-              <app-subnavbar-btn [active]="activeTL==TOPIC.DEV"  (click)="showInfo(TOPIC.DEV)">Device</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="true"  (click)="showInfo(TOPIC.PRJ)">Project</app-subnavbar-btn>
             </ng-container>
           </app-subnavbar>
         </ng-container>
         <ng-container body-top>
 
-          <div class="container-fluid" class="p-1" *ngIf="project" [class.dxc-hidden]="(activeTL==null) || (activeTL!=TOPIC.APP)">
-            <div class="row no-gutters"><div class="col-2 datapair-key">App ID :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.package }}</dxc-ref></div></div>
-            <div class="row no-gutters" *ngIf="project.apk!=null"><div class="col-2 datapair-key">Package :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.apk.path }}</dxc-ref></div></div>
-          </div>
 
-          <div class="container-fluid" class="p-1" *ngIf="project"  [class.dxc-hidden]="(activeTL==null) || (activeTL!=TOPIC.PRJ)">
+          <div class="container-fluid" class="p-1" *ngIf="project">
             <div class="row no-gutters"><div class="col-2 datapair-key">Project ID :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.uid }}</dxc-ref></div></div>
             <div class="row no-gutters"><div class="col-2 datapair-key">Workspace :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.uid}}</dxc-ref></div></div>
-            <div class="row no-gutters" *ngIf="project.apk!=null"><div class="col-2 datapair-key">Package :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.apk.path }}</dxc-ref></div></div>
             <div class="row no-gutters">
               <div class="col-2 datapair-key">Default device :</div>
               <div class="col-8 datapair-val" *ngIf="project.device!=null"><dxc-ref>{{ project.device.model }}</dxc-ref></div>
             </div>
           </div>
 
-          <div class="container-fluid" class="p-1" [class.dxc-hidden]="(activeTL==null) || (activeTL!=TOPIC.DEV)">
-            inf
-          </div>
-
-          <div class="container-fluid" class="p-1" [class.dxc-hidden]="(activeTL==null) || (activeTL!=TOPIC.ANA)">
-
-            <ul class="explorer-list">
-              <ng-container *ngFor="let insp of inspectors">
-                <li class="dxc-text-75 exp-item" >
-                  <span (contextmenu)="displayCtxMenu($event,'inspector',insp)">
-                    <dxc-icon [model]="insp.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
-                    <span>{{ insp.name }}</span>
-                    <span *ngIf="insp.hookset && insp.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
-                    <!--<span *ngIf="insp.getListerners().length>0" class="text-info">&nbsp;[rules]</span>-->
-                  </span>
-                </li>
-              </ng-container>
-            </ul>
 
             <!--
             <app-expandable-list>
@@ -79,7 +53,6 @@
             </app-expandable-list>
             -->
 
-          </div>
 
         </ng-container>
         <ng-container nav-bottom>

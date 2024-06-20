@@ -71,7 +71,7 @@
             </span>
 
             <span *ngIf="NODE_TYPES.HOOK_NATIVE==itemObj.__" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
-              <dxc-icon [model]="itemObj._enabled? icons['UP'] : icons['DOWN']"></dxc-icon>
+              <dxc-icon [model]="itemObj.enable? icons['UP'] : icons['DOWN']"></dxc-icon>
               <dxc-meta [css]="'dxc-salmon dxc-sz-6 mr-1'" [label]="itemObj.file">NATIVE : {{ itemObj.file }}</dxc-meta>&nbsp;{{ itemObj.symbol }}
             </span>
 
@@ -82,7 +82,7 @@
             </span>
 
             <span *ngIf="NODE_TYPES.HOOK_JAVA==itemObj.__" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
-              <dxc-icon [model]="itemObj._enabled? icons['UP'] : icons['DOWN']"></dxc-icon>
+              <dxc-icon [model]="itemObj.enable? icons['UP'] : icons['DOWN']"></dxc-icon>
               <dxc-meta [css]="'dxc-herb dxc-sz-6 mr-1'" [label]="'java'">java</dxc-meta>&nbsp;{{ itemObj.symbol }}
               <ng-container *ngIf="itemObj.method.__signature__!=null || itemObj.method.__s!=null; else mn">
                 <ng-container *ngIf="itemObj.method.__signature__!=null">{{ itemObj.method.__signature__  }}</ng-container>

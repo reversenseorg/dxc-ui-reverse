@@ -102,6 +102,7 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
   selectProject(proj: DexcaliburProject, pIndex = -1):void {
       this.focusEl = pIndex;
       this.projSvc.getProjectInfo(proj).subscribe( (pEvent)=>{
+        console.log("selectProject ",pEvent);
         this.selected = pEvent;
         (this.selected as any).icon = pEvent.icon==null ? new AppIcon({ localPath:"/assets/icons/dexcalibur_32.png" }) : pEvent.icon;
       });

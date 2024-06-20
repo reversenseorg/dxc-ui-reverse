@@ -620,7 +620,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
           .getAllHooks()
           .subscribe((hooks:AbstractHook[]) => {
 
-            console.log(hooks);
+            console.log("Hook Explorer > refresh > ",hooks);
             this.activePool = this.hookPools[HOOK_VIEW.HOOK] = { app:hooks };
 
 
