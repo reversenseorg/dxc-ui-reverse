@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:pro": "ng build --base-href /pro/",
-    "build:pro-dev": "ln -s $PWD/dist/dxc-ui-reverse",
+    "build:pro-dev": "DEST=$HOME/dxc/dexcalibur-codebase/dexcalibur-ts/dist/src/webserver/www/pro && rm -r $DEST && ln -s $PWD/dist/dxc-ui-reverse $DEST",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "skip": ""

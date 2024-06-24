@@ -51,9 +51,9 @@
       </ng-container>
       <ng-container body-left>
         <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='fr')">
-            <div class="row no-gutters m-1 pt-1">
+            <div class="row no-gutters m-1 pt-1" *ngIf="data!=null && data.frida!=null">
               <div class="col-lg-2">Server path</div>
-              <div class="col-lg-7"><input type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}" [(ngModel)]="data.frida.server"></div>
+              <div class="col-lg-7"><input type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}"  [(ngModel)]="data.frida.server"></div>
               <div class="col-lg-3 text-right">
                 <button class="dxc-frm-btn" (click)="testFridaConnection()"><dxc-icon [model]="gIcons['REFRESH']"></dxc-icon>&nbsp;Test</button>
                 <button class="dxc-frm-btn default" (click)="saveFrida($event)">Save</button>

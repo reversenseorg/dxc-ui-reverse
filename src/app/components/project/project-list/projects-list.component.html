@@ -11,7 +11,7 @@
             <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refreshProjects()"></app-subnavbar-btn>
             <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
             <app-subnavbar-btn  [icon]="gIcons['PLUS']" (click)="newProject()"></app-subnavbar-btn>
-            <app-subnavbar-btn  [icon]="gIcons['TRASH']" (click)="removeProject()"></app-subnavbar-btn>
+            <app-subnavbar-btn  [disable]="selected==null" [icon]="gIcons['TRASH']" (click)="deleteProject(selected)"></app-subnavbar-btn>
         </ng-container>
     </app-subnavbar>
 
@@ -22,7 +22,7 @@
             Loading projects ...
         </div>
         <ng-container *ngFor="let project of window; let index = index">
-            <div class="row g-0" [ngStyle]="{'height':rowHeight+'px'}" [ngClass]="{'focus':(project.uid==selected?.uid)}" (click)="selectProject(project, 'click')">
+            <div class="row g-0" [ngStyle]="{'height':rowHeight+'px'}" [ngClass]="{'focus':(project.uid==selected?.uid)}" (dblclick)="dblclickProject(project)" (click)="selectProject(project, 'click')">
                 <div class="col-lg-7 ps-1">
                         <ng-container [ngSwitch]="project.os">
                             <dxc-icon *ngSwitchCase="'fireos'" [model]="gIcons['FIREOS']"></dxc-icon>

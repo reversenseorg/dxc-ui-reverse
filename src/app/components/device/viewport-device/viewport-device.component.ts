@@ -1,12 +1,12 @@
 import {
-  AfterContentInit, AfterViewInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  ContentChild,
-  ContentChildren,
   ElementRef,
   Input,
   OnInit,
-  QueryList, ViewChild
+  ViewChild
 } from '@angular/core';
 import {ViewportTab} from "../../../cmp/ViewportTab";
 import {ViewportView} from "../../../cmp/ViewportView";
@@ -15,11 +15,7 @@ import {ViewportComponent} from "../../../base/viewport/viewport.component";
 import {DEV_ICONS} from "../icons";
 import {Subject} from "rxjs";
 import {DeviceController} from "../ctrl/DeviceController";
-import ModelClass from "../../../models/ModelClass";
-import {CodeController} from "../../code/ctrl/CodeController";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
-import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
-import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Device} from "../../../models/Device";
 import {IconModel} from "../../../base/icon/IconModel";
@@ -46,7 +42,8 @@ export const DEVICE_PANEL = {
 @Component({
   selector: 'app-viewport-device',
   templateUrl: './viewport-device.component.html',
-  styleUrls: ['./viewport-device.component.scss','../../../forms.scss']
+  styleUrls: ['./viewport-device.component.scss','../../../forms.scss'],
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewportContainer {
 
@@ -163,7 +160,9 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     private dmService: DeviceManagerService,
     private hookSvc: HookService,
     private electronSvc:ElectronService,
-    private outputSvc:OutputService) {
+    private outputSvc:OutputService,
+    private changeDetectorRef: ChangeDetectorRef
+    ) {
 
     this.height = 300;
   }
@@ -193,9 +192,11 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
    * @public
    */
   configure( pData:any, pFocus:any):void {
-    this.data = pData;
 
     console.log('configure device viewport>',pData);
+
+    this.data = pData;
+
 
     this.view.tab.icon = this.icons['MOBILE'];
     this.view.tab.label = pData.id;
@@ -208,12 +209,15 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
       this.view.tab.color = 'text-warning';
     }
 
+    console.log(pData.$,pData.profile, pFocus);
+
     if(pData.$ != null)
       this.showDetail(pData.$);
     else if(pData.profile == null)
       this.showDetail(DEVICE_PANEL.SYSTEM);
 
     if(pFocus!=null){
+      console.log("[DEVICE] Focus : ",pFocus);
       this.activeLeft = pFocus
       if(this.defaultWidths[pFocus] != null)
         this.activeWidth = this.defaultWidths[pFocus];
@@ -275,6 +279,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     switch (pType){
       case DEVICE_PANEL.FRIDA:
         this.activeLeft = DEVICE_PANEL.FRIDA;
+        this.changeDetectorRef.detectChanges();
         break;
       case DEVICE_PANEL.SYSCALL:
         this.dmService.getSystemCalls(this.data).subscribe((pSyscalls)=>{
@@ -282,6 +287,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
           console.log(pSyscalls);
           this.activeLeft = pType;
           this.activeRight = pType;
+          this.changeDetectorRef.detectChanges();
         });
         break;
       default:
@@ -300,6 +306,9 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
               this.activeWidth = this.defaultWidth;
               break;
           }
+
+
+          this.changeDetectorRef.detectChanges();
         });
         break;
     }
@@ -338,7 +347,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
    * @since 1.0.0
    */
   testFridaConnection() {
-    console.log(this.data);
+    console.log("testFridaConnection > ",this.data);
     this.hookSvc.startServer({
       dev: this.data.uid,
       path: this.data.frida.server,
@@ -360,7 +369,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
    * @param $event
    */
   saveFrida($event: MouseEvent) {
-    console.log(this.data);
+    console.log("saveFrida > ",this.data);
     this.dmService.saveSettings(this.data, {
       server: this.data.frida.server,
       port: (this.data.frida.port==null ? -1 : this.data.frida.port),

@@ -11,6 +11,8 @@ import {ProjectService} from "../ctrl/project.service";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {Nullable} from "../../../base/Nullable";
+import {OutputMessage} from "../../../cmp/OutputMessage";
+import {OutputService} from "../../output/ctrl/output.service";
 
 let ctr = 0;
 
@@ -39,6 +41,12 @@ export interface TargetApp {
           color: var(--text-100);
         }
         
+        &.footer {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+        }
+        
         cursor: pointer;
       }
     `]
@@ -56,6 +64,7 @@ export class ProjectsListComponent implements OnInit {
 
     @Output() refreshed:EventEmitter<any> = new EventEmitter<any>();
     @Output() selectOne:EventEmitter<DexcaliburProject> = new EventEmitter<DexcaliburProject>();
+    @Output() dblclickOne:EventEmitter<DexcaliburProject> = new EventEmitter<DexcaliburProject>();
 
     projectList: DexcaliburProject[] = [];
     window: DexcaliburProject[] = [];
@@ -85,6 +94,7 @@ export class ProjectsListComponent implements OnInit {
 
     constructor(
         private _projectSvc: ProjectService,
+        private _outputSvc: OutputService,
         private changeRef:ChangeDetectorRef) {
 
     }
@@ -148,6 +158,10 @@ export class ProjectsListComponent implements OnInit {
         this.selectOne.emit(pObject);
     }
 
+    dblclickProject(pObject:any):void {
+        this.dblclickOne.emit(pObject)
+    }
+
 
     refreshProjects(pResetUI  = false) {
         this._projectSvc.listProjects2().subscribe((vProj:DexcaliburProject[])=>{
@@ -172,32 +186,27 @@ export class ProjectsListComponent implements OnInit {
         });
     }
 
-    removeProject(pProject:Nullable<DexcaliburProject>=null) {
-        /*
-        this._droping = pProject==null ? Object.values(this.selected.projects)[0] : pProject;
-        if(this._droping != null){
-            this.confirmSvc.confirm({
-                header: 'Are you sure to remove project "'+this._droping.uid+'" ?',
-                message: 'Please confirm to proceed by typing name of the project to remove.',
-                accept: () => {
-                    this._projectSvc.removeProject(this._droping as DexcaliburProject).subscribe((vSuccess:any)=>{
 
-                        if(vSuccess.remove){
-                            this.canDrop = false;
-                            this._droping = null;
-                            this.messageSvc.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-                            //this._droping.pop();
-                        }else{
-                            this.messageSvc.add({ severity: 'error', summary: 'Rejected', detail: 'Removing rejected', life: 3000 });
-                        }
-                    });
-                },
-                reject: () => {
-                    this.messageSvc.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-                }
-            });
-        }*/
+    /**
+     * Action of delete a project when a user select a project and click on the trash
+     *
+     * @param {Nullable<DexcaliburProject>} pProject Default NULL
+     */
+    deleteProject(pProject: Nullable<DexcaliburProject> = null) {
 
+        if(pProject!=null){
+            try{
+                this._projectSvc.removeProject(pProject).subscribe( (pResult)=>{
+                    if(pResult.remove==true){
+                        this.selectProject(null,"delete");
+                        this._outputSvc.print( OutputMessage.newSuccess({ src:"Project Manager", msg:`Project "${pProject.uid}" has been removed.`}));
+                        this.refreshProjects();
+                    }
+                });
+            }catch (err:any) {
+                this._outputSvc.alert(new OutputMessage({ msg:err.message }))
+            }
+        }
     }
 
     onConfirmInput(pEvent: any) {

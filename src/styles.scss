@@ -852,6 +852,11 @@ span.badge.dxc-meta {
   font-size: 11px;
 }
 
+span.badge.dxc-meta-value {
+  background-color:var(--input-bg);
+  color: var(--input-text);
+}
+
 input.dxc-meta {
   border-radius:0px;
   margin:0px;

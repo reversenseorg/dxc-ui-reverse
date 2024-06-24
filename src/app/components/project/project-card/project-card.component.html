@@ -1,23 +1,27 @@
-<div class="project-card" [ngStyle]="{ 'height':height+'px'}">
-    <div class="row">
+<div class="project-card p-2" [ngStyle]="{ 'height':height+'px'}">
+    <div class="row g-0">
         <div *ngIf="project.icon!=null" class="col-lg-3">
             &nbsp;
         </div>
-        <div [ngClass]="['col-lg-'+(project.icon!=null?'6':'9')]">
+        <div [ngClass]="['col-lg-'+(project.icon!=null?'9':'12')]">
             <h5 class="project-name">{{ project.uid }}</h5>
             <i class="project-app">{{ project.pkg }}</i>
         </div>
-        <div class="col-lg-3">
+    </div>
+    <div class="row g-0" *ngIf="project.icon==null">
+        <div class="col-lg-12">
             <dxc-meta [label]="project.os" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
-            <p>
-                {{ project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'}}
-            </p>
-            <p>
-                {{ project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'}}
-            </p>
+            <dxc-meta [label]="'Engine Version : '+project.engineVersion" [css]="'dxc-salmon dxc-meta ml-2'"></dxc-meta>
         </div>
     </div>
-    <div>
-        <dxc-meta [label]="'Engine Version : '+project.engineVersion" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
+    <div class="row g-0" *ngIf="project.icon==null">
+        <div class="col-lg-12">
+            <dxc-meta [label]="'Created'" [css]="'dxc-herb'" [value]="project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'"></dxc-meta>
+            <dxc-meta [label]="'Opened'" [css]="'dxc-yellow'" [value]="project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'"></dxc-meta>
+        </div>
+    </div>
+
+    <div class="row bottom-0 footer">
+        <ng-content></ng-content>
     </div>
 </div>

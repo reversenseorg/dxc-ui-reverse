@@ -17,9 +17,9 @@ import {Nullable} from "../../base/Nullable";
     <div class="splash-panel openproject">
       <div class="container-fluid body">
         <h5>Workspace</h5>
-        <div class="row ml-0 mr-0">
-          <div class="col-lg-6">
-            <dxs-projects-list [height]="300" [pagignation]="true" (selectOne)="selectedProject = $event" (refreshed)="updateRender()"></dxs-projects-list>
+        <div class="row ml-0 mr-0 g-0">
+          <div class="col-lg-8 col-xl-8">
+            <dxs-projects-list [height]="300" [pagignation]="true" (dblclickOne)="openProject($event)" (selectOne)="selectedProject = $event" (refreshed)="updateRender()"></dxs-projects-list>
             <!--
             <div class=" row project-menu">
               <div class="col-lg-8">
@@ -46,8 +46,14 @@ import {Nullable} from "../../base/Nullable";
               </ng-container>
             </div>-->
           </div>
-          <div class="col-lg-6">
-            <dxs-project-card *ngIf="selectedProject" [project]="selectedProject" [height]="200"></dxs-project-card>
+          <div class="col-lg-4 col-xl-4 ps-1 pe-1">
+            <dxs-project-card *ngIf="selectedProject" [project]="selectedProject" [height]="200">
+                <ng-container>
+                  <div class="col-lg-4 g-0 offset-9">
+                    <dxc-btn (click)="openProject(selectedProject)" [label]="'Open'"></dxc-btn>
+                  </div>
+                </ng-container>    
+            </dxs-project-card>
             <!--
             <div *ngIf="selectedProject != null" class="project-details">
               <img height="32" [src]="selectedProject.icon.localPath" style="user-select:none"/>
