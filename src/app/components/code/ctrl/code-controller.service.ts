@@ -17,14 +17,13 @@ import ModelField from "../../../models/ModelField";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import ModelFile from "../../../models/ModelFile";
 import {TagService} from "../../tag/ctrl/tag.service";
-import ModelPackage from "../../../models/ModelPackage";
 import {InfiniteScrollOpts} from "../../../cmp/InfiniteScrollOpts";
 import {Nullable} from "../../../base/Nullable";
-import ModelBasicBlock from "../../../models/ModelBasicBlock";
 import {DexcaliburConnectionParams} from "../../../models/remote/DexcaliburConnectionParams";
-import {DxcApiToken} from "../../../base/DxcApiToken";
 import {AuthenticationEvent, AuthenticationEventType} from "../../auth/AuthenticationEvent";
 import {AuthService} from "../../auth/ctrl/auth.service";
+import {ElectronService} from "../../../core/services";
+import {MenuItem} from "../../../base/menu/MenuItem";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -52,8 +51,17 @@ export class CodeControllerService extends DxcApiService{
   onMenuClick:Subject<CodeMenuEvent> = new Subject<CodeMenuEvent>();
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
+  /**
+   * A field to hold the state of menu items linked to the type of node activaly focused by
+   * the user
+   *
+   * @private
+   */
+  private menuItemsEnabled: Nullable<MenuItem>[] = [];
+
   constructor( private appmenuSvc:AppMenuService,
                private authSvc:AuthService,
+               private eSvc:ElectronService,
                private projectSvc:ProjectService,
                private tagSvc:TagService,
                private outputSvc:OutputService,
@@ -167,17 +175,23 @@ export class CodeControllerService extends DxcApiService{
       }, {
         label: 'Show control-flow graph',
       }, {
+        id: 'show-xrefs',
         label: 'Show cross-reference',
+        enabled: false,
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xrefs', win: pBrowserWindow});
         }
       }, {
+        id: 'show-xgraph-from',
         label: 'Show xref graph from ...',
+        enabled: false,
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xfrom', win: pBrowserWindow});
         }
       }, {
+        id: 'show-xgraph-to',
         label: 'Show xref graph to ...',
+        enabled: false,
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xto', win: pBrowserWindow});
         }
@@ -251,9 +265,26 @@ export class CodeControllerService extends DxcApiService{
         }]
     }, 5);*/
 
+    this.eSvc.getSelectionManager().onSelect$.subscribe((pNode:any)=>{
+      console.log("[CodeController][onSelect] > ",pNode);
+      switch (pNode.__){
+        case NodeInternalType.FUNC:
+        case NodeInternalType.METHOD:
+        case NodeInternalType.CLASS:
+        case NodeInternalType.FIELD:
+          this._disableMenuItems();
+          this._enableMenuItems(pNode.__);
+          break;
+        default:
+          this._disableMenuItems();
+          break;
+      }
+    })
+
     this.projectSvc.onProjectReady.subscribe(()=>{
       this.refreshTags();
     });
+
   }
 
 
@@ -724,5 +755,55 @@ export class CodeControllerService extends DxcApiService{
         }
       })
     );
+  }
+
+
+  /**
+   * To enable menu item (disabled by default) when the user focus specific elements
+   * (such as method, field, function, etc...)
+   *
+   * @param {NodeInternalType} pNodeType The type of the node actively focused by the user
+   * @method
+   * @private
+   */
+  private _enableMenuItems(pNodeType:NodeInternalType):void {
+    const menuItems:Nullable<MenuItem>[] = [];
+    switch (pNodeType){
+      case NodeInternalType.CLASS:
+        menuItems.push(this.appmenuSvc.getMenuItemById('show-xrefs'));
+        break;
+      case NodeInternalType.METHOD:
+        menuItems.push(this.appmenuSvc.getMenuItemById('show-xrefs'));
+        menuItems.push(this.appmenuSvc.getMenuItemById('show-xgraph-to'));
+        menuItems.push(this.appmenuSvc.getMenuItemById('show-xgraph-from'));
+        break;
+      case NodeInternalType.FIELD:
+        menuItems.push(this.appmenuSvc.getMenuItemById('show-xgraph-to'));
+        menuItems.push(this.appmenuSvc.getMenuItemById('show-xgraph-from'));
+        break;
+    }
+
+    menuItems.map((x)=> {
+      if(x!=null){
+        x.enabled = true;
+      }
+    });
+
+    this.menuItemsEnabled = menuItems;
+    this.appmenuSvc.update();
+  }
+
+  /**
+   * To disable menu item enabled previously when the user focused specific elements
+   * (such as method, field, function, etc...)
+   *
+   *
+   * @method
+   * @private
+   */
+  private _disableMenuItems():void {
+    this.menuItemsEnabled.map((x)=> {
+      if(x!=null) x.enabled = false;
+    });
   }
 }
