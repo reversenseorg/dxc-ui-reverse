@@ -13,8 +13,11 @@ import {StageComponent} from "./components/stage/stage.component";
       component: StageComponent
   }, {
       path: '**',
-      redirectTo: '/home'
-  },
+      redirectTo: '/home/-'
+  },{
+      path: '',
+      redirectTo: '/home/-'
+  }
   ], { useHash:true, onSameUrlNavigation: 'reload' })],
   exports: [RouterModule]
 })
