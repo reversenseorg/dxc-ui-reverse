@@ -1,5 +1,6 @@
 
 
+/*
 export const AppMenuTpl = [
   {
     label: 'File',
@@ -130,3 +131,4 @@ export const AppMenuTpl = [
     }]
   }
 ];
+*/

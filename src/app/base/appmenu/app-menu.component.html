@@ -14,10 +14,19 @@
                             <div class="dropdown-divider"></div>
                         </ng-template>
                         <ng-template #buttonEntry>
-                            <button [ngClass]="{ 'disabled': !item.enable }" (click)="onItemSelect(item,$event)"  ngbDropdownItem>
-                                <dxc-icon *ngIf="item.icon" [model]="item.icon"></dxc-icon>
-                                {{ item.label }}
-                            </button>
+                            <ng-container *ngIf="item.enabled">
+                                <button [ngClass]="{ 'disabled': (item.enabled==false) }" (click)="onItemSelect(item,$event)"  ngbDropdownItem>
+                                    <dxc-icon *ngIf="item.icon" [model]="item.icon"></dxc-icon>
+                                    {{ item.label }}
+                                </button>
+                            </ng-container>
+                            <ng-container *ngIf="!item.enabled">
+                                <button class="dropdown-item disabled">
+                                    <dxc-icon *ngIf="item.icon" [model]="item.icon"></dxc-icon>
+                                    {{ item.label }}
+                                </button>
+                            </ng-container>
+
                         </ng-template>
                     </ng-container>
                 </div>

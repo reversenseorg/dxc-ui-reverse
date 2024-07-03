@@ -8,7 +8,8 @@ import {
     ViewChild
 } from "@angular/core";
 import {Nullable} from "../Nullable";
-import {AppMenuService, MenuTemplate, MenuTemplateEntry} from "./app-menu.service";
+import {AppMenuService, MenuTemplate, MenuTemplateEntry, MenuUpdateEvent} from "./app-menu.service";
+import {MenuItem} from "../menu/MenuItem";
 
 @Component({
     selector: 'app-menu',
@@ -28,11 +29,19 @@ export class AppMenuComponent {
     selectedItem:string = '';
 
     entries:any[] = [];
+    _items:Record<string, MenuItem> = {};
 
 
     constructor( protected appmenuSvc:AppMenuService, private changeDetectorRef:ChangeDetectorRef) {
-        this.appmenuSvc.onTemplateUpdate$.subscribe((pTemplate:MenuTemplate[])=>{
-            this.render(pTemplate);
+        this.appmenuSvc.onTemplateUpdate$.subscribe((pEvt:MenuUpdateEvent)=>{
+            if(pEvt.update){
+                //console.log("[APP-MENU] Update rendering ", this.entries);
+                this.changeDetectorRef.detectChanges();
+                this.appmenuSvc.onMenuRendered$.next(this._items);
+            }else{
+                this.render(pEvt.tpl, pEvt.idMapping);
+            }
+
         })
     }
 
@@ -53,9 +62,17 @@ export class AppMenuComponent {
         return ((pItem as any).type!=null && (pItem as any).type=='separator');
     }
 
-    render(pTemplate:MenuTemplate[]) {
+    /**
+     * To render or re-render a menu component
+     *
+     * @param {MenuTemplate[]} pTemplate
+     * @param {Record<string, MenuItem>} pIdMapping
+     *
+     */
+    render(pTemplate:MenuTemplate[], pIdMapping:Record<string, MenuItem>) {
 
         const newRender:any[] = [];
+
         pTemplate.map((vMenu:MenuTemplate, vOffset)=> {
             const renderedEntry:any = {}
             // new drop down btn
@@ -64,9 +81,12 @@ export class AppMenuComponent {
             renderedEntry.id = vMenu.id;
             renderedEntry.label = vMenu.label;
             renderedEntry.submenu = [];
+
             vMenu.submenu.map((sub:any,o)=>{
                 const subEntry:any = {}
                 if(sub.role!=null) return;
+
+                if(sub.id!=null) subEntry.id = sub.id;
 
                 if(this.isSeparatorEntry(sub)){
                     subEntry.type = 'separator';
@@ -74,12 +94,19 @@ export class AppMenuComponent {
                     if(sub.label==null){
                         return;
                     }
-                    subEntry.enable = !(sub.enabled===false);
+                    subEntry.enabled = (sub.enabled!==false);
                     subEntry.icon = sub.icon;
                     subEntry.label = sub.label;
                     subEntry.onclick = sub.click;
                     subEntry.type = null;
                 }
+
+                this._items[subEntry.id] = subEntry;
+
+                if(subEntry.id !=null){
+                    pIdMapping[subEntry.id] = subEntry;
+                }
+
                 renderedEntry.submenu.push(subEntry);
             });
 
@@ -89,7 +116,9 @@ export class AppMenuComponent {
         });
 
         this.entries = newRender;
+        // console.log("[APP-MENU] Renderering > ",this.entries);
         this.changeDetectorRef.detectChanges();
+        this.appmenuSvc.onMenuRendered$.next(this._items);
     }
 
 }

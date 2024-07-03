@@ -54,6 +54,7 @@
 
       &.disabled {
         color: var(--appmenu-btn-disabled);
+        cursor: not-allowed;
       }
     }
 

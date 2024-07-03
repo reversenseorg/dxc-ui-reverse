@@ -17,10 +17,14 @@ interface MenuStatus {
 
 export type MenuItemType = 'separator' | 'radio' ;
 
+export interface MenuUpdateEvent {
+  tpl: MenuTemplate[],
+  idMapping: Record<string, MenuItem>;
+  update: boolean;
+}
 export interface MenuItemSeparator {
   type: MenuItemType;
   icon?:Nullable<IconModel>;
-
 }
 
 export interface MenuItemPreset {
@@ -58,9 +62,7 @@ export interface AcceleratedMenu {
   click: ((vItem:MenuItem, VCtx:any)=>any);
 }
 
-export interface AcceleratorMapping {
-  [acceleratorKey:string] :AcceleratedMenu
-}
+export type AcceleratorMapping = Record<string, AcceleratedMenu>;
 
 /**
  * Represent the service responsible to manage applICation menus
@@ -85,16 +87,29 @@ export class AppMenuService {
   rendered = false;
   menuStatus:any = {};
 
-  onTemplateUpdate$:Subject<any> = new Subject<any>();
+  onTemplateUpdate$:Subject<MenuUpdateEvent> = new Subject<MenuUpdateEvent>();
 
   private _accelerators:AcceleratorMapping = {};
 
   private _tpl:MenuItemConstructorOptions[] = [];
 
-  private _items:MenuItem[] = [];
+  /**
+   * List of menu items indexed by unique ID
+   *
+   * The purpose of this map is to change the state of menu item
+   *
+   * @type {Record<string, MenuTemplate|MenuTemplateEntry>}
+   * @private
+   */
+  private _items:Record<string, MenuItem> = {};
+
+  onMenuRendered$:Subject<Record<string, MenuItem>> = new Subject<Record<string, MenuItem>>();
 
   constructor() {
 
+    this.onMenuRendered$.subscribe((pIdMapping:Record<string, MenuItem>)=>{
+      this._items = pIdMapping;
+    })
   }
 
 
@@ -136,6 +151,7 @@ export class AppMenuService {
    */
   addMenu(pTpl:MenuTemplate, pOffset=-1):void{
 
+
     if(typeof pTpl.enabled==='boolean'){
       this.menuStatus[pTpl.id] = pTpl.enabled;
     }
@@ -149,13 +165,15 @@ export class AppMenuService {
   }
 
   render():void{
-    //this.beforeRender.next(this.tpl);
-
-    //this.menu = AppMenu.getInstance();
-
+    // build menu
     this.buildFromTemplate( this.tpl);
 
-    this.onTemplateUpdate$.next(this.tpl);
+    // effective update of rendering
+    this.onTemplateUpdate$.next({
+      tpl:this.tpl,
+      idMapping: this._items,
+      update: false
+    });
 
     //this.rendered = AppMenu.getInstance().render();
     //this.afterRender.next(this.tpl);
@@ -187,21 +205,74 @@ export class AppMenuService {
       })
       return mapping;
   }
+
+
+  /**
+   * Scan a menu tree to search mapping between shortcut and menu item + action
+   *
+   * @param {MenuTemplate[]} pTpl App menu template
+   * @return {AcceleratorMapping} Shortcut mapping
+   */
+  searchAccelerator( pTplEntry:MenuTemplateEntry, pMapping:AcceleratorMapping = {} ):AcceleratorMapping {
+    const mapping:AcceleratorMapping = pMapping;
+
+    if((pTplEntry as any).accelerator!=null){
+      if(mapping[(pTplEntry as any).accelerator] !=null){
+        console.error("App menu : duplicated accelerator : ",(pTplEntry as any).accelerator);
+      }
+      mapping[(pTplEntry as any).accelerator] = {
+        menu: pTplEntry,
+        click: (pTplEntry as any).click
+      }
+    }
+
+    return mapping;
+  }
+
   /**
    * Building template will search additional information
    * inside menu item such
    * @param pTpl
    */
-  buildFromTemplate( pTpl:MenuTemplate[] ):any {
+  buildFromTemplate( pTpl:MenuTemplate[]|MenuTemplateEntry[] ):any {
+
+    const mapping:AcceleratorMapping = {};
+    const items:Record<string, MenuItem> = {};
+
+    // scan recursively entire menu
+    pTpl.map((x:MenuTemplate|MenuTemplateEntry)=>{
+
+      // search accelerator
+      this.searchAccelerator(x, mapping);
+
+      // search id
+      if((x as any).id != null){
+        items[(x as any).id] = null as any;
+      }
+
+      // recursively browse nested menu
+      if((x as MenuTemplate).submenu!=null){
+        const subm = (x as MenuTemplate).submenu;
+        if(Array.isArray(subm) && subm.length>0){
+          this.buildFromTemplate(subm);
+        }
+      }
+
+    })
+
+    // registers IDs
+    this._items = items;
 
     // parse template
-    this._accelerators = this.searchAccelerators(pTpl);
+    //this._accelerators = this.searchAccelerators(pTpl);
+
 
     return this;
   }
 
   getMenuItemById(pItemId:string):Nullable<MenuItem> {
-    return this._items.find((pItem:MenuItem)=> pItem.id===pItemId);
+    //console.log("getMenuItemById > ",pItemId, this._items[pItemId])
+    return this._items[pItemId];
   }
 
 
@@ -222,4 +293,17 @@ export class AppMenuService {
     return this.menu.getMenuItemById(pId);
   }
 
+  /**
+   * To trigger an update of rendered elements
+   *
+   * @method
+   */
+  update() {
+    // effective update of rendering
+    this.onTemplateUpdate$.next({
+      tpl:this.tpl,
+      idMapping: this._items,
+      update: true
+    });
+  }
 }
