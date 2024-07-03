@@ -1,4 +1,5 @@
 import {Nullable} from "../../../base/Nullable";
+import {Subject} from "rxjs";
 
 
 export enum DxcSelectionType {
@@ -45,6 +46,8 @@ export class SelectionManager {
   private _size:number;
 
   current:DxcSelection[] = [];
+
+  onSelect$:Subject<any> = new Subject<any>();
 
   constructor( pMaxSize = 100){
     this._size = pMaxSize
@@ -126,6 +129,8 @@ export class SelectionManager {
 
     this.flush();
     this.appendNode(pComponent,pShortVal);
+
+    this.onSelect$.next(pComponent);
 
     //console.log("[SELECTION][NEW] node : ",pComponent,pShortVal);
   }
