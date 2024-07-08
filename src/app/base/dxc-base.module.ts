@@ -20,6 +20,7 @@ import {AppMenuService} from "./appmenu/app-menu.service";
 import {BoxComponent} from "./box/box.component";
 import {PaginatorComponent} from "./paging/dxc-paginator.component";
 import {DxcButtonComponent} from "./button/btn.component";
+import {AppMenuItemComponent} from "./appmenu/app-menu-item.component";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {DxcButtonComponent} from "./button/btn.component";
     MetaComponent,
     BoxComponent,
     AppMenuComponent,
+    AppMenuItemComponent,
     PaginatorComponent,
     DxcButtonComponent
   ],
@@ -52,6 +54,7 @@ import {DxcButtonComponent} from "./button/btn.component";
         PreviewerComponent,
         MetaComponent,
         AppMenuComponent,
+        AppMenuItemComponent,
         BoxComponent,
         PaginatorComponent,
         DxcButtonComponent,
