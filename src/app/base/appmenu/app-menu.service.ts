@@ -15,7 +15,7 @@ interface MenuStatus {
   [label:string] :boolean
 }
 
-export type MenuItemType = 'separator' | 'radio' ;
+export type MenuItemType = 'separator' | 'radio' | 'checkbox' ;
 
 export interface MenuUpdateEvent {
   tpl: MenuTemplate[],
@@ -41,6 +41,38 @@ export interface MenuItemTemplate extends MenuItemShortCutable{
   label:string;
   click?: ((vItem:MenuItem, VCtx:any)=>any);
   enabled?:boolean;
+
+  /**
+   * TRUE to put a checkbox at the begin of the item
+   * @type {boolean}
+   */
+  checkbox?:boolean;
+
+  /**
+   * The value to return when the checkbox is checked.
+   * This value is also used to verify if the box is cheked or not
+   * @type {any}
+   */
+  value?:any;
+
+  /**
+   * The name of the input related to this checkbox
+   * @type {string}
+   */
+  name?:string;
+
+  /**
+   * An event stream publishing value changes to any item with same `name`
+   * @type {Subject<string>}
+   */
+  onChange$?:Subject<string>;
+
+  onCheck?:(vVal:boolean,vItem:any)=>void;
+
+  onSuccess$?:Subject<boolean>;
+
+  onFailure$?:Subject<boolean>;
+
   checked?:boolean;
   icon?:Nullable<IconModel>;
   id?:string;

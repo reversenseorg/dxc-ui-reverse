@@ -7,27 +7,8 @@
                     {{ menu.label  }}
                 </button>
                 <div ngbDropdownMenu class="nav-menu-dropdown" aria-labelledby="dropdownBasic1" >
-                    <ng-container *ngFor="let item of menu.submenu">
-                        <ng-container *ngIf="item.type==null; then buttonEntry else separator"></ng-container>
-                        <ng-template #separator>
-                            <!--div class="menu-separator">&nbsp;</div>-->
-                            <div class="dropdown-divider"></div>
-                        </ng-template>
-                        <ng-template #buttonEntry>
-                            <ng-container *ngIf="item.enabled">
-                                <button [ngClass]="{ 'disabled': (item.enabled==false) }" (click)="onItemSelect(item,$event)"  ngbDropdownItem>
-                                    <dxc-icon *ngIf="item.icon" [model]="item.icon"></dxc-icon>
-                                    {{ item.label }}
-                                </button>
-                            </ng-container>
-                            <ng-container *ngIf="!item.enabled">
-                                <button class="dropdown-item disabled">
-                                    <dxc-icon *ngIf="item.icon" [model]="item.icon"></dxc-icon>
-                                    {{ item.label }}
-                                </button>
-                            </ng-container>
-
-                        </ng-template>
+                    <ng-container *ngFor="let item of menu.submenu; let index=index">
+                         <app-menu-item (onCheck)="onButtonCheck($event)" [item]="item" [offset]="index"></app-menu-item>
                     </ng-container>
                 </div>
             </div>

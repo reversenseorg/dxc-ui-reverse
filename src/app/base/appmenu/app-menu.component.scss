@@ -7,6 +7,14 @@
 
 .nav-menu-dropdown, .row > .nav-menu-dropdown {
   width: 18rem;
+  background-color: var(--appmenu-bg);
+
+  &.dropdown-menu {
+    border:none;
+    border-radius: 0px;
+    background-color: var(--menu-bg);
+    box-shadow: 2px 2px 5px #333;
+  }
 }
 
 
@@ -16,7 +24,7 @@
 }
 
 .dxc-appmenu-vpnav,
-.row > .dxc-appmenu-vpnav {
+.row > .dxc-appmenu-vpnav  {
   font-family: var(--nav-font);
   height: var(--nav-height);
   background-color: var(--appmenu-bg);
@@ -25,12 +33,17 @@
 
   div.nav-menu {
 
+
     .dropdown-toggle {
       margin:0px;
       padding:0px;
       padding-left:0.8em;
       color: var(--nav-tabtext);
       font-size:1em;
+
+      &::after {
+        display: none;
+      }
     }
 
     .btn:focus {
