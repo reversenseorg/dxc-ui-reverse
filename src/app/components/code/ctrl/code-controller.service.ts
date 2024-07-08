@@ -168,7 +168,7 @@ export class CodeControllerService extends DxcApiService{
         label: 'Search ...',
         accelerator: 'CommandOrControl+F',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onMenuClick.next({item: 'search', win: pBrowserWindow});
+          this.onMenuClick.next({item: 'search'});
         }
       }, {
         type: 'separator'

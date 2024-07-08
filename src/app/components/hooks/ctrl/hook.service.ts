@@ -108,6 +108,9 @@ export class HookService extends DxcApiService {
   options: any = {
     ft: 0,
     ff: 0,
+
+    followThread: false,
+    followFork: false,
     mode: "spawn-self"
   };
 
@@ -251,28 +254,73 @@ export class HookService extends DxcApiService {
         submenu: [
           {
             label: 'Follow thread',
-            type: 'radio',
-            checked: (this.options.followThread == true),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
-              this.switchProperty("followThread");
+            type: 'checkbox',
+            name: "followThread",
+            value: false,
+            checked: false,
+            onCheck: (vCurrVal:boolean, vItem:any)=>{
+
+              const opt = this.getOption("followThread");
+              if(vCurrVal==opt){
+
+                // synchronized
+                this.switchProperty("followThread", (vCurrVal!=true));
+                vItem.value = vItem.checked = (vCurrVal!=true);
+                return true;
+
+              }else{
+
+                // refresh first
+                vItem.value = opt;
+                vItem.checked = (opt==true);
+                return false;
+              }
             }
           },{
             label: 'Follow fork',
-            type: 'radio',
-            checked: (this.options.followFork == true),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
-              this.switchProperty("followFork");
+            type: 'checkbox',
+            name: "followFork",
+            value: false,
+            checked: false,
+            onCheck: (vCurrVal:boolean, vItem:any)=>{
+              const opt = this.getOption("followFork");
+              if(vCurrVal==opt){
+
+                // synchronized
+                this.switchProperty("followFork", (vCurrVal!=true));
+                vItem.value = vItem.checked = (vCurrVal!=true);
+                return true;
+
+              }else{
+
+                // refresh first
+                vItem.value = opt;
+                vItem.checked = (opt==true);
+                return false;
+              }
             }
           },{
             label: 'Record hook sessions',
-            type: 'radio',
-            checked: (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            type: 'checkbox',
+            name: "cache_policy",
+            value: false,
+            checked: false,
+            onCheck: (vCurrVal:boolean, vItem:any)=>{
+              if(vCurrVal==true){
+                this.switchProperty("cache_policy",
+                    (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS)?
+                        HOOKSESSION_CACHE_POLICY.FLUSH_SESSIONS : HOOKSESSION_CACHE_POLICY.STORE_SESSIONS
+                );
+                vItem.value = vItem.checked = false;
+              }else{
+                this.switchProperty("cache_policy",
+                    (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS)?
+                        HOOKSESSION_CACHE_POLICY.FLUSH_SESSIONS : HOOKSESSION_CACHE_POLICY.STORE_SESSIONS
+                );
+                vItem.value = vItem.checked = true;
+              }
 
-              this.switchProperty("cache_policy",
-                (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS)?
-                  HOOKSESSION_CACHE_POLICY.FLUSH_SESSIONS : HOOKSESSION_CACHE_POLICY.STORE_SESSIONS
-              );
+              return true;
             }
           }]
       },{
@@ -350,44 +398,56 @@ export class HookService extends DxcApiService {
           {
             label: 'Spawn target app',
             type: 'radio',
-            checked: (this.mode=="spawn-self"),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            name: "attach_mode",
+            value: "spawn-self",
+            onCheck: (vVal:boolean)=>{
               this.switchToMode("spawn-self");
+              return true;
             }
           },{
             label: 'Spawn custom app',
             type: 'radio',
-            checked: (this.mode=="spawn-app"),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            name: "attach_mode",
+            value: "spawn-app",
+            onCheck: (vVal:boolean)=>{
               this.switchToMode("spawn-app");
+              return true;
             }
           },{
             label: 'Attach to gadget',
             type: 'radio',
-            checked: (this.mode=="attach-gadget"),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            name: "attach_mode",
+            value: "attach-gadget",
+            onCheck: (vVal:boolean)=>{
               this.switchToMode("attach-gadget");
+              return true;
             }
           },{
             label: 'Attach to PID ...',
             type: 'radio',
-            checked: (this.mode=="attach-pid"),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            value: "attach-pid",
+            name: "attach_mode",
+            onCheck: (vVal:boolean)=>{
               this.switchToMode("attach-pid");
+              return true;
             }
           },{
             label: 'Attach to target app',
             type: 'radio',
-            checked: (this.mode=="attach-app-self"),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            name: "attach_mode",
+            value: "attach-app-self",
+            onCheck: (vVal:boolean)=>{
               this.switchToMode("attach-app-self");
+              return true;
             }
           },{
             label: 'Attach to app ...',
             type: 'radio',
-            checked: (this.mode=="attach-app"),
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
+            name: "attach_mode",
+            value: "attach-app",
+            onCheck: (vVal:boolean)=>{
               this.switchToMode("attach-app");
+              return true;
             }
           },{
             type: 'separator',
@@ -539,7 +599,19 @@ export class HookService extends DxcApiService {
   }
 
 
+  /**
+   * To get the current value of an option
+   *
+   * @param pOptionName
+   */
+  getOption( pOptionName:string):any {
+    return this.options[pOptionName];
+  }
+
+
   switchProperty( pProperty:string, pValue:any = null){
+
+      //alert("HookService switchProperty > "+pProperty+" > "+pValue);
       if(pValue != null)
         this.options[pProperty] = pValue ;
       else

@@ -207,7 +207,7 @@ export class AppMenuItemComponent implements AfterViewInit {
      * @param pEvent
      */
     onItemSelect( pItem:any, pEvent:any):void{
-        if(pItem.enable){
+        if(pItem.enabled){
             if(pItem.onclick!=null){
                 pItem.onclick.apply(null, [ pItem, pEvent]);
             }
