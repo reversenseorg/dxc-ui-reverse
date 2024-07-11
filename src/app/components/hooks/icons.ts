@@ -89,4 +89,16 @@ export const HOOK_ICONS = {
     name: 'layer-group',
     color1: 'dxc-text-yellow'
   }),
+  UNKNOWN_HOOK_STATE:new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'circle-exclamation',
+    color1: 'dxc-error-icon'
+  }),
+  NOT_HOOKED:new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'circle',
+    color1: 'dxc-text-50'
+  })
 };

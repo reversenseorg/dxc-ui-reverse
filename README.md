@@ -26,7 +26,11 @@ mongod --dbpath $HOME/dxc/db_data/mongodb
 
 ## 2. Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+To build for DxSecurity, just run  :
+```
+ng build --base-href /pro/ && ln -s $PWD/dist/dxc-ui-reverse <WEBSTORM_WORKSPACE>/dexcalibur-codebase/dexcalibur-ts/dist/src/webserver/www/pro
+```
 
 ## 3. Running unit tests
 

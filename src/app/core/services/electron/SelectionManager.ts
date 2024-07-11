@@ -96,6 +96,7 @@ export class SelectionManager {
         break;
       case Node.ELEMENT_NODE:
         if(pDomSelection.anchorNode){
+
           switch (pDomSelection.anchorNode.nodeName) {
             case "ACE-EDITOR":
               this.selectNode( pDomSelection.anchorNode, (pDomSelection.anchorNode as any).env.editor.getSelectedText());
