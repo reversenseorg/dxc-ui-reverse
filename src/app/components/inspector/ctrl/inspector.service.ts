@@ -11,6 +11,7 @@ import {AbstractHook} from "../../../models/AbstractHook";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import {Nullable} from "../../../base/Nullable";
+import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
 
 
 // @ts-ignore
@@ -136,4 +137,13 @@ export class InspectorService extends DxcApiService {
         })
       );
   }
+
+
+    // Context Menu events
+
+    displayCtxMenu$: Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
+
+    displayContextMenu(pEvent:any, pType:string, pObject:any):void {
+        this.displayCtxMenu$.next({event: pEvent, type: pType, obj: pObject});
+    }
 }
