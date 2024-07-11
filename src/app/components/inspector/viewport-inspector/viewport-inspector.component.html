@@ -8,21 +8,21 @@
   </dxc-breadcrumb>-->
 
 
-  <div class="container-fluid dxc-text-100" style="margin: 10px 0px;padding:10px;">
-    <dxc-icon [model]="gIcons['HELPER']" style="font-size:14px;color:#fff;margin:0px 5px;"></dxc-icon>
-    <span>{{ data.description }}</span>
-  </div>
+
 
   <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="activeWidth" [type]="'1:2'">
     <ng-container nav-left>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn [active]="activeLeft=='st'"  (click)="showStrategy(30)">Strategies</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='hk'"  (click)="showHooks(100)">Hooks</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='er'"  (click)="showEventsRegistered(30)">Pipes</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='er'"  (click)="showActions(30)">Actions</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='tg'"  (click)="showActions(30)">Tags</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='ec'"  (click)="showEventsCaptured(50)">Events</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='in'"  (click)="showInfo(100)">Details</app-subnavbar-btn>
+            <ng-container *ngIf="data.hookset!=null && data.hookset.strats!=null && data.hookset.strats.length>0">
+                <app-subnavbar-btn [active]="activeLeft=='st'"  (click)="showStrategy(40)">Strategies</app-subnavbar-btn>
+                <app-subnavbar-btn  [active]="activeLeft=='hk'"  (click)="showHooks(100)">Hooks</app-subnavbar-btn>
+            </ng-container>
+          <app-subnavbar-btn *ngIf="data.listener?.length>0" [active]="activeLeft=='er'"  (click)="showEventsRegistered(30)">Event Processing</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='ac'"  (click)="showActions(30)">Actions</app-subnavbar-btn>
+            <!--<app-subnavbar-btn [active]="activeLeft=='tg'"  (click)="showTags(30)">Tags</app-subnavbar-btn>-->
+          <app-subnavbar-btn *ngIf="data.db" [active]="activeLeft=='db'"  (click)="showDatabase(50)">Database</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -30,6 +30,22 @@
       <!--<app-expandable-list [class.dxc-hidden]="(activeLeft==null) || (activeLeft.id!='hooks')">
 
       </app-expandable-list>-->
+        <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
+            <div class="row">
+                <div class="col-8">
+                    <h5>{{ data.name }}</h5>
+                    <p class="dxc-text-75">{{ data.description }}</p>
+                </div>
+                <div class="col-4">
+
+                </div>
+            </div>
+            <div class="container-fluid dxc-text-100" style="margin: 10px 0px;padding:10px;">
+                <dxc-icon [model]="gIcons['HELPER']" style="font-size:14px;color:#fff;margin:0px 5px;"></dxc-icon>
+                <h5>{{ data.name }}</h5>
+                <p class="dxc-text-75">{{ data.description }}</p>
+            </div>
+        </div>
 
       <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='hk')">
         <ng-container *ngFor="let h of hooks">

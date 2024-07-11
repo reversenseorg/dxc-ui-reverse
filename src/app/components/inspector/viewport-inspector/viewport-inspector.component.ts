@@ -63,7 +63,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
 
   resize$: Subject<any> = new Subject<any>();
 
-  activeLeft = 'st';
+  activeLeft = 'in';
   activeRight:number = -1;
   activeItem:any = null;
   activeWidth = 30;
@@ -189,12 +189,15 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     //
   }
 
-  showHooks(pWidth:number):void{
+  showHooks(pWidth:number, pHide = false):void{
     this.activeRight = NodeInternalType.HOOK_SET;
     this.inspSvc.getHooksFrom(this.data).subscribe((hooks:AbstractHook[])=>{
       this.hooks=hooks;
-      this.activeLeft = 'hk';
-      this.activeWidth = pWidth;
+      if(!pHide){
+        this.activeLeft = 'hk';
+        this.activeWidth = pWidth;
+      }
+
     })
   }
 
@@ -202,14 +205,14 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     this.activeLeft = 'er';
     this.activeWidth = pWidth;
 
-    console.log(this.data);
+    console.log("Inspector Data : ",this.data);
   }
 
-  showEventsCaptured(pWidth:number):void{
-    this.activeLeft = 'ec';
+  showDatabase(pWidth:number):void{
+    this.activeLeft = 'db';
     this.activeWidth = pWidth;
 
-    console.log(this.data);
+    console.log("Inspector Data : ",this.data);
   }
 
 
@@ -217,7 +220,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     this.activeLeft = 'ac';
     this.activeWidth = pWidth;
 
-    console.log(this.data);
+    console.log("Inspector Data : ",this.data);
   }
 
   showStrategy(pWidth:number, pStrat:Nullable<HookStrategy> = null) {
@@ -231,6 +234,10 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     this.activeWidth = pWidth;
   }
 
+  showInfo(pWidth:number){
+    this.activeLeft = 'in';
+    this.activeWidth = pWidth;
+  }
   /**
    *
    * @param pNodeType
@@ -292,6 +299,11 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     }
   }
 
+  /**
+   *
+   * @param pType
+   * @param pFrag
+   */
   showFrag(pType: FRAG_LOCATION, pFrag:any) {
     // load into code editor
 
