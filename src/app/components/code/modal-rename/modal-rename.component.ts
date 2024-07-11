@@ -63,10 +63,6 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
   submitAlias(){
     let b:any = BINDING[this.item.__];
 
-    console.log(b.type,
-      this.item,
-      this.aliasControl.value as string);
-
     if(this.controller.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
     }
@@ -77,14 +73,15 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
       (this.aliasControl.value as string)
     ).subscribe( (vMsg:Message) => {
       if(vMsg.isSuccess()){
-        console.log(this.item);
         this.item.alias = this.aliasControl.value;
-        console.log(this.item);
+
         (this.controller.app as any).hideModal('rename-item',this.item);
         (this.controller.app as any).print( new OutputMessage({
           src: "RenameNode",
           msg: `The item '${this.item[b.id]}' has been renamed '${this.aliasControl.value}' `
         }));
+
+        this.controller.service.renamed$.next(this.item);
       }else{
         this.error = vMsg;
         (this.controller.app as any).print( new OutputMessage({

@@ -1,4 +1,4 @@
-<app-modal-base [name]="'rename-item'" [closable]="true" [width]="200" [height]="50" [mainController]="controller.app" (open)="onOpen($event)">
+<app-modal-base [name]="'rename-item'" [closable]="true" [width]="400" [height]="100" [mainController]="controller.app" (open)="onOpen($event)">
   <div head [ngStyle]="{ 'background-color':'#555', 'color':'#bbb', 'font-weight':200, 'text-align':'left', 'padding-left':'10px', 'width':'100%' }">
     <span class="text-warning">@rename (alias)</span>
   </div>
@@ -6,15 +6,17 @@
     <dxc-helper-btn [docid]="'code.rename'"></dxc-helper-btn>
     <!--<span class="btn-close" (click)="controller.app.helper.open('rename')"><fa-icon [icon]="['fas','circle-question']"></fa-icon></span>-->
   </ng-container>
-  <div body class="input-group mr-0 ml-0">
-    <div class="input-group-prepend">
-      <fa-icon [icon]="['fas','caret-down']" class="input-group-text dxc-text-clear75"></fa-icon>
+  <div body class="mr-0 ml-0">
+    <div class="row input-group g-0">
+        <div class="col-lg-11 ps-1">
+            <input type="text" class="form-control" autofocus="autofocus" name="alias" [formControl]="aliasControl" (keyup)="resetError($event)" (keydown.enter)="submitAlias()">
+        </div>
+        <div class="col-lg-1">
+            <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="controller.gIcons['CHECK']" (click)="submitAlias()"></dxc-icon>
+            <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="controller.gIcons['WARNING']"></dxc-icon>
+        </div>
     </div>
-    <input type="text" class="form-control" autofocus="autofocus" name="alias" [formControl]="aliasControl" (keyup)="resetError($event)" (keydown.enter)="submitAlias()">
-    <div class="input-group-append">
-      <dxc-icon *ngIf="!error" class="input-group-text clickable" [model]="controller.gIcons['CHECK']" (click)="submitAlias()"></dxc-icon>
-      <dxc-icon *ngIf="error!=null" class="input-group-text" [model]="controller.gIcons['WARNING']"></dxc-icon>
-    </div>
+
   </div>
   <ng-container footer>
     <span *ngIf="error!=null" class="badge dxc-warning-msg" #msgBox>{{ error.msg }}</span>
