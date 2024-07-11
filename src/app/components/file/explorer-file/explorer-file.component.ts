@@ -11,7 +11,7 @@ import DexcaliburProject from "../../../models/DexcaliburProject";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {HookController} from "../../hooks/ctrl/HookController";
 import {
-  ContextMenuComponent,
+  ContextMenuComponent, ContextMenuEvent,
   ContextMenuList,
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
@@ -25,7 +25,6 @@ import ModelFile from "../../../models/ModelFile";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {ElectronService} from "../../../core/services";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
-import {ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
 

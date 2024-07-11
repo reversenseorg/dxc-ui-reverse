@@ -19,14 +19,14 @@ import {ProjectService} from "../../project/ctrl/project.service";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {
-  ContextMenuComponent,
+  ContextMenuComponent, ContextMenuEvent,
   ContextMenuList,
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
 import {from, Observable} from "rxjs";
 import {ElectronService} from "../../../core/services";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
-import {CodeControllerService, ContextMenuEvent} from "../../code/ctrl/code-controller.service";
+import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import {AuditController} from "../ctrl/AuditController";
 import {AuditService} from "../ctrl/audit.service";
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";

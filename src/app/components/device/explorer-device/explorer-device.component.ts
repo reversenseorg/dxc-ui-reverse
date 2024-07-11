@@ -39,7 +39,6 @@ import {ElectronService} from "../../../core/services";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {FILE_ICONS} from "../../file/icons";
-import {ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {DeviceBindedData} from "../common";

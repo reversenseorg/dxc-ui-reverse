@@ -11,7 +11,7 @@ import {CodeItem} from "../../code/explorer-code/CodeItem";
 import {HOOK_ICONS} from "../icons";
 import Hook from "../../../models/Hook";
 import {
-  ContextMenuComponent,
+  ContextMenuComponent, ContextMenuEvent,
   ContextMenuList,
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
@@ -230,6 +230,11 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
 
   ngOnInit(): void {
+
+
+    this.hookSvc.displayCtxMenu$.subscribe( (pObs:ContextMenuEvent)=>{
+      this.displayCtxMenu(pObs.event, pObs.type, pObs.obj);
+    });
 
 
     this.hookSvc.refresh$.subscribe( pEvent => {
