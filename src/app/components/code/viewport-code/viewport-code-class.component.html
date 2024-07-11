@@ -26,8 +26,9 @@
           <app-subnavbar-btn [active]="activeLeft=='md'"  (click)="showModel()">Details</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showContents()">Contents</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['ANALYZE']" (click)="showInstance()">Instances</app-subnavbar-btn>
-          <app-subnavbar-btn [disable]="true" [active]="activeLeft=='pm'"  [icon]="gIcons['LOCK']" (click)="showAndroidAPI()">Android API</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="gIcons['LOCK']" (click)="showAndroidAPI()">Android API</app-subnavbar-btn>
           <app-subnavbar-btn [disable]="true" [active]="activeLeft=='io'"  [icon]="gIcons['FILE']" (click)="showIO()">I/O</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons['EDIT']" (click)="controller.renameItem(data)">Rename</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
