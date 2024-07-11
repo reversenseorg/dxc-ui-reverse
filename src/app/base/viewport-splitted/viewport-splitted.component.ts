@@ -28,6 +28,7 @@ export class ViewportSplittedComponent implements OnInit, OnChanges, AfterViewIn
   @Input() data: ModelClass;
   @Input() controller: IController;
   @Input() parent: any; //ViewportComponent;
+  @Input() css: Record<string, string> = {};
 
   @Output() onLayoutResize: EventEmitter<any> = new EventEmitter<any>();
 
@@ -204,4 +205,11 @@ export class ViewportSplittedComponent implements OnInit, OnChanges, AfterViewIn
     return true;
   }
 
+  getCssClass(pType:string):string{
+    if(this.css[pType]!=null){
+      return this.css[pType];
+    }else{
+      return "";
+    }
+  }
 }
