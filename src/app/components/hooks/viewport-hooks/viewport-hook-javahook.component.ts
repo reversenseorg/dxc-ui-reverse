@@ -267,10 +267,6 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     }
   }
 
-  showExport() {
-    this.activeRight = 'ex';
-
-  }
 
   showLatestCatch() {
     this.activeRight = 'ct';
@@ -297,14 +293,20 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     this.activeRight = 'fr';
   }
 
-  editFragment( pType:string, pOffset:number, pFragment:any) {
+  editFragment( pType:string, pOffset:number, pFragment:any, pEvent:any = null) {
 
     if(this.activeLeft=='sc'){
       // save editor state
       this.states.sc =  this.codeEditor.value;
     }
+
+    if(this.activeFrag !=null){
+      if(this.activeFrag.cmp!=null){
+        this.activeFrag.cmp.focusOut();
+      }
+    }
     this.editingFrag = true;
-    this.activeFrag = {_t:FRAG_TYPE[pType], o:pOffset, f:pFragment};
+    this.activeFrag = {_t:FRAG_TYPE[pType], o:pOffset, f:pFragment, cmp:(pEvent!=null?pEvent.cmp:null)};
     this.activeFragCss = FRAG_CSS[pType];
     this.activeLeft = 'fr';
 
