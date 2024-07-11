@@ -46,7 +46,6 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {ViewportCodePackageComponent} from "./components/code/viewport-code/viewport-code-package.component";
 import { ViewportHookComponent } from './components/hooks/viewport-hooks/viewport-hook.component';
 import {TerminalHookComponent} from "./components/hooks/terminal-hooks/terminal-hook.component";
-import {ViewportHookInspectorComponent} from "./components/hooks/viewport-hooks/viewport-hook-inspector.component";
 import {ViewportHookJavaComponent} from "./components/hooks/viewport-hooks/viewport-hook-javahook.component";
 import { ViewportInspectorComponent } from './components/inspector/viewport-inspector/viewport-inspector.component';
 import {BreadcrumbComponent, BreadcrumbItemComponent} from './base/breadcrumb/breadcrumb.component';
@@ -128,6 +127,13 @@ import {AssessmentRowComponent} from "./components/audit/misc/assessment-row.com
 import {ControlRowComponent} from "./components/audit/misc/control-row.component";
 import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal-audit.component";
 import {ProjectModule} from "./components/project/project.module";
+import {TagListComponent} from "./components/tag/tag-list/tag-list.component";
+import {XrefListComponent} from "./components/code/xref-list/xref-list.component";
+import {XrefItemComponent} from "./components/code/xref-item/xref-item.component";
+import {NodeTokenComponent} from "./components/code/node-token/node-token.component";
+import {NodeAliasComponent} from "./components/code/node-alias/node-alias.component";
+import {HookStatusComponent} from "./components/hooks/hook-status/hook-status.component";
+import {HookFragItemComponent} from "./components/hooks/frag-item/frag-item.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -208,7 +214,6 @@ import {ProjectModule} from "./components/project/project.module";
     ExplorerHooksComponent,
     ViewportHookComponent,
     ViewportHookJavaComponent,
-    ViewportHookInspectorComponent,
     ViewportHookScriptComponent,
     ViewportHookKpComponent,
     TerminalHookComponent,
@@ -281,9 +286,20 @@ import {ProjectModule} from "./components/project/project.module";
     TagBadgeComponent,
     ModalTagEditorComponent,
     ModalTagInfoComponent,
+    TagListComponent,
     RuleRowComponent,
     AssessmentRowComponent,
-    ControlRowComponent
+    ControlRowComponent,
+
+    NodeTokenComponent,
+    NodeAliasComponent,
+
+    XrefListComponent,
+    XrefItemComponent,
+
+    HookStatusComponent,
+    HookFragItemComponent
+
 
   ],
   imports: [

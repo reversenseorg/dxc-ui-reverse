@@ -24,17 +24,20 @@ import {AuthenticationEvent, AuthenticationEventType} from "../../auth/Authentic
 import {AuthService} from "../../auth/ctrl/auth.service";
 import {ElectronService} from "../../../core/services";
 import {MenuItem} from "../../../base/menu/MenuItem";
+import {INode} from "../../../models/INode";
+import {ModelFunction} from "../../../models/ModelFunction";
+import ModelPackage from "../../../models/ModelPackage";
+import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
 }
 
-export interface ContextMenuEvent {
-  event: Event;
-  type:string;
-  obj:any;
-}
 
+export interface DisplayNodeEvent {
+  node: INode;
+  type?:string;
+}
 
 // @ts-ignore
 @Injectable({
@@ -50,6 +53,7 @@ export class CodeControllerService extends DxcApiService{
 
   onMenuClick:Subject<CodeMenuEvent> = new Subject<CodeMenuEvent>();
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
+  displayNode$:Subject<DisplayNodeEvent> = new Subject<DisplayNodeEvent>();
 
   /**
    * A field to hold the state of menu items linked to the type of node activaly focused by
@@ -58,6 +62,7 @@ export class CodeControllerService extends DxcApiService{
    * @private
    */
   private menuItemsEnabled: Nullable<MenuItem>[] = [];
+  renamed$:Subject<INode> = new Subject<INode>();
 
   constructor( private appmenuSvc:AppMenuService,
                private authSvc:AuthService,
@@ -234,17 +239,23 @@ export class CodeControllerService extends DxcApiService{
         }, {
           label: "Remove useless jumps"
         }, {
-          label: "Simplify method by emulation"
+          label: "Simplify method by emulation",
+          enabled: false,
+
         }, {
           label: "Remove nop and noise"
         }, {
-          label: "Remove integrity checks"
+          label: "Remove integrity checks",
+          enabled: false
         }, {
-          label: "Remove root detection checks"
+          label: "Remove root detection checks",
+          enabled: false
         }, {
-          label: "Remove hook detection checks"
+          label: "Remove hook detection checks",
+          enabled: false
         }, {
-          label: "Remove SSL Pining"
+          label: "Remove SSL Pining",
+          enabled: false
         }]
       }, {
         label: 'Export',
@@ -266,19 +277,22 @@ export class CodeControllerService extends DxcApiService{
     }, 5);*/
 
     this.eSvc.getSelectionManager().onSelect$.subscribe((pNode:any)=>{
-      console.log("[CodeController][onSelect] > ",pNode);
-      switch (pNode.__){
-        case NodeInternalType.FUNC:
-        case NodeInternalType.METHOD:
-        case NodeInternalType.CLASS:
-        case NodeInternalType.FIELD:
-          this._disableMenuItems();
-          this._enableMenuItems(pNode.__);
-          break;
-        default:
-          this._disableMenuItems();
-          break;
+
+      if(pNode.hasOwnProperty("__")){
+        switch (pNode.__){
+          case NodeInternalType.FUNC:
+          case NodeInternalType.METHOD:
+          case NodeInternalType.CLASS:
+          case NodeInternalType.FIELD:
+            this._disableMenuItems();
+            this._enableMenuItems(pNode.__);
+            break;
+          default:
+            this._disableMenuItems();
+            break;
+        }
       }
+
     })
 
     this.projectSvc.onProjectReady.subscribe(()=>{
@@ -585,7 +599,9 @@ export class CodeControllerService extends DxcApiService{
     }));
   }
 
-  getModelMethod( pSignature:string):Observable<Nullable<ModelMethod>> {
+
+
+  getModelMethod( pSignature:string, pPullClass = false):Observable<Nullable<ModelMethod>> {
     return this.getMethod(pSignature).pipe( map((pObs:any) => {
         if(pObs.data != undefined && Object.keys(pObs.data).length>0){
           return new ModelMethod(pObs.data);
@@ -688,6 +704,7 @@ export class CodeControllerService extends DxcApiService{
       }
     ).pipe(
       map((pEl:any)=>{
+
         return new Message({
           type: (pEl.success? MessageType.SUCCESS : MessageType.WARNING),
           msg: (pEl.msg != null)? pEl.msg.msg : null
@@ -805,5 +822,48 @@ export class CodeControllerService extends DxcApiService{
     this.menuItemsEnabled.map((x)=> {
       if(x!=null) x.enabled = false;
     });
+  }
+
+
+  /**
+   * To get string representation of a Node  using a specified format
+   *
+   * @param {any} pItem
+   * @param {string} pFormat
+   */
+  getFormatedSymbol(pItem:any, pFormat:string):string {
+    return "";
+  }
+
+  /**
+   * To get unformated Human-readable UID from node
+   *
+   * @return {string}
+   * @method
+   */
+  getBaseSymbol(pItem:any):string {
+    let sym:Nullable<string> = "";
+
+    switch (pItem.__){
+      case NodeInternalType.METHOD:
+        sym = (pItem as ModelMethod).__signature__;
+        break;
+      case NodeInternalType.CLASS:
+        sym = (pItem as ModelClass).name;
+        break;
+      case NodeInternalType.FIELD:
+        sym = (pItem as ModelField).__signature__;
+        break;
+      case NodeInternalType.FUNC:
+        sym = (pItem as ModelFunction).name;
+        break;
+      case NodeInternalType.PACKAGE:
+        sym = (pItem as ModelPackage).name;
+        break;
+    }
+
+    if(sym==null) sym="";
+
+    return sym;
   }
 }

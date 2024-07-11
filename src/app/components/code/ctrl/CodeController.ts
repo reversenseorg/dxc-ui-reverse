@@ -49,8 +49,15 @@ export class CodeController extends UiController implements IController {
 
   constructor(pConfig:IControllerOptions) {
     super();
+    // configure with options
     this.configure(pConfig);
+    // perform extra actions
+    this.service.displayNode$.subscribe((vEvent)=>{
+      this.showItem(vEvent.node);
+    });
   }
+
+
 
   override getViews():ViewportView[]{
     return this.views;

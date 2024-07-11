@@ -73,7 +73,10 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
   id: number = -1;
 
+  hook:Nullable<AbstractHook> = null;
   hooks:any[] = [];
+  hooksMsg:any[] = [];
+
   vm:DxcVM_Result = {
     events: [],
     instr: [],
@@ -136,6 +139,13 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
   ngOnInit(): void {
 
+    this.hookSvc.onHookEdit.subscribe((pEvtHook)=>{
+      if(pEvtHook.hook != null){
+        if((pEvtHook.hook as any).method==this.data.__signature__){
+          this.hooks.push(pEvtHook.hook);
+        }
+      }
+    })
   }
 
 
@@ -305,7 +315,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   showHooksLogs() {
     this.hookSvc.getHooksMsgForMeth(this.data.__signature__).subscribe( (pHooks:any) => {
       console.log(pHooks);
-      this.hooks = pHooks.data;
+      this.hooksMsg = pHooks.data;
       this.activeBottom = 'hm';
     });
   }
@@ -532,6 +542,43 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
       this.showDxcVM();
       this.showVmLogs();
+    });
+  }
+
+  /**
+   * To get CSS class of modifiers
+   *
+   * @param {string} pKey the modifier name
+   * @return {string}
+   */
+  getModifiersStyles(pKey: any) {
+    let cls = "";
+
+    switch (pKey){
+      case "private":
+        cls = "text-danger";
+        break;
+      case "private":
+        cls = "text-primary";
+        break;
+      default:
+        cls = "";
+        break;
+    }
+
+    return cls;
+  }
+
+  /**
+   * Navigate to the item
+   *
+   * @param {INode} pItem
+   */
+  goTo(pItem:any = null){
+
+    console.log("Go To (2)",pItem);
+    this.codeSvc.displayNode$.next({
+      node: (pItem!=null? pItem : this.item)
     });
   }
 }

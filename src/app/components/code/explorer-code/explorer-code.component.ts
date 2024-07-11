@@ -24,7 +24,7 @@ import {CodeItem} from "./CodeItem";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {ModifierFormat} from "../../../models/AccessFlags";
 import {
-  ContextMenuComponent,
+  ContextMenuComponent, ContextMenuEvent,
   ContextMenuList,
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
@@ -34,7 +34,7 @@ import {ProjectService} from "../../project/ctrl/project.service";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {IKeyboardNavigable} from "../../../base/keyboard/IKeyboardNavigable";
 import ModelMethod from "../../../models/ModelMethod";
-import {CodeControllerService, ContextMenuEvent} from "../ctrl/code-controller.service";
+import {CodeControllerService} from "../ctrl/code-controller.service";
 import {HookFragmentPresetOptions, HookFragmentPresetType, HookService} from "../../hooks/ctrl/hook.service";
 import {ElectronService} from "../../../core/services";
 import ModelClass from "../../../models/ModelClass";
