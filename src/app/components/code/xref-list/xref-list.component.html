@@ -1,0 +1,53 @@
+<div>
+    <h5 *ngIf="title">{{ title }}</h5>
+
+    <div *ngIf="description!=null">
+        <p>{{ description }}</p>
+    </div>
+
+
+
+    <app-subnavbar *ngIf="navbar" [type]="'navbar'"  [opts]="true" [parent]="this">
+        <ng-container options>
+            <!--app-subnavbar-btn  (click)="showModel()">Details</app-subnavbar-btn>-->
+            <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refresh()"></app-subnavbar-btn>
+            <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
+        </ng-container>
+    </app-subnavbar>
+
+    <div *ngIf="header" class="row">
+        <ng-container *ngFor="let col of getHeaderColumns()">
+            <div [ngClass]="col.cls">
+                {{ col.label }}
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="dxc-grid-body" [ngStyle]="{'height':height+'px', 'border-bottom':'none'}" style="overflow-y: auto">
+        <div *ngIf="window.length==0">
+            <div *ngIf="data.length>0" class="row">
+                <div class="col-lg-12 text-center">
+                    <dxc-icon [model]="gIcons.SPINNER"></dxc-icon><span>Loading xref ...</span>
+                </div>
+            </div>
+            <div *ngIf="data.length==0" class="row">
+                <div class="col-lg-12 text-center">
+                    <dxc-icon [model]="gIcons.WARNING"></dxc-icon><span>This node has not known cross references ...</span>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngFor="let xref of window; let index = index">
+            <div class="row g-0" [ngStyle]="{'height':rowHeight+'px'}"  (click)="select(xref, 'click')">
+                <div class="col-lg-12">
+                    <dxs-xref-item [hookstatus]="true" [type]="xreffrom?'from':'to'" [item]="xref"></dxs-xref-item>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <div *ngIf="pagignation" class="dxc-navbar">
+        <div class="col-lg-6 offset-6">
+            <dxc-paginator [rows]="rows"  [totalRecords]="data.length" (onPageChange)="onPageChange($event)"></dxc-paginator>
+        </div>
+    </div>
+</div>
