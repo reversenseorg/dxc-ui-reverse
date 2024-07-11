@@ -10,9 +10,9 @@ import {PrivacyReport} from "../../../models/audit/privacy/PrivacyReport";
 import {DashBoard} from "../../../models/audit/common/DashBoard";
 import {TopologyService} from "../../topology/ctrl/topology.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {CodeMenuEvent, ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import { PrivacyModel } from "../../../models/audit/privacy/PrivacyModel";
 import {Nullable} from "../../../base/Nullable";
+import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
 
 
 @Injectable({

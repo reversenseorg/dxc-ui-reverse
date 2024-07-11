@@ -30,6 +30,7 @@ import {AppMenu} from "../../../base/menu/AppMenu";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {UIException} from "../../../base/error/UIException";
+import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
 
 export interface HookTree {
   [parent:string] :Hook[]
@@ -65,6 +66,11 @@ export interface HookFragmentPresetOptions{
   tplOpts?:any
 }
 
+export interface HookEditEvent {
+  ope: any,
+  hook?: Nullable<AbstractHook>,
+  hookID: string,
+}
 
 export enum HOOK_TARGET_TYPE {
   METHOD='method',
@@ -92,7 +98,6 @@ export enum HOOKSESSION_CACHE_POLICY {
 }
 
 
-
 // ts-ignore
 @Injectable({
   providedIn: 'root'
@@ -102,7 +107,9 @@ export class HookService extends DxcApiService {
   HKOP:any = {
     REMOVED: 'r',
     EDITED: 'e',
-    CREATED: 'c'
+    CREATED: 'c',
+    ENABLED: 'se',
+    DISABLED: 'sd',
   };
 
   options: any = {
@@ -117,7 +124,7 @@ export class HookService extends DxcApiService {
   socket:any = null;
 
   onCreateHook:Subject<any> = new Subject<any>();
-  onHookEdit:Subject<any> = new Subject<any>();
+  onHookEdit:Subject<HookEditEvent> = new Subject<HookEditEvent>();
   onKpEdit:Subject<any> = new Subject<any>();
   onEditFragment:Subject<any> = new Subject<any>();
   onFragmentUpdate:Subject<any> = new Subject<any>();
@@ -151,6 +158,7 @@ export class HookService extends DxcApiService {
 
 
   mode = "spawn-self";
+
 
   constructor( private appmenuSvc:AppMenuService,
                public outputSvc:OutputService,
@@ -762,6 +770,13 @@ export class HookService extends DxcApiService {
   }
 
 
+  /**
+   *
+   *
+   * deprecated ?
+   * @param pScope
+   * @param pOptions
+   */
   listHooks(pScope:Nullable<string> = null, pOptions:any={}):Observable<any>{
     return this._process(
       this.endpoints['hook']['list'],
@@ -773,6 +788,8 @@ export class HookService extends DxcApiService {
           this.outputSvc.print(OutputMessage.newError({ type:"Hook Manager", msg:pEl.msg}));
           return null;
         }else{
+
+          // todo : return abstract hook
           return pEl.data;
         }
 
@@ -1345,10 +1362,16 @@ export class HookService extends DxcApiService {
     ).pipe(
       map( (pRes:any) => {
         if(pRes.success){
-
-          console.log(pRes);
           if(pRes.data.hasOwnProperty('enable')) {
             pHook._enabled = pRes.data.enable;
+
+            console.log("enableHook > ",pHook,pHook.getGUID());
+            this.onHookEdit.next({
+              hookID:pHook.getGUID() as string,
+              hook:pHook,
+              ope: (pHook._enabled? this.HKOP.ENABLED : this.HKOP.DISABLED)
+            });
+
             return pHook._enabled; //(pRes.data.enable === pStatus);
           }else{
             return null;
@@ -1385,7 +1408,7 @@ export class HookService extends DxcApiService {
           return false;
         }
 
-        this.onHookEdit.next({ hook:pHook.getGUID(), ope:this.HKOP.REMOVED })
+        this.onHookEdit.next({ hookID:pHook.getGUID() as string, hook:pHook, ope:this.HKOP.REMOVED })
         return true;
       })
     );
@@ -1399,6 +1422,13 @@ export class HookService extends DxcApiService {
       return this.listHooks(null, { t:'meth', s:Utils.dxc_encodeURIparam(pMeth) });
     else
       return this.listHooks(null, { t:'meth', s:Utils.dxc_encodeURIparam(pMeth.signature()) });
+  }
+
+  getHooksFor(pMeth: ModelMethod|ModelFunction):Observable<any> {
+    if(pMeth.__==NodeInternalType.METHOD)
+      return this.listHooks(null, { t:'meth', s:Utils.dxc_encodeURIparam(pMeth.signature()) });
+    else
+      return this.listHooks(null, { t:'func', s:Utils.dxc_encodeURIparam(pMeth.signature()) });
   }
 
   getInspectors():Observable<HookSet[]> {
@@ -1701,5 +1731,13 @@ export class HookService extends DxcApiService {
           return pEl.success;
         })
     );
+  }
+
+  // Context Menu events
+
+  displayCtxMenu$: Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
+
+  displayContextMenu(pEvent:any, pType:string, pObject:any):void {
+    this.displayCtxMenu$.next({event: pEvent, type: pType, obj: pObject});
   }
 }

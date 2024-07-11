@@ -9,7 +9,6 @@ import {OutputMessage} from "../../../cmp/OutputMessage";
 import {DashBoard} from "../../../models/audit/common/DashBoard";
 import {TopologyService} from "../../topology/ctrl/topology.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {CodeMenuEvent, ContextMenuEvent} from "../../code/ctrl/code-controller.service";
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";
 import AssuranceReport from "../../../models/audit/common/AssuranceReport";
 import {Nullable} from "../../../base/Nullable";
@@ -17,6 +16,7 @@ import Control from "../../../models/audit/common/Control";
 import {IStringIndex} from "../../../base/IStringIndex";
 import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import {SearchService} from "../../search/ctrl/search.service";
+import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
 
 export enum CheckEventState {
   NEW= 'new',

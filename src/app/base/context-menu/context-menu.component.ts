@@ -18,6 +18,12 @@ export interface ContextMenuList {
 }
 
 
+export interface ContextMenuEvent {
+  event: Event;
+  type:string;
+  obj:any;
+}
+
 export interface ContextMenuState {
   menu?: ContextMenuComponent,
   subject: any,
