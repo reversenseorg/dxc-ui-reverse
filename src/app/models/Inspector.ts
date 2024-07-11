@@ -73,7 +73,7 @@ export class Inspector
 
     frontController:any = null;
     preRegisteredTags:any = [];
-    //db: any = null;
+    db: any = null;
 
     /**
      * @type {String}
