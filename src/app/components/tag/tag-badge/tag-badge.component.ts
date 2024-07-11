@@ -5,7 +5,15 @@
 
 
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnChanges,
+    SimpleChanges
+} from "@angular/core";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {TagService} from "../ctrl/tag.service";
 import {Tag} from "../../../models/tags/Tag";
@@ -16,7 +24,7 @@ import {Nullable} from "../../../base/Nullable";
 @Component({
     selector: 'dxc-tag-badge',
     template: `
-        <span (click)="displayMenu($event)"  [ngbTooltip]="tag.descr!=null? tag.descr : null" [ngClass]="gutters? 'badge dxc-no-gutters dxc-meta dxc-text-std '+css:'badge dxc-gutters dxc-meta dxc-text-std '+css" [ngStyle]="_styles">
+        <span *ngIf="tag !=null" (contextmenu)="displayMenu($event)"  [ngbTooltip]="tag.descr!=null? tag.descr : null" [ngClass]="gutters? 'badge dxc-no-gutters dxc-meta dxc-text-std '+css:'badge dxc-gutters dxc-meta dxc-text-std '+css" [ngStyle]="_styles">
             {{ tag._uid }}
         </span>
    `,
@@ -30,9 +38,11 @@ import {Nullable} from "../../../base/Nullable";
    `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagBadgeComponent implements OnChanges {
+export class TagBadgeComponent implements AfterViewInit,OnChanges {
 
-    @Input() tag:Tag;
+    @Input() tag:Tag|null = null;
+    @Input() tagUUID:number = -1;
+
     @Input() editable = false;
 
     @Input() style:any = {};
@@ -40,10 +50,25 @@ export class TagBadgeComponent implements OnChanges {
     @Input() label:any = null;
     @Input() gutters:boolean = true;
 
+
+
     gIcons:any = GLOBAL_ICONS;
     _styles:any = {};
+
     constructor( public tagSvc:TagService, private _changeDRef:ChangeDetectorRef) {
 
+    }
+
+    ngAfterViewInit() {
+        if(this.tagUUID>-1){
+            this.tag = this.tagSvc.getTagByUUID(this.tagUUID);
+            console.log("getTagByUUID > ",this.tag);
+            this._styles = {
+                backgroundColor: (this.tag.styles as any).bgColor,
+                color: (this.tag.styles as any).color
+            };
+            this._changeDRef.detectChanges();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -72,7 +97,8 @@ export class TagBadgeComponent implements OnChanges {
     }
 
     displayMenu(pEvent:any){
-        if(this.editable){
+        console.log("Display Tag menu ",pEvent, this.tag);
+        if(this.editable && this.tag!=null){
             this.tagSvc.onTagMenu$.next({
                 tag: this.tag,
                 evt: pEvent,
