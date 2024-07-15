@@ -146,7 +146,6 @@ export class HookService extends DxcApiService {
   onCreateKeyPoint: EventEmitter<any> = new EventEmitter<any>();
 
   refresh$: Subject<any> = new Subject<any>();
-  onNewCustomHook: Subject<any> = new Subject<any>();
   serverRunning = false;
 
   onKeyPointListChange: Subject<KeyPoint[]> = new Subject<KeyPoint[]>();
@@ -245,19 +244,38 @@ export class HookService extends DxcApiService {
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({ item:'new-script', win:pBrowserWindow });
         }
-      }/*,{
-        label: 'Custom hook',
+      },{
+        type: 'separator'
+      },{
+        label: 'System calls',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onNewCustomHook.next(true)
+          this.onCreateHook.next({ type:HOOK_TARGET_TYPE.SYSCALL });
+        }
+      }/*,{
+        label: 'Hypervisor calls',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onCreateHook.next({ type:HOOK_TARGET_TYPE.INT });
         }
       },{
-        label: 'New scratchpad hook',
+        label: 'SecureMonitor calls',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onNewCustomHook.next(true)
+          this.onCreateHook.next({ type:HOOK_TARGET_TYPE.INT });
         }
-      }*/, {
+      }*/,{
         type: 'separator'
+      },{
+        label: 'File Descriptors',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_FDS });
+        }
+      },{
+        label: 'Keystores',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_KEYSTORE_OPE });
+        }
       }, {
+        type: 'separator'
+      },{
         label: 'Global options',
         submenu: [
           {
@@ -332,62 +350,6 @@ export class HookService extends DxcApiService {
             }
           }]
       },{
-        type: 'separator'
-      },{
-        label: 'System calls',
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onCreateHook.next({ type:HOOK_TARGET_TYPE.SYSCALL });
-        }
-      }/*,{
-        label: 'Hypervisor calls',
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onCreateHook.next({ type:HOOK_TARGET_TYPE.INT });
-        }
-      },{
-        label: 'SecureMonitor calls',
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onCreateHook.next({ type:HOOK_TARGET_TYPE.INT });
-        }
-      }*/,{
-        type: 'separator'
-      },{
-        label: 'Show key points',
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onMenuClick.next({ item:HOOK_TARGET_TYPE.KP });
-        }
-        /*
-        submenu: [
-          {
-            label: 'List',
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
-              //this.draw({ type:'hook_points' });
-              //this.displayHookPointList()
-              //this..next({ type:HOOK_TARGET_TYPE.INT });
-              this.onMenuClick.next({ item:HOOK_TARGET_TYPE.KP });
-            }
-          },
-          {
-            label: 'New hook oriented',
-            click: (pMenuItem:any, pBrowserWindow:any ) => {
-              this.onCreateKeyPoint.next({ type:'hook_based' });
-            }
-          }
-        ]*/
-      }, {
-        type: 'separator'
-      },{
-        label: 'File Descriptors',
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_FDS });
-        }
-      },{
-        label: 'Keystores',
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onCreateHook.next({ type:HookFragmentPresetType.TRACK_KEYSTORE_OPE });
-        }
-      }, {
-        type: 'separator'
-      },{
         label: 'Clear Dynamic DEX bytecode',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.clearDynamicDex().subscribe();
@@ -398,8 +360,6 @@ export class HookService extends DxcApiService {
           this.flushCache("all").subscribe(()=> {
           });
         }
-      }, {
-        type: 'separator'
       },{
         label: 'Attach mode',
         submenu: [
@@ -466,6 +426,11 @@ export class HookService extends DxcApiService {
             }
           }
         ]
+      },{
+        label: 'Show key points',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onMenuClick.next({item: HOOK_TARGET_TYPE.KP});
+        }
       },{
         type: 'separator'
       },{

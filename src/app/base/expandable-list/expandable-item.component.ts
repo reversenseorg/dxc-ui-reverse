@@ -34,13 +34,16 @@ export interface ItemEvent<T> {
   item: T
 }
 
+/*
+(click)="onFocus($event, itemCtx.item, itemRef)"
+ */
 
 // @ts-ignore
 @Component({
   selector: 'app-expandable-item',
   template: `
     <ng-template #expItemTpl let-itemCtx="cfg">
-      <li class="dxc-text-75 exp-item" [ngClass]="{'hidden': hidden }" [style.padding-left]="itemCtx.depth+'em'" (keydown.arrowDown)="goNext($event, itemCtx.item, itemRef)"  (dblclick)="onArrowClick($event, itemCtx.item, itemRef)" (keyup.arrowLeft)="doCollapse($event, itemCtx.item, itemRef)" (keyup.arrowRight)="doExpand($event, itemCtx.item, itemRef)" (keyup.enter)="onArrowClick($event, itemCtx.item, itemRef)" (click)="onFocus($event, itemCtx.item, itemRef)"  #itemRef>
+      <li class="dxc-text-75 exp-item" [ngClass]="{'hidden': hidden }" [style.padding-left]="itemCtx.depth+'em'" (click)="onArrowClick($event, itemCtx.item, itemRef)" (keydown.arrowDown)="goNext($event, itemCtx.item, itemRef)"  (dblclick)="onArrowClick($event, itemCtx.item, itemRef)" (keyup.arrowLeft)="doCollapse($event, itemCtx.item, itemRef)" (keyup.arrowRight)="doExpand($event, itemCtx.item, itemRef)" (keyup.enter)="onArrowClick($event, itemCtx.item, itemRef)"  #itemRef>
 
         <fa-icon *ngIf="e" [icon]="['fad','caret-right']" class="dxc-text-75 caret" (click)="onArrowClick($event, itemCtx.item, itemRef)"></fa-icon>
         <!-- <ng-content select="[content-root]"></ng-content> -->
@@ -352,6 +355,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    */
   onArrowClick( pEvent:any, pItem:any, pRef:any):void{
 
+
     if(this.state == ITEM_STATE.COLLAPSED) {
       this.state = ITEM_STATE.EXPANDED;
       this.onExpand({ item:pItem, ref:pRef });
@@ -359,6 +363,9 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
       this.state = ITEM_STATE.COLLAPSED;
       this.onCollapse({ item:pItem, ref:pRef });
     }
+
+
+    this.onFocus(pEvent, pItem.item, pRef);
   }
 
   /**

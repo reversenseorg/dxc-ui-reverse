@@ -271,17 +271,22 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
     });
 
     this.hookSvc.onCreateHook.subscribe( (pOptions:any)=>{
-      switch (pOptions.target.__){
-        case NodeInternalType.METHOD:
-        case NodeInternalType.FUNC:
-          this.modalJavaNew.show(pOptions.type, pOptions.target, pOptions);
-          break;
-        case NodeInternalType.INSTR_CPU:
-          this.modalJavaNew.show(pOptions.type, pOptions.target, pOptions);
-          break;
-        case NodeInternalType.SYSCALL:
-          //this.modalInterruptorConfig.show();
-          break;
+
+      if(pOptions.target!=null){
+        switch (pOptions.target.__){
+          case NodeInternalType.METHOD:
+          case NodeInternalType.FUNC:
+            this.modalJavaNew.show(pOptions.type, pOptions.target, pOptions);
+            break;
+          case NodeInternalType.INSTR_CPU:
+            this.modalJavaNew.show(pOptions.type, pOptions.target, pOptions);
+            break;
+          case NodeInternalType.SYSCALL:
+            //this.modalInterruptorConfig.show();
+            break;
+        }
+      }else{
+
       }
     });
 

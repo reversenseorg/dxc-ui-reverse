@@ -76,6 +76,9 @@ import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.c
 import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
 import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.component";
 import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal-audit.component";
+import {RuntimeEventController} from "./components/events/ctrl/RuntimeEventController";
+import {RuntimeEventsService} from "./components/events/ctrl/events.service";
+import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
 
 
 interface StageSet {
@@ -96,6 +99,7 @@ export class ControllerService {
     private appmenuService:AppMenuService,
     private codeCtrlService: CodeControllerService,
     private hookService: HookService,
+    private eventsSvc:RuntimeEventsService,
     private inspectorSvc: InspectorService,
     private wsSvc: WorkspaceService,
     private helperService: HelperService,
@@ -221,6 +225,12 @@ export class ControllerService {
         },
         terminalCmp: {
           main: TerminalHookComponent
+        }
+      }),
+      new RuntimeEventController({
+        service: this.eventsSvc,
+        viewCmp: {
+          main: ViewportEventsComponent
         }
       }),
       new DeviceController({
