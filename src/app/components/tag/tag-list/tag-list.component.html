@@ -1,0 +1,36 @@
+<div>
+    <h5 *ngIf="title">{{ title }}</h5>
+
+    <div *ngIf="description!=null">
+        <p>{{ description }}</p>
+    </div>
+
+    <app-subnavbar  [type]="'navbar'"  [opts]="true" [parent]="this">
+        <ng-container options>
+            <!--app-subnavbar-btn  (click)="showModel()">Details</app-subnavbar-btn>-->
+            <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refresh()"></app-subnavbar-btn>
+            <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
+        </ng-container>
+    </app-subnavbar>
+
+
+    <div class="dxc-grid-body" [ngStyle]="{'height':height+'px', 'border-bottom':'none'}" style="overflow-y: auto">
+        <div *ngIf="tagList.length==0">
+
+            Loading tags ...
+        </div>
+        <ng-container *ngFor="let tag of window; let index = index">
+            <div class="row g-0" [ngStyle]="{'height':rowHeight+'px'}" [ngClass]="{'focus':(tag.getUUID()==selected?.getUUID())}"  (click)="select(tag, 'click')">
+                <div class="col-lg-12">
+                    <dxc-meta [label]="tag.label"> </dxc-meta>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div *ngIf="pagignation" class="dxc-navbar">
+        <div class="col-lg-6 offset-6">
+            <dxc-paginator [rows]="rows"  [totalRecords]="tagList.length" (onPageChange)="onPageChange($event)"></dxc-paginator>
+        </div>
+
+    </div>
+</div>
