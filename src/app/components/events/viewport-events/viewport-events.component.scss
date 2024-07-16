@@ -1,0 +1,58 @@
+.viewport-hook {
+  background-color: #2f2f2f;
+  color:white;
+  height:100%;
+  user-select: none;
+  margin:0px;
+  padding:0px;
+
+  ace-editor.ace_editor:nth-child(3) > div:nth-child(4) {
+    scrollbar-color: #474b38 var(--editor-bg);
+  }
+
+  button.code-abstract {
+    font-weight:800;
+  }
+
+  button.code-abstract:hover {
+    cursor: pointer;
+  }
+
+  b.meta-access {
+    margin-right:3em;
+  }
+
+  span.code-type:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+div.host-right {
+  background-color: var(--editor-bg);
+}
+
+.dxc-editable-block {
+  border-radius: 15px;
+  border: 1px solid var(--text-75);
+  padding:10px;
+  margin-bottom: 15px;
+  background-color: var(--nav-bg);
+
+  &:hover {
+    background-color: var(--text-50);
+  }
+}
+
+.hook-views {
+  background-color: var(--editor-bg);
+}
+
+
+.right-panel {
+  background-color: var(--editor-bg);
+}
+
+.frag-item-block {
+  box-shadow: 2px 2px 10px #111;
+}

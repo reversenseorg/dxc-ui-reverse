@@ -134,6 +134,7 @@ import {NodeTokenComponent} from "./components/code/node-token/node-token.compon
 import {NodeAliasComponent} from "./components/code/node-alias/node-alias.component";
 import {HookStatusComponent} from "./components/hooks/hook-status/hook-status.component";
 import {HookFragItemComponent} from "./components/hooks/frag-item/frag-item.component";
+import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -298,9 +299,9 @@ import {HookFragItemComponent} from "./components/hooks/frag-item/frag-item.comp
     XrefItemComponent,
 
     HookStatusComponent,
-    HookFragItemComponent
+    HookFragItemComponent,
 
-
+    ViewportEventsComponent
   ],
   imports: [
     AppRoutingModule,
