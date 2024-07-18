@@ -475,14 +475,24 @@ export class HookService extends DxcApiService {
       enabled:false,
       submenu:[{
         label: 'Search into process ...',
+        click: ()=>{
+          this.onMenuClick.next({ item:"mem-search-p"});
+        }
       },{
         label: 'Search on hook triggered',
+        click: ()=>{
+          this.onMenuClick.next({ item:"mem-search-p"});
+        }
       },{
         label: 'Memory mapping',
+        click: ()=>{
+          this.onMenuClick.next({ item:"mem-mapping"});
+        }
       },{
         type: 'separator'
       },{
         label: 'History',
+        enabled: false
       }]
     }, 4);
 
@@ -491,21 +501,27 @@ export class HookService extends DxcApiService {
       label: 'Communication',
       enabled:false,
       submenu: [{
-        label: 'Monitor (pro only)',
+        label: 'Monitor',
       }, {
         type: 'separator'
       }, {
-        label: 'HTTP(S) (pro only)',
+        label: 'HTTP(S)',
+        click: () => {
+          //this.onMenuClick.next();
+        }
       }, {
-        label: 'NFC (pro only)',
+        label: 'NFC',
       }, {
-        label: 'Bluetooth (pro only)',
+        label: 'Bluetooth',
       }, {
-        label: 'IPC / Binder (pro only)',
+        label: 'IPC / Binder',
       }, {
-        label: 'TEE (pro only)',
+        label: 'TEE',
+        click: ()=>{
+
+        }
       }, {
-        label: 'Android Intents (pro only)',
+        label: 'Android Intents',
       }]
     }, 7);
 

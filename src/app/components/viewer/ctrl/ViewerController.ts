@@ -46,6 +46,7 @@ export class ViewerController extends UiController implements IController {
       return (vItem.path !== pItem.path);
     });
 
+    console.log("ViewerController::closeView > ",pItem);
 
     this.closeView.next(pItem);
   }

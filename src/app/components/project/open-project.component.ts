@@ -82,8 +82,8 @@ import {Nullable} from "../../base/Nullable";
       </div>
     </div>
   `,
-  styleUrls: ['./project.component.scss']
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./project.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OpenProjectComponent implements OnInit {
 
@@ -104,13 +104,12 @@ export class OpenProjectComponent implements OnInit {
     private outputSvc:OutputService,
     private projectService:ProjectService,
     private authSvc:AuthService) {
-
   }
 
   ngOnInit(){
-    this.projectService.onRefreshAll.subscribe( (pProjects:DexcaliburProject[])=>{
+    /*this.projectService.onRefreshAll.subscribe( (pProjects:DexcaliburProject[])=>{
       this._updateProjectList(pProjects);
-    });
+    });*/
   }
 
   private _updateProjectList(pProjects:DexcaliburProject[]):void {
@@ -120,7 +119,7 @@ export class OpenProjectComponent implements OnInit {
         return (vProjA.meta.lastOpenDate > vProjB.meta.lastOpenDate)? 1 : -1;
     });
 
-    console.log(pProjects);
+    console.log("_updateProjectList > ",pProjects);
 
     this.projectsCount = pProjects.length;
     if (this.projectsCount == 0) {

@@ -42,6 +42,7 @@ import {FILE_ICONS} from "../../file/icons";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {DeviceBindedData} from "../common";
+import ModelFile from "../../../models/ModelFile";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -352,33 +353,25 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
         );
         break;
       case 'fs':
-        console.log(pItem);
         data = this.fsSvc.listDevicePath( {
           uid: pItem.dev.uid,
           //path: (pItem.p != null ? encodeURIComponent(pItem.p) : '/'),
           type:(pItem.dev.rootMode? 'privileged':'user')
-        });
-        if(data!=null){
-          data = data.pipe( map((pObs:any)=>{
-            return this.sortFiles(pObs, pItem.dev);
-          }));
-        }
+        }).pipe( map((pObs:ModelFile[])=>{
+          pItem.children = this.sortFiles(pObs, pItem.dev);
+          return pObs; //this.sortFiles(pObs, pItem.dev);
+        }));
         break;
+      case 'l':
       case 'd':
         data = this.fsSvc.listDevicePath( {
           uid: pItem.dev.uid,
-          path:encodeURIComponent(pItem.p),
+          path:encodeURIComponent( (pItem._t=='d')? pItem.p : pItem._d ),
           type:(pItem.dev.rootMode? 'privileged':'user')
-        });
-        if(data!=null){
-          data = data.pipe( map((pObs:any)=>{
-            console.log("Explorer-device > ")
-            if(pObs!=null){
-
-            }
-            return this.sortFiles(pObs, pItem.dev);
+        }).pipe( map((pObs:any)=>{
+          pItem.children = this.sortFiles(pObs, pItem.dev);
+          return pObs; //this.sortFiles(pObs, pItem.dev);
           }));
-        }
         break;
       case 'dev':
         data = from([this._prepareDeviceRendering(pItem)])
@@ -532,28 +525,38 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     return pItem.children;
   }
 
-
+  /**
+   * To retrieve the short form (string) of the select element
+   * to ensure most basic copy/paste feature
+   *
+   * @param {any} pEl
+   * @private
+   */
   private _retrieveShortForm( pEl:any):string {
 
-    console.log(pEl);
-    switch(pEl.item._t){
-      case "dev":
-        return pEl.item.model+" [id="+pEl.item.id+"]";
-        break;
-      case "apkg":
-        return pEl.item.packageIdentifier;
-        break;
-      case "p":
-        return pEl.item.PID+" "+pEl.item.USER+" "+pEl.item.NAME;
-        break;
-      default:
-        if(pEl.item.__ == NodeInternalType.FILE){
-          return pEl.item.p;
-        }else{
-          return "";
-        }
-        break;
+    if(pEl.item!=null){
+      switch(pEl.item._t){
+        case "dev":
+          return pEl.item.model+" [id="+pEl.item.id+"]";
+          break;
+        case "apkg":
+          return pEl.item.packageIdentifier;
+          break;
+        case "p":
+          return pEl.item.PID+" "+pEl.item.USER+" "+pEl.item.NAME;
+          break;
+        default:
+          if(pEl.item.__ == NodeInternalType.FILE){
+            return pEl.item.p;
+          }else{
+            return "";
+          }
+          break;
+      }
+    }else{
+      return "";
     }
+
   }
 
   /**
@@ -575,7 +578,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     this.activeItem = pEvent;
 
-    if (this.activeItem.item._t == 'enrollnow') {
+    if (this.activeItem?.item?._t == 'enrollnow') {
       pEvent.el.style.backgroundColor = '#330000';
     }
     else {

@@ -278,6 +278,8 @@ export class CodeControllerService extends DxcApiService{
 
     this.eSvc.getSelectionManager().onSelect$.subscribe((pNode:any)=>{
 
+      if(pNode==null) return;
+
       if(pNode.hasOwnProperty("__")){
         switch (pNode.__){
           case NodeInternalType.FUNC:

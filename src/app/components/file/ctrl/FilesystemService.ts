@@ -67,7 +67,7 @@ export class FilesystemService extends DxcApiService{
     this.displayCtxMenu$.next({event: pEvent, type: pType, obj: pObject});
   }
 
-  listDevicePath( pOptions:any = {}):Observable<any[]> {
+  listDevicePath( pOptions:any = {}):Observable<ModelFile[]> {
     return this._process(
       (pOptions.app!=null ? this.endpoints['list']['devData'] : this.endpoints['list']['dev']),
       pOptions

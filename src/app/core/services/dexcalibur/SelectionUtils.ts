@@ -4,6 +4,8 @@ export class SelectionUtils {
 
   static retrieveShortForm(pEl:any):string {
 
+    if(pEl==null) return "";
+
     switch( pEl.__) {
       case NodeInternalType.PACKAGE:
         return pEl.name;

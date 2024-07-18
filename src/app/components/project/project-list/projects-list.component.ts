@@ -13,6 +13,7 @@ import DexcaliburProject from "../../../models/DexcaliburProject";
 import {Nullable} from "../../../base/Nullable";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
+import {IconModel} from "../../../base/icon/IconModel";
 
 let ctr = 0;
 
@@ -49,7 +50,8 @@ export interface TargetApp {
         
         cursor: pointer;
       }
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectsListComponent implements OnInit {
 
@@ -81,6 +83,8 @@ export class ProjectsListComponent implements OnInit {
         { label: 'Z to A', icon: 'pi pi-fw pi-sort-alpha-down-alt' }
     ];
 
+    removeIcon: IconModel = GLOBAL_ICONS.TRASH;
+
     //items!: MenuItem[];
 
 
@@ -97,10 +101,10 @@ export class ProjectsListComponent implements OnInit {
         private _outputSvc: OutputService,
         private changeRef:ChangeDetectorRef) {
 
+
     }
 
     ngOnInit() {
-
 
         this.rowHeight = Math.round(this.height / this.visibleRows);
 
@@ -181,7 +185,8 @@ export class ProjectsListComponent implements OnInit {
             }
 
             console.log("refreshProjects > ",this.projectList, this.window );
-            //this.changeRef.detectChanges();
+            this.removeIcon = GLOBAL_ICONS.TRASH;
+            this.changeRef.detectChanges();
             this.refreshed.emit(true);
         });
     }
@@ -196,14 +201,27 @@ export class ProjectsListComponent implements OnInit {
 
         if(pProject!=null){
             try{
+                this.removeIcon = GLOBAL_ICONS.SPINNER;
+
                 this._projectSvc.removeProject(pProject).subscribe( (pResult)=>{
                     if(pResult.remove==true){
+                        this.removeIcon = GLOBAL_ICONS.CHECK;
                         this.selectProject(null,"delete");
                         this._outputSvc.print( OutputMessage.newSuccess({ src:"Project Manager", msg:`Project "${pProject.uid}" has been removed.`}));
                         this.refreshProjects();
+                    }else{
+                        this.removeIcon = GLOBAL_ICONS.WARNING;
+                        this.changeRef.detectChanges();
                     }
+
                 });
             }catch (err:any) {
+                this.removeIcon = GLOBAL_ICONS.WARNING;
+                this.changeRef.detectChanges();
+                setTimeout(()=>{
+                    this.removeIcon = GLOBAL_ICONS.TRASH;
+                    this.changeRef.detectChanges();
+                })
                 this._outputSvc.alert(new OutputMessage({ msg:err.message }))
             }
         }
@@ -229,7 +247,7 @@ export class ProjectsListComponent implements OnInit {
     }
 
     newProject() {
-
+        this._projectSvc.onMenuClick.next({ item:'new-project' });
     }
 
     onPageChange(pEvent: {offset:number, size:number }) {

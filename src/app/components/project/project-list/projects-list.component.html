@@ -11,7 +11,7 @@
             <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refreshProjects()"></app-subnavbar-btn>
             <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
             <app-subnavbar-btn  [icon]="gIcons['PLUS']" (click)="newProject()"></app-subnavbar-btn>
-            <app-subnavbar-btn  [disable]="selected==null" [icon]="gIcons['TRASH']" (click)="deleteProject(selected)"></app-subnavbar-btn>
+            <app-subnavbar-btn  [disable]="selected==null" [icon]="removeIcon" (click)="deleteProject(selected)"></app-subnavbar-btn>
         </ng-container>
     </app-subnavbar>
 
