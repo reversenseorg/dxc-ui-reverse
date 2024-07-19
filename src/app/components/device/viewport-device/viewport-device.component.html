@@ -46,10 +46,13 @@
             <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showDetail('ct')">Certificates</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='mnt'"  [icon]="gIcons['LIST']" (click)="showDetail('mnt')">Partitions</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='fr'"  [icon]="gIcons['HOOKS']" (click)="showDetail('fr')">Frida</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeLeft=='eop'"  [icon]="gIcons['LOCK']" (click)="showDetail('fr')">EoP</app-subnavbar-btn>
           </ng-container>
         </app-subnavbar>
       </ng-container>
       <ng-container body-left>
+      <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='eop')">
+      </div>
         <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='fr')">
             <div class="row no-gutters m-1 pt-1" *ngIf="data!=null && data.frida!=null">
               <div class="col-lg-2">Server path</div>
