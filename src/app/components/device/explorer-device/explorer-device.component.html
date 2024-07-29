@@ -90,7 +90,7 @@
           </span>
 
 
-            <span *ngIf="itemObj._t=='enrollnow'" (dblclick)="enroll(itemObj, {rooted:true})" >
+            <span *ngIf="itemObj._t=='enrollnow'" (dblclick)="enroll(itemObj, {profiling:{rooted:true}})" >
               <dxc-icon [model]="enrolling ? gIcons['SPINNER'] : gIcons['ERROR']" ></dxc-icon>&nbsp;
               <span class="text-danger" style="font-weight: 800">This device is not enrolled. Double-click to start ...</span>
             </span>
@@ -154,8 +154,8 @@
   <app-context-item [label]="'Install project app'" [separator]="true"  [icon]="gIcons['DOWNLOAD']" (itemclick)="installApp(ctxMenuState.subject,'proj')"></app-context-item>
   <app-context-item [label]="'Uninstall project app'"  [icon]="gIcons['TRASH']" (itemclick)="uninstallProjectApp(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Select as default'" [separator]="true"  [icon]="gIcons['STAR']" (itemclick)="setAsDefaultDev(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [label]="'Enroll'"  (itemclick)="enroll(ctxMenuState.subject,{rooted:true})"></app-context-item>
-  <app-context-item [label]="'Enroll (unprivileged)'"  (itemclick)="enroll(ctxMenuState.subject, {rooted:false})"></app-context-item>
+  <app-context-item [label]="'Enroll'"  (itemclick)="enroll(ctxMenuState.subject,{profiling:{rooted:true}})"></app-context-item>
+  <app-context-item [label]="'Enroll (unprivileged)'"  (itemclick)="enroll(ctxMenuState.subject, {profiling:{rooted:false}})"></app-context-item>
   <app-context-item [label]="'Analyze'"  (itemclick)="analyze(ctxMenuState.subject)"></app-context-item>
 
   <!--<app-context-item [label]="'Frida server'" (itemclick)="controller.startFridaSer(ctxMenuState.subject)"></app-context-item>-->
@@ -215,8 +215,7 @@
 
 <app-modal-dm [controller]="controller"></app-modal-dm>
 <!-- <app-modal-dev-app [controller]="controller"></app-modal-dev-app> -->
-<app-modal-progress [progress$]="progress$" [controller]="controller" [title]="progressTitle"></app-modal-progress>
-
+<app-modal-progress [cancelable]="true" [progress$]="progress$" [controller]="controller" [title]="'Enrollment'" [width]="450" [closable]="true"></app-modal-progress>
 
 <app-context-menu [name]="'dev_app'"  [width]="250">
   <app-context-item [label]="'Search ...'" [iconName]="'FIND'" (click)="filterApp(ctxMenuState.subject, {type:'c'})"></app-context-item>

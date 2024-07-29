@@ -3,7 +3,8 @@ export enum PrivilegedExecutionType {
     COMMAND='c',
     WRAPPER_MODE='w',
     INTENT='i',
-    HOST_COMMAND='h'
+    HOST_COMMAND='h',
+    BRIDGE_COMMAND="bc"
 }
 
 export class PrivilegedExecutionPhase {

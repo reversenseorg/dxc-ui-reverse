@@ -145,7 +145,7 @@ export class Device
      * @type {AdbWrapper[]}
      * @field
      */
-    bridges:any = {};
+    bridges:Record<string, IBridge> = {};
 
     /**
      * Flag. TRUE is the device is enrolled, else FALSE

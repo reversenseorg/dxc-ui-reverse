@@ -135,6 +135,7 @@ import {NodeAliasComponent} from "./components/code/node-alias/node-alias.compon
 import {HookStatusComponent} from "./components/hooks/hook-status/hook-status.component";
 import {HookFragItemComponent} from "./components/hooks/frag-item/frag-item.component";
 import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
+import {DeviceModule} from "./components/device/device.module";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -318,7 +319,8 @@ import {ViewportEventsComponent} from "./components/events/viewport-events/viewp
     DxcBaseModule,
     DxcClientModule,
 
-    ProjectModule
+    ProjectModule,
+    DeviceModule
     //ProjectManagementModule
   ],
   providers: [

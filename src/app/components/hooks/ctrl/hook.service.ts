@@ -432,6 +432,11 @@ export class HookService extends DxcApiService {
           this.onMenuClick.next({item: HOOK_TARGET_TYPE.KP});
         }
       },{
+        label: 'Enable/Disable all hooks',
+        click: (pMenuItem:any, pBrowserWindow:any ) => {
+          this.onMenuClick.next({item: HOOK_TARGET_TYPE.KP});
+        }
+      },{
         type: 'separator'
       },{
         label: 'Kill target app',

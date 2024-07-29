@@ -20,6 +20,7 @@ export class ContextItemComponent implements OnInit {
   @Input() icon: Nullable<IconModel> = null;
   @Input() separator: boolean = false;
   @Input() disabled: boolean = false;
+  @Input() checked: boolean = false;
 
   @Output() itemclick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -34,9 +35,18 @@ export class ContextItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.iconName != null){
-      this.icon = GLOBAL_ICONS[this.iconName];
 
+    if(this.icon == null){
+      if(this.checked) {
+        this.icon = GLOBAL_ICONS.CHECK
+      } else {
+        this.icon = null;
+      }
+    }
+
+
+    if (this.iconName != null) {
+      this.icon = GLOBAL_ICONS[this.iconName];
     }
   }
 

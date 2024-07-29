@@ -41,7 +41,7 @@ import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {FILE_ICONS} from "../../file/icons";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
-import {DeviceBindedData} from "../common";
+import {DeviceBindedData, EnrollmentOpts} from "../common";
 import ModelFile from "../../../models/ModelFile";
 
 /*interface PackageSets {
@@ -152,6 +152,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    */
   progressTitle:Nullable<string> = null;
   enrolling = false ;
+  private _appFilter:Nullable<string> = null;
 
 
 
@@ -240,6 +241,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
 
     this.dmService.devices$.subscribe((pDevices)=>{
+      console.log("LIST DEVICES ", pDevices);
       this.outputSvc.print( OutputMessage.newSuccess({ msg:"Devices have been refreshed", src:'Device Manager', extra:null }));
       pDevices.map((vDev)=>{
         this._prepareDeviceRendering(vDev);
@@ -331,6 +333,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
               pItem.children = children;
             }
 
+            console.log("Explorer-device > expand apps > ",pItem);
             return pObs;
           })
         );
@@ -769,10 +772,18 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     this.modalDm.show();
   }
 
-  enroll(pItemObj: any, pOptions:any, pForce = false): void {
+  /**
+   *  To start device enrollement (gui + api)
+   *
+   * @param pItemObj
+   * @param pOptions
+   * @param pForce
+   */
+  enroll(pItemObj: any, pOptions:EnrollmentOpts, pForce = false): void {
     let dev: Nullable<Device> = null;
 
     if(pItemObj.enrolled && !pForce){
+
       this.outputSvc.confirm(OutputMessage.newConfirm({
         msg: "This device is already enrolled. Are you sure to re-enroll this device ? If the version of the operating system of the device changed since an old project, please enroll it as a new device.",
       }, (pEvent:any)=>{
@@ -791,10 +802,21 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     if(dev != null){
       this.enrolling = true;
+
+      // Progress UI
+      this.progressTitle = 'Enrollement progression';
+      this.progress$.next({ value: 20, msg: 'Start to enroll the device ...' });
+      this.modalProgress.show();
+
       this.dmService.enroll(dev as Device, pOptions).subscribe((pObs: any) => {
         console.log('enroll started : ', pObs);
+
+
         this.dmService.enrollStatus(dev as Device).subscribe(( pObs2) => {
           console.log('status : ', pObs2);
+
+          this.progress$.next({ value: 100 });
+          this.modalProgress.close();
         });
       });
     }
@@ -807,15 +829,20 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    * @param pItem
    * @param pFilter
    */
-  filterApp(pItem: any, pFilter: any) {
+  filterApp(pItem: any, pFilter: Nullable<Record<string, any>> = null) {
     if(pFilter == null){
       this.refreshApp(pItem);
     }
+    
+    this._appFilter = JSON.stringify(pFilter);
 
     const itm = this._getItemByDevice( pItem.dev, 'app');
+
+    console.log("item by dev : ", itm);
     if(itm != null){
-      itm.filterChildren(pFilter);
+      itm.filterChildren(pFilter==null ? {} : pFilter);
     }
+
   }
 
 
@@ -1131,4 +1158,5 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
       })
     }
+
 }

@@ -27,6 +27,7 @@ import {OutputMessage} from "../../../cmp/OutputMessage";
 import ModelSyscall from "../../../models/ModelSyscall";
 import {ElectronService} from "../../../core/services";
 import {Nullable} from "../../../base/Nullable";
+import {PrivilegedExecutionStrategy} from "../../../models/devices/PrivilegedExecutionStrategy";
 
 
 export const DEVICE_PANEL = {
@@ -37,7 +38,8 @@ export const DEVICE_PANEL = {
   PERM: 'pm',
   NETWORK: 'nt',
   MOUNTS: 'mnt',
-  USB: 'usb'
+  USB: 'usb',
+  EOP:'eop'
 }
 @Component({
   selector: 'app-viewport-device',
@@ -64,13 +66,14 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   icn: IconModel = DEV_ICONS['MOBILE'];
   activeLeft =  'ss';
   activeRight:Nullable<string> = null;
-  defaultWidth = 70;
+  defaultWidth = 100;
   defaultWidths = {
     [DEVICE_PANEL.MOUNTS]: 100,
     [DEVICE_PANEL.CERT]: 100,
-    [DEVICE_PANEL.USB]: 100
+    [DEVICE_PANEL.USB]: 100,
+    [DEVICE_PANEL.EOP]: 100
   };
-  activeWidth = 70;
+  activeWidth = 100;
 
 /*
   topNav: NavbarSimpleView = new NavbarSimpleView({
@@ -277,6 +280,12 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   showDetail(pType:string):any {
 
     switch (pType){
+      case DEVICE_PANEL.EOP:
+        this.activeLeft = DEVICE_PANEL.EOP;
+        this.activeWidth = this.defaultWidths[DEVICE_PANEL.EOP];
+        this.changeDetectorRef.detectChanges();
+        console.log("DEVICE_PANEL.EOP ",this.data);
+        break;
       case DEVICE_PANEL.FRIDA:
         this.activeLeft = DEVICE_PANEL.FRIDA;
         this.changeDetectorRef.detectChanges();
@@ -383,4 +392,5 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
       }
     });
   }
+
 }

@@ -65,7 +65,7 @@ export class SettingsService extends DxcApiService {
         }else{
           return {
             http: {name:'http', value:pRes.data.http},
-            ws: {name:'ws', value:pRes.data.ws}
+            ws: {name:'ws', value: pRes.data.ws}
           };
         }
       }));

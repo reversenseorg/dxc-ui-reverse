@@ -46,12 +46,27 @@
             <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showDetail('ct')">Certificates</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='mnt'"  [icon]="gIcons['LIST']" (click)="showDetail('mnt')">Partitions</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='fr'"  [icon]="gIcons['HOOKS']" (click)="showDetail('fr')">Frida</app-subnavbar-btn>
-              <app-subnavbar-btn [active]="activeLeft=='eop'"  [icon]="gIcons['LOCK']" (click)="showDetail('fr')">EoP</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeLeft=='eop'"  [icon]="gIcons['LOCK']" (click)="showDetail('eop')">EoP</app-subnavbar-btn>
           </ng-container>
         </app-subnavbar>
       </ng-container>
       <ng-container body-left>
       <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='eop')">
+
+          <div class="row">
+              <div class="col-lg-10 offset-1 text-left dxc-text-75 text-wrap p-1">
+                  This panel helps to define how the server perform privilege escalation to execute a lambda command as root. Such commands are used to dump memory, to inspect any processes, to read protected files, as well as profile the device.
+                  Any devices should provide at least one strategy to perform such Escalation of Privilege (EoP). Strategy can be trigged at several step depending of how th EoP is done.
+                  The strategy can wrap a command inside a simple <code>su -c '@@__COMMAND__@@'</code> as well to perform multi-step EoP when the device boot or the project starts. In the resulting phases, the token <code>@@__COMMAND__@@</code> will be replaced by the final command.
+              </div>
+          </div>
+          <ng-container *ngFor="let bridge of data.bridges | keyvalue">
+            <ng-container *ngFor="let strat of bridge.value.strategies | keyvalue">
+                <dxs-device-eop-editor [devID]="data.getUID()" [bridge]="bridge.value" [defaultStrat]="bridge.value.defaultStrat==strat.value.name" [strategy]="strat.value"></dxs-device-eop-editor>
+            </ng-container>
+
+        </ng-container>
+
       </div>
         <div class="container-fluid" style="overflow:auto;position:relative;height:100%" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='fr')">
             <div class="row no-gutters m-1 pt-1" *ngIf="data!=null && data.frida!=null">

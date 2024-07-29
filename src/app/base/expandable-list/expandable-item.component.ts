@@ -45,7 +45,7 @@ export interface ItemEvent<T> {
     <ng-template #expItemTpl let-itemCtx="cfg">
       <li class="dxc-text-75 exp-item" [ngClass]="{'hidden': hidden }" [style.padding-left]="itemCtx.depth+'em'" (click)="onArrowClick($event, itemCtx.item, itemRef)" (keydown.arrowDown)="goNext($event, itemCtx.item, itemRef)"  (dblclick)="onArrowClick($event, itemCtx.item, itemRef)" (keyup.arrowLeft)="doCollapse($event, itemCtx.item, itemRef)" (keyup.arrowRight)="doExpand($event, itemCtx.item, itemRef)" (keyup.enter)="onArrowClick($event, itemCtx.item, itemRef)"  #itemRef>
 
-        <fa-icon *ngIf="e" [icon]="['fad','caret-right']" class="dxc-text-75 caret" (click)="onArrowClick($event, itemCtx.item, itemRef)"></fa-icon>
+        <fa-icon *ngIf="e" [icon]="['fad','caret-right']" class="dxc-text-75 caret"></fa-icon>
         <!-- <ng-content select="[content-root]"></ng-content> -->
         <ng-container *ngTemplateOutlet="itemCtx.tpl ; context: {item: itemCtx.item}"></ng-container>
       </li>
@@ -148,8 +148,8 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    *
    * @param {()=>boolean} pCondition
    */
-  filterChildren( pCondition:any):void {
-    const filt:IStringIndex<((val:any)=>boolean)> = {};
+  filterChildren( pCondition:Record<string, any>):void {
+    const filt:Record<string, ((val:any)=>boolean)> = {};
 
     for(const p in pCondition){
       if(Array.isArray(pCondition[p])){

@@ -15,7 +15,8 @@ import {DEVICE_PANEL} from "../viewport-device/viewport-device.component";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
-import {DeviceBindedData} from "../common";
+import {DeviceBindedData, EnrollmentOpts} from "../common";
+import {PrivilegedExecutionStrategy} from "../../../models/devices/PrivilegedExecutionStrategy";
 
 export type DeviceUID = string;
 export interface AppAcquisitionOpts {
@@ -91,7 +92,7 @@ export class DeviceManagerService extends DxcApiService {
           listFile: { method: 'GET', url:'/device/fs/list', format:'json', auth:AUTH_ENFORCE},
           readFile: { method: 'GET', url:'/device/fs/content', format:'json', auth:AUTH_ENFORCE},
           pullFile: { method: 'GET', url:'/device/fs/pull', format:'json', auth:AUTH_ENFORCE},
-          getApp: { method: 'GET', url:'/device/applications', format:'json', auth:AUTH_ENFORCE},
+          getApp: { method: 'GET', url:'/device/applications/:uid', format:'json', auth:AUTH_ENFORCE},
           getSyscalls: { method: 'GET', url:'/device/syscalls', format:'json', auth:AUTH_ENFORCE},
           pullApp: { method: 'POST', url:'/device/application/pull', format:'json', auth:AUTH_ENFORCE},
           acquire: { method: 'POST', url:'/device/acquire', format:'json', auth:AUTH_ENFORCE},
@@ -101,7 +102,8 @@ export class DeviceManagerService extends DxcApiService {
           profileAll: { method: 'GET', url:'/device/profile/all', format:'json', auth:AUTH_ENFORCE},
           profile: { method: 'GET', url:'/device/profile/:type', format:'json', auth:AUTH_ENFORCE},
           doProfiling: { method: 'POST', url:'/device/profile/:type', format:'json', auth:AUTH_ENFORCE},
-          admin: { method: 'POST', url:'/device/admin/:action', format:'json', auth:AUTH_ENFORCE}
+          admin: { method: 'POST', url:'/device/admin/:action', format:'json', auth:AUTH_ENFORCE},
+          eop_change: { method: 'POST', url:'/device/eop/change', format:'json', auth:AUTH_ENFORCE}
         },
         frida: {
           save: { method: 'POST', url:'/device/frida/settings', format:'json', auth:AUTH_ENFORCE}
@@ -307,7 +309,12 @@ export class DeviceManagerService extends DxcApiService {
     ).pipe(
       map((pEl:any)=>{
         if(pEl.success){
-          this._cache.devices = pEl.data.devices;
+
+          this._cache.devices = [];
+          pEl.data.devices.map( (rawDev:any) => {
+            this._cache.devices.push(new Device(rawDev));
+          });
+
           this.outputSvc.print(new OutputMessage({
             src: "Device Manager",
             msg: `There are ${pEl.data.devices.length} devices configured`
@@ -487,7 +494,7 @@ export class DeviceManagerService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           appCache = []
-          pEl.data.apps.map((x:any) => {
+          pEl.data.map((x:any) => {
             const app = new AppPackage(x);
             (app as DeviceBindedData<any>).dev = pDevice;
             appCache.push(app as DeviceBindedData<AppPackage>);
@@ -498,7 +505,7 @@ export class DeviceManagerService extends DxcApiService {
 
           this.outputSvc.print(new OutputMessage({
             src: "Device Manager",
-            msg: `There are ${pEl.data.apps.length} applications installed on device ${pDevice.uid}`
+            msg: `There are ${pEl.data.length} applications installed on device ${pDevice.uid}`
           }));
 
           return this._cache.app[pDevice.uid as string];
@@ -567,7 +574,9 @@ export class DeviceManagerService extends DxcApiService {
    *    - randomName : true/false
    * @param pDevice
    */
-  enroll( pDevice:Device, pOptions:any = {rooted:true}):Observable<any> {
+  enroll( pDevice:Device, pOptions:EnrollmentOpts = {profiling:{rooted:true}}):Observable<any> {
+
+
 
     return this._process(
       this.endpoints['device']['enroll'],
@@ -575,7 +584,7 @@ export class DeviceManagerService extends DxcApiService {
         uid:pDevice.uid,
         opts: {
           profiling:{
-            unprivileged: !pOptions.rooted
+            unprivileged: (pOptions.profiling? (!pOptions.profiling.rooted):true)
           },
           frida:{
             devicePath: '/data/local/tmp/frida-server'
@@ -600,10 +609,7 @@ export class DeviceManagerService extends DxcApiService {
             }
           );
         }else{
-          this.outputSvc.alert(OutputMessage.newSuccess({
-            src: "Device Manager",
-            msg: `Enrollment of ${pDevice.uid} started ...`
-          }));
+
 
           return pEl;
         }
@@ -779,6 +785,33 @@ export class DeviceManagerService extends DxcApiService {
       }else{
         //his.outputSvc.print( OutputMessage.newSuccess({ msg: 'The application ['+opts.opts.pkg+'] has been uninstalled on device ['+opts.uid+'] ' }));
         return pRes;
+      }
+    }));
+  }
+
+
+  /**
+   * To save ean EoP strategy
+   *
+   * @param {Device} pDevice
+   * @param {PrivilegedExecutionStrategy} pStrategy
+   * @method
+   */
+  saveStrategy(pDeviceID:string, pBridgeName:string, pStrategy: PrivilegedExecutionStrategy):Observable<boolean> {
+
+    return this._process(
+        this.endpoints['device']['eop_change'], {
+          uid: pDeviceID,
+          bridge: pBridgeName,
+          strategy: pStrategy
+        }
+    ).pipe(map( (pRes: any) => {
+      if(!pRes.success){
+        this.outputSvc.alert( OutputMessage.newError({ msg: pRes.msg }));
+        return false;
+      }else{
+        //his.outputSvc.print( OutputMessage.newSuccess({ msg: 'The application ['+opts.opts.pkg+'] has been uninstalled on device ['+opts.uid+'] ' }));
+        return true;
       }
     }));
   }

@@ -1,17 +1,11 @@
 import {
   AfterContentInit, ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
   Input,
   OnInit,
-  Output,
   ViewChild
 } from '@angular/core';
 import {Observable, Subject} from "rxjs";
-import {DeviceController} from "../../components/device/ctrl/DeviceController";
-import {Message} from "../../cmp/Error";
 import {ModalBaseComponent} from "../modal-base/modal-base.component";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {NgbProgressbarConfig} from "@ng-bootstrap/ng-bootstrap";

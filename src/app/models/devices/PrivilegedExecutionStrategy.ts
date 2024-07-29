@@ -1,11 +1,13 @@
-import {IBridge} from "./Bridge.js";
+
 import {PrivilegedExecutionPhase} from "./PrivilegedExecutionPhase";
 
 
 
 export enum StrategyTrigger {
-    CMD_EXEC,
-    DEV_LIST
+    CMD_EXEC= 'cmd_exec',
+    DEV_BOOT = 'dev_boot',
+    DEV_LIST = 'dev_list',
+    PROJ_START = 'proj_start'
 }
 
 /**
@@ -28,7 +30,7 @@ export class PrivilegedExecutionStrategy {
      * @type {IBridge}
      * @field
      */
-    bridge:IBridge;
+    bridge:any;
 
     /**
      * A list of steps to execute prior to be able run a command as root
@@ -42,7 +44,7 @@ export class PrivilegedExecutionStrategy {
      * @field
      * @private
      */
-    private _trigger:StrategyTrigger = StrategyTrigger.CMD_EXEC;
+    _trigger:StrategyTrigger = StrategyTrigger.CMD_EXEC;
 
     private _executed:boolean = false;
 
@@ -52,7 +54,7 @@ export class PrivilegedExecutionStrategy {
         }
     }
 
-    setBridge(pBridge:IBridge):void {
+    setBridge(pBridge:any):void {
         this.bridge = pBridge;
     }
 
@@ -83,10 +85,10 @@ export class PrivilegedExecutionStrategy {
         let o:any  = {};
         o.name = this.name;
         o.phases = [];
+        o._trigger = this._trigger;
         for(let i=0; i<this.phases.length; i++){
             o.phases[i] = this.phases[i].toJsonObject();
         }
-        CoreDebug.checkJsonSerialize(o, "PrivilegedExecutionStrategy");
         return o;
     }
 }

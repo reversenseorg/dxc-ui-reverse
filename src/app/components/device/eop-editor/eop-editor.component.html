@@ -1,42 +1,52 @@
 <div class="project-card p-2" [ngStyle]="{ 'height':height+'px'}">
 
-    <div class="row g-0">
-        <div class="col-lg-4">
+    <div class="row g-0 strategy-header">
             <ng-container *ngIf="editingName; else showName">
-                <input type="text" class="form-input dxc-cell-input" style="width:300px" [name]="'name'" [(ngModel)]="name" (keydown.control.v)="onPaste('ext',ext)"  (keydown.escape)="quitEditMode($event,ext)" (keyup.enter)="saveName($event)"/>
+                <div class="col-lg-8">
+                    <input type="text" class="form-input dxc-cell-input" style="width:300px" [name]="'name'" [(ngModel)]="name"  (keydown.escape)="quitEditMode($event)" (keyup.enter)="saveName($event)"/>
+                </div>
             </ng-container>
             <ng-template #showName>
-                <span>{{ strategy.name }}</span>
-                <dxc-btn [icon]="gIcons['EDIT']" (click)="editingName = true"></dxc-btn>
+                <div class="col-lg-7">
+                    <h4 class="dxc-text-yellow">
+                        {{ strategy.name }}
+                        <dxc-meta *ngIf="defaultStrat" [label]="'default'" [css]="'text-bg-success dxc-meta ml-2'"></dxc-meta>
+                        <dxc-meta *ngIf="bridge" [label]="bridge.shortname" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
+                    </h4>
+                </div>
+                <div class="col-lg-1">
+                    <span class="dxc-success-icon" *ngIf="savedSuccess">
+                        <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
+                    </span>
+                </div>
+                <div class="col-lg-3">
+                    <select name="type"  (change)="save()" [(ngModel)]="strategy._trigger" class="dxc-input">
+                        <option value="cmd_exec" default>for each command</option>
+                        <option value="proj_start">at project start</option>
+                        <option value="dev_boot">at device boot</option>
+                        <option value="dev_list">on device list (once))</option>
+                    </select>
+                </div>
+                <div class="col-lg-1">
+                    <dxc-btn [borderless]="true" [icon]="gIcons['EDIT']" (click)="editingName = true"></dxc-btn>
+                </div>
             </ng-template>
-        </div>
     </div>
 
+    <p *ngIf="strategy.description">
+        {{ strategy.description }}
+    </p>
 
-    <div class="row g-0" *ngFor>
-        <div *ngIf="project.icon!=null" class="col-lg-3">
-            &nbsp;
-        </div>
-        <div [ngClass]="['col-lg-'+(project.icon!=null?'9':'12')]">
-            <h5 class="project-name">{{ project.uid }}</h5>
-            <i class="project-app">{{ project.pkg }}</i>
-        </div>
-    </div>
-
-    <div class="row g-0" *ngIf="project.icon==null">
+    <div class="row g-0 strategy-phase" *ngFor="let phase of strategy.phases; let i=index">
         <div class="col-lg-12">
-            <dxc-meta [label]="project.os" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
-            <dxc-meta [label]="'Engine Version : '+project.engineVersion" [css]="'dxc-salmon dxc-meta ml-2'"></dxc-meta>
-        </div>
-    </div>
-    <div class="row g-0" *ngIf="project.icon==null">
-        <div class="col-lg-12">
-            <dxc-meta [label]="'Created'" [css]="'dxc-herb'" [value]="project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'"></dxc-meta>
-            <dxc-meta [label]="'Opened'" [css]="'dxc-yellow'" [value]="project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'"></dxc-meta>
+            <dxs-device-eop-phase-e [offset]="i" [editable]="true" [phase]="phase" (phaseChange)="updatePhase(i,$event)"></dxs-device-eop-phase-e>
         </div>
     </div>
 
-    <div class="row bottom-0 footer">
-        <ng-content></ng-content>
+    <div class="row g-0">
+        <div class="col-lg-12 text-center dxc-text-75">
+            add a new phase<br><dxc-btn [icon]="gIcons['ADD']" (click)="newPhase()"></dxc-btn>
+        </div>
     </div>
+
 </div>
