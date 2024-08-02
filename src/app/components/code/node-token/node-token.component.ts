@@ -70,6 +70,17 @@ export interface TargetApp {
                         <dxc-icon [model]="cIcons.METH"></dxc-icon>
                         <dxc-node-alias [item]="item" [text]="item.name"></dxc-node-alias>
                     </span>
+                    <ng-container *ngIf="full">
+                        <span>(</span>
+                            <ng-container *ngFor="let a of item.args; let i=index">
+                                <span>arg{{i}}</span>
+                                <dxc-node-alias [item]="a" [text]="getSymbol(a)"></dxc-node-alias>
+                                <span *ngIf="(i+1)<item.args.length">&nbsp;,&nbsp;</span>
+                            </ng-container>
+                        <span>)</span> 
+                        <span> :ret </span>
+                        <dxc-node-alias [item]="item.ret" [text]="getSymbol(item.ret)"></dxc-node-alias>
+                    </ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.FUNC">
                     <span (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event,'func',item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
@@ -112,6 +123,9 @@ export class NodeTokenComponent implements OnInit, AfterViewInit {
     @Input() styleValue?: { [p:string]:any };
     @Input() css:string = "";
     @Input() cssValue:string = "";
+
+
+    @Input() full = false;
 
     @Input() format:Nullable<string> = null;
     @Input() noAlias = false;

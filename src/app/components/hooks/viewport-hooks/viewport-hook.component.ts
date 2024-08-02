@@ -54,10 +54,15 @@ export class ViewportHookComponent implements OnInit, AfterViewInit, IViewportCo
     console.log('size vp > ', this.size);
   }
 
+  /**
+   * To initialize the data of the viewport
+   *
+   * @param pData
+   */
   configure( pData:any):void {
     this.data = pData;
 
-    console.log('configure viewport>',pData);
+    console.log('configure viewport-hook>',pData);
     this.view.tab.icon = pData._icon;
 
 

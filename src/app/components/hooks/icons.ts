@@ -100,5 +100,12 @@ export const HOOK_ICONS = {
     type: 'fas',
     name: 'circle',
     color1: 'dxc-text-50'
+  }),
+  SCRIPT:new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'scroll',
+    color1: 'dxc-text-50'
   })
+
 };

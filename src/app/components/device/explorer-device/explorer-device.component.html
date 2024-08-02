@@ -148,7 +148,7 @@
   <app-context-item [label]="'Show processes'" (itemclick)="showProcess(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Browse filesystem'"  (itemclick)="showDevFs(ctxMenuState)"></app-context-item>
   <app-context-item [label]="'Acquire device'" [icon]="gIcons['DOWNLOAD']" (itemclick)="acquire(ctxMenuState.subject,'all')"></app-context-item>
-  <app-context-item [label]="'Root access'"  [icon]="gIcons['UNLOCK']" (itemclick)="usePrivilegedMode(ctxMenuState.subject, true)"></app-context-item>
+  <app-context-item [label]="'Root access'" [separator]="true"   [icon]="gIcons['UNLOCK']" (itemclick)="usePrivilegedMode(ctxMenuState.subject, true)"></app-context-item>
   <app-context-item [label]="'User access'"  [icon]="gIcons['LOCK']" (itemclick)="usePrivilegedMode(ctxMenuState.subject, false)"></app-context-item>
   <app-context-item [label]="'Remove'"  [icon]="gIcons['TRASH']" (itemclick)="removeDevice(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Install project app'" [separator]="true"  [icon]="gIcons['DOWNLOAD']" (itemclick)="installApp(ctxMenuState.subject,'proj')"></app-context-item>
@@ -157,6 +157,7 @@
   <app-context-item [label]="'Enroll'"  (itemclick)="enroll(ctxMenuState.subject,{profiling:{rooted:true}})"></app-context-item>
   <app-context-item [label]="'Enroll (unprivileged)'"  (itemclick)="enroll(ctxMenuState.subject, {profiling:{rooted:false}})"></app-context-item>
   <app-context-item [label]="'Analyze'"  (itemclick)="analyze(ctxMenuState.subject)"></app-context-item>
+    <app-context-item [label]="'Start hook server'"  [icon]="gIcons['PLAY']" (itemclick)="startServer(ctxMenuState.subject)"></app-context-item>
 
   <!--<app-context-item [label]="'Frida server'" (itemclick)="controller.startFridaSer(ctxMenuState.subject)"></app-context-item>-->
 </app-context-menu>

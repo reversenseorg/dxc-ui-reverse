@@ -17,6 +17,7 @@ import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {DeviceBindedData, EnrollmentOpts} from "../common";
 import {PrivilegedExecutionStrategy} from "../../../models/devices/PrivilegedExecutionStrategy";
+import {HookService} from "../../hooks/ctrl/hook.service";
 
 export type DeviceUID = string;
 export interface AppAcquisitionOpts {

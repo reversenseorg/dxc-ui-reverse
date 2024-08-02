@@ -3,6 +3,8 @@ import {UserRole} from "./acl/rbac/UserRole";
 import {IStringIndex} from "../../base/IStringIndex";
 import {Nullable} from "../../base/Nullable";
 
+export type UserAccountUUID = string;
+
 export class UserAccount implements IStringIndex<any>{
 
     private _uid:Nullable<string>  = null;

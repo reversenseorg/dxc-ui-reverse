@@ -98,6 +98,13 @@ export enum HOOKSESSION_CACHE_POLICY {
 }
 
 
+interface RuntimeEventFilter {
+  fragUID?:string;
+  hookUID?:string;
+  tagUUIDs?:number[];
+  tagNames?:string[];
+}
+
 // ts-ignore
 @Injectable({
   providedIn: 'root'
@@ -118,6 +125,7 @@ export class HookService extends DxcApiService {
 
     followThread: false,
     followFork: false,
+    cache_policy: HOOKSESSION_CACHE_POLICY.STORE_SESSIONS,
     mode: "spawn-self"
   };
 
@@ -153,6 +161,7 @@ export class HookService extends DxcApiService {
   _sessions:HookSession[] = [];
   _hooks:HookMap = {};
   _hook_kp:KeyPoint[] = [];
+  _frags:Record<string, HookTemplateFragment> = {};
   _hook_map:HookMethMap = {};
 
 
@@ -190,7 +199,7 @@ export class HookService extends DxcApiService {
           },
           sessions: {
             list: { method: 'GET', url:'/hook/sessions', format:'json', auth:false /* removed */, puid:true},
-            get_msg: { method: 'GET', url:'/hook/session/msg', format:'json', auth:false /* removed */, puid:true, window: new WebApiWindowing(0,100)},
+            //get_msg: { method: 'GET', url:'/hook/msg', format:'json', auth:false /* removed */, puid:true, window: new WebApiWindowing(0,100)},
           },
           global: {
             edit_config: { method: 'POST', url:'/hook/global/opts', format:'json', auth:false /* removed */, puid:true},
@@ -329,20 +338,14 @@ export class HookService extends DxcApiService {
             label: 'Record hook sessions',
             type: 'checkbox',
             name: "cache_policy",
-            value: false,
-            checked: false,
+            value: true,
+            checked: true,
             onCheck: (vCurrVal:boolean, vItem:any)=>{
               if(vCurrVal==true){
-                this.switchProperty("cache_policy",
-                    (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS)?
-                        HOOKSESSION_CACHE_POLICY.FLUSH_SESSIONS : HOOKSESSION_CACHE_POLICY.STORE_SESSIONS
-                );
+                this.switchProperty("cache_policy",HOOKSESSION_CACHE_POLICY.FLUSH_SESSIONS);
                 vItem.value = vItem.checked = false;
               }else{
-                this.switchProperty("cache_policy",
-                    (this.options.cache_policy == HOOKSESSION_CACHE_POLICY.STORE_SESSIONS)?
-                        HOOKSESSION_CACHE_POLICY.FLUSH_SESSIONS : HOOKSESSION_CACHE_POLICY.STORE_SESSIONS
-                );
+                this.switchProperty("cache_policy",HOOKSESSION_CACHE_POLICY.STORE_SESSIONS);
                 vItem.value = vItem.checked = true;
               }
 
@@ -447,7 +450,7 @@ export class HookService extends DxcApiService {
       },{
         label: 'Start server',
         id:'hook-server-start',
-        enabled:(this.getServerStatus()==false),
+        enabled:true,
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.startServer().subscribe( (pRes:any)=>{
             pMenuItem.enabled = !this.serverRunning;
@@ -460,7 +463,7 @@ export class HookService extends DxcApiService {
       },{
         label: 'Stop server',
         id:'hook-server-stop',
-        enabled:(this.getServerStatus()),
+        enabled:true,
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.stopServer().subscribe( (pRes:any)=>{
             pMenuItem.enabled = this.serverRunning;
@@ -635,9 +638,15 @@ export class HookService extends DxcApiService {
 
         const data:HookSession[] = []
 
-        pEl.data.sess.map((x:any) => {         x.__ = NodeInternalType.HOOK_SESSION;
-          x.date = new Date(x.time);
-          data.push(x);
+        const project = this.projectSvc.getSelectedProject();
+        pEl.data.sess.map((x:any) => {
+          if(project!=null){
+            const s:any = HookSession.from(project, x);
+            s.__ = NodeInternalType.HOOK_SESSION;
+            s.date = new Date(x.time);
+            data.push(s);
+          }
+
         })
         return data;
       }
@@ -647,11 +656,27 @@ export class HookService extends DxcApiService {
   /**
    * To get all message of the specified session
    */
-  getMessageFromSession( pSessID:string):Observable<RuntimeEvent<any>[]> {
+  getMessageFromSession( pSessID:string, pFilter:RuntimeEventFilter = {}):Observable<RuntimeEvent<any>[]> {
+    const f:Record<string, any> = {};
+    let pval:any;
+    for(let ppt in pFilter){
+      pval = (pFilter as any)[ppt];
+      if(pval!=null){
+        if(Array.isArray(pval)){
+          if(pval.length>0){
+            f[ppt] = atob(JSON.stringify(pval));
+          }
+        }else if(pval!==null && pval!==undefined){
+          f[ppt] = pval;
+        }
+      }
+    }
+
     return this._process(
-      this.endpoints['sessions']['get_msg'],
+      this.endpoints['hook']['logs'],
       {
-        sess: pSessID
+        sess: pSessID,
+        ...f
       }
     ).pipe(
       map((pEl:any)=>{
@@ -677,20 +702,27 @@ export class HookService extends DxcApiService {
    * @method
    * @since 1.0.0
    */
-  getAllMessagesForNode( pTarget:ModelMethod|ModelFunction):Observable<HookMessage[]> {
+  getAllMessagesForNode( pTarget:ModelMethod|ModelFunction):Observable<Record<string, RuntimeEvent<any>>> {
     return this._process(
-      this.endpoints['sessions']['get_msg'],
+      this.endpoints['hook']['logs'],
       {
-        node: pTarget.getUID()
+        node: (pTarget as any).__signature__,
+        size:10000,
+        startAt:0//pTarget.getUID()
       }
     ).pipe(
       map((pEl:any)=>{
           if(!pEl.success){
             this.outputSvc.print(OutputMessage.newError({ msf:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
-            return [];
+            return {};
           }
 
-          const data:HookMessage[] = []
+          const data:Record<string, RuntimeEvent<any>> = {};
+          if(pEl.data!=null){
+            for(let sess in pEl.data){
+              data[sess] = pEl.data[sess];
+            }
+          }
 
           return data;
         }
@@ -815,7 +847,7 @@ export class HookService extends DxcApiService {
    * To start frida server on the default project device
    */
   startServer( pOptions:any = {}):Observable<any>{
-    const opts = {
+    const opts:Record<string, any> = {
       privileged: 'true'
     };
 
@@ -1441,6 +1473,56 @@ export class HookService extends DxcApiService {
     );
   }
 
+
+  /**
+   * To create a template fragment instance from raw data and save it into
+   * a hashmap
+   *
+   * @param {any} pData
+   * @return {HookTemplateFragment}
+   * @method
+   */
+  createFragment( pData:any):HookTemplateFragment {
+    const o = HookTemplateFragment.fromJsonObject(pData);
+    const uid = o.getUID();
+    if(uid!=null) this._frags[uid] = o;
+    return o;
+  }
+
+  /**
+   * To create an abstract hook
+   *
+   * It creates also HookTemplateFragment object or pull it from
+   * the cache
+   *
+   * @param {any} pRaw Raw data
+   */
+  createAbstractHook( pRaw:any):AbstractHook {
+    const o:any = new AbstractHook(pRaw);
+    let vFrag:any;
+
+    ['_before','_replace','_after'].map((vPos) => {
+      if(Array.isArray(o[vPos])){
+        for(let i=0; i<o[vPos].length; i++){
+          vFrag = o[vPos][i];
+          if(this._frags[vFrag._uid]!=null){
+            o[vPos][vFrag._uid] = this._frags[vFrag._uid];
+          }else{
+            o[vPos][vFrag._uid]  = this.createFragment(vFrag)
+          }
+        }
+      }
+    });
+
+    o._t = "h";
+    if(o.__==NodeInternalType.HOOK_NATIVE){
+      o.symbol = o.func.substr(o.func.lastIndexOf(':')+1);
+    }
+
+    return o;
+  }
+
+
   /**
    * To get all hooks enabled and disabled
    *
@@ -1456,12 +1538,9 @@ export class HookService extends DxcApiService {
       map( (pData:any) => {
           const h:AbstractHook[] = [];
           pData.map( (vRaw:any)=>{
-            const o:any = new AbstractHook(vRaw);
+            const o:any = this.createAbstractHook(vRaw);
 
-            o._t = "h";
-            if(o.__==NodeInternalType.HOOK_NATIVE){
-              o.symbol = o.func.substr(o.func.lastIndexOf(':')+1);
-            }
+            console.log("Create AbstractHook > ",o);
             h.push( o as AbstractHook);
           });
 

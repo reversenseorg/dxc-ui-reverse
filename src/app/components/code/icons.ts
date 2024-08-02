@@ -12,8 +12,14 @@ export const CODE_ICONS = {
     color1: 'dxc-icon-field'
   }),
   METH: new IconModel({
-    iconType: ICON_TYPE.TEXT,
+    /*iconType: ICON_TYPE.TEXT,
     label: 'M:',
+    color1: 'dxc-icon-meth'*/
+
+
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'm',
     color1: 'dxc-icon-meth'
   }),
   STATIC: new IconModel({
@@ -42,6 +48,20 @@ export const CODE_ICONS = {
     name: 'circle',
     color1: 'dxc-icon-class'
   }),
+  ABSTRACT_CLASS: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fal',
+    name: 'circle-a',
+    color1: 'dxc-icon-abstract'
+  }),
+
+  ABSTRACT_METH: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'square-m',
+    color1: 'dxc-icon-abstract'
+  }),
+
   PKG: new IconModel({
     iconType: ICON_TYPE.ICON,
     type: 'fas',

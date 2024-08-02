@@ -115,8 +115,6 @@ export default class ModelMethod extends Savable
     // store arguments values catch at runtime
     dyn:any = []; // TODO
 
-    _useClass:any = {};
-    _useClassCtr:number = 0;
     _useMethod:any = {};
     _useMethodCtr:number = 0;
     _useField:any = {};
@@ -289,10 +287,6 @@ export default class ModelMethod extends Savable
         return this._useMethodCtr;
     }
 
-    countUsedClasses():number{
-        return this._useClassCtr;
-    }
-
     countUsedFields():number{
         return this._useFieldCtr;
     }
@@ -306,7 +300,6 @@ export default class ModelMethod extends Savable
 
         for(let i in this){
             switch(i){
-                case "_useClass":
                 case "_useMethod":
                 case "_useField":
                 case "_callers":
@@ -412,13 +405,6 @@ export default class ModelMethod extends Savable
                 // if(fields != null && fields.indexOf(i)==-1) continue;
 
                 switch(i){
-                    case "_useClass":
-                        obj._useClass = [];
-                        for(let j in this._useClass){
-                            if(this._useClass[i] != undefined)
-                                obj._useClass.push(this._useClass[i].name);
-                        }
-                        break;
                     case "_useMethod":
                         obj._useMethod = [];
                         for(let j in this._useMethod){
@@ -636,9 +622,6 @@ export default class ModelMethod extends Savable
             this._useMethod[method.signature()] = [];
 
         this._useMethod[method.signature()].push(call);
-    }
-    getClassUsed():any{
-        return this._useClass;
     }
 
     getFieldUsed():any{

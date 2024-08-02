@@ -3,14 +3,13 @@
   white-space: nowrap;
 }
 
-/*
-li.exp-item:hover {
-  background-color: #333;
+
+li.exp-item:focus {
+  background-color: #3a4f8e;
 }
-*/
 
 li.exp-item-focus {
-  background-color: royalblue;
+  background-color: #3a4f8e; /* royalblue; */
 }
 
 li.hidden {

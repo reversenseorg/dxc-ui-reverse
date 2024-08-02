@@ -558,11 +558,6 @@ const RequestHelperMAP =  {
       ref: "class",
       token: "enclosingClass"
     },
-    "by class used": {
-      type: RequestHelperTYPES.T_NODE,
-      ref: "class",
-      token: "_useClass"
-    },
     "by method called": {
       type: RequestHelperTYPES.T_NODE,
       ref: "method",

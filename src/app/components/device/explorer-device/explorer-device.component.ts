@@ -817,6 +817,8 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
           this.progress$.next({ value: 100 });
           this.modalProgress.close();
+          // refresh device list
+          this.refresh();
         });
       });
     }
@@ -1159,4 +1161,9 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       })
     }
 
+  startServer(pDevice: Device) {
+     this.hookSvc.startServer({dev:pDevice.getUID()}).subscribe(()=>{
+
+     })
+  }
 }

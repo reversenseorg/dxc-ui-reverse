@@ -28,6 +28,9 @@ import {INode} from "../../../models/INode";
 import {ModelFunction} from "../../../models/ModelFunction";
 import ModelPackage from "../../../models/ModelPackage";
 import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
+import {CodeController} from "./CodeController";
+import {CODE_ICONS} from "../icons";
+import {Tag} from "../../../models/tags/Tag";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -331,7 +334,53 @@ export class CodeControllerService extends DxcApiService{
     this._icons[pType] = pIcon;
   }
 
-  getIconOf(pType:string):IconModel {
+  _asbtractTag:Nullable<Tag> = null;
+
+  /**
+   * Search if at least one method is abstract
+   *
+   * @param pClass
+   */
+  isClassAbstract( pClass:any):boolean {
+    if(this._asbtractTag==null){
+      this._asbtractTag = this.tagSvc.getTagByName("obj.access.abstract");
+    }
+
+    let ppt = 'children';
+
+    console.log("isClassAbstract", pClass, this._asbtractTag);
+    if(pClass[ppt] == null) {
+      ppt = 'methods';
+      if (pClass[ppt] == null) {
+        return false;
+      }
+    }
+
+    for(let i=0; i<pClass[ppt].length; i++){
+      if(this._asbtractTag.match(pClass[ppt][i])){
+        return true;
+      }
+    }
+
+    return false;
+  }
+  getIconOf(pType:string, pItem:any = null):IconModel {
+    if(pItem!=null){
+      switch (pItem.__){
+        case NodeInternalType.CLASS:
+          if(this.isClassAbstract(pItem)) {
+            return CODE_ICONS.ABSTRACT_CLASS;
+          }
+          break;
+        case NodeInternalType.METHOD:
+          if(pItem.modifiers.abstract===true) {
+            return CODE_ICONS.ABSTRACT_METH;
+          }
+          break;
+      }
+    }
+
+    // by default
     return this._icons[pType];
   }
 
@@ -395,7 +444,7 @@ export class CodeControllerService extends DxcApiService{
 
                 vChild.children.map( (vSelf:any) => {
 
-                  vSelf._icon = this.getIconOf(vSelf._t)
+                  vSelf._icon = this.getIconOf(vSelf._t, vSelf);
 
                   if(vSelf._t=='p' && this.tags.INTERNAL.match(vSelf)){
                     if(this.tags.STATIC.match(vSelf)){
@@ -431,10 +480,9 @@ export class CodeControllerService extends DxcApiService{
                   });
                 }
                 data.push(vChild);
-                return;
                 break;
               default:
-                vChild._icon = this.getIconOf(vChild._t);
+                vChild._icon = this.getIconOf(vChild._t, vChild);
                 break;
             }
 
@@ -468,6 +516,7 @@ export class CodeControllerService extends DxcApiService{
     );
   }
 
+
   getClass( pQuery:string, pComplete:boolean = false):Observable<CodeItem> {
 
     if(pComplete){
@@ -483,7 +532,6 @@ export class CodeControllerService extends DxcApiService{
         }else{
           return pRes;
         }
-
 
       }));
     }else{

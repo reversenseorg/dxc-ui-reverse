@@ -76,7 +76,8 @@
             </span>
 
             <span *ngIf="NODE_TYPES.HOOK_SESSION==itemObj.__" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'hksess',itemObj)">
-              <dxc-meta [css]="'dxc-green-fluo dxc-sz-6 mr-1'" *ngIf="itemObj.active" [label]="'LATEST'"></dxc-meta>&nbsp;
+              <!--<dxc-meta [css]="'dxc-green-fluo dxc-sz-6 mr-1'" *ngIf="itemObj.active" [label]="'LATEST'"></dxc-meta>&nbsp;-->
+
               {{ itemObj.date.toISOString() }}
               <span class="badge rounded-pill  text-bg-danger ml-1">{{ itemObj.offset }}</span>
             </span>
@@ -138,6 +139,10 @@
   <app-context-item [label]="'Show'" (itemclick)="controller.showHook(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Attach to key point ...'" [icon]="gIcons['ATTACH_HOOK']" (itemclick)="controller.showAttachToKP(ctxMenuState.subject )"></app-context-item>
   <app-context-item [label]="'Remove'" [separator]="true" [icon]="gIcons['TRASH']" (itemclick)="controller.deleteHook(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [name]="'hksess'" [width]="250">
+    <app-context-item [label]="'Show'" (itemclick)="controller.showSess(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <app-context-menu [name]="'hkfrag'" [width]="250">

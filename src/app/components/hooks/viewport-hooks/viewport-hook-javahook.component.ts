@@ -18,6 +18,10 @@ import NativeFunctionHook from "../../../models/NativeFunctionHook";
 import {ElectronService} from "../../../core/services";
 import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
+import HookTemplateFragment from "../../../models/hook/HookTemplateFragment";
+import {Nullable} from "../../../base/Nullable";
+import HookMessage from "../../../models/HookMessage";
+import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
 
 
 const FRAG_TYPE:IStringIndex<string> = {
@@ -30,6 +34,11 @@ const FRAG_CSS:IStringIndex<string> = {
   b: 'dxc-salmon',
   r: 'dxc-azue',
 };
+
+export interface FragmentItem {
+  frag: HookTemplateFragment,
+  position: string
+}
 
 // @ts-ignore
 @Component({
@@ -84,9 +93,10 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
   activeFrag:any = null;
   activeFragCss:string = '';
   activeLeft: string = 'sc';
-  activeRight: string = 'ds';
+  activeRight: string = 'fr';
 
   addr:string = "0x?";
+  events: RuntimeEvent<any>[] = [];
 
   constructor( private hookSvc:HookService,
                private electronSvc:ElectronService,
@@ -123,11 +133,11 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     })
   }
 
+
+
   configure( pData:any):void {
     this.data = pData;
     this.view.tab.icon = pData._icon;
-
-
 
     if(pData.alias != null){
       this.view.tab.label = '@'+pData.alias;
@@ -180,6 +190,8 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
       this.codeEditor.value += "// After \n";
       this.codeEditor.value = atob(this.data.code.after);
     }*/
+
+    // todo : replace by 1st fragments
     this.codeEditor.value = this.states.sc = decodeURIComponent(atob(this.data.script));
 
 
@@ -199,7 +211,6 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     });
 
   }
-
 
   displayExtMenu($event: MouseEvent, pType: string, pObj:any) {
     this.codeSvc.displayCtxMenu$.next({ event:$event, type:pType, obj:pObj});
@@ -253,7 +264,7 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
    *
    * @param pMethod
    */
-  openMethod(pHook: any) {
+  /*openMethod(pHook: any) {
 
     if(this.controller.app==null){
       throw UIException.APP_NOT_INITIALIZED;
@@ -265,12 +276,16 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     else if(this.data.__ == NodeInternalType.HOOK_NATIVE){
       this.controller.app.getController('ctrl:native-main').open( pHook.func, 'vp');
     }
-  }
+  }*/
 
 
   showLatestCatch() {
     this.activeRight = 'ct';
 
+    console.log(this);
+    this.hookSvc.getAllMessagesForNode(this.data.method).subscribe((x)=>{
+      this.events = x as any;
+    })
   }
 
   showMeta() {
@@ -293,7 +308,24 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
     this.activeRight = 'fr';
   }
 
+  /**
+   * To retrieve the first fragement from the list of fragments
+   * built from the concatenation of before + replace + after lists
+   *
+   *
+   * @method
+   */
+  getFirstFragment():Nullable<HookTemplateFragment> {
+    if(this.data._before!=null && this.data._before.length>0) return this.data._before[0];
+    if(this.data._replace!=null && this.data._replace.length>0) return this.data._replace[0];
+    if(this.data._after!=null && this.data._after.length>0) return this.data._after[0];
+
+    return null;
+  }
+
   editFragment( pType:string, pOffset:number, pFragment:any, pEvent:any = null) {
+
+    console.log(pFragment);
 
     if(this.activeLeft=='sc'){
       // save editor state
@@ -305,6 +337,7 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
         this.activeFrag.cmp.focusOut();
       }
     }
+
     this.editingFrag = true;
     this.activeFrag = {_t:FRAG_TYPE[pType], o:pOffset, f:pFragment, cmp:(pEvent!=null?pEvent.cmp:null)};
     this.activeFragCss = FRAG_CSS[pType];
@@ -384,6 +417,26 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
    */
   onEditorFocus() {
     const sm = this.electronSvc.getSelectionManager();
+
+  }
+
+  insertSnippet(pSnippetName: string):void {
+
+  }
+
+  addTransVar() {
+
+  }
+
+  addCondition() {
+
+  }
+
+  addKeyPoint() {
+
+  }
+
+  startSingle() {
 
   }
 }

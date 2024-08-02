@@ -163,6 +163,7 @@ export class AppMenuItemComponent implements AfterViewInit {
 
     }
 
+
     ngAfterViewInit() {
         console.log("AppMenuIetmCmp > ", this.item);
 
@@ -198,6 +199,7 @@ export class AppMenuItemComponent implements AfterViewInit {
                 });
                 break;
         }
+        this.changeDetectorRef.detectChanges();
     }
 
 

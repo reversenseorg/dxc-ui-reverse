@@ -429,7 +429,8 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           .listPackages( this.selected, '^'+pItem.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+'$')
           .pipe(
             map( (pObs:any)=>{
-              pObs[0].children.map((vSelf:any) => {               vSelf._icon = this.codeService.getIconOf(vSelf._t);
+              pObs[0].children.map((vSelf:any) => {
+                vSelf._icon = this.codeService.getIconOf(vSelf._t);
 
 
                 if(vSelf._t=="p" && this.tags.INTERNAL.match(vSelf)){
@@ -595,11 +596,13 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
       .selectNode(pEvent.item, SelectionUtils.retrieveShortForm(pEvent.item));
 
     if(this.activeItem != null){
-      this.activeItem.el.style.backgroundColor = "#444";
+      //this.activeItem.el.style.backgroundColor = "#444";
+      this.activeItem.el.classList.remove("exp-item-focus");
     }
 
     this.activeItem = pEvent;
-    pEvent.el.style.backgroundColor = "royalblue";
+    pEvent.el.classList.add("exp-item-focus");
+//    pEvent.el.style.backgroundColor = "#3a4f8e";
   }
 
   onMenuItemClick( pEvent:any, pForce = false):void{

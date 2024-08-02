@@ -25,12 +25,12 @@ import {CodeController} from "../../code/ctrl/CodeController";
 import ModelClass from "../../../models/ModelClass";
 import {CodeItem} from "../../code/explorer-code/CodeItem";
 import HookMessage from "../../../models/HookMessage";
-import HookSession from "../../../models/hook/HookSession";
 import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {IconModelCollection} from "../../../base/icon/IconModel";
 import {UIException} from "../../../base/error/UIException";
+import {HookSession} from "./HookSession";
 
 
 export class HookController extends UiController implements IController {
@@ -242,7 +242,8 @@ export class HookController extends UiController implements IController {
         (this.app.getController('ctrl:inspector') as InspectorController)._show(pItem);
         break;
       case NodeInternalType.HOOK_SESSION:
-        if((pItem as HookSession).getUID()!=null){
+
+        if((pItem as HookSession).getUID()!="" && (pItem as HookSession).getUID()!=null ){
           this.service.getMessageFromSession((pItem as HookSession).getUID() as string).subscribe(( pMessages:RuntimeEvent<any>[] )=>{
             console.log(pMessages);
           });
@@ -426,6 +427,10 @@ export class HookController extends UiController implements IController {
 
         break;
     }
+
+  }
+
+  showSess(subject: any) {
 
   }
 }

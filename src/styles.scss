@@ -831,6 +831,12 @@ span.dxc-icon-window {
   text-align:right;
 }
 
+.dxc-icon-abstract {
+  color: #fff600;
+  width:15px;
+  text-align:right;
+}
+
 .dxc-icon-yr {
   color: #ff8c00;
   fa-secondary-color: #ff8c00;
@@ -1117,3 +1123,14 @@ div.dxc-row-table {
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+.exp-item-focus {
+  background-color: #3a4f8e;
+}

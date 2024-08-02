@@ -17,7 +17,7 @@ import {
 import {NavbarSimpleView} from "../../cmp/NavbarSimpleView";
 import {NavbarTabView} from "../../cmp/NavbarTabView";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
-import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDropdown, NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {IconModel} from "../icon/IconModel";
 import {Subject} from "rxjs";
 import {ElectronService} from "../../core/services";
@@ -110,7 +110,7 @@ export class SubnavbarInputComponent implements AfterViewInit {
 @Component({
   selector: 'app-subnavbar-btn',
   template: `
-      <button [class.active]="active" [class.vertical]="vert" [class.disable]="disable" [class.separator]="separator" [ngClass]="color" class="btn dxc-text-clear100 nav-btn" #btn>
+      <button [ngbTooltip]="tooltip" [class.active]="active" [class.vertical]="vert" [class.disable]="disable" [class.separator]="separator" [ngClass]="color" class="btn dxc-text-clear100 nav-btn" #btn>
         <dxc-icon *ngIf="trail" [model]="_trailIcon" [color1]="'trail-arrow-neg'"></dxc-icon>
         <dxc-icon *ngIf="icon" [model]="icon" [fw]="fwicon" ></dxc-icon>
         <!--<fa-icon *ngIf="icon" class="dxc-icon" [icon]="[iconView.type, iconView.name]" [ngClass]="iconView.color1"></fa-icon>-->
@@ -143,13 +143,14 @@ export class SubnavbarButtonComponent implements AfterViewInit {
   @Input() height: number = -1;
   @Input() trail: any = null;
   @Input() fwicon: boolean = false;
+  @Input() tooltip: Nullable<string> = null;
 
   @ViewChild('btn', {read:ElementRef, static:true}) btnEl:ElementRef;
 
 
 
-  constructor() {
-
+  constructor(private ngbTooltipConfig:NgbTooltipConfig) {
+    ngbTooltipConfig.tooltipClass = "dxc-tooltip-vp";
   }
 
   ngAfterViewInit():void {
