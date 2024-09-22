@@ -71,6 +71,7 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   projectName = "";
   method = "fs";
   targetFile:Nullable<File> = null;
+  targetFileUplUID:Nullable<string> = null;
   targetFileName:Nullable<string> = null;
   targetUrl:Nullable<string> = null;
   proxyIp:Nullable<string> = null;
@@ -140,6 +141,7 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   }
 
   updateAppFile($event: any) {
+    console.log("updateAppFile", $event);
     this.targetFile = $event.target.files[0];
 
 
@@ -149,8 +151,9 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
       this.projSvc.uploadFile(this.targetFile as File);
 
       /*.subscribe((pUploadUID:string)=>{
-        console.log(" updateAppFile > ",pUploadUID)
-      })*/
+        console.log(" updateAppFile > uploaded ",pUploadUID);
+        this.targetFileUplUID = pUploadUID;
+      });*/
 
     }
 
@@ -179,7 +182,7 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
             dev: this.devuid,
             type: 'upload',
             platform: this.platform,
-            file: this.targetFile
+            file: this.projSvc.findUploadUid(this.targetFile)
           }).subscribe( (pRes)=>{
             this.modal.hide('close');
           })
@@ -204,6 +207,8 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   }
 
   checkDevice(pDevice:Device) {
+    this.device = pDevice;
+    this.devuid = pDevice.uid;
     this.displayPlatformList();
   }
 }

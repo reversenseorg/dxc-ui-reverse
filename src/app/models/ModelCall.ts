@@ -15,6 +15,7 @@ const EOL = '\n';
  */
 export default class ModelCall
 {
+    __ = NodeInternalType.CALL;
 
     instr:Nullable<ModelInstruction> = null;
     caller:Nullable<ModelMethod> = null;

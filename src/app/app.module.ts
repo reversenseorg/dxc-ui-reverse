@@ -136,6 +136,10 @@ import {HookStatusComponent} from "./components/hooks/hook-status/hook-status.co
 import {HookFragItemComponent} from "./components/hooks/frag-item/frag-item.component";
 import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
 import {DeviceModule} from "./components/device/device.module";
+import {
+  OsApiProjectionListComponent
+} from "./components/topology/osapi-projection-list/osapi-projection-list.component";
+import {CodeEmulatorComponent} from "./components/code/emulator/emulator.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -186,6 +190,8 @@ import {DeviceModule} from "./components/device/device.module";
     ModalProjectSettingsComponent,
     ModalProjectAnalConfigComponent,
     ModalLogoutComponent,
+
+    CodeEmulatorComponent,
 
     // dxc components
     ExplorerCodeComponent,
@@ -302,7 +308,9 @@ import {DeviceModule} from "./components/device/device.module";
     HookStatusComponent,
     HookFragItemComponent,
 
-    ViewportEventsComponent
+    ViewportEventsComponent,
+
+    OsApiProjectionListComponent
   ],
   imports: [
     AppRoutingModule,

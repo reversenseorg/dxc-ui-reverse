@@ -21,15 +21,19 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import {Nullable} from "../../../base/Nullable";
 import {IntentDataCriteria} from "../../../models/android/Intent";
+import {FilesystemService} from "../../file/ctrl/FilesystemService";
 
 
 export interface TopologyMenuEvent {
   scope?:string;
   type?:string;
+  action?:'open';
   item:NodeInternalType;
 
   product?:string;
+  filepath?:string;
 }
+
 
 
 // @ts-ignore
@@ -38,10 +42,9 @@ export interface TopologyMenuEvent {
 })
 export class TopologyService extends DxcApiService {
 
-  //activeProject:DexcaliburProject[] = [];
 
   onMenuClick$:Subject<TopologyMenuEvent> = new Subject<TopologyMenuEvent>();
-  onOpenPackageFile$:Subject<any> = new Subject<any>();
+
 
   //onSearchReady:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
   //onProjectOpening:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
@@ -55,6 +58,7 @@ export class TopologyService extends DxcApiService {
   constructor( private appmenuSvc:AppMenuService,
                private searchSvc:SearchService,
                private outputSvc:OutputService,
+               private fsSvc:FilesystemService,
                protected override _http:HttpClient) {
     super(
       {
@@ -117,7 +121,7 @@ export class TopologyService extends DxcApiService {
       },{
         label: 'Show Android manifest',
         click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.onOpenPackageFile$.next({ item:NodeInternalType.FILE, file:"AndroidManifest.xml", scope:'PKG', type:'manifest' });
+          this.onMenuClick$.next({ item:NodeInternalType.FILE, action:'open', filepath:"AndroidManifest.xml", scope:'PKG', type:'manifest' });
         }
       },{
         label: 'Show AIDL file',
@@ -209,6 +213,21 @@ export class TopologyService extends DxcApiService {
       }*/]
     }, 9);
 
+    this._setupSubscriptions();
+
+  }
+
+  private _setupSubscriptions():void {
+
+    this.onMenuClick$.subscribe((pEvent:TopologyMenuEvent)=>{
+        switch (pEvent.item){
+          case NodeInternalType.FILE:
+            if( pEvent.action=='open' && pEvent.filepath!=null){
+              this.fsSvc.viewNativeFileContent(pEvent.filepath, 'PKG');
+            }
+            break;
+        }
+    });
   }
 
 

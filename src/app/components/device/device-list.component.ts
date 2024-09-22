@@ -1,10 +1,22 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from "@angular/core";
 import Platform from "../../models/Platform";
 import {PlatformService} from "../platform/ctrl/platform.service";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {DeviceManagerService} from "./ctrl/device-manager.service";
 import { Device } from "../../models/Device";
 import {Nullable} from "../../base/Nullable";
+import {OutputMessage} from "../../cmp/OutputMessage";
+import {DEV_SUBVIEW} from "./explorer-dev.const";
 
 
 @Component({
@@ -49,16 +61,21 @@ export class DeviceListComponent implements OnInit{
   @Input() devices:Device[];
   @Output() selectDevice:EventEmitter<Device> = new EventEmitter<Device>();
 
-  constructor(  private dmSvc:DeviceManagerService) {
+  constructor(  private dmSvc:DeviceManagerService,
+                private _changeDetectorRef:ChangeDetectorRef) {
   }
 
   ngOnInit(){
+    this.dmSvc.devices$.subscribe((pDevices)=>{
+      this.devices = pDevices;
+      this._changeDetectorRef.detectChanges();
+    })
+
     this.refresh();
   }
 
   refresh():void {
     const subs = this.dmSvc.listDevices().subscribe(( pDevs)=>{
-      this.devices = pDevs;
       subs.unsubscribe();
     });
   }

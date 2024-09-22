@@ -63,6 +63,12 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
         if(this.tagUUID>-1){
             this.tag = this.tagSvc.getTagByUUID(this.tagUUID);
             console.log("getTagByUUID > ",this.tag);
+
+            if(this.tag ==null){
+                console.log("[TAG BADGE] Tag not found for UUID : "+this.tagUUID);
+                return;
+            }
+
             this._styles = {
                 backgroundColor: (this.tag.styles as any).bgColor,
                 color: (this.tag.styles as any).color

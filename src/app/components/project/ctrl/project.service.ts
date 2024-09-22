@@ -169,6 +169,14 @@ export class ProjectService extends DxcApiService {
      */
   showProject$:Subject<DexcaliburProject> = new Subject();
 
+    /**
+     * An hashmap to keep mapping between latest uploaded files and UploadUID
+     *
+     * @type {Record<string,string>}
+     * @field
+     */
+  private _uploaded:Record<string, Nullable<string>> = {};
+
   /**
    *
    * @param {AppMenuService} appmenuSvc
@@ -766,6 +774,7 @@ export class ProjectService extends DxcApiService {
     const form = new FormData();
     form.append('file', pFile);
 
+    this._uploaded[pFile.name+":"+pFile.size] = null;
 
     console.log(form);
 
@@ -793,7 +802,14 @@ export class ProjectService extends DxcApiService {
 
     this.subscriptionUpload = req.subscribe((vEvent)=>{
 
-      if (vEvent.type == HttpEventType.UploadProgress) {
+        console.log("Upload progress > ",vEvent)
+
+        if(vEvent!=null){
+            this._uploaded[pFile.name+":"+pFile.size] = vEvent.upload;
+        }
+
+
+        if (vEvent.type == HttpEventType.UploadProgress) {
         this.progressUpload = Math.round(100 * (vEvent.loaded / vEvent.total));
       }
     })
@@ -1038,5 +1054,21 @@ export class ProjectService extends DxcApiService {
       })
     )
   }
+
+    /**
+     * To retrieve the upload UID associated to an uploaded file.
+     *
+     * It works only for thie tab panel
+     *
+     * @param {string} pTargetFile
+     */
+    findUploadUid(pTargetFile: Nullable<File>):Nullable<string> {
+      if(pTargetFile==null){
+          return null;
+      }
+
+      return this._uploaded[pTargetFile.name+":"+pTargetFile.size];
+
+    }
 }
 

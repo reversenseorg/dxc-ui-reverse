@@ -130,7 +130,9 @@
       </div>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
-        <div #vm class="row view-outer no-gutters"(contextmenu)="openVmMenu($event)">
+              <dxc-code-emulator [parentLayout]="layout" [node]="data" (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
+
+        <!--<div #vm class="row view-outer g-0"(contextmenu)="openVmMenu($event)">
           <div class="col-lg-8">
             <ace-editor #vmEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
           </div>
@@ -197,7 +199,7 @@
             </app-expandable-list>
 
           </div>
-        </div>
+        </div>-->
       </div>
 
     </ng-container>

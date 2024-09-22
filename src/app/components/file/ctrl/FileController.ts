@@ -13,6 +13,7 @@ import {File, FileLocation} from "../../../cmp/File";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {UIException} from "../../../base/error/UIException";
+import ModelFile from "../../../models/ModelFile";
 
 
 export class FileController implements IController {
@@ -66,6 +67,16 @@ export class FileController implements IController {
 
   }
 
+  openFile(pFile:ModelFile):any {
+    if(this.app==null){
+      throw  UIException.APP_NOT_INITIALIZED();
+    }
+
+    const fileViewer = (this.app.getController('ctrl:viewer') as ViewerController);
+
+    fileViewer.open(pFile, 'file');
+  }
+
   open(pItem: any, pSrc:any): any{
 
     if(this.app==null){
@@ -113,7 +124,7 @@ export class FileController implements IController {
               console.log(pItem.file._uid);
               switch (pItem.file.t) {
                 case 'ELF':
-                  fn = this.service.viewNativeFileContent(pItem.file._r, 'PKG').subscribe( pFile => {
+                  fn = this.service.getNativeFileContent(pItem.file._r, 'PKG').subscribe( pFile => {
                     console.log(pFile);
                     if(pFile!=null) {
                       //console.log(pFile);

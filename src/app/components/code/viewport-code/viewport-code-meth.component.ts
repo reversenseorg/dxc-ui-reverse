@@ -28,13 +28,6 @@ import {TagService} from "../../tag/ctrl/tag.service";
 import {Nullable} from "../../../base/Nullable";
 
 
-interface DxcVM_Result {
-  events: any[],
-  instr: string[],
-  tags: string[],
-  error: Nullable<string>
-}
-
 
 
 
@@ -52,11 +45,11 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   @Input() height: number;
   @Input() width: number;
   @ViewChild('codeEditor') codeEditor:any;
-  @ViewChild('vmEditor') vmEditor:any;
+  //@ViewChild('vmEditor') vmEditor:any;
 
   @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
   @ViewChild('editor',{ read:ElementRef, static:false}) editorEl:ElementRef;
-  @ViewChild('vm',{ read:ElementRef, static:false}) vmEl:ElementRef;
+  //@ViewChild('vm',{ read:ElementRef, static:false}) vmEl:ElementRef;
   @ViewChild(ViewportSplittedComponent) layout:ViewportSplittedComponent;
   @ViewChild('topNav',{ read:ElementRef, static:false}) topNavEl:ElementRef;
 
@@ -69,6 +62,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
 
   vmedHeight: number = 0;
+
   editorHeight: number = 0;
 
   id: number = -1;
@@ -77,7 +71,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   hooks:any[] = [];
   hooksMsg:any[] = [];
 
-  vm:DxcVM_Result = {
+  vm:any = {
     events: [],
     instr: [],
     tags: [],
@@ -146,6 +140,8 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
         }
       }
     })
+
+    this.vmedHeight = this.height;
   }
 
 
@@ -180,7 +176,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   ngAfterViewInit() {
 
     let editor:any = this.codeEditor.getEditor();
-    let vmEditor:any = this.vmEditor.getEditor();
+    //let vmEditor:any = this.vmEditor.getEditor();
 
     // listener for splitted layout resize
     this.layout.onLayoutResize.subscribe( (vSizes:any) => {
@@ -207,14 +203,14 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       editor.resize();
 
       // vm editor
-      vmEditor.setOptions({
+      /*vmEditor.setOptions({
         showLineNumbers: true,
         tabSize: 2
-      });
+      });*/
 
 
       this.vmedHeight = vSizes.bottom.height-this.topNavEl.nativeElement.offsetHeight;
-
+/*
       vmEditor.container.style.height = this.vmedHeight+'px';
       vmEditor.container.style.minHeight = this.vmedHeight+'px';
       vmEditor.container.style.maxHeight = this.vmedHeight+'px';
@@ -222,7 +218,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       this.vmEditor.mode = 'javascript';
       this.vmEditor.value = "Ready for emulation";
 
-      vmEditor.resize();
+      vmEditor.resize();*/
     })
 
     // init layout
@@ -322,6 +318,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
   showVmLogs( pRes:any = null):void{
     this.activeBottom = 'vml';
+    this.vmLog = pRes;
   }
 
   removeNOP() {
@@ -427,11 +424,12 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
   showDxcVM() {
 
+    /*
     if((this.data.hasOwnProperty('__vm_code')) && this.data.__vm_code!=null){
       this.vmEditor.mode = 'javascript';
       this.vmEditor.value = this.data.__vm_code; //this.data.__view_code;
       this.vmEditor.getEditor().resize();
-    }
+    }*/
 
 
     if(this.ddvmOpts[0].children.length==0){
@@ -517,33 +515,6 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
     return ops;
   }
 
-  ddvmExec() {
-    this.codeSvc.ddvm_execMethod( this.data, this.prepareDDVMOptions()).subscribe( vRes => {
-      console.log('VM exec : ', vRes);
-
-      this.vm = vRes;
-      this.vmLog = [];
-
-      if(vRes.instr.length>0){
-        if(vRes.instr[0].indexOf('// An ')==0){
-          this.data.__vm_code = vRes.instr[0]+" See VM logs."
-          this.vmLog.push({
-            t:"e", v:vRes.instr[1]
-          });
-        }else{
-          this.data.__vm_code = vRes.instr.join(`
- `);
-        }
-      }
-
-      if(vRes.events.length>0){
-        this.vmLog = this.vmLog.concat(vRes.events);
-      }
-
-      this.showDxcVM();
-      this.showVmLogs();
-    });
-  }
 
   /**
    * To get CSS class of modifiers

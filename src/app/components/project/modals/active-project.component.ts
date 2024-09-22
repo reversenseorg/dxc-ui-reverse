@@ -93,8 +93,10 @@ export class ModalActiveProjectComponent extends AbstractKeyboardNavigable imple
 
   ngAfterViewInit() {
 
-    console.log(this.modals);
     this.projectSvc.getActiveProject("active-project:after-view-init").subscribe( (pProjects:DexcaliburProject[]) => {
+
+      if(pProjects==null) return;
+
       if(pProjects.length<1) return;
       if(pProjects.length==1) {
         this.project = pProjects[0];

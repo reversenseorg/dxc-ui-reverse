@@ -87,6 +87,12 @@ export const BASIC_NODE:SearchNodeList = {
     _t: RequestHelperTYPES.T_LITTERAL,
     _f: "__RAW__",
   },
+  MERLIN_RAW: {
+    label: 'Merlin request',
+    icon: SEARCH_ICONS['RAW'],
+    _t: RequestHelperTYPES.T_LITTERAL,
+    _f: "__RAW__",
+  },
 
   BYTEARRAY: {
     label: 'Byte Array',
@@ -476,7 +482,8 @@ export const BUILTIN_SEARCH:SearchNode[] = [
   BASIC_NODE['PROVIDER'],
   BASIC_NODE['RECEIVER'],
   BASIC_NODE['PERMISSION'],
-  BASIC_NODE['RAW']
+  BASIC_NODE['RAW'],
+  BASIC_NODE['MERLIN_RAW']
 ];
 
 
