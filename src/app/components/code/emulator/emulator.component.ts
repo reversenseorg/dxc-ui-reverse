@@ -19,6 +19,7 @@ import {ModelFunction} from "../../../models/ModelFunction";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {from, Observable} from "rxjs";
 import * as ace from "ace-builds";
+import {IconModel} from "../../../base/icon/IconModel";
 
 let ctr = 0;
 
@@ -38,6 +39,34 @@ interface DxcVM_Result {
     error: Nullable<string>
 }
 
+interface DDVM_Configuration {
+    context:DDVM_Option;
+    options:DDVM_Option;
+    args:DDVM_Option;
+}
+
+interface DDVM_Option {
+    _t?: string,
+    _c?: string,
+    _i?: IconModel,
+    /**
+     * Field type
+     */
+    ft?: any,
+    /**
+     * Default value / initial value
+     */
+    v?:any,
+    val?:any,
+    label?: string,
+    arg?:any;
+    children?: DDVM_Option[],
+    inputName?:string;
+    /**
+     * Is the value symbolic or concrete
+     */
+    sym?:boolean;
+}
 
 // (contextmenu)="openVmMenu($event)"
 
@@ -52,10 +81,14 @@ interface DxcVM_Result {
                 <app-subnavbar [type]="'navbar'" [inlineStyle]="{ 'background-color': '#333'}" [parent]="this">
                     <ng-container main>
                         <app-subnavbar-btn [active]="true" [icon]="gIcons['INTERNAL']">&nbsp;Configuration</app-subnavbar-btn>
+                        <app-subnavbar-btn [icon]="gIcons['INTERNAL']">&nbsp;Options</app-subnavbar-btn>
                         <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="ddvmExec()">&nbsp;Run</app-subnavbar-btn>
                     </ng-container>
                 </app-subnavbar>
 
+                <div class="row g-0">
+                    
+                </div>
                 <app-expandable-list
                         *ngIf="ddvmOpts">
 
@@ -74,7 +107,29 @@ interface DxcVM_Result {
                   <input [(ngModel)]="itemObj.val" [class.dxc-hidden]="itemObj.sym" [disabled]="itemObj.sym" name="input" type="text" class="dxc-frm-input pl-1 ml-2"/>
                 </span>
 
+                        <div class="row g-0"  *ngIf="itemObj._t=='o'">
+                            <ng-container *ngIf="itemObj.ft=='c'; else noCheckbox">
+                                <div class="col-2" >
+                                    <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
+                                    <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
+                                </div>
+                                <div class="col-10">
+                                    {{ itemObj.label }}
+                                </div>
+                            </ng-container>
+                            <ng-template #noCheckbox>
+                                <div class="col-6">
+                                    {{ itemObj.label }}
+                                </div>
+                                <div class="col-6">
+                                    <input *ngIf="itemObj.ft=='n'" [(ngModel)]="itemObj.v" type="number" class="dxc-frm-input"/>
+                                    <input *ngIf="itemObj.ft=='i'" [(ngModel)]="itemObj.v" type="text" class="dxc-frm-input"/>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <!--
                         <span *ngIf="itemObj._t=='o'">
+                            
                   <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
                   <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
                   <span class="dxc-text-clear100">{{ itemObj.label }}</span>
@@ -86,7 +141,7 @@ interface DxcVM_Result {
                   </span>
                   </ng-container>
 
-                </span>
+                </span>-->
 
                         <span *ngIf="itemObj._t=='e'">
                   <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
@@ -95,14 +150,14 @@ interface DxcVM_Result {
 
                     </ng-template>
 
-                    <ng-container *ngFor="let dev of ddvmOpts">
+                    <ng-container *ngFor="let dev of ddvmOpts | keyvalue">
 
 
                         <app-expandable-item
                                 [itemTpl]="expCodeItem"
-                                [item]="dev"
+                                [item]="dev.value"
                                 [provider]="this"
-                                [itemType]="dev._t"
+                                [itemType]="dev.value._t"
                                 [expandableFn]="ddvmItemHasChildren"
                                 (itemFocus)="ddvmOnItemFocus($event)"
                         >
@@ -131,6 +186,7 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
     @Input() parentLayout:any = null;
 
 
+
     vmedHeight: number = 200;
 
     vm:DxcVM_Result = {
@@ -140,21 +196,38 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
         error: null
     };
 
+    /*
+        loadClassFirst:boolean =  false;
+        mockAndroidInternals:boolean = false;
+        autoInstanceArgs:boolean = false;
+        simplify:number = 0;
+        initParent:boolean = true;
+        maxdepth:number = -1;
+         */
 
     /**
+     *
+     * loadClassFirst:boolean =  false;
+     *         mockAndroidInternals:boolean = false;
+     *         autoInstanceArgs:boolean = false;
+     *         simplify:number = 0;
+     *         initParent:boolean = true;
+     *         maxdepth:number = -1;
+     *
      * ft : Field Type
      * fi : Field Input
      * _t : type
      * _c : Child type
      * _i : Icon Model
      */
-    ddvmOpts: any[] = [{
+    ddvmOpts: DDVM_Configuration = {
+        args: {
         _t: 'c',
         _c: 'p',
         _i: GLOBAL_ICONS['EDIT'],
         label: 'Parameters',
         children: []
-    },{
+    },context:{
         _t: 'c',
         _c: 's',
         _i: GLOBAL_ICONS['INTERNAL'],
@@ -164,9 +237,15 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
             label: 'Load parent class',
             ft: 'c',
             v: false,
-            name: 'clinit'
+            inputName: 'clinit'
+        },{
+            _t: 'o',
+            label: 'Load parent class',
+            ft: 'c',
+            v: false,
+            inputName: 'clinit'
         }]
-    },{
+    },options:{
         _t: 'c',
         _c: 'o',
         _i: GLOBAL_ICONS['LIST'],
@@ -176,9 +255,9 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
             label: 'Call stack limit (infinite=-1)',
             ft: 'n',
             v: 0,
-            name: 'depth'
+            inputName: 'depth'
         }]
-    }];
+    }};
 
     private _vmLog:any[] = [];
 
@@ -242,23 +321,31 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
 
         };
 
-        this.ddvmOpts[1].children.map((vPar:any) => {
-            ops[vPar.name] = vPar.v;
-        });
+        if(this.ddvmOpts.context.children!=null){
+            this.ddvmOpts.context.children.map((vPar:any) => {
+                ops[vPar.name] = vPar.v;
+            });
+        }
 
-        this.ddvmOpts[2].children.map((vPar:any) => {
-            ops[vPar.name] = vPar.v;
-        });
+        if(this.ddvmOpts.options.children!=null){
+            this.ddvmOpts.options.children.map((vPar:any) => {
+                ops[vPar.name] = vPar.v;
+            });
+        }
+
 
         ops.params = [];
-        this.ddvmOpts[0].children.map((vPar:any) => {
-            console.log(vPar);
+        if(this.ddvmOpts.args.children!=null){
+            this.ddvmOpts.args.children.map((vPar:any) => {
+                console.log(vPar);
 
-            ops.params.push({
-                notset: vPar.sym,
-                val: (vPar.sym? null : vPar.val)
+                ops.params.push({
+                    notset: vPar.sym,
+                    val: (vPar.sym? null : vPar.val)
+                });
             });
-        });
+        }
+
 
         ops.level = 0;
 
@@ -275,28 +362,31 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
         }
 
 
-        if(this.ddvmOpts[0].children.length==0){
+        if(this.ddvmOpts.args.children !=null){
+            if(this.ddvmOpts.args.children.length==0){
 
-            if(this.node.args.length>0){
-                this.node.args.map((vArg:any, vOffset:number) => {
-                    console.log(vArg,this.ddvmOpts[0]);
-                    this.ddvmOpts[0].children.push({
-                        _t: 'p',
-                        label: 'Arg_'+vOffset,
-                        arg: vArg,
-                        val: '',
-                        ft: 'i',
-                        sym: true
+                if(this.node.args.length>0){
+                    this.node.args.map((vArg:any, vOffset:number) => {
+                        console.log(vArg,this.ddvmOpts.args);
+                        this.ddvmOpts.args?.children?.push({
+                            _t: 'p',
+                            label: 'Arg_'+vOffset,
+                            arg: vArg,
+                            val: '',
+                            ft: 'i',
+                            sym: true
+                        });
+                    })
+                }else{
+                    this.ddvmOpts.args.children.push({
+                        _t: 'e',
+                        _i: GLOBAL_ICONS['WARNING'],
+                        label: 'This methods has not parameters'
                     });
-                })
-            }else{
-                this.ddvmOpts[0].children.push({
-                    _t: 'e',
-                    _i: GLOBAL_ICONS['WARNING'],
-                    label: 'This methods has not parameters'
-                });
+                }
             }
         }
+
     }
 
     ddvmExec() {
