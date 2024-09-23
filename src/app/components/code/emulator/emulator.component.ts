@@ -39,7 +39,7 @@ interface DxcVM_Result {
     error: Nullable<string>
 }
 
-interface DDVM_Configuration {
+interface DDVM_Configuration extends Record<string, DDVM_Option>{
     context:DDVM_Option;
     options:DDVM_Option;
     args:DDVM_Option;
