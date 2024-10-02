@@ -217,7 +217,7 @@ export class ModalProjectAnalConfigComponent extends AbstractKeyboardNavigable i
    */
   isAndroid() {
     return (this.platform === 'android')
-        ||(this.device!=null && this.device.bridge.startsWith("adb+"));
+        ||(this.device?.bridge?.startsWith("adb+"));
   }
 
   /**
