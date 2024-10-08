@@ -43,7 +43,7 @@ export interface ItemEvent<T> {
   selector: 'app-expandable-item',
   template: `
     <ng-template #expItemTpl let-itemCtx="cfg">
-      <li class="dxc-text-75 exp-item" [ngClass]="{'hidden': hidden }" [style.padding-left]="itemCtx.depth+'em'" (click)="onArrowClick($event, itemCtx.item, itemRef)" (keydown.arrowDown)="goNext($event, itemCtx.item, itemRef)"  (dblclick)="onArrowClick($event, itemCtx.item, itemRef)" (keyup.arrowLeft)="doCollapse($event, itemCtx.item, itemRef)" (keyup.arrowRight)="doExpand($event, itemCtx.item, itemRef)" (keyup.enter)="onArrowClick($event, itemCtx.item, itemRef)"  #itemRef>
+      <li class="dxc-text-75 exp-item" [ngClass]="{'hidden': hidden }" (focus)="onFocus($event, itemCtx, itemRef)" [style.padding-left]="itemCtx.depth+'em'" (click)="onArrowClick($event, itemCtx.item, itemRef)" (keydown.arrowDown)="goNext($event, itemCtx.item, itemRef)"  (dblclick)="onArrowClick($event, itemCtx.item, itemRef)" (keyup.arrowLeft)="doCollapse($event, itemCtx.item, itemRef)" (keyup.arrowRight)="doExpand($event, itemCtx.item, itemRef)" (keyup.enter)="onArrowClick($event, itemCtx.item, itemRef)"  #itemRef>
 
         <fa-icon *ngIf="e" [icon]="['fad','caret-right']" class="dxc-text-75 caret"></fa-icon>
         <!-- <ng-content select="[content-root]"></ng-content> -->
@@ -419,6 +419,12 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    * @method
    */
   onFocus( pEvent:any, pItem:any, pRef:any):void {
-    this.itemFocus.emit({ item:pItem,  el:pRef });
+    if(pItem==null){
+      this.itemFocus.emit({ item:this.item,  el:pRef });
+    }else{
+      this.itemFocus.emit({ item:pItem,  el:pRef });
+
+    }
+
   }
 }

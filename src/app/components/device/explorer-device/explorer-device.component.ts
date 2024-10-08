@@ -568,7 +568,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    */
   onItemFocus( pEvent: any): void{
 
-    console.log(pEvent);
+    console.log("DEVICE EXPLORER > onItemFocus > ",pEvent);
 
 
     this.electronSvc
