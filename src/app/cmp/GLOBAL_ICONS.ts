@@ -20,6 +20,12 @@ export const GLOBAL_ICONS:IconModelCollection = {
     name: 'android',
     color1: 'dxc-icon-android'
   }),
+  LINUX: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fab',
+    name: 'linux',
+    color1: 'dxc-text-100'
+  }),
   FIREOS: new IconModel({
     iconType: ICON_TYPE.ICON,
     type: 'fab',

@@ -52,22 +52,35 @@
 
 
 .model-btn-grad {
-  border: 1px solid #aaa;
-}
+  border: 0px;
+  background-color: var(--menu-bg);
+  border-radius: 5px;
+  margin:5px 10px;
+  padding: 1em;
 
-/*
-.model-btn-grad:hover {
-  border: 1px solid #06beb6;
-  cursor: pointer;
-}*/
+  span {
+    font-weight: bold;
+    color: var(--text-75);
+  }
 
-.model-btn-grad:hover {
-  cursor: pointer;
-  background-image: linear-gradient(to right, #06beb6 0%, #48b1bf  51%, #06beb6  100%);
-  transition: 0.5s;
-  background-size: 200% auto;
-  border: 1px solid #06beb6;
-  color: #000;
+  .matched {
+    border-bottom: 2px solid green;
+  }
+
+  .notfound {
+    border-bottom: 2px solid orange;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-image: linear-gradient(to right, #06beb6 0%, #48b1bf  51%, #06beb6  100%);
+    transition: 0.5s;
+    /*background-size: 200% auto;*/
+    color: #000;
+    span {
+      color: #000;
+    }
+  }
 }
 
 /*

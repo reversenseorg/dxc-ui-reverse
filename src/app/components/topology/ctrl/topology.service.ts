@@ -27,8 +27,8 @@ import {FilesystemService} from "../../file/ctrl/FilesystemService";
 export interface TopologyMenuEvent {
   scope?:string;
   type?:string;
-  action?:'open';
-  item:NodeInternalType;
+  action?:'open'|"modal-open";
+  item?:NodeInternalType;
 
   product?:string;
   filepath?:string;
@@ -163,10 +163,12 @@ export class TopologyService extends DxcApiService {
           },{
             label: 'Send intent',
             click: (pMenuItem:any, pBrowserWindow:any ) => {
+              this.onMenuClick$.next({ type:"send-intent", action:"modal-open" });
             }
           },{
             label: 'Install',
             click: (pMenuItem:any, pBrowserWindow:any ) => {
+
             }
           },{
             label: 'Dumpsys',
@@ -301,7 +303,7 @@ export class TopologyService extends DxcApiService {
         uid: pComponent.name
       }
     ).pipe(map((pObs)=>{
-      console.log(pObs);
+      console.log("Scan component",pObs);
       if(pObs.success){
         return pObs.data;
       }else{

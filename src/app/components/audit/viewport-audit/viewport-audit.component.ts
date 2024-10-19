@@ -1,4 +1,12 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  ViewChild
+} from '@angular/core';
 import {ViewportTab} from "../../../cmp/ViewportTab";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
@@ -23,12 +31,14 @@ import {UIException} from "../../../base/error/UIException";
 import Control from "../../../models/audit/common/Control";
 import {ContextMenuList, ContextMenuState} from "../../../base/context-menu/context-menu.component";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {ScanOrder} from "../../../models/ScanOrder";
 
 
 export const AUDIT_PANEL = {
   INFO : 'in',
   RULES : 'rl',
   RESULT: 'rs',
+  ORDERS: 'or'
 }
 
 @Component({
@@ -152,6 +162,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   selectedCtrl: any = {};
   checkedCtrls: any = {};
   safeHTML: Nullable<SafeHtml> = null;
+  orders: ScanOrder[] = [];
 
   constructor(
     private auditService: AuditService,
@@ -267,10 +278,29 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
         break;
       case AUDIT_PANEL.RESULT:
         this.activeLeft = AUDIT_PANEL.RESULT;
-        this.activeWidth = 80;
+        this.activeWidth = 100;
         this.auditService.getReportOf(this.data.getID()).subscribe((vResults:any)=>{
             console.log(vResults);
-        })
+        });
+        break;
+      case AUDIT_PANEL.ORDERS:
+        this.activeLeft = AUDIT_PANEL.ORDERS;
+        this.activeWidth = 100;
+        const activeProject = this.projectService.getSelectedProject();
+
+
+        if(activeProject==null){
+          this.outputSvc.alert( OutputMessage.newError({
+            msg: "Scan orders cannot be listed : you must select a project first."
+          }));
+          return;
+        }
+
+        this.auditService.listOrders(
+            activeProject, this.data).subscribe((vResults:any)=>{
+          console.log("LIST ORDERS > ",vResults);
+            this.orders = vResults;
+        });
         break;
       case AUDIT_PANEL.RULES:
         this.activeLeft = AUDIT_PANEL.RULES;
@@ -399,5 +429,17 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
    */
   updateTags() {
     console.log(this.checkedCtrls);
+  }
+
+  isSelectedCtrl(i: Control) {
+    return (this.selectedCtrl.id==i.id);
+  }
+
+  onScanning(pEvent:any):void {
+
+  }
+
+  onDryRunSuccess(pEvent:any):void {
+    // generated section
   }
 }

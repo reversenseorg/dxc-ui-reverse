@@ -106,7 +106,13 @@
           </div>-->
         </ng-container>
 
-        <ng-container *ngIf="pltList && display.pltf">
+        <ng-container *ngIf="display.pltf">
+            <div class="dxc-frm-label">
+                Select the platform version (can be changed later)  :
+            </div>
+            <dxc-platform-list [platform]="platform" (selectPlatform)="platformChange($event)"></dxc-platform-list>
+
+            <!--
           <div class="dxc-frm-label">
             Select the platform version (can be changed later)  :
           </div>
@@ -116,18 +122,18 @@
               <option value="min">Minimal version supported</option>
               <option value="target">Target version from manifest</option>
               <optgroup label="Installed">
-                <ng-container *ngFor="let plt of pltList">
+                <ng-container *ngFor="let plt of pltList.installed">
                   <option *ngIf="plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
                 </ng-container>
               </optgroup>
               <optgroup label="Available  (Internet required)">
-                <ng-container *ngFor="let plt of pltList">
+                <ng-container *ngFor="let plt of pltList.remote">
                   <option *ngIf="!plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
                 </ng-container>
               </optgroup>
 
             </select>
-          </div>
+          </div>-->
         </ng-container>
       </div>
   </div>

@@ -30,7 +30,7 @@ export class CodeController extends UiController implements IController {
   name :string = 'code-main';
 
   id:string = '';
-  app: Nullable<StageComponent> = null;
+  app:StageComponent; // Nullable<StageComponent> = null;
 
   lIcons: any = CODE_ICONS;
   gIcons: any = GLOBAL_ICONS;

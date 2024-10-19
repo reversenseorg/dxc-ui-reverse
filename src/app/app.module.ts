@@ -16,7 +16,7 @@ import { ViewportComponent } from './base/viewport/viewport.component';
 import { fas } from '@fortawesome/pro-solid-svg-icons';
 import { fal, faPlus } from '@fortawesome/pro-light-svg-icons';
 import { fad } from '@fortawesome/pro-duotone-svg-icons';
-import { faPython, faJsSquare, faJava, faAndroid, faApple, faUsb } from '@fortawesome/free-brands-svg-icons';
+import {faPython, faJsSquare, faJava, faAndroid, faApple, faUsb, faLinux} from '@fortawesome/free-brands-svg-icons';
 
 import { TerminalComponent } from './base/terminal/terminal.component';
 import { ExplorerFileComponent } from './components/file/explorer-file/explorer-file.component';
@@ -140,6 +140,8 @@ import {
   OsApiProjectionListComponent
 } from "./components/topology/osapi-projection-list/osapi-projection-list.component";
 import {CodeEmulatorComponent} from "./components/code/emulator/emulator.component";
+import {ControlViewComponent} from "./components/audit/control-view/control-view.component";
+import {AssessViewComponent} from "./components/audit/assessment-view/assess-view.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -288,6 +290,8 @@ import {CodeEmulatorComponent} from "./components/code/emulator/emulator.compone
     ExplorerAuditComponent,
     ViewportAuditComponent,
     TerminalAuditComponent,
+    ControlViewComponent,
+    AssessViewComponent,
     //ButtonComponent,
 
     ExplorerTagComponent,
@@ -348,7 +352,7 @@ export class AppModule {
     library.addIconPacks(fas, fad, fal);
     library.addIcons(
       // Brands
-      faPython, faJava, faJsSquare, faAndroid, faApple, faUsb,
+      faPython as any, faJava as any, faJsSquare as any, faAndroid as any, faApple as any, faUsb as any, faLinux as any,
       // Light
       faPlus
     );

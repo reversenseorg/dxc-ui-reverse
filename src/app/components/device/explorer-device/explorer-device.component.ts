@@ -214,11 +214,11 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   private _printError(pMessage:string, pExtra:any = null){
-    this.outputSvc.print( OutputMessage.newError({ msg:pMessage, src:'Device Manager', extra:pExtra }));
+    this.outputSvc.print( OutputMessage.newError({ msg:pMessage, src:'Device Manager'/*, extra:pExtra*/ }));
   }
 
   private _printSuccess(pMessage:string, pExtra:any = null){
-    this.outputSvc.print( OutputMessage.newSuccess({ msg:pMessage, src:'Device Manager', extra:pExtra }));
+    this.outputSvc.print( OutputMessage.newSuccess({ msg:pMessage, src:'Device Manager'/*, extra:pExtra*/ }));
   }
 
 
@@ -242,7 +242,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     this.dmService.devices$.subscribe((pDevices)=>{
       console.log("LIST DEVICES ", pDevices);
-      this.outputSvc.print( OutputMessage.newSuccess({ msg:"Devices have been refreshed", src:'Device Manager', extra:null }));
+      this.outputSvc.print( OutputMessage.newSuccess({ msg:"Devices have been refreshed", src:'Device Manager' }));
       pDevices.map((vDev)=>{
         this._prepareDeviceRendering(vDev);
       });
@@ -289,14 +289,14 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     el.style.width = '100%';
 //    el.style.width = pSize.width + 'px';
 //    el.style.maxWidth = pSize.width + 'px';
-    el.style.height = pSize.height + 'px';
-    el.style.maxHeight = pSize.height + 'px';
+    el.style.height = pSize.height-30 + 'px';
+    el.style.maxHeight = pSize.height-30 + 'px';
 
     ctn.style.width = '100%';
     //ctn.style.width = pSize.width + 'px';
     //ctn.style.maxWidth = pSize.width + 'px';
-    ctn.style.height = (pSize.height - navHeight) + 'px';
-    ctn.style.maxHeight = (pSize.height - navHeight) + 'px';
+    ctn.style.height = (pSize.height - navHeight -30) + 'px';
+    ctn.style.maxHeight = (pSize.height - navHeight -30) + 'px';
   }
 
   /**
@@ -316,16 +316,16 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     console.log('expanding ...', pItem);
     switch (pItem._t){
       case 'app':
-        data = this.dmService.getApplications(pItem.dev).pipe(
+        data = this.dmService.getApplications(pItem.dev,true).pipe(
           map( (pObs: DeviceBindedData<AppPackage>[]) => {
             const children:DeviceBindedData<AppPackage>[] = [];
             if(pObs != null){
               pObs.map((pApp:DeviceBindedData<AppPackage>) => {
                 pApp._t = 'apkg';
                 pApp._e = false ;
-                if(pApp.packagePath != null){
+                /*if(pApp.packagePath != null){
                   pApp.tag = (pApp.packagePath.split('/')[1]);
-                }
+                }*/
                 children.push(pApp);
               });
 
@@ -704,7 +704,8 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       .pipe(
         map( (pObs: any) => {
           if( pObs == null) return pObs;
-          pObs.map((vChild:any) => {            this._prepareDeviceRendering(vChild);
+          pObs.map((vChild:any) => {
+            this._prepareDeviceRendering(vChild);
             /*
             vChild._icon = this.gIcons['DEVICE'];
             vChild._t = 'dev';
@@ -840,7 +841,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     const itm = this._getItemByDevice( pItem.dev, 'app');
 
-    console.log("item by dev : ", itm);
+    console.log("Filter item by dev : ", itm);
     if(itm != null){
       itm.filterChildren(pFilter==null ? {} : pFilter);
     }

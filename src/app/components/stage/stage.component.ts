@@ -1042,7 +1042,7 @@ export class StageComponent implements OnInit, AfterViewInit {
   }
 
   showModal( pName:string, pOptions:any=null): void {
-    console.log("show modals> ",this.modals[pName], pOptions);
+    console.log("show modals> ",this.modals,pName, this.modals[pName]);
 
     if(this.modals[pName]==null) return;
 

@@ -35,7 +35,8 @@ export interface AlertControl {
 export interface AlertOptions extends IStringIndex<any>{
   controls?: AlertControl[],
   title?: string,
-  helpDocID?:string
+  helpDocID?:string,
+  rawText?:string[]
 }
 
 export interface AlertMessage {
@@ -58,6 +59,8 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
   @Input() width:number = 500;
   @Input() animated:boolean = false;
   @Input() cancelable: boolean = false;
+  @Input() rawText: any[] = [];
+
 
   @Input() onConfirm:Function = (()=>{});
   @Input() msg:OutputMessage;
@@ -105,6 +108,8 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
     }
 
     this.outputSvc.alert$.subscribe( (pMsg:AlertMessage)=>{
+
+      console.log("Show alert modal > ",pMsg)
       this.msg = pMsg.msg;
       this.resetOptions();
       this.setupOptions(pMsg.opts);
@@ -156,6 +161,10 @@ export class ModalAlertComponent extends AbstractKeyboardNavigable implements On
 
     if(pOptions.helpDocID != null){
       this.helpDocID = pOptions.helpDocID;
+    }
+
+    if(pOptions.rawText != null){
+      this.rawText = pOptions.rawText;
     }
   }
 

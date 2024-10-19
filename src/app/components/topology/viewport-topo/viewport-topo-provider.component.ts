@@ -17,6 +17,7 @@ import {Subject} from "rxjs";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import AndroidActivity from "../../../models/android/AndroidActivity";
 import AndroidProvider from "../../../models/android/AndroidProvider";
+import {Nullable} from "../../../base/Nullable";
 
 
 
@@ -68,6 +69,8 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, IViewpo
   activeTop: string;
   activeTopLeft: string = 'if';
 
+  cmp_impl: Nullable<ModelClass> = null;
+
   constructor(private codeService:CodeControllerService) {
   }
 
@@ -84,6 +87,7 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, IViewpo
   }
 
   // ----- END of IViewportContainer  -------
+  activeTopRight: string;
 
   ngOnInit(): void {
   }
@@ -122,6 +126,20 @@ export class ViewportTopoProviderComponent implements OnInit, OnChanges, IViewpo
   configure( pData:any):void {
     this.data = pData;
 
+  }
+
+  showImplementation(pView: string) {
+    console.log(this.data);
+
+    this.codeService.getClass(this.data.__impl==null ? this.data.name : this.data.__impl).subscribe((pData:any)=>{
+
+      if( pData != null){
+        this.cmp_impl = new ModelClass(pData.data);
+      }else{
+        this.cmp_impl = null;
+      }
+      this.activeTopRight = pView;
+    });
   }
 
 

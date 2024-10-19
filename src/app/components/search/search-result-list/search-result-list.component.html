@@ -57,7 +57,7 @@
         </div>
         <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;" [ngClass]="{ 'text-success': TAGS.INTERNAL&&TAGS.INTERNAL.match(e), 'text-warning': TAGS.DYNAMIC&&TAGS.DYNAMIC.match(e)}">
           {{ e.enclosingClass }}
-          &nbsp;
+          <!--&nbsp;<dxc-node-token [full]="true" [interactive]="true" [item]="data.method"></dxc-node-token>-->
           <!--<dxc-icon *ngIf="e.tags.indexOf('di')>-1" [model]="gIcons['ANDROID']"></dxc-icon>
           <dxc-icon *ngIf="e.tags.indexOf('di')==-1" [model]="gIcons['WINDOW']"></dxc-icon>-->
         </div>

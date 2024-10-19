@@ -79,6 +79,7 @@ import {TerminalAuditComponent} from "./components/audit/terminal-audit/terminal
 import {RuntimeEventController} from "./components/events/ctrl/RuntimeEventController";
 import {RuntimeEventsService} from "./components/events/ctrl/events.service";
 import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
+import {ModalSendIntentComponent} from "./components/topology/modal-intent/modal-send-intent.component";
 
 
 interface StageSet {
@@ -274,6 +275,9 @@ export class ControllerService {
           service: ViewportTopoServiceComponent,
           provider: ViewportTopoProviderComponent,
           receiver: ViewportTopoReceiverComponent,
+        },
+        modalCmp: {
+          "send-intent": ModalSendIntentComponent
         }
       }),
       new ViewerController({

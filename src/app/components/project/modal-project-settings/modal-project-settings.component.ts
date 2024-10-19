@@ -15,7 +15,7 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {ProjectService} from "../ctrl/project.service";
 import {Device} from "../../../models/Device";
 import {DeviceCacheFlavor, DeviceManagerService} from "../../device/ctrl/device-manager.service";
-import {PlatformService} from "../../platform/ctrl/platform.service";
+import {PlatformService, PlatformSet} from "../../platform/ctrl/platform.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import DexcaliburProject from "../../../models/DexcaliburProject";
@@ -68,7 +68,7 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
   deviceList: Device[] = [];
   device: string;
   devuid:Nullable<string> = null;
-  pltList: any;
+  pltList: PlatformSet;
   platform: any;
 
   previous:ProjectSettings = {
@@ -128,7 +128,7 @@ export class ModalProjectSettingsComponent extends AbstractKeyboardNavigable imp
 
 
   displayPlatformList():void {
-    this.pltList = this.platformSvc.list().subscribe(
+    this.platformSvc.list().subscribe(
       (pPltf) => {
         this.pltList = pPltf;
         /*if(this.project!=null){

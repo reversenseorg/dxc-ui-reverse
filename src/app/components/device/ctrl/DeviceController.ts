@@ -23,7 +23,7 @@ export class DeviceController extends UiController  implements IController {
    */
   name:string = 'device';
   id:Nullable<string> = null;
-  app: Nullable<StageComponent> = null;
+  app:StageComponent; // Nullable<StageComponent> = null;
   service: DeviceManagerService;
 
   constructor(pConfig:IControllerOptions) {

@@ -166,12 +166,6 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
     // if pCriteria not null, generate payload
   }
 
-  /*openImplementation(pView: string) {
-    this.parent.parent.parent
-      .getController('ctrl:code-main')
-      .open({ _t:'c', name:this.data.__impl },'act');
-  }*/
-
   showImplementation(pView: string) {
     console.log(this.data);
 
@@ -254,7 +248,13 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
         ret = from([pItem.methods])
         break;
       case NodeInternalType.METHOD:
-        ret = from([pItem.xrefs])
+        //console.log(pItem.xrefs);
+          if(this.activeTopRight=='xr'){
+            console.log(pItem.xrefs);
+            ret = from([pItem.xrefs])
+          }else{
+            ret = this.codeService.getMethodXref( this.data.__signature__, 'to');
+          }
         break;
       default:
         ret = from([]);
@@ -273,7 +273,22 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
   }
 
   itemGetChildren( pItem:any):any{
-    return pItem.children;
+    switch (pItem.__){
+      case NodeInternalType.CLASS:
+        return pItem.methods;
+        break;
+      case NodeInternalType.METHOD:
+        //console.log(pItem.xrefs);
+        if(this.activeTopRight=='xr'){
+          return pItem.xrefs;
+        }else{
+         // ret = this.codeService.getMethodXref( this.data.__signature__, 'to');
+        }
+        break;
+      default:
+        pItem.children;
+        break;
+    }
   }
 
   getIntentFilters():IntentFilter[] {
@@ -282,6 +297,7 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
     }else
       return (this.data as AndroidActivity).intentFilters;
   }
+
   open(pItem: any): Observable<boolean> {
 
     if(this.controller.app==null){

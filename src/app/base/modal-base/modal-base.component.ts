@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {Observable} from "rxjs";
 import {Nullable} from "../Nullable";
+import {StageComponent} from "../../components/stage/stage.component";
 
 
 interface EventSources {
@@ -28,7 +29,14 @@ interface EventSources {
 export class ModalBaseComponent implements OnInit, AfterContentInit {
 
   @Input() headless = false;
-  @Input() mainController:any
+
+  /**
+   * The component which hold the reference to this modal
+   * It should be "stage" (top level element)
+   * @field
+   */
+  @Input() mainController:StageComponent;
+
   @Input() name:any;
   @Input() options:any;
   @Input() delegateConfigure:any = null;
@@ -68,6 +76,7 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
   constructor( private changeDetector:ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    // register the global into stage
     this.mainController.registerModal(this.name,this);
   }
 

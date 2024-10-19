@@ -17,6 +17,9 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import ControlAssessment from "../../../models/audit/common/ControlAssessment";
 import {SearchService} from "../../search/ctrl/search.service";
 import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
+import {ProjectService} from "../../project/ctrl/project.service";
+import {ScanOrder} from "../../../models/ScanOrder";
+import DexcaliburProject from "../../../models/DexcaliburProject";
 
 export enum CheckEventState {
   NEW= 'new',
@@ -61,9 +64,11 @@ export class AuditService extends DxcApiService{
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
   onCheckAction$:Subject<CheckResult> = new Subject<CheckResult>();
+  private refreshScans$: Subject<any> = new Subject<any>();
 
   constructor( private appmenuSvc:AppMenuService,
                private topoSvc:TopologyService,
+               private projectSvc:ProjectService,
                private _searchSvc:SearchService,
                private outputSvc:OutputService,
                protected override _http:HttpClient) {
@@ -78,8 +83,16 @@ export class AuditService extends DxcApiService{
           dashboard: { method: 'GET', url:'/audit/dashboard/:model', format:'json', auth:false /* removed */, puid:true},
           scan: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:false /* removed */, puid:true},
           scanInfo: { method: 'POST', url:'/audit/scanInfo', format:'json', auth:false /* removed */, puid:true},
-          controls: { method: 'POST', url:'/audit/controls/:model', format:'json', auth:false /* removed */, puid:true}
-        }
+          controls: { method: 'POST', url:'/audit/controls/:model', format:'json', auth:false /* removed */, puid:true},
+        },
+        scan: {
+          start: { method: 'POST', url:'/audit/project/:uid/scan/start', format:'json', auth:false, puid:false},
+          listProject: { method: 'POST', url:'/audit/project/:uid/scan/list', format:'json', auth:false, puid:false},
+          list: { method: 'GET', url:'/audit/order/list', format:'json', auth:false, puid:false},
+          scheduler_info: { method: 'GET', url:'/node/scheduler/info', format:'json', auth:false, puid:false},
+          order: { method: 'POST', url:'/audit/order/scan', format:'json', auth:false, puid:true},
+          orderFromScratch: { method: 'POST', url:'/audit/order/scan?_puid=:puid', format:'json', auth:false, puid:false},
+        },
       }, _http, outputSvc);
 
     /*
@@ -245,7 +258,7 @@ export class AuditService extends DxcApiService{
     }));
   }
 
-  scan(pModelId:string):Observable<Nullable<AssuranceReport>> {
+  scan(pProjectUID:string, pModelId:string):Observable<Nullable<AssuranceReport>> {
     return this._process(
       this.endpoints['audit']['scan'],
       { model: pModelId }
@@ -271,6 +284,38 @@ export class AuditService extends DxcApiService{
     }));
   }
 
+  newScanOrder(pProjectUID:string, pModelId:string):Observable<Nullable<AssuranceReport>> {
+    return this._process(
+        this.endpoints['scan']['order'],
+        {
+          projectUID: pProjectUID,
+          modelUID: [pModelId],
+        }
+    ).pipe(map( (pEl:any) => {
+
+      if(pEl.success){
+
+
+        const report:AssuranceReport = AssuranceReport.fromJsonObject(pEl.data);
+
+        this.outputSvc.print(OutputMessage.newSuccess({
+          src: "Audit",
+          msg: `Scan order pushed`
+        }));
+        //this.onAuthentication.next(AuthenticationEvent.newLogoutSuccess());
+        return report;
+      }else{
+        this.outputSvc.print(OutputMessage.newError({
+          src: "Audit",
+          msg: `Scan order failed`
+        }));
+        return null;
+      }
+    }));
+  }
+
+
+  //listOrdersOf(pProjectUID:string):Observable<ScanOrder>
 
   getControlsOf(pModelID:string, pRefresh = false):Observable<Control[]>{
     return this.getModel(pModelID, pRefresh).pipe(map((vModel:Nullable<AssuranceModel>)=>{
@@ -329,6 +374,80 @@ export class AuditService extends DxcApiService{
       this.onCheckAction$.next(checkEvt);
 
       return checkEvt;
+    }));
+  }
+
+
+  /**
+   * To get all orders related to a project
+   * @param {string} pProject Project UID
+   * @return {Observable<ScanOrder[]>} An observable list of ScanOrder
+   * @method
+   */
+  listOrders(pProject:DexcaliburProject, pModel:Nullable<AssuranceModel> = null):Observable<any[]> {
+
+
+    return this._process(
+        this.endpoints.scan.list, {
+          projectUID: pProject.uid
+        }
+    ).pipe(map( (pEl:any) => {
+
+      if(pEl.success){
+
+        this.outputSvc.print(OutputMessage.newSuccess({
+          src: "Audit",
+          msg: `Scan orders cannot have been retrieved for the project`
+        }));
+
+        const orders:IStringIndex<ScanOrder> = {};
+        pEl.data.map((x: any) =>{
+
+          const scan = new ScanOrder(x);
+
+          if(scan.$project===pProject.uid){
+            orders[scan.uuid as string] = scan;
+
+            if(scan.settings.modelUID!=null){
+              scan.$model = pModel!;
+
+              /*scan.$model = this.getModel(scan.settings.modelUID);
+              if(scan.$model==null){
+                this.getModel(scan.settings.modelUID).subscribe((vModel)=>{
+                  if(vModel!=null){
+                    scan.$model = vModel;
+                    this.refreshScans$.next(Object.values(orders) );
+                  }
+                })
+              }*/
+            }
+
+
+            scan.$project = pProject;
+            this.refreshScans$.next(Object.values(orders) );
+
+
+        }else{
+          /*
+           if(scan.settings.projectUID!=null){
+             this.projectSvc.getProjectInfo(pProjectUID).subscribe((vProject:any)=>{
+               console.log(vProject);
+               scan.$project = pProjectUID;
+               this.refreshScans$.next(Object.values(orders) );
+             });
+           }*/
+        }
+
+      });
+
+        return Object.values(orders);
+      }else{
+        this.outputSvc.print(OutputMessage.newError({
+          src: "Audit",
+          msg: `Scan orders cannot be listed for the project`
+        }));
+        return [];
+      }
     }));
   }
 }

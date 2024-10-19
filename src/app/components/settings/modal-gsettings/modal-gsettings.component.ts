@@ -17,7 +17,7 @@ import {NgbProgressbarConfig} from "@ng-bootstrap/ng-bootstrap";
 import {ServerSettings, Setting, SettingsService, WebServerSettings} from "../ctrl/settings.service";
 import {Device} from "../../../models/Device";
 import {DeviceManagerService} from "../../device/ctrl/device-manager.service";
-import {PlatformService} from "../../platform/ctrl/platform.service";
+import {PlatformService, PlatformSet} from "../../platform/ctrl/platform.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {StageComponent} from "../../stage/stage.component";
@@ -112,7 +112,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
   proxyIp:Nullable<string> = null;
   proxyPort:Nullable<string> = null;
   httpHeaders:Nullable<string> = null;*/
-  pltList: any;
+  pltList: PlatformSet;
   platform: any;
 
   srv:any = {

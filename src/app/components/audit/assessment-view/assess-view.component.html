@@ -1,0 +1,31 @@
+<div class="report-tpl assessment" [ngClass]="{ 'section':(this.level==0), 'mt-1':(this.level>0) }" [ngStyle]="{ 'paddingLeft': calcPadding() }">
+    <div class="row g-0" >
+        <div class="col-12 subtitle" [ngStyle]="calcStyles('subtitle')">
+            {{parentNum}}.{{getOffset()}}.&nbsp;{{ assess.name }}
+        </div>
+    </div>
+    <div class="row g-0 mt-2 ms-2">
+        <div class="col-12">
+            <dxc-meta [label]="getTestType()" [css]="'dxc-herb'"></dxc-meta>
+            <dxc-meta [label]="getAnalyzerType()" [css]="getAnalyzerStyle()"></dxc-meta>
+            <dxc-meta [label]="'#'+assess.id" [css]="'dxc-black'"></dxc-meta>
+        </div>
+    </div>
+
+    <div class="row g-0">
+        <div class="col-12 p-2" [innerHTML]="assess.description"></div>
+    </div>
+
+    <!--
+    <ng-container *ngFor="let rule of assess.rules">
+        <div class="row g-0 description" *ngIf="assess.rules">
+            <div class="col-12">
+                <dxc-audit-rule [rule]="rule" [assessement]="assess" (onScanning)="onScanning($event)" (onDryRunSuccess)="onDryRunSuccess($event)"></dxc-audit-rule>
+            </div>
+        </div>
+    </ng-container>
+    -->
+    <ng-container *ngFor="let rule of assess.rules">
+        <dxc-audit-rule [reqClass]="'dxc-text-black'" [style]="{ alignContent:'center', backgroundColor: '#DDD', marginTop:'1em', padding:'0 0 0 1em', height:'2.5em', borderRadius:'10px' }" [rule]="rule" [assessement]="assess" (onScanning)="onScanning($event)" (onDryRunSuccess)="onDryRunSuccess($event)"></dxc-audit-rule>
+    </ng-container>
+</div>

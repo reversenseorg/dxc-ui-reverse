@@ -35,6 +35,13 @@ export class TopologyController extends UiController implements IController {
   constructor(pConfig:any=null) {
     super();
     this.configure(pConfig);
+
+    // listen for 'open modal'
+    this.service.onMenuClick$.subscribe((pEvt )=>{
+        if(pEvt.action==='modal-open' && (pEvt.type)){
+          this.app?.showModal(pEvt.type);
+        }
+    });
   }
 
 
@@ -117,7 +124,7 @@ export class TopologyController extends UiController implements IController {
   }
 
   sendIntentTo(pOptions:any = null):void{
-
+    this.app?.showModal('send-intent', pOptions);
   }
 
 

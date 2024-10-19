@@ -82,7 +82,7 @@ export class NativeService extends DxcApiService {
           return pEl.data;
         }else{
           // Output message
-          this.outputSvc.print(OutputMessage.newError(pEl.msg));
+          this.outputSvc.print(OutputMessage.newError({ msg: pEl.msg }));
           return null;
         }
       })

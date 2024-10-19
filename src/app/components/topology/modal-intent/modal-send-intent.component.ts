@@ -1,5 +1,5 @@
 import {
-  AfterContentInit, ChangeDetectorRef,
+  AfterContentInit, AfterViewInit, ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -20,6 +20,7 @@ import {IntentDataCriteria} from "../../../models/android/Intent";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {Nullable} from "../../../base/Nullable";
+import {StageComponent} from "../../stage/stage.component";
 
 
 interface EventSources {
@@ -32,7 +33,7 @@ interface EventSources {
   templateUrl: './modal-send-intent.component.html',
   styleUrls: ['../../../modal.scss','../../../forms.scss'],
 })
-export class ModalSendIntentComponent  extends AbstractKeyboardNavigable implements OnInit {
+export class ModalSendIntentComponent  extends AbstractKeyboardNavigable implements OnInit,AfterViewInit {
 
   @Input() controller:any;
   @Input() closable:boolean = true;
@@ -76,13 +77,24 @@ export class ModalSendIntentComponent  extends AbstractKeyboardNavigable impleme
     //config.height = '20px';
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
     //this.refresh();
     /*this.progress$.subscribe( (pProgress:any)=>{
       console.log(pProgress);
       this.progress = pProgress.value;
       this.message = pProgress.msg;
     });*/
+
+    console.log("modal-send-intent : ", this.controller);
+    console.log("model-send-intent modal > ",this.modal);
+
+    if((this.controller.app as StageComponent).getModal(this.modal.name)==null){
+      (this.controller.app as StageComponent).registerModal(this.modal.name, this.modal);
+    }
+
 
     this.onKeyboardEvent.subscribe( pEvent => {
 

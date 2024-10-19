@@ -106,6 +106,10 @@ h4.dxc-sub {
   color: var(--text-50);
 }
 
+.dxc-code-area {
+  background-color: var(--text-bg-75);
+  font-size: 0.9em;
+}
 
 .dxc-text-yellow {
   color: yellow;
@@ -1073,6 +1077,19 @@ div.dxc-list {
   color:black !important;;
 }
 
+
+.dxc-black {
+  background-color: #000;
+  color:white !important;;
+}
+
+.dxc-black-neg {
+  border: 1px solid #000;
+  border-radius: 0px;
+  background-color: #FFF;
+  color:#000 !important;;
+}
+
 .dxc-table {
   th, td {
     padding: 5px 0 5px 10px;
@@ -1133,4 +1150,8 @@ button:focus {
 
 .exp-item-focus {
   background-color: #3a4f8e;
+}
+
+.fill-height {
+  height: 100%;
 }

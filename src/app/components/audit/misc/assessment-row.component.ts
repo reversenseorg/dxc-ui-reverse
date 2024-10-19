@@ -30,10 +30,11 @@ import {DxcComponent} from "../../../base/DxcComponent";
       </div>
       <div class="col-1 text-center" >
         <dxc-icon [model]="gIcons['PLAY_ALL']" (click)="runAll()"></dxc-icon>
+        <dxc-icon [model]="gIcons['PLUS']" (click)="addRule()"></dxc-icon>
       </div>
     </div>
     <ng-container  *ngFor="let r of assessement.rules">
-      <dxc-audit-rule *ngIf="r!=null" [rule]="r" [assessement]="assessement" (onScanning)="onScanning.emit($event)" (onDryRunSuccess)="onDryRunSuccess.emit($event)"></dxc-audit-rule>
+      <dxc-audit-rule *ngIf="r!=null" [styleRow]="{ paddingLeft: '2em'}" [rule]="r" [assessement]="assessement" (onScanning)="onScanning.emit($event)" (onDryRunSuccess)="onDryRunSuccess.emit($event)"></dxc-audit-rule>
     </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -119,6 +120,10 @@ export class AssessmentRowComponent extends DxcComponent  {
       }
 
     return "dxc-salmon";
+  }
+
+  addRule() {
+
   }
 }
 

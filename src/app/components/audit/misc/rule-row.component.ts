@@ -18,11 +18,10 @@ import {AuditService, CheckEventState} from "../ctrl/audit.service";
   selector: 'dxc-audit-rule',
   template: `
     <div class="row g-0 dxc-text-100 dxc-rule-req" style="padding:0" [ngStyle]="style" (click)="dryRunRule(assessement,rule)">
-      <div class="col-1">&nbsp;</div>
-      <div class="col-10 dxc-text-75">
+      <div class="col-11 dxc-text-75" [ngStyle]="styleRow">
         <dxc-meta [label]="rule.o.targetOS" [css]="'dxc-text-std dxc-herb'"></dxc-meta>
         <dxc-meta *ngIf="rule.emulate" [label]="'emulation allowed'" [css]="'dxc-text-std dxc-yellow'"></dxc-meta>
-        <span *ngIf="rule.request!=null">{{ rule.request.__stringified }}</span> 
+        <span [ngClass]="reqClass" *ngIf="rule.request!=null">{{ rule.request.__stringified }}</span> 
       </div>
       <div class="col-1 text-center" >
         <dxc-icon *ngIf="idle; else running" [model]="gIcons['PLAY']"></dxc-icon>
@@ -53,6 +52,8 @@ export class RuleRowComponent extends DxcComponent  {
   idle = true;
 
   gIcons:any = GLOBAL_ICONS;
+  @Input() reqClass: string | string[] | Set<string> | { [p: string]: any } | null | undefined = null;
+  @Input() styleRow: { [p: string]: any } | null | undefined = null;
 
   constructor(
       private _projectSvc: ProjectService,

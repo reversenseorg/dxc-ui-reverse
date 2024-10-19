@@ -35,6 +35,8 @@ import Control from "../../../models/audit/common/Control";
 import {UIException} from "../../../base/error/UIException";
 import {ICON_TYPE} from "../../../base/icon/IconModel";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {OutputService} from "../../output/ctrl/output.service";
+import {OutputMessage} from "../../../cmp/OutputMessage";
 
 export enum AUDIT_SUBVIEW {
   THREATS="threat",
@@ -98,7 +100,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
    *
    */
   constructor( private auditSvc:AuditService,
-
+               private outputSvc:OutputService,
                private codeSvc:CodeControllerService,
                private electronSvc:ElectronService,
                private projectSvc:ProjectService,
@@ -233,8 +235,9 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
       case AUDIT_SUBVIEW.REPORT:
         this.controller.service
           .getReports()
-          .subscribe((vModel) => {
-            this.dataPool[AUDIT_SUBVIEW.REPORT] = vModel;
+          .subscribe((vReport) => {
+            console.log("GET REPORTS > ",vReport);
+            this.dataPool[AUDIT_SUBVIEW.REPORT] = vReport;
           });
         break;
     }
@@ -398,7 +401,19 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
 
   scanModel( pModel:AssuranceModel) {
-    this.open(pModel)
+
+    const activeProject = this.projectSvc.getSelectedProject();
+
+    //this.open(pModel)
+    if(activeProject==null){
+      this.outputSvc.alert( OutputMessage.newError({
+        msg: "Scan cannot be ordered : you must select a project first."
+      }));
+      return;
+    }
+    this.auditSvc.newScanOrder( activeProject.getUID(), pModel.getID()).subscribe((vReport  )=>{
+      console.log("Scan Order done", vReport );
+    })
   }
 
     protected readonly ICON_TYPE = ICON_TYPE;

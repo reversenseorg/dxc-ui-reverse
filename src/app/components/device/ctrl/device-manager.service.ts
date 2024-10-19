@@ -494,13 +494,41 @@ export class DeviceManagerService extends DxcApiService {
     ).pipe(
       map((pEl:any)=>{
         if(pEl.success){
-          appCache = []
+          const groups:Record<string, DeviceBindedData<AppPackage>[]> = {};
+
+          appCache = [];
           pEl.data.map((x:any) => {
             const app = new AppPackage(x);
             (app as DeviceBindedData<any>).dev = pDevice;
-            appCache.push(app as DeviceBindedData<AppPackage>);
+
+            if(app.packagePath != null){
+              app.tag = (app.packagePath.split('/')[1]);
+            }
+
+            if(groups[app.tag]==null){
+              groups[app.tag] = [];
+            }
+            groups[app.tag].push(app as DeviceBindedData<AppPackage>);
+
+//            appCache.push(app as DeviceBindedData<AppPackage>);
           });
 
+          for(let k in groups){
+            groups[k].sort((a:DeviceBindedData<AppPackage>,b:DeviceBindedData<AppPackage>)=>{
+              if(a.packageIdentifier != b.packageIdentifier){
+                if(b.packageIdentifier==null) return 1;
+                if(a.packageIdentifier==null) return 1;
+
+                return a.packageIdentifier.localeCompare(b.packageIdentifier);
+              }else{
+                return 0;
+              }
+            });
+          }
+
+          Object.values(groups).map( x => {
+            appCache = appCache.concat(x);
+          })
 
           this._cache.app[pDevice.uid as string] = appCache;
 

@@ -1,4 +1,4 @@
-<app-modal-base [name]="'send-intent'" [closable]="closable" [width]="400" [height]="450" [mainController]="controller.app" *ngIf="filter!=null">
+<app-modal-base [name]="'send-intent'" [closable]="true" [width]="400" [height]="450" [mainController]="controller.app">
   <div head class="dxc-modal-header">
     Send intent <ng-container *ngIf="comp!=null">to {{ comp.name }}</ng-container>
   </div>
@@ -6,7 +6,7 @@
 
             <p>This intent filter has multiple categories and/or actions. So, please select intent parameters.</p>
 
-            <ng-container *ngIf="filter.hasMultipleCategories()">
+            <ng-container *ngIf="filter && filter.hasMultipleCategories()">
               <div class="input-group mb-3" id="confCatListSection">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="confCatIntentLabel">Categories</span>
@@ -18,7 +18,7 @@
             </ng-container>
 
 
-            <ng-container *ngIf="filter.hasMultipleActions()">
+            <ng-container *ngIf="filter && filter.hasMultipleActions()">
               <div class="input-group mb-3" id="confActListSection">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="confActIntentLabel">Actions</span>

@@ -57,7 +57,7 @@ export class ModalProgressComponent implements OnInit {
   @Input() closable:boolean = false;
   @Input() progress$:Observable<ModalProgressEvent> ;
   @Input() progressSrc:any = null;
-  @Input() progress:number = 20;
+  @Input() progress:number = 100;
   @Input() width:number = 200;
   @Input() animated:boolean = false;
   @Input() cancelable: boolean = false;
@@ -101,7 +101,11 @@ export class ModalProgressComponent implements OnInit {
 
     if(this.progress$ != null){
       this.progress$.subscribe( (pEvent:ModalProgressEvent)=>{
-        console.log(pEvent);
+        //console.log(pEvent.progress=);
+        if(pEvent.progress!=100){
+
+          this.progress = 100;
+        }
         this.progress = pEvent.progress;
         this.message = pEvent.msg;
       });

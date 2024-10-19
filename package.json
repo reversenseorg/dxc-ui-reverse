@@ -36,7 +36,7 @@
     "@angular/localize": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.6",
     "@fortawesome/angular-fontawesome": "^0.13.0",
-    "@fortawesome/free-brands-svg-icons": "^6.4.2",
+    "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/pro-duotone-svg-icons": "^6.4.2",
     "@fortawesome/pro-light-svg-icons": "^6.4.2",
     "@fortawesome/pro-solid-svg-icons": "^6.4.2",

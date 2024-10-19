@@ -1,13 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output
-} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../../../base/Nullable";
 import {OutputService} from "../../output/ctrl/output.service";
@@ -15,7 +6,6 @@ import {Tag} from "../../../models/tags/Tag";
 import ModelCall from "../../../models/ModelCall";
 //import {CodeControllerService} from "../ctrl/code-controller.service";
 import ModelMethod from "../../../models/ModelMethod";
-import ModelField from "../../../models/ModelField";
 import ModelClass from "../../../models/ModelClass";
 import {ModelFunction} from "../../../models/ModelFunction";
 import {NodeInternalType} from "../../../models/NodeInternalType";
@@ -24,6 +14,8 @@ import {from, Observable} from "rxjs";
 import {TopologyService} from "../ctrl/topology.service";
 import AndroidComponent from "../../../models/android/AndroidComponent";
 import {CodeControllerService} from "../../code/ctrl/code-controller.service";
+import {UIException} from "../../../base/error/UIException";
+import {UiController} from "../../../base/controllers/UiController";
 
 let ctr = 0;
 
@@ -67,8 +59,20 @@ export class OsApiProjectionListComponent implements OnInit {
 
     @Input() title?:string;
     @Input() description = null;
-
+    @Input() projectionAreaName = "OS API";
+    /**
+     * To automatically search xref to OS API
+     */
+    @Input() autoload = false;
+    /**
+     * Projection depth
+     */
+    @Input() depth = 1;
     @Input() component:Nullable<AndroidComponent> = null;
+    @Input() node: Nullable<AndroidComponent|ModelClass|ModelFunction|ModelMethod> = null;
+
+    @Input() controller:any;
+
 
     @Input() sort:"asc"|"desc" = "desc";
     @Input() pagignation: boolean = false;
@@ -81,8 +85,6 @@ export class OsApiProjectionListComponent implements OnInit {
     @Input() navbar = false;
     @Input() headerCols:string[] = [];
 
-    @Input() node: Nullable<ModelCall|ModelMethod|ModelField|ModelClass|ModelFunction> = null
-    @Input() data: (any)[] = [];
 
     @Input() xrefto = false;
     @Input() xreffrom = false;
@@ -92,10 +94,11 @@ export class OsApiProjectionListComponent implements OnInit {
     @Output() dblclickOne:EventEmitter<ModelCall> = new EventEmitter<ModelCall>();
 
 
+
+    data:ModelClass[] = [];
+
     activeItem: any = null;
     window: (ModelMethod|ModelFunction)[] = [];
-    windowStartAt: number = 0;
-    rowHeight = 15;
 
     selected:Nullable<ModelMethod|ModelFunction> = null;
 
@@ -107,6 +110,11 @@ export class OsApiProjectionListComponent implements OnInit {
 
     columns: Record<string, Column> = {};
 
+
+    protected readonly gIcons = GLOBAL_ICONS;
+    protected readonly NODE_TYPES = NodeInternalType;
+    protected readonly cIcons = CODE_ICONS;
+
     constructor(
         private _outputSvc: OutputService,
         private topoSvc: TopologyService,
@@ -116,16 +124,6 @@ export class OsApiProjectionListComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        this.rowHeight = Math.round(this.height / this.visibleRows);
-
-        if(this.pagignation){
-            this.rows = this.rowPerPageOpts[0];
-            this.windowStartAt = 0;
-        }else{
-            this.rows = -1;
-        }
-
         this.refresh();
     }
 
@@ -157,108 +155,63 @@ export class OsApiProjectionListComponent implements OnInit {
     refresh(pResetUI  = false) {
 
         if(this.node != null){
-            this.data = this.getXrefsOf(this.node);
 
-            if(this.pagignation){
-                this.window = this.data.slice(this.windowStartAt, this.windowStartAt+this.rows);
-            }else if(this.window.length==0 || pResetUI){
-                this.windowStartAt = 0;
-                this.window = this.data;
+            let projection:Nullable<Observable<any>> = null;
+            switch (this.node.__) {
+                case NodeInternalType.ANDROID_ACTIVITY:
+                case NodeInternalType.ANDROID_RECEIVER:
+                case NodeInternalType.ANDROID_SERVICE:
+                case NodeInternalType.ANDROID_PROVIDER:
+                    projection = this.topoSvc.scanComponent( this.node as AndroidComponent);
+                    break;
+                case NodeInternalType.METHOD:
+                    break;
+                case NodeInternalType.FUNC:
+                    break;
+                case NodeInternalType.CLASS:
+                    break;
             }
 
-            this.changeRef.detectChanges();
-        }
 
-        /*
-        this.codeSvc.listTags(true).subscribe((vTags:Tag[])=>{
-            //console.log("refreshProjects > ",vProj);
+            if(projection!=null){
+                projection.subscribe((x)=>{
+                    this.data = x;
 
-            this.xrefList = vTags.sort((a:ModelCall,b:ModelCall)=>{
-                return a.calleed.name.localeCompare(b.calleed.label);
-            });
+                    /*
+                    for(const cls in x.__ppts.internals){
 
-            if(this.pagignation){
-                this.window = this.xrefList.slice(this.windowStartAt, this.windowStartAt+this.rows);
-            }else if(this.window.length==0 || pResetUI){
-                this.windowStartAt = 0;
-                this.window = this.xrefList;
-            }
+                      clsX = {
+                        __: NodeInternalType.CLASS,
+                        uid: cls,
+                        meths: []
+                      };
 
-            this.refreshed.emit(true);
-        });*/
-    }
-
-
-
-
-    protected readonly gIcons = GLOBAL_ICONS;
-
-
-    bookmark() {
-
-    }
-
-    onPageChange(pEvent: {offset:number, size:number }) {
-        this.window = this.data.slice(pEvent.offset, pEvent.offset+pEvent.size);
-    }
-
-    getXrefsOf(pItem: ModelCall|ModelMethod|ModelFunction|ModelField|ModelClass):(ModelFunction|ModelMethod)[] {
-        let xrefs:(ModelFunction|ModelMethod)[] = [];
-        switch((pItem as any).__){
-            case NodeInternalType.FUNC:
-                if(this.xreffrom){
-                    xrefs = (pItem as any).xcref;
-                }else{
-                    xrefs = (pItem as any).xdref;
-                }
-                break;
-            case NodeInternalType.METHOD:
-
-                this.codeSvc.getMethodXref(
-                    (pItem as any).__signature__, (this.xreffrom?'from':'to')
-                ).subscribe( (pData:any)=>{
-
-                    pData.map((x:any) => {
-
-                        this.codeSvc.getModelMethod(x.s).subscribe((vMeth:any)=>{
-                            if(vMeth!=null && vMeth.enclosingClass!=null){
-                                this.codeSvc.getClass(vMeth.enclosingClass as string).subscribe((vClz:any)=>{
-                                    if(vClz!=null && vClz.success){
-                                        vMeth.enclosingClass = new ModelClass(vClz.data);
-                                        this.data.push(vMeth);
-                                        this.changeRef.detectChanges();
-                                    }else{
-                                        console.log("Class not found : ",vMeth.enclosingClass,vClz)
-                                    }
-                                });
-                            }
+                      for(const idx in x.__ppts.internals[cls]){
+                        methX = x.__ppts.internals[cls][idx]
+                        clsX.children.push({
+                          __: NodeInternalType.METHOD,
+                          uid: idx,
+                          xrefs: []
                         })
-                    })
+                      })
 
-                    xrefs= [];
+                      this.data.internals.push({
+                        __: NodeInternalType.CLASS,
+                        name: cls,
+                        children: []
+                      });
+                    }*/
+                    console.log(this.data,x);
+
+                    this.changeRef.detectChanges();
                 });
-
-                break;
-            case NodeInternalType.FIELD:
-
-                xrefs = (pItem as any)._getters;
-                xrefs = xrefs.concat((pItem as any)._setters);
-                break;
-            case NodeInternalType.CALL:
-                if(this.xreffrom){
-                    xrefs = [(pItem as any).calleed];
-                }else{
-                    xrefs = [(pItem as any).caller];
-                }
-                break;
+           }
         }
-
-        return xrefs;
     }
 
 
-    protected readonly NODE_TYPES = NodeInternalType;
-    protected readonly cIcons = CODE_ICONS;
+
+
 
     /**
      * To display a contextual menu defined by another brick
@@ -271,47 +224,8 @@ export class OsApiProjectionListComponent implements OnInit {
         this.codeSvc.displayCtxMenu$.next({ event:$event, type:pType, obj:pObj});
     }
 
-    showAndroidAPI(pTabName: string) {
-
-        if(this.component==null) return;
-
-
-        this.topoSvc.scanComponent( this.component).subscribe((x:AndroidComponent)=>{
-
-            console.log(x);
-            //this.data = x;
-            let clsX:any, methX:any;
-
-            /*
-            for(const cls in x.__ppts.internals){
-
-              clsX = {
-                __: NodeInternalType.CLASS,
-                uid: cls,
-                meths: []
-              };
-
-              for(const idx in x.__ppts.internals[cls]){
-                methX = x.__ppts.internals[cls][idx]
-                clsX.children.push({
-                  __: NodeInternalType.METHOD,
-                  uid: idx,
-                  xrefs: []
-                })
-              })
-
-              this.data.internals.push({
-                __: NodeInternalType.CLASS,
-                name: cls,
-                children: []
-              });
-            }*/
-            console.log(this.data,x);
-        })
-    }
-
     expand(pItem: any, pType: string): Observable<any> {
-        console.log("expand: ",pItem,pType);
+        console.log("expand osapi: ",pItem,pType);
         let ret:Observable<any>
         switch (pItem.__){
             case NodeInternalType.CLASS:
@@ -327,6 +241,29 @@ export class OsApiProjectionListComponent implements OnInit {
         return ret;
     }
 
+    itemHasChildren(pItem: any, pType: string): boolean {
+        return (pItem.__!=null) && ([NodeInternalType.CLASS,NodeInternalType.METHOD].indexOf(pItem.__)>-1);
+    }
+
+
+    itemHasLazyChildren( pItem:any, pType ='p'): boolean {
+        return (pItem.children.length==1 && pItem.children[0]._t=="wait");
+    }
+
+    itemGetChildren( pItem:any):any{
+        switch (pItem.__){
+            case NodeInternalType.CLASS:
+                return pItem.methods;
+                break;
+            case NodeInternalType.METHOD:
+                return pItem.xrefs;
+                break;
+            default:
+                pItem.children;
+                break;
+        }
+    }
+
     isExpandable(pItem:any, pSrc:any):boolean{
         return (pItem.__!=null) && ([NodeInternalType.CLASS,NodeInternalType.METHOD].indexOf(pItem.__)>-1);
     }
@@ -339,5 +276,34 @@ export class OsApiProjectionListComponent implements OnInit {
 
         this.activeItem = pEvent;
         pEvent.el.style.backgroundColor = "royalblue";
+    }
+
+    open(pItem: any): Observable<boolean> {
+
+        console.log('osapi open > ',pItem);
+        if(this.controller==null || this.controller.app==null){
+            throw  UIException.APP_NOT_INITIALIZED();
+        }
+
+        let success:boolean;
+        switch (pItem.__){
+            case NodeInternalType.CLASS:
+            case NodeInternalType.METHOD:
+                this.controller.app.getController('ctrl:code-main')
+                    .openNode(pItem.uid, pItem.__);
+                success = true;
+                break;
+            default:
+                if(pItem.hasOwnProperty('parent')){
+                    this.controller.app.getController('ctrl:code-main')
+                        .openNode(pItem.parent, NodeInternalType.METHOD);
+                    success = true;
+                }else{
+                    success = false;
+                }
+                break;
+        }
+
+        return from([success]);
     }
 }

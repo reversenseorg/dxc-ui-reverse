@@ -16,6 +16,7 @@ export default class AppPackage {
     workspaceExists:boolean = false;
     currentWd:boolean = false;
     removed:boolean = false;
+    tag:string = "";
 
 
     /**

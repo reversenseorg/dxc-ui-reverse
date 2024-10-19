@@ -80,7 +80,6 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
   deviceList: any;
   device: Device;
   devuid:Nullable<string> = null;
-  pltList: any;
   platform: any;
 
   display:any = {
@@ -123,13 +122,17 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
 
 
   displayPlatformList():void {
+    this.display.pltf = true;
+    this.changeDetectorRef.detectChanges();
+    /*
     this.pltList = this.platformSvc.list().subscribe(
       (pPltf) => {
         console.log(pPltf);
+
         this.pltList = pPltf;
         this.display.pltf = true;
       }
-    );
+    );*/
   }
 
   show(){
@@ -210,5 +213,10 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
     this.device = pDevice;
     this.devuid = pDevice.uid;
     this.displayPlatformList();
+  }
+
+  platformChange($event: string) {
+    console.log("changes : ", $event);
+    this.platform = $event;
   }
 }

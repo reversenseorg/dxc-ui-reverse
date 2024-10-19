@@ -560,7 +560,8 @@ export class HookService extends DxcApiService {
           // pop alert box
           OutputMessage.newError({ msg:pEvent.msg.data.msg}),
           {
-            title: "Frida error"
+            title: "Frida error",
+            rawText: pEvent.msg.data?.extra?.diags
           }
         );
       }
@@ -631,7 +632,7 @@ export class HookService extends DxcApiService {
     ).pipe(
       map((pEl:any)=>{
         if(!pEl.success){
-          this.outputSvc.print(OutputMessage.newError({ msf:"Hook sessions cannot be lister : "+pEl.msg, src:"Hook Manager" }));
+          this.outputSvc.print(OutputMessage.newError({ msg:"Hook sessions cannot be lister : "+pEl.msg, src:"Hook Manager" }));
           return [];
 
         }
@@ -681,7 +682,7 @@ export class HookService extends DxcApiService {
     ).pipe(
       map((pEl:any)=>{
           if(!pEl.success){
-            this.outputSvc.print(OutputMessage.newError({ msf:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
+            this.outputSvc.print(OutputMessage.newError({ msg:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
             return [] ;
           }
 
@@ -713,7 +714,7 @@ export class HookService extends DxcApiService {
     ).pipe(
       map((pEl:any)=>{
           if(!pEl.success){
-            this.outputSvc.print(OutputMessage.newError({ msf:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
+            this.outputSvc.print(OutputMessage.newError({ msg:"Content of the hook sessions cannot be retrieved : "+pEl.msg, src:"Hook Manager" }));
             return {};
           }
 
@@ -803,7 +804,7 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
 
         if(!pEl.success){
-          this.outputSvc.print(OutputMessage.newError({ type:"Hook Manager", msg:pEl.msg}));
+          this.outputSvc.print(OutputMessage.newError({ src: "Hook Manager", msg:pEl.msg}));
           return null;
         }else{
 
@@ -1194,17 +1195,17 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           this.outputSvc.print( OutputMessage.newSuccess({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: "The agent script has been built successfully"
           }));
         }else{
           this.outputSvc.print( OutputMessage.newError({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: pEl.msg
           }))
         }
         console.log(pEl.data);
-        return pEl.data;
+        return pEl.data.bundle;
       })
     );
   }
@@ -1226,7 +1227,7 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
         if(!pEl.success){
           this.outputSvc.print( OutputMessage.newError({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: pEl.msg
           }))
         }
@@ -1250,12 +1251,12 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           this.outputSvc.print( OutputMessage.newSuccess({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: "Hooking sessions has started successfully"
           }));
         }else{
           this.outputSvc.print( OutputMessage.newError({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: pEl.msg
           }))
         }
@@ -1273,12 +1274,12 @@ export class HookService extends DxcApiService {
       map((pEl:any)=>{
         if(pEl.success){
           this.outputSvc.print( OutputMessage.newSuccess({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: "Hooking sessions has started successfully"
           }));
         }else{
           this.outputSvc.print( OutputMessage.newError({
-            type: "Hook Manager",
+            src: "Hook Manager",
             msg: pEl.msg
           }))
         }

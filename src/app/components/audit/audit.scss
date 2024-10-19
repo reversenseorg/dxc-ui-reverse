@@ -1,0 +1,39 @@
+
+
+.report-tpl {
+  background-color: #FFF;
+  color: #000;
+
+  &.section, div.section{
+    padding: 1em 2em;
+
+    div.title {
+      font-size:2em;
+    }
+
+    div.tag {
+      background-color: #000;
+      color: #FFF;
+      font-size:2em;
+      font-weight: bold;
+    }
+
+    div.description {
+      font-size:1.2em;
+    }
+  }
+
+  &.assessment {
+    font-size:1.2em;
+    margin: 1.5em 0;
+    padding-bottom: 3em;
+  }
+}
+
+
+.assess-meta {
+  border: 1px solid #000;
+  border-radius: 0px;
+  background-color: #FFF;
+  color: #000;
+}

@@ -16,9 +16,6 @@ import {
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
 import {MenuItem, MenuView} from "../../../cmp/MenuView";
-import {CODE_SUBVIEW} from "../../code/explorer-code/explorer-code.const";
-import { Utils} from "../../../cmp/Utils";
-import {InspectorController} from "../../inspector/ctrl/InspectorController";
 import {ProjectService} from "../../project/ctrl/project.service";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {HOOK_TARGET_TYPE, HookFragmentPresetOptions, HookFragmentPresetType, HookService} from "../ctrl/hook.service";
@@ -30,19 +27,14 @@ import {ModalProjectAnalConfigComponent} from "../../project/modal-project-anal-
 import {ModalHookJavaNewComponent} from "../modal-hook-java-new/modal-hook-java-new.component";
 import KeyPoint from "../../../models/KeyPoint";
 import {map} from "rxjs/operators";
-import HookTemplateFragment from "../../../models/hook/HookTemplateFragment";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {ModalNewFragmentComponent} from "../modal-new-fragment/modal-new-fragment.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Inspector} from "../../../models/Inspector";
-import {Device} from "../../../models/Device";
-import {DeviceManagerService} from "../../device/ctrl/device-manager.service";
 import {InspectorService} from "../../inspector/ctrl/inspector.service";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
-import {IStringIndex} from "../../../base/IStringIndex";
-import {INode} from "../../../models/INode";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
 import JavaMethodHook from "../../../models/JavaMethodHook";
 

@@ -23,7 +23,7 @@ import {DEV_SUBVIEW} from "./explorer-dev.const";
   selector: 'dxc-device-list',
   template: `
 
-    <div class="row no-gutters">
+    <div class="row g-0">
       <div class="col-10">
         <select [(ngModel)]="device" name="devuid" id="devuid" #dev="ngModel" (ngModelChange)="change($event)" class="dxc-input" dxcInputValidation dxcToken="device:uid">
           <option [value]="null">None</option>

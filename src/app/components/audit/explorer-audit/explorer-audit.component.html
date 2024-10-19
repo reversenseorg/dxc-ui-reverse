@@ -59,15 +59,9 @@
 
     <ng-container *ngIf="selected=='model'">
       <ng-container *ngFor="let model of dataPool[selected]">
-          <div class="row dxc-no-gutters dxc-text-clear75 model-btn-grad" style="border-radius: 5px; margin:5px 10px; border: 1px solid #aaaaaa; padding: 1em;" *ngIf="model.__==_NODE.ASSURANCE_MODEL" (click)="showModel(model,$event)" (contextmenu)="displayCtxMenu($event,'audit_model',model)">
-            <div class="col-1 text-center">
-              <dxc-icon [model]="gIcons['LIBS']"></dxc-icon>
-            </div>
+          <div class="row g-0 dxc-text-clear75 model-btn-grad" *ngIf="model.__==_NODE.ASSURANCE_MODEL" (click)="showModel(model,$event)" (contextmenu)="displayCtxMenu($event,'audit_model',model)">
             <div class="col-9 text-left">
-              <span class="font-size:1.2em; dxc-text-std ">{{ model.name }}</span>
-            </div>
-            <div class="col-1 text-center">
-              <dxc-icon [model]="gIcons['EDIT']"></dxc-icon>
+              <span class="dxc-text-std ">{{ model.name }}</span>
             </div>
           </div>
       </ng-container>

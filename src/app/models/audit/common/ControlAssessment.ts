@@ -8,8 +8,9 @@ export enum TestType {
 }
 
 export enum AnalysisType {
-    SAST, // support VT/PT
-    DAST, // support VT/PT
+    SAST,
+    DAST,
+    IAST
 }
 
 

@@ -339,7 +339,18 @@ export class DxcApiService {
 
 
 
-    return obs;
+    return obs.pipe(map((pEl:any)=>{
+      if(pEl.success == false && pEl.msg=="Access denied"){
+        this._output?.alert( OutputMessage.newWarning({
+          msg: "Your session has expired. Please refresh this page or re-authenticate"
+        }),{
+          title: "Session timeout"
+        });
+        return null;
+      }else{
+        return pEl;
+      }
+    }));
   }
 
   private _saveAuthProfile(pName:string, pProfile:any):void {

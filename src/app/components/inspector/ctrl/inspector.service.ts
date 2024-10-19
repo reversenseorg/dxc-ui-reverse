@@ -129,7 +129,7 @@ export class InspectorService extends DxcApiService {
         map((vObs)=>{
 
           if(!vObs.success){
-            this.outputSvc.print(OutputMessage.newError({ type:"Hook Manager", msg:vObs.msg}));
+            this.outputSvc.print(OutputMessage.newError({/*type:"Hook Manager",*/ msg:vObs.msg}));
             return [];
           }else{
             return vObs.data;

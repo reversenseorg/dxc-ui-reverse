@@ -383,6 +383,13 @@ BASIC_NODE['CLZ_METH'].node  = BASIC_NODE['METH'].node = [
   BASIC_NODE['ACCESSFLAGS'],
   BASIC_NODE['XREF_TO'],
   BASIC_NODE['XREF_FROM'],
+  {
+    label: "Class",
+    icon: CODE_ICONS['CLASS'],
+    _t: RequestHelperTYPES.T_NODE,
+    _f: "enclosingClass",
+    node: BASIC_NODE['CLASS'].node
+  }
 ];
 
 

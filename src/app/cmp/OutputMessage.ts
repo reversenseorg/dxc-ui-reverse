@@ -17,6 +17,15 @@ export interface IOutputMessage {
   cb:Function;
 }
 
+
+export interface OutputMessageOptions {
+  _t?:OutputMessageType;
+  _s?:boolean;
+  src?:any;
+  msg?:string;
+  data?:any;
+  cb?:(()=>{});
+}
 export class OutputMessage implements IOutputMessage{
 
   _t:OutputMessageType = OutputMessageType.INFO;
@@ -29,32 +38,38 @@ export class OutputMessage implements IOutputMessage{
   data:any = {};
   cb:Function = (()=>{});
 
-  constructor(pConfig:any=null) {
+  constructor(pConfig:Nullable<OutputMessageOptions>=null) {
     if(pConfig != null){
-      for(let i in pConfig)  (this as IStringIndex<any>)[i] = pConfig[i];
+      this._t = pConfig._t!;
+      this._s = pConfig._s!;
+      this.src = pConfig.src!;
+      this.msg = pConfig.msg!;
+      this.data = pConfig.data!;
+      this.cb = pConfig.cb!;
+      //for(let i in pConfig)  (this as IStringIndex<any>)[i] = pConfig[i];
     }
   }
 
-  static newError( pConfig:any):OutputMessage
+  static newError( pConfig:OutputMessageOptions):OutputMessage
   {
     pConfig._t = OutputMessageType.ERROR;
     return new OutputMessage(pConfig);
   }
 
-  static newWarning( pConfig:any):OutputMessage
+  static newWarning( pConfig:OutputMessageOptions):OutputMessage
   {
     pConfig._t = OutputMessageType.WARNING;
     return new OutputMessage(pConfig);
   }
 
-  static newConfirm( pConfig:any, pCallback:Function):OutputMessage
+  static newConfirm( pConfig:OutputMessageOptions, pCallback:Function):OutputMessage
   {
     pConfig._t = OutputMessageType.CONFIRM;
-    pConfig.cb = pCallback;
+    pConfig.cb = pCallback as any;
     return new OutputMessage(pConfig);
   }
 
-  static newSuccess( pConfig:any):OutputMessage
+  static newSuccess( pConfig:OutputMessageOptions):OutputMessage
   {
     pConfig._t = OutputMessageType.SUCCESS;
     return new OutputMessage(pConfig);

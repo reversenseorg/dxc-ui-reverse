@@ -7,7 +7,8 @@
           <ng-container main>
             <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['INFO']" (click)="showDetail('in')">Info</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeLeft=='rl'"  [icon]="gIcons['LIST']" (click)="showDetail('rl')">Rules</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Result</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Report template</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeLeft=='or'"  [icon]="gIcons['LIST']" (click)="showDetail('or')">Orders</app-subnavbar-btn>
           </ng-container>
           <ng-container options>
             <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['TAG']" (click)="updateTags()"></app-subnavbar-btn>
@@ -66,6 +67,30 @@
             </div>
           </div>
 
+            <ng-container *ngIf="orders">
+                <ng-container  *ngFor="let order of orders">
+
+                    <div *ngIf="order!=null" class="row g-0 p-2 dxc-text-std">
+                        <div class="col-12 dxc-text-clear75 dxc-control dxc-entry default">
+                            <div class="row g-0">
+                                <div class="col-2 text-center" >
+                                </div>
+                                <div class="col-10 dxc-text-std" >
+                                    {{  order.$model }}
+                                </div>
+                                <div class="col-1 dxc-text-std" >
+                                    {{ order.getState() }}
+                                </div>
+                                <div class="col-1 text-center" >·
+                                    <dxc-icon [model]="gIcons['DOWN']"></dxc-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </ng-container>
+            </ng-container>
+
         </div>
 
         <div class="container-fluid p-0" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rl')">
@@ -89,7 +114,22 @@
                   </ng-container>
                 </ng-container>
                 <ng-template #noStyles>
-                  <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat" (click)="showControl(i,$event)">
+
+                    <div class="row g-0 p-2 dxc-text-std"  (click)="showControl(i,$event)">
+                        <div class="col-12 dxc-text-clear75 dxc-control dxc-entry default" [ngClass]="{ selected: isSelectedCtrl(i)}">
+                            <div class="row g-0">
+                                <div class="col-2 text-center" >
+                                    <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
+                                </div>
+                                <div class="col-10 dxc-text-std" >
+                                    {{ i.name }}
+                                    <br><dxc-meta [label]="i.id" [css]="'dxc-text-clear75 dxc-ref'"></dxc-meta>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                  <!--<div class="row g-0 dxc-text-std dxc-row-table dxc-rules-topCat" (click)="showControl(i,$event)">
                     <div class="col-2 text-center">
                       <input type="checkbox" [ngModel]="checkedCtrls" [value]="i.id"/>
                       <span *ngIf="i.country" class="fi" [ngClass]="'fi-'+i.country.code"></span>
@@ -100,14 +140,14 @@
                         <dxc-meta [label]="cat" [css]="'text-bg-info dxc-meta'"></dxc-meta>
                       </ng-container>
                     </div>
-                  </div>
+                  </div>-->
                 </ng-template>
 
 
                 <!--
 
                 <ng-container  *ngFor="let f of i.assessments">
-                  <div class="row no-gutters dxc-text-clear75 dxc-row-table dxc-rules-ctrl1">
+                  <div class="row g-0 dxc-text-clear75 dxc-row-table dxc-rules-ctrl1">
                     <div class="col-2">{{ i.id }}</div>
                     <div class="col-8">{{ i.name }}</div>
                     <div class="col-2">
@@ -116,11 +156,11 @@
                   </div>
                 </ng-container>
                 <ng-container  *ngFor="let f of i.children">
-                  <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-ctrl1">
+                  <div class="row g-0 dxc-text-std dxc-row-table dxc-rules-ctrl1">
                     <div class="col-12 pl-4"><i>{{ f.id }}</i></div>
                   </div>
                   <ng-container  *ngFor="let y of f.assessments">
-                    <div class="row no-gutters  dxc-row-table dxc-rules-ctrl2 m-0 p-0" (click)="showControlAssessm(y)">
+                    <div class="row g-0  dxc-row-table dxc-rules-ctrl2 m-0 p-0" (click)="showControlAssessm(y)">
                       <div class="col-1 text-center" >
                         <dxc-icon [model]="gIcons['INFO']"></dxc-icon>
                       </div>
@@ -133,13 +173,13 @@
                   -->
 
                 <!--
-                <div class="row no-gutters dxc-text-std dxc-row-table">
+                <div class="row g-0 dxc-text-std dxc-row-table">
                   <div class="col-1">
                     <dxc-icon [model]="gIcons['INFO']"></dxc-icon>
                   </div>
                   <div class="col-11 p-0">
                     <ng-container  *ngFor="let y of f.assessments">
-                      <div class="row no-gutters  dxc-row-table dxc-rules-ctrl m-0 p-0">
+                      <div class="row g-0  dxc-row-table dxc-rules-ctrl m-0 p-0">
                         <div class="col-10 pl-2" >{{ y.name }}</div>
                         <div class="col-2 text-center text-secondary" [ngStyle]="{}" style="background-color:#FF7700;color:#fff;">{{ y.rules.length }}</div>
                       </div>
@@ -159,74 +199,44 @@
           </ng-container>
         </div>
 
-        <div class="container-fluid p-0" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rs')">
 
+
+        <div class="container-fluid p-0 report-tpl" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rs')">
           <ng-container *ngIf="data">
-            <ng-container  *ngFor="let i of data.controls">
-              <div class="row no-gutters dxc-text-std dxc-row-table dxc-rules-topCat" style="border-bottom: 2px;border-color: yellow" >
-                <div class="col-12 pl-2">{{ i.name }}</div>
-              </div>
-
-              <ng-container  *ngFor="let f of i.assessments">
-                <div class="row no-gutters dxc-text-clear75 dxc-row-table dxc-rules-ctrl">
-                  <div class="col-2">{{ i.id }}</div>
-                  <div class="col-8">{{ i.name }}</div>
-                  <div class="col-2">
-                    <span class="badge rounded-pill  badge-sm text-bg-info">{{ f.rules.length }}</span>
-                  </div>
-                </div>
+              <ng-container  *ngFor="let i of data.controls; let numSection=index;">
+                  <dxe-audit-control-view [ctrl]="i" [offset]="numSection+1" [showID]="false" [controller]="controller" [level]="0"></dxe-audit-control-view>
               </ng-container>
-
-              <ng-container  *ngFor="let f of i.children">
-                <div class="row no-gutters dxc-text-std dxc-row-table">
-                  <div class="col-1">&nbsp;</div>
-                  <div class="col-11 dxc-rules-ctrl pl-3"><b>{{ f.id }}</b></div>
-                </div>
-                <div class="row no-gutters dxc-text-std dxc-row-table">
-                  <div class="col-1">&nbsp;</div>
-                  <div class="col-11">
-                    <ng-container  *ngFor="let y of f.assessments">
-                      <div class="row no-gutters  dxc-row-table">
-                        <div class="col-4 dxc-rules-ctrlassess">{{ y.name }}</div>
-                        <div class="col-8">
-                          <span *ngIf="y.rules.length-5>-4" class="badge rounded-pill  badge-sm text-bg-info">{{ y.rules.length }}</span>
-                          <span *ngIf="y.rules.length>5" class="badge rounded-pill  badge-sm text-bg-danger">{{ y.rules.length }}</span>
-                        </div>
-                      </div>
-
-
-
-                    </ng-container>
-                  </div>
-                </div>
-
-              </ng-container>
-            </ng-container>
           </ng-container>
         </div>
 
 
+          <div class="container-fluid p-0" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='or')">
 
-        <!--
-        <div class="container-fluid view-outer dxc-list" style="background-color: #343a40" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rs')">
-          <div class="row no-gutters">
-            <div class="col-2">Partition</div>
-            <div class="col-2">Mount point</div>
-            <div class="col-1">FS Type</div>
-            <div class="col-7">Options</div>
+              <ng-container *ngIf="orders">
+                  <ng-container  *ngFor="let order of orders">
+
+                      <div *ngIf="order!=null" class="row g-0 p-2 dxc-text-std">
+                          <div class="col-12 dxc-text-clear75 dxc-control dxc-entry default">
+                              <div class="row g-0">
+                                  <div class="col-2 text-center" >
+                                  </div>
+                                  <div class="col-10 dxc-text-std" >
+                                      {{  order.$model }}
+                                  </div>
+                                  <div class="col-1 dxc-text-std" >
+                                      {{ order.getState() }}
+                                  </div>
+                                  <div class="col-1 text-center" >·
+                                      <dxc-icon [model]="gIcons['DOWN']"></dxc-icon>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </ng-container>
+              </ng-container>
           </div>
-          <ng-container *ngIf="data.profile && data.profile.profiles.mounts ">
-            <ng-container  *ngFor="let i of data.profile.profiles.mounts.mounts">
-              <div class="row no-gutters dxc-text-clear75 dxc-row-table" (click)="onItemFocus($event,i,'mnt')" >
 
-                <div class="col-2" style="word-wrap: anywhere">{{ i.partition }}</div>
-                <div class="col-2" style="word-wrap: anywhere">{{ i.mountPoint }}</div>
-                <div class="col-1">{{ i.fsType }}</div>
-                <div class="col-7" style="word-wrap: anywhere">{{ i.opts._raw }}</div>
-              </div>
-            </ng-container>
-          </ng-container>
-        </div>-->
       </ng-container>
       <ng-container body-right>
 
@@ -238,30 +248,31 @@
 
             <p class=" dxc-text-std">{{ selectedData.description }}</p>
 
-            <div class="row no-gutters dxc-text-std dxc-text-100">
+            <div class="row g-0 dxc-text-std dxc-text-100">
               <div class="col-11 pl-1"><b>Rules</b></div>
             </div>
-            <div class="row no-gutters">
+            <div class="row g-0">
               <div class="col-8 pl-1 pt-1">
                 <div class="dxc-list dxc-rules-list">
                   <ng-container  *ngFor="let r of selectedData.rules">
-                    <dxc-audit-rule [rule]="r" (onDryRunSuccess)="execResults=$event"></dxc-audit-rule>
+                    <dxc-audit-rule [styleRow]="{ paddingLeft:'2em' }" [rule]="r" (onDryRunSuccess)="execResults=$event"></dxc-audit-rule>
                   </ng-container>
                 </div>
               </div>
             </div>
 
-            <div class="row no-gutters dxc-text-std dxc-text-100 pt-1">
+            <!--
+            <div class="row g-0 dxc-text-std dxc-text-100 pt-1">
               <div class="col-11 pl-1"><b>Results</b></div>
             </div>
-            <div class="row no-gutters">
+            <div class="row g-0">
               <div class="col-12 pl-1 pt-1">
                 <div class="dxc-list dxc-rules-list">
                   <dxc-search-result-list *ngIf="searchCtrl.app" [results]="execResults" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>
                 </div>
               </div>
             </div>
-
+            -->
           </ng-container>
 
           <ng-container *ngIf="selectedData && (selectedType=='control')">
@@ -307,7 +318,7 @@
                           <ng-container main>
                             <app-subnavbar-label [label]="'Rules'"></app-subnavbar-label>
                           </ng-container>
-                          <ng-container opts>
+                          <ng-container options>
                             <dxc-helper-btn [docid]="'model.rules.list'"></dxc-helper-btn>
                             <app-subnavbar-btn [active]="selectedData.rules==null"  [icon]="gIcons['PLUS']" (click)="newControl(selectedData)">New control</app-subnavbar-btn>
                             <app-subnavbar-btn [active]="selectedData.children==null"  [icon]="gIcons['PLUS']" (click)="newRule(selectedData)">New rules</app-subnavbar-btn>

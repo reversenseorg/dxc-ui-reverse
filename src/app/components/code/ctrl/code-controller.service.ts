@@ -509,7 +509,7 @@ export class CodeControllerService extends DxcApiService{
           console.log(data);
           return data;
         }else{
-          this.outputSvc.print( OutputMessage.newError(pObs.msg))
+          this.outputSvc.print( OutputMessage.newError({ msg: pObs.msg }))
           return [];
         }
       })

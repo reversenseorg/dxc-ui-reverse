@@ -95,6 +95,7 @@ div.splitted {
 
 div.dxc-control {
 
+
   &.dxc-row-table {
     padding-left: 1rem !important;
   }
@@ -103,6 +104,19 @@ div.dxc-control {
     border-radius: 5px;
     /*margin: 0.5em 0.5em 0.5em 0.2em;*/
     padding: 1em 0em;
+
+    background-color: var(--menu-bg);
+    color: var(--text-75);
+
+    &.default {
+      font-weight: bold;
+      padding: 0;
+    }
+
+    &.selected {
+      background-color: var(--menu-bg-hover);
+      color: var(--menu-text-hover);
+    }
   }
 }
 .dxc-rules-topCat {
@@ -211,5 +225,50 @@ div.dxc-control {
   minWidth:50%;
 }
 
+.dxc-ref {
+  font-size: 0.4em;
+}
+
+.selectedCtrl {
+  border: 1px solid
+}
+
+.report-tpl {
+  background-color: #FFF;
+  color: #000;
+
+  div.section{
+    padding: 1em 2em;
+
+    div.title {
+      font-size:2em;
+      padding-left: 1em;
+    }
+
+    div.subtitle {
+      font-size:2em;
+      padding-left: 2em;
+    }
+
+    div.tag {
+      background-color: #000;
+      color: #FFF;
+      font-size:1.6em;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    div.description {
+      font-size:1.2em;
+    }
+  }
 
 
+}
+
+.assess-meta {
+  border: 1px solid #000;
+  border-radius: 0px;
+  background-color: #FFF;
+  color: #000;
+}

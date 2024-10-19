@@ -1,6 +1,16 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from "@angular/core";
 import Platform from "../../models/Platform";
-import {PlatformService} from "../platform/ctrl/platform.service";
+import {PlatformService, PlatformSet} from "../platform/ctrl/platform.service";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 
 
@@ -14,13 +24,13 @@ import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
           <option value="min">Minimal version supported</option>
           <option value="target">Target version from manifest</option>
           <optgroup label="Installed">
-            <ng-container *ngFor="let plt of platforms">
-              <option *ngIf="plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
+            <ng-container *ngFor="let plt of platforms.installed">
+              <option [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
             </ng-container>
           </optgroup>
           <optgroup label="Available  (Internet required)">
-            <ng-container *ngFor="let plt of platforms">
-              <option *ngIf="!plt.installed" [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
+            <ng-container *ngFor="let plt of platforms.remote">
+              <option [value]="plt.uid">{{ plt.vendor | titlecase }}&nbsp;{{ plt.source | uppercase }}&nbsp;{{ plt.name }}&nbsp;{{ plt.version }}</option>
             </ng-container>
           </optgroup>
         </select>
@@ -39,10 +49,13 @@ export class PlatformListComponent implements OnInit{
 
   gIcons:any = GLOBAL_ICONS;
   @Input() platform:string;
-  @Input() platforms:Platform[];
+  @Input() platforms:PlatformSet;
+
   @Output() selectPlatform:EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(  private platformSvc:PlatformService) {
+  constructor(  private platformSvc:PlatformService,
+                private chRef:ChangeDetectorRef) {
+
   }
 
   ngOnInit(){
@@ -52,6 +65,7 @@ export class PlatformListComponent implements OnInit{
   refresh():void {
     const subs = this.platformSvc.list().subscribe(( pPlatforms)=>{
       this.platforms = pPlatforms;
+      this.chRef.detectChanges();
       subs.unsubscribe();
     });
   }

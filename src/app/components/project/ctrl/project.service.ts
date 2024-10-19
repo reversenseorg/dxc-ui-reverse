@@ -534,7 +534,7 @@ export class ProjectService extends DxcApiService {
 
     // lock service, prevent concurrent exec
     if(this.isLocked()) {
-      this.outputSvc.print(OutputMessage.newError("Multiple project cannot be removed/opened/created in a same time. Please wait ..."));
+      this.outputSvc.print(OutputMessage.newError({ msg:"Multiple project cannot be removed/opened/created in a same time. Please wait ..." }));
       throw new Error("Project cannot be removed. The service is busy by another workflow (locked).");
     }else {
       this.setLock(true);
@@ -726,7 +726,7 @@ export class ProjectService extends DxcApiService {
 
     // lock service, prevent concurrent exec
     if(this.isLocked()) {
-      this.outputSvc.print(OutputMessage.newError("Multiple project cannot be removed/opened/created in a same time. Please wait ..."));
+      this.outputSvc.print(OutputMessage.newError({ msg:"Multiple project cannot be removed/opened/created in a same time. Please wait ..." }));
       throw new Error("Multiple project cannot be created in a same time. Please wait ...");
     }else {
       this.setLock(true);
@@ -1046,7 +1046,7 @@ export class ProjectService extends DxcApiService {
     ).pipe(
       map(pRes => {
         if(!pRes.success){
-          this.outputSvc.print(OutputMessage.newError(pRes.msg));
+          this.outputSvc.print(OutputMessage.newError({ msg: pRes.msg }));
         }else{
           this.outputSvc.print(new OutputMessage({ msg:"Default device updated for active project.", src:"Project Manager" }));
           return pRes;

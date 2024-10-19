@@ -43,6 +43,7 @@ $dark-modal-footer-textColor: #fff;
 $dark-text-clear-100: #fff;
 $dark-text-clear-75: #bbb; /*#b5b5b5;*/
 $dark-text-clear-50: #828282;
+$dark-text-bg-clear-75: #FFFFFF40;
 
 $dark-input-border: 1px solid #bbb;
 $dark-input-bg: #333;
@@ -97,6 +98,7 @@ $dark-scrollbar-bg: #555;
   --text-100: #{$dark-text-clear-100};
   --text-75: #{$dark-text-clear-75};
   --text-50: #{$dark-text-clear-50};
+  --text-bg-75: #{$dark-text-bg-clear-75};
 
   --list-border-color: royalblue;
   --list-bg: #{$dark-explorer-bgColor};

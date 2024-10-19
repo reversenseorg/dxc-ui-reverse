@@ -86,7 +86,7 @@ export class ModalRenameComponent extends AbstractKeyboardNavigable implements O
         this.error = vMsg;
         (this.controller.app as any).print( new OutputMessage({
           src: "RenameNode",
-          msg: vMsg
+          msg: vMsg.msg
         }));
       }
     });

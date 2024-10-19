@@ -1,103 +1,60 @@
-<div>
+<div class="container-fluid fill-height p-0">
     <h5 *ngIf="title">{{ title }}</h5>
 
     <div *ngIf="description!=null">
         <p>{{ description }}</p>
     </div>
 
+    <ng-container *ngIf="data!=null && data.length>0; else noData">
+        <app-expandable-list style="overflow: auto;">
+            <ng-container *ngFor="let cat of data">
 
+                <ng-template #expItem let-itemObj="item" >
 
-    <!--<app-subnavbar *ngIf="navbar" [type]="'navbar'"  [opts]="true" [parent]="this">
-        <ng-container options>
-            <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refresh()"></app-subnavbar-btn>
-            <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
-        </ng-container>
-    </app-subnavbar>-->
+                    <ng-container [ngSwitch]="itemObj.__">
+                        <ng-container *ngSwitchCase="NODE_TYPES.CLASS">
+                          <span (contextmenu)="displayExtMenu($event,'clazz',itemObj)">
+                            <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
+                              {{ itemObj.uid  }}
+                          </span>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="NODE_TYPES.METHOD">
+                          <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                                            <dxc-icon [model]="cIcons['METH']"></dxc-icon>
+                              <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                              {{ itemObj.short  }}
+                          </span>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                          <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                            <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
+                              <i *ngIf="itemObj.loc">[&nbsp;{{ itemObj.loc[0].bb  }}&nbsp;:&nbsp;{{ itemObj.loc[0].instr  }}&nbsp;]&nbsp;</i>{{ itemObj.parent  }}
+                          </span>
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
 
-    <div>
-        <div *ngIf="window.length==0">
-            <div *ngIf="data.length>0" class="row">
-                <div class="col-lg-12 text-center">
-                    <dxc-icon [model]="gIcons.SPINNER"></dxc-icon><span>Loading xref ...</span>
-                </div>
+                <app-expandable-item
+                        [itemTpl]="expItem"
+                        [item]="cat"
+                        [provider]="this"
+                        [itemType]="cat.__"
+                        [expandableFn]="isExpandable"
+                        (itemFocus)="onItemFocus($event)"
+                >
+
+                </app-expandable-item>
+            </ng-container>
+        </app-expandable-list>
+    </ng-container>
+    <ng-template #noData>
+        <div class="dxc-text-clear100 pt-4 row">
+            <div class="text-right col-2 pt-2">
+                <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
             </div>
-            <div *ngIf="data.length==0" class="row">
-                <div class="col-lg-12 text-center">
-                    <dxc-icon [model]="gIcons.WARNING"></dxc-icon><span>This node has not known cross references ...</span>
-                </div>
+            <div class="col-8 text-left">
+                Deep Cross-references to {{projectionAreaName}} not found<br>The class implementing this activity is probably missing
             </div>
         </div>
-
-        <ng-container *ngIf="data!=null; else noData">
-            <app-expandable-list style="overflow: auto;">
-                <ng-container *ngFor="let cat of data">
-
-                    <ng-template #expItem let-itemObj="item" >
-
-                        <ng-container [ngSwitch]="itemObj.__">
-                            <ng-container *ngSwitchCase="NODE_TYPES.CLASS">
-                      <span (contextmenu)="displayExtMenu($event,'clazz',itemObj)">
-                        <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
-                          {{ itemObj.uid  }}
-                      </span>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="NODE_TYPES.METHOD">
-                      <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                                        <dxc-icon [model]="cIcons['METH']"></dxc-icon>
-                          <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
-                          {{ itemObj.short  }}
-                      </span>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="NODE_TYPES.FIELD">
-                      <span (contextmenu)="displayExtMenu($event,'field',itemObj)">
-                                        <dxc-icon [model]="cIcons['FIELD']"></dxc-icon>
-                          <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
-                          {{ itemObj.short  }}
-                      </span>
-                            </ng-container>
-                            <ng-container *ngSwitchDefault>
-                              <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                                <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
-                                  <i *ngIf="itemObj.loc">[&nbsp;{{ itemObj.loc[0].bb  }}&nbsp;:&nbsp;{{ itemObj.loc[0].instr  }}&nbsp;]&nbsp;</i>{{ itemObj.parent  }}
-                              </span>
-                            </ng-container>
-                        </ng-container>
-                        <!--<span *ngIf="NODE_TYPES.CLASS==itemObj.__" (contextmenu)="displayExtMenu($event,'clazz',itemObj)">
-                          <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
-                          {{ itemObj.uid  }}
-                        </span>
-                        <span *ngIf="NODE_TYPES.METHOD==itemObj.__" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                          <dxc-icon [model]="cIcons['METH']"></dxc-icon>
-                            {{ itemObj.short  }}
-                        </span>
-                        <span *ngIf="itemObj.__==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                          <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
-                            <span *ngIf="itemObj.loc">[&nbsp;{{ itemObj.loc[0].bb  }}&nbsp;:&nbsp;{{ itemObj.loc[0].instr  }}&nbsp;]&nbsp;</span>{{ itemObj.parent  }}
-                        </span>-->
-                    </ng-template>
-
-                    <app-expandable-item
-                            [itemTpl]="expItem"
-                            [item]="cat"
-                            [provider]="this"
-                            [itemType]="cat.__"
-                            [expandableFn]="isExpandable"
-                            (itemFocus)="onItemFocus($event)"
-                    >
-
-                    </app-expandable-item>
-                </ng-container>
-            </app-expandable-list>
-        </ng-container>
-        <ng-template #noData>
-            <div class="dxc-text-clear100 pt-4 row">
-                <div class="text-right col-2 pt-2">
-                    <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
-                </div>
-                <div class="col-8 text-left">
-                    Deep Cross-references to Android API not found<br>The class implementing this activity is probably missing
-                </div>
-            </div>
-        </ng-template>
-    </div>
+    </ng-template>
 </div>

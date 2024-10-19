@@ -1,0 +1,58 @@
+<div class="dxc-text-std report-tpl" [ngClass]="{ 'section':(this.level==0), 'mt-1':(this.level>0) }">
+    <div class="row g-0" [ngStyle]="{ 'paddingLeft': calcPadding() }">
+        <ng-container *ngIf="showID; else hiddenID">
+            <div class="col-9 title" [ngStyle]="calcStyles('title')">
+                {{getCanonicalOffset()}}.&nbsp;{{ ctrl.name }}
+            </div>
+            <div class="col-1">&nbsp;</div>
+            <div class="col-2 tag" [ngStyle]="calcStyles('tag')">
+                {{ ctrl.id }}
+            </div>
+        </ng-container>
+        <ng-template #hiddenID>
+            <div class="col-12 title" [ngStyle]="calcStyles('title')">
+                {{getCanonicalOffset()}}.&nbsp;{{ ctrl.name }}
+            </div>
+        </ng-template>
+    </div>
+
+    <div class="row g-0 mt-1" *ngIf="hasProfiles()"  [ngStyle]="{ 'paddingLeft': calcPadding() }">
+        <div class="col-12">
+            <ng-container *ngFor="let profile of getProfileTags()">
+                <dxc-meta *ngIf="profile!=null && profile.value!='-'" [css]="getProfileStyle(profile.key)" [label]="profile.key+' : '+profile.value"></dxc-meta>
+            </ng-container>
+        </div>
+    </div>
+
+
+    <ul>
+        <ng-container *ngFor="let link of getExtraLinks()">
+            <a [href]="link.value">{{link.value}}</a>
+        </ng-container>
+    </ul>
+
+    <div class="row g-0" *ngIf="hasExtraMeta()">
+        <div class="col-12">
+            <ng-container *ngFor="let meta of getExtraMeta() | keyvalue">
+                <dxc-meta *ngIf="meta.value!=null && meta.value!='-'" [css]="'assess-meta'" [label]="meta.value"></dxc-meta>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="row g-0 dxc-text-std section">
+        <div class="col-12 description" [innerHTML]="ctrl.description"></div>
+    </div>
+
+    <div class="row g-0 dxc-text-std section" *ngIf="ctrl.assessments.length>0">
+        <div class="col-12">
+            <ng-container  *ngFor="let f of ctrl.assessments; let numAssess=index">
+                <dxe-audit-assess-view [assess]="f" [offset]="numAssess" [controller]="controller" [parentNum]="getCanonicalOffset()" [level]="level+1"></dxe-audit-assess-view>
+            </ng-container>
+        </div>
+    </div>
+
+
+  <ng-container  *ngFor="let f of ctrl.children; let numChild=index;">
+      <dxe-audit-control-view [ctrl]="f" [showID]="true" [offset]="numChild" [controller]="controller" [parentNum]="getCanonicalOffset()" [level]="level+1"></dxe-audit-control-view>
+  </ng-container>
+</div>

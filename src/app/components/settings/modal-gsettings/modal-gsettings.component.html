@@ -104,20 +104,37 @@
                 </tr>
               </thead>
               <tbody>
-                  <tr *ngFor="let plt of pltList; trackBy: platformIdentify">
-                    <td>{{ plt.uid }}</td>
-                    <td>{{ plt.version }}</td>
-                    <td>{{ plt.source }}</td>
-                    <td>
+                <ng-container *ngif="pltList!=null">
+                    <tr *ngFor="let plt of pltList.installed; trackBy: platformIdentify">
+                        <td>{{ plt.uid }}</td>
+                        <td>{{ plt.version }}</td>
+                        <td>{{ plt.source }}</td>
+                        <td>
                       <span *ngIf="plt.installed && !plt._installing" class="text-success">
                         <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Installed
                       </span>
-                      <span *ngIf="!plt.installed && !plt._installing">
+                            <span *ngIf="!plt.installed && !plt._installing">
                         <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
                       </span>
-                      <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
-                    </td>
-                  </tr>
+                            <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let plt of pltList.remote; trackBy: platformIdentify">
+                        <td>{{ plt.uid }}</td>
+                        <td>{{ plt.version }}</td>
+                        <td>{{ plt.source }}</td>
+                        <td>
+                      <span *ngIf="plt.installed && !plt._installing" class="text-success">
+                        <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Installed
+                      </span>
+                            <span *ngIf="!plt.installed && !plt._installing">
+                        <app-subnavbar-btn [icon]="gIcons['DOWNLOAD']" [color]="'dxc-grid'" (click)="dlPlatform(plt)">Download</app-subnavbar-btn>
+                      </span>
+                            <ngb-progressbar *ngIf="plt._installing" [animated]="true" [striped]="true" [value]="50" type="info" height="5px"></ngb-progressbar>
+                        </td>
+                    </tr>
+                </ng-container>
+
               </tbody>
             </table>
           </div>

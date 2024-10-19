@@ -1,4 +1,4 @@
-<div  [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': height+'px', 'minHeight': height+'px' }">
+<div  [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid" class="pl-0 pr-0" [ngStyle]="{ 'height': '100%', 'minHeight': height+'px' }">
   <div #metadata style="border-bottom:1px solid #777;line-height: 1">
 
 
@@ -99,7 +99,7 @@
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
           <app-subnavbar-btn [icon]="cIcons['CLASS']" [active]="activeTopRight == 'cmp'" (click)="showImplementation('cmp')">Implementation</app-subnavbar-btn>
-          <app-subnavbar-btn [icon]="gIcons['ANDROID']" [active]="activeTopRight == 'xr'" (click)="selectRightTab('xr')">Android API xref</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons['ANDROID']" [active]="activeTopRight == 'xr'" (click)="activeTopRight = 'xr'">Android API xref</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
@@ -107,108 +107,60 @@
 
 
 
+        <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='xr')">
+            <dxc-osapi-projection-list [controller]="controller"  [autoload]="true" [node]="data" [projectionAreaName]="'Android API'">
+            </dxc-osapi-projection-list>
+        </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='xr')">
-        <ng-container *ngIf="data.internal!=null && data.internal.length>0; else noInternal">
-          <app-expandable-list style="overflow: auto;">
-            <ng-container *ngFor="let cat of data.internals">
 
-              <ng-template #expItem let-itemObj="item" >
+
+        <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='cmp')">
+            <ng-container *ngIf="data.internal!=null && data.internal.length>0; else noInternal">
+                <app-expandable-list style="overflow: auto;">
+                    <ng-container *ngFor="let cat of data.internals">
+
+                        <ng-template #expItem let-itemObj="item" >
 
               <span *ngIf="itemObj._t=='c'" (contextmenu)="displayExtMenu($event,'clzz',itemObj)">
                 <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
-                {{ itemObj.name  }}
+                  {{ itemObj.name  }}
               </span>
-                <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                            <span *ngIf="itemObj._t=='m'" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
                 <dxc-icon [model]="cIcons['METH']"></dxc-icon>
-                  <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
-                  {{ itemObj.__callSignature__  }}
+                                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                                {{ itemObj.__callSignature__  }}
               </span>
-                <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                            <span *ngIf="itemObj._t==null" (contextmenu)="displayExtMenu($event,'meth',itemObj)">
                 <dxc-icon [model]="cIcons['XREF_TO']"></dxc-icon>
-                  {{ itemObj.__signature__  }}
+                                {{ itemObj.__signature__  }}
               </span>
-              </ng-template>
+                        </ng-template>
 
-              <app-expandable-item
-                [itemTpl]="expItem"
-                [item]="cat"
-                [provider]="this"
-                [itemType]="cat._t"
-                [expandableFn]="isExpandable"
-              >
+                        <app-expandable-item
+                                [itemTpl]="expItem"
+                                [item]="cat"
+                                [provider]="this"
+                                [itemType]="cat._t"
+                                [expandableFn]="isExpandable"
+                        >
 
-              </app-expandable-item>
+                        </app-expandable-item>
+                    </ng-container>
+                </app-expandable-list>
             </ng-container>
-          </app-expandable-list>
-        </ng-container>
-        <ng-template #noInternal>
-          <div class="text-center dxc-text-clear100 pt-4 row">
-            <div class="col-4">
-              <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
-            </div>
-            <div class="col-8 text-center">
-              Deep Cross-references to Android API not found<br>The class implementing this service is probably missing
-            </div>
-
-          </div>
-        </ng-template>
-      </div>
-
-      <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='cmp')">
-        <span *ngIf="data.impl" (contextmenu)="displayExtMenu($event,'clzz',data.impl)">
-                <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
-          {{ data.impl.name  }}
-              </span>
-        <app-expandable-list *ngIf="data.impl" style="overflow: auto;">
-
-          <ng-container *ngFor="let cat of data.impl.fields">
-
-            <ng-template #impFieldItem let-itemObj="item" >
-              <span (contextmenu)="displayExtMenu($event,'field',itemObj)">
-                <dxc-icon [model]="cIcons['FIELD']"></dxc-icon>
-                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
-                {{ itemObj.name  }}
-                <span *ngIf="itemObj.type" class="text-warning">
-                  <i *ngIf="!itemObj.type.primitive" >:&nbsp;{{ itemObj.type.name }}</i>
-                  <i *ngIf="itemObj.type.arr">[]</i>
-                </span>
-              </span>
+            <ng-template #noInternal>
+                <div class="dxc-text-clear100 pt-4 row">
+                    <div class="text-right col-2 pt-2">
+                        <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
+                    </div>
+                    <div class="col-8 text-left">
+                        Deep Cross-references to Android API not found<br>The class implementing this provider is probably missing
+                    </div>
+                </div>
             </ng-template>
+        </div>
 
-            <app-expandable-item
-              [itemTpl]="impFieldItem"
-              [item]="cat"
-              [provider]="this"
-              [itemType]="cat._t"
-              [expandableFn]="isExpandable"
-            >
 
-            </app-expandable-item>
-          </ng-container>
-
-          <ng-container *ngFor="let cat of data.impl.methods">
-
-            <ng-template #impMethItem let-itemObj="item" >
-              <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
-                <dxc-icon [model]="cIcons['METH']"></dxc-icon>
-                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
-                {{ itemObj.__callSignature__  }}
-              </span>
-            </ng-template>
-
-            <app-expandable-item
-              [itemTpl]="impMethItem"
-              [item]="cat"
-              [provider]="this"
-              [itemType]="cat._t"
-              [expandableFn]="isExpandable"
-            >
-
-            </app-expandable-item>
-          </ng-container>
-        </app-expandable-list>
-      </div>
 
 
 

@@ -214,7 +214,7 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    */
   renderChildren( pChildren:any = null ):void {
 
-    console.log("Rendering children of ",this.item);
+    console.log("Rendering children of ",this.item,pChildren);
 
     const children:any = (pChildren!=null)? pChildren : this.provider.itemGetChildren(this.item); //this.item.children;
     const viewContainerRef:ViewContainerRef = this.expandedHost.viewContainerRef;
@@ -378,7 +378,6 @@ export class ExpandableItemComponent<T> implements OnInit, AfterViewInit {
    * @method
    */
   doExpand( pEvent:any, pItem:any, pRef:any):void{
-    console.log("Do expand");
     if(this.state == ITEM_STATE.COLLAPSED) {
       this.state = ITEM_STATE.EXPANDED;
       this.onExpand({item: pItem, ref: pRef});

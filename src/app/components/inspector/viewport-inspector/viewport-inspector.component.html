@@ -20,7 +20,7 @@
                 <app-subnavbar-btn  [active]="activeLeft=='hk'"  (click)="showHooks(100)">Hooks</app-subnavbar-btn>
             </ng-container>
           <app-subnavbar-btn *ngIf="data.listener?.length>0" [active]="activeLeft=='er'"  (click)="showEventsRegistered(30)">Event Processing</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeLeft=='ac'"  (click)="showActions(30)">Actions</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="false" [active]="activeLeft=='ac'"  (click)="showActions(30)">Actions</app-subnavbar-btn>
             <!--<app-subnavbar-btn [active]="activeLeft=='tg'"  (click)="showTags(30)">Tags</app-subnavbar-btn>-->
           <app-subnavbar-btn *ngIf="data.db" [active]="activeLeft=='db'"  (click)="showDatabase(50)">Database</app-subnavbar-btn>
         </ng-container>
