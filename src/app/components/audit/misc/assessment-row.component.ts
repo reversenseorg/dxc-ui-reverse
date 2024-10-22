@@ -13,6 +13,7 @@ import {OutputService} from "../../output/ctrl/output.service";
 import {SearchService} from "../../search/ctrl/search.service";
 import {Nullable} from "../../../base/Nullable";
 import {DxcComponent} from "../../../base/DxcComponent";
+import {AuditService} from "../ctrl/audit.service";
 
 /**
  * Represent a Control Assessment (i.e. a test)
@@ -28,9 +29,9 @@ import {DxcComponent} from "../../../base/DxcComponent";
         <span class="dxc-text-std dxc-text-white"><b>{{ assessement.name }}</b></span>
         <b>[<span class="ml-2 dxc-text-yellow">{{ assessement.rules.length }}</span>]</b>
       </div>
-      <div class="col-1 text-center" >
+      <div class="col-1 text-center dxc-text-100">
         <dxc-icon [model]="gIcons['PLAY_ALL']" (click)="runAll()"></dxc-icon>
-        <dxc-icon [model]="gIcons['PLUS']" (click)="addRule()"></dxc-icon>
+        <dxc-icon [model]="gIcons['PLUS']" [color1]="'#FFFFFF'" (click)="_auditSvc.openRuleEditor(assessement)"></dxc-icon>
       </div>
     </div>
     <ng-container  *ngFor="let r of assessement.rules">
@@ -54,6 +55,7 @@ export class AssessmentRowComponent extends DxcComponent  {
 
   constructor(
       private _projectSvc: ProjectService,
+      public _auditSvc: AuditService,
       private _outputSvc: OutputService,
       private _searchSvc: SearchService,
       private _changeDetector:ChangeDetectorRef
@@ -122,8 +124,6 @@ export class AssessmentRowComponent extends DxcComponent  {
     return "dxc-salmon";
   }
 
-  addRule() {
 
-  }
 }
 

@@ -70,7 +70,7 @@ export enum NodeInternalType {
   REMOTE_TAG= 100001
 }
 
-export const NodeInternalTypeName = {
+export const NodeInternalTypeName:Record<number, string> = {
   [NodeInternalType.BASIC_BLOCK]: "BASIC_BLOCK",
   [NodeInternalType.CLASS]: "CLASS",
   [NodeInternalType.METHOD]: "METHOD",

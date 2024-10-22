@@ -87,3 +87,6 @@
   <app-context-item [label]="'Open'" (click)="controller.open(ctxMenuState.subject,'xt')"></app-context-item>
   <app-context-item [label]="'Scan'" [icon]="gIcons['PLAY']" (click)="scanModel(ctxMenuState.subject)" ></app-context-item>
 </app-context-menu>
+
+
+<dxc-modal-edit-rule [controller]="controller"></dxc-modal-edit-rule>

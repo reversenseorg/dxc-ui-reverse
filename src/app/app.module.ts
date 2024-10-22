@@ -142,6 +142,7 @@ import {
 import {CodeEmulatorComponent} from "./components/code/emulator/emulator.component";
 import {ControlViewComponent} from "./components/audit/control-view/control-view.component";
 import {AssessViewComponent} from "./components/audit/assessment-view/assess-view.component";
+import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
 //import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 
 
@@ -292,6 +293,7 @@ import {AssessViewComponent} from "./components/audit/assessment-view/assess-vie
     TerminalAuditComponent,
     ControlViewComponent,
     AssessViewComponent,
+    ModalEditRuleComponent,
     //ButtonComponent,
 
     ExplorerTagComponent,

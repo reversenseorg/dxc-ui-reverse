@@ -41,6 +41,11 @@ export interface CheckResult {
   results: any[];
 }
 
+export interface EditorEvent {
+  type:string;
+  parent:any
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -65,6 +70,7 @@ export class AuditService extends DxcApiService{
 
   onCheckAction$:Subject<CheckResult> = new Subject<CheckResult>();
   private refreshScans$: Subject<any> = new Subject<any>();
+  openEditor$: Subject<EditorEvent> = new Subject<EditorEvent>();
 
   constructor( private appmenuSvc:AppMenuService,
                private topoSvc:TopologyService,
@@ -334,7 +340,7 @@ export class AuditService extends DxcApiService{
    * @param pAssess
    * @param pRule
    */
-  runRule(pAssess: ControlAssessment, pRule: any):Observable<CheckResult> {
+  runRule(pAssess: Nullable<ControlAssessment>, pRule: any):Observable<CheckResult> {
     const evt:any = {
       rule: pRule,
       assessment: pAssess,
@@ -449,5 +455,20 @@ export class AuditService extends DxcApiService{
         return [];
       }
     }));
+  }
+
+
+  openRuleEditor(pAssessment:any) {
+    this.openEditor$.next({
+      type:'rule',
+      parent: pAssessment
+    });
+  }
+
+  openAssessEditor(pControl:any) {
+    this.openEditor$.next({
+      type:'assess',
+      parent: pControl
+    });
   }
 }

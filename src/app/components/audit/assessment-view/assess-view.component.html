@@ -25,7 +25,10 @@
         </div>
     </ng-container>
     -->
-    <ng-container *ngFor="let rule of assess.rules">
-        <dxc-audit-rule [reqClass]="'dxc-text-black'" [style]="{ alignContent:'center', backgroundColor: '#DDD', marginTop:'1em', padding:'0 0 0 1em', height:'2.5em', borderRadius:'10px' }" [rule]="rule" [assessement]="assess" (onScanning)="onScanning($event)" (onDryRunSuccess)="onDryRunSuccess($event)"></dxc-audit-rule>
+    <ng-container *ngFor="let rule of assess.rules; let i=index">
+        <dxc-audit-rule [reqClass]="'dxc-text-black'" [style]="{ alignContent:'center', backgroundColor: '#DDD', marginTop:'1em', padding:'0 0 0 1em', height:'2.5em', borderRadius:'10px' }" [rule]="rule" [assessement]="assess" (onScanning)="onScanning($event)" (onDryRunSuccess)="onDryRunSuccess(i, $event)"></dxc-audit-rule>
+        <ng-container *ngIf="hasDryResults(i)">
+            <dxc-search-result-list *ngIf="controller.app && searchCtrl" [hFull]="true" [results]="dryrunResults[i]" [controller]="searchCtrl" [mainController]="controller.app"></dxc-search-result-list>
+        </ng-container>
     </ng-container>
 </div>

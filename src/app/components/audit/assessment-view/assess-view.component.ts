@@ -7,6 +7,7 @@ import {AuditService} from "../ctrl/audit.service";
 import {UIException} from "../../../base/error/UIException";
 import {DomSanitizer} from "@angular/platform-browser";
 import ControlAssessment, {AnalysisType, TestType} from "../../../models/audit/common/ControlAssessment";
+import {MerlinPrimitive} from "../../../models/search/Merlin";
 
 
 @Component({
@@ -25,9 +26,15 @@ export class AssessViewComponent implements AfterViewInit {
   @Input() parentNum: string;
   @Input() numType: string = "num";
 
+  @Input() dryrunResults: Record<string, any> = {};
 
   gIcons:any = GLOBAL_ICONS;
   tIcons:any = TOPO_ICONS;
+
+  /**
+   *
+   */
+  searchCtrl: any;
 
 
   constructor(
@@ -46,7 +53,8 @@ export class AssessViewComponent implements AfterViewInit {
     if(this.controller.app==null){
       throw UIException.APP_NOT_INITIALIZED;
     }
-    //this.searchCtrl = this.controller.app.getController('ctrl:search');
+
+    this.searchCtrl = this.controller.app.getController('ctrl:search');
   }
 
   getOffset() {
@@ -97,8 +105,9 @@ export class AssessViewComponent implements AfterViewInit {
     
   }
 
-  onDryRunSuccess($event: any) {
-    
+  onDryRunSuccess( pIndex:any, $event: any) {
+    this.dryrunResults[pIndex] = $event;
+    console.log("onDryRunSuccess > ",pIndex, $event);
   }
 
 
@@ -156,4 +165,9 @@ export class AssessViewComponent implements AfterViewInit {
     }
     return "";
   }
+
+  hasDryResults(pRule: any) {
+    return (this.dryrunResults[pRule.id]!=null)
+  }
+
 }

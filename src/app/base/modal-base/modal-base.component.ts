@@ -57,7 +57,7 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
   @Output() open: EventEmitter<any> = new EventEmitter<any>();
   @Output() close: EventEmitter<any> = new EventEmitter<any>();
 
-  draggable = true;
+  @Input() draggable = true;
   @Input() closeOnFocusout = false;
   @Input() closable = false;
   display = false;
@@ -191,6 +191,7 @@ export class ModalBaseComponent implements OnInit, AfterContentInit {
 
   onMouseDown( pEvent:any):void{
 
+    if(!this.draggable) return;
     if(pEvent.buttons!=1) return;
 
     // mouse down = click -> must focus active element

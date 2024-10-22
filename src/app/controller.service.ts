@@ -80,6 +80,7 @@ import {RuntimeEventController} from "./components/events/ctrl/RuntimeEventContr
 import {RuntimeEventsService} from "./components/events/ctrl/events.service";
 import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
 import {ModalSendIntentComponent} from "./components/topology/modal-intent/modal-send-intent.component";
+import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
 
 
 interface StageSet {
@@ -317,6 +318,9 @@ export class ControllerService {
         },
         terminalCmp: {
           main: TerminalAuditComponent
+        },
+        modalCmp: {
+          rule: ModalEditRuleComponent
         }
       }),
       new TagController({
