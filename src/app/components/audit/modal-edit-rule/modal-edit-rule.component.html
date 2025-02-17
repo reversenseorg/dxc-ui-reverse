@@ -1,0 +1,76 @@
+<app-modal-base [name]="'tag_info'" (open)="onOpen($event)" [draggable]="false" [closable]="true"  [width]="700" [height]="400" [mainController]="controller.app">
+  <div head class="dxc-modal-header">
+    {{ title }}
+  </div>
+  <div body class="dxc-modal-body p-2">
+      <div class="row g-0">
+          <div class="col-4 dxc-text-std dxc-text-75">
+              <b>Operating System :</b>
+          </div>
+          <div class="col-4">
+              <select [(ngModel)]="targetOs" (ngModelChange)="onTargetOsChange($event)" class="dxc-input">
+                  <ng-container *ngFor="let os of supportedOs">
+                      <option [value]="os">{{os}}</option>
+                  </ng-container>
+              </select>
+          </div>
+      </div>
+
+      <div class="row g-0 mt-1">
+          <div class="col-2">
+              <select [(ngModel)]="newOpeType" (ngModelChange)="onOperationChange($event)"  class="dxc-input">
+                  <ng-container *ngFor="let ope of getSupportedOperations()">
+                      <option [value]="ope.id">{{ope.label}}</option>
+                  </ng-container>
+              </select>
+          </div>
+          <div class="col-2" *ngIf="isNodeSelectorRequired()">
+              <select [(ngModel)]="newNodeType" (ngModelChange)="onNodeTypeChange($event)"  class="dxc-input">
+                  <ng-container *ngFor="let node of supportedNode">
+                      <option [value]="node.value">{{node.label}}</option>
+                  </ng-container>
+              </select>
+          </div>
+          <div class="col-7 ps-1">
+              <input  *ngIf="isPatternRequired()" type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}"  [(ngModel)]="pattern" />
+          </div>
+          <div class="col-1">
+                <dxc-icon [model]="gIcons['PLAY']" (click)="execSingle()"></dxc-icon>
+               <dxc-icon [model]="gIcons['PLUS']" [ngClass]="'ps-1'" (click)="addOperation()"></dxc-icon>
+          </div>
+      </div>
+
+      <div class="row g-0 mt-1" [ngStyle]="{ borderTop: '1px solid #fff'}">
+          <div class="col-12">
+              <ng-container *ngFor="let step of steps">
+                  <div class="row g-0">
+                      <div class="col-1">
+                          <dxc-icon [model]="gIcons['UP']" [color1]="'dxc-text-100'"></dxc-icon>
+                          <dxc-icon [model]="gIcons['DOWN']" [color1]="'dxc-text-100'"></dxc-icon>
+                      </div>
+                      <div class="col-1">
+                          {{ getOperationString(step) }}
+                      </div>
+                      <div class="col-8">
+                          <code>{{ step.args }}</code>
+                      </div>
+                  </div>
+              </ng-container>
+              <!--
+              <dxc-search-result-list [hFull]="true" [results]="dryrunResults" [controller]="searchCtrl" [mainController]="controller.app"></dxc-search-result-list>
+                -->
+          </div>
+      </div>
+
+      <div class="row g-0 mt-1">
+          <div class="col-12">
+              <!--
+              <dxc-search-result-list [hFull]="true" [results]="dryrunResults" [controller]="searchCtrl" [mainController]="controller.app"></dxc-search-result-list>
+                -->
+          </div>
+      </div>
+  </div>
+  <div footer>
+    <button class="dxc-frm-btn" (click)="close()">Close</button>
+  </div>
+</app-modal-base>
