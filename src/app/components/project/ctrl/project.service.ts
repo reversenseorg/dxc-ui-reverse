@@ -200,7 +200,8 @@ export class ProjectService extends DxcApiService {
           new: { method: 'POST', url:'/workspace/new', format:'json', auth:false /* removed */},
           delete: { method: 'POST', url:'/workspace/delete', format:'json', auth:false /* removed */},
           upload: { method: 'POST', url:'/workspace/upload', format:'json', auth:false /* removed */},
-          test: { method:'GET', url:'/workspace/availability', format:'json', auth:false /* removed */}
+          test: { method:'GET', url:'/workspace/availability', format:'json', auth:false /* removed */},
+          info: { method: 'GET', url:'/workspace/info/:uid', format:'json', auth:false /* removed */ },
         },
         project: {
           device: { method: 'GET', url:'/project/device', format:'json', auth:false /* removed */, puid:true },
@@ -388,8 +389,9 @@ export class ProjectService extends DxcApiService {
                         }
                     }else{
                         const proj = new DexcaliburProject(
-                            {},
-                            (DxcApiToken.getInstance("puid") as any).getToken()
+                            {
+                                uid: (DxcApiToken.getInstance("puid") as any).getToken()
+                            }
                         );
 
                         if(vProjects.map(x => x.uid).indexOf(proj.uid)>-1){
@@ -491,7 +493,7 @@ export class ProjectService extends DxcApiService {
         if(pEl.success){
           const proj:DexcaliburProject[] = [];
           const p = pEl.data.projects;
-          p.map( (x:string) => proj.push( new DexcaliburProject( null, x)));
+          p.map( (x:string) => proj.push( new DexcaliburProject( { uid: x })));
           return proj;
         }else{
           this.outputSvc.print( OutputMessage.newError({ msg:"List of projects cannot be retrieved" }));
@@ -597,7 +599,9 @@ export class ProjectService extends DxcApiService {
 
     return this._process(
       this.endpoints['workspace']['open'],
-      { 'uid': pProject.uid }
+      {
+          'uid': pProject.uid
+      }
     ).pipe(
       map((pEl:any)=>{
 
@@ -746,7 +750,9 @@ export class ProjectService extends DxcApiService {
 
               DxcApiToken.remove("puid");
               DxcApiToken.create("puid",pEl.data.uid);
-              this.selected = new DexcaliburProject({}, pEl.data.uid );
+              this.selected = new DexcaliburProject({
+                  uid: pEl.data.uid
+              });
 
               this._beforeProjectReady(pEl);
 //          this.onProjectReady.next(pEl);
@@ -850,6 +856,29 @@ export class ProjectService extends DxcApiService {
       );
   }
 
+    /**
+     *
+     * @param pPpt
+     * @param pValue
+     */
+    getProject(  pUID:string):Observable<{loaded:boolean, project:Nullable<DexcaliburProject>}> {
+        return this._process(
+            this.endpoints['workspace']['info'],{
+                uid: pUID,
+            }).pipe(
+            map((pEl:any)=>{
+                //new DexcaliburProject()
+                if(pEl.success){
+                    return {
+                        loaded: pEl.data.loaded,
+                        project: new DexcaliburProject(pEl.data.projects)
+                    }
+                }else{
+                    return {loaded:false, project:null};
+                }
+            })
+        );
+    }
   /**
    *
    * It should be called only when a new window pops or when a project is closed.
@@ -1069,6 +1098,24 @@ export class ProjectService extends DxcApiService {
 
       return this._uploaded[pTargetFile.name+":"+pTargetFile.size];
 
+    }
+
+    getProjectNode(pProjectUID:string):Observable<DexcaliburProject> {
+        return this._process(
+            this.endpoints['project']['load'],
+            {
+                uid: pProjectUID
+            }
+        ).pipe(
+            map(pRes => {
+                if(!pRes.success){
+                    this.outputSvc.print(OutputMessage.newError({ msg: pRes.msg }));
+                }else{
+                    this.outputSvc.print(new OutputMessage({ msg:"Default device updated for active project.", src:"Project Manager" }));
+                    return pRes;
+                }
+            })
+        )
     }
 }
 

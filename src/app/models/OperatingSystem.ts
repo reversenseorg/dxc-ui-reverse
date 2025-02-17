@@ -1,11 +1,15 @@
-
-
 export enum OperatingSystem {
     LINUX= 'linux',
     ANDROID= 'android',
+    TOYBOX= 'toybox',
     TIZEN= 'tizen',
     IOS= 'ios',
     DARWIN= 'darwin',
     MACOS= 'macos',
-    WINNT= 'windows NET'
+    FLUTTER= 'flutter',
+    REACTNATIVE= 'reactnative',
+    WINNT= 'windows NET',
+    FIREOS='fireos',
+    WEBOS='webos',
+    NONE=''
 }

@@ -72,11 +72,6 @@ export class ModalTagEditorComponent extends AbstractKeyboardNavigable implement
   ngOnInit(): void {
     this.kbSvc.register(this);
     gInstance = this;
-
-    /*
-    this.hookSvc.listKeyPoints().subscribe( (pKPs:KeyPoint[])=>{
-      this.keypoints = pKPs;
-    })*/
   }
 
 

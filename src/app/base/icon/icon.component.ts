@@ -101,12 +101,12 @@ export class IconComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(pChanges: SimpleChanges) {
-      if (pChanges.hasOwnProperty('model')) {
-          this.configure(pChanges['model'].currentValue);
-      }
-      if (pChanges.hasOwnProperty('color1')) {
-        this.color1 = pChanges['color1'].currentValue;
-      }
+    if (pChanges.hasOwnProperty('model')) {
+      this.configure(pChanges['model'].currentValue);
+    }
+    if (pChanges.hasOwnProperty('color1')) {
+      this.color1 = pChanges['color1'].currentValue;
+    }
   }
 
   configure(pConfig:any=null) :void {

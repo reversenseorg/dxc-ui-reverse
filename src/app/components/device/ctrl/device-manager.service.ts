@@ -18,6 +18,7 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import {DeviceBindedData, EnrollmentOpts} from "../common";
 import {PrivilegedExecutionStrategy} from "../../../models/devices/PrivilegedExecutionStrategy";
 import {HookService} from "../../hooks/ctrl/hook.service";
+import {OrganizationUnitUUID} from "../../../models/orgs/OrganizationUnit";
 
 export type DeviceUID = string;
 export interface AppAcquisitionOpts {
@@ -105,6 +106,9 @@ export class DeviceManagerService extends DxcApiService {
           doProfiling: { method: 'POST', url:'/device/profile/:type', format:'json', auth:AUTH_ENFORCE},
           admin: { method: 'POST', url:'/device/admin/:action', format:'json', auth:AUTH_ENFORCE},
           eop_change: { method: 'POST', url:'/device/eop/change', format:'json', auth:AUTH_ENFORCE}
+        },
+        dev: {
+          info: { method: 'GET', url:'/device/dev/:uid/org/:oid', format:'json', auth:AUTH_ENFORCE},
         },
         frida: {
           save: { method: 'POST', url:'/device/frida/settings', format:'json', auth:AUTH_ENFORCE}
@@ -341,6 +345,37 @@ export class DeviceManagerService extends DxcApiService {
 
   listDevicesFromCache():Device[]{
     return this._cache.devices;
+  }
+
+
+  /**
+   * To read info about a device by its UID
+   *
+   * @param {DeviceUID} pDevUID
+   * @return {Observable<Nullable<Device>>}
+   * @method
+   */
+  getDevice(pDevUID:DeviceUID, pOrgUnitUUID:OrganizationUnitUUID):Observable<Nullable<Device>>{
+
+    return this._process(
+        this.endpoints['dev']['info'], {
+          uid: pDevUID,
+          oid: pOrgUnitUUID
+        }
+    ).pipe(
+        map((pEl:any)=>{
+          if(pEl.success){
+            return new Device(pEl.data);
+          }else{
+
+            this.outputSvc.print(OutputMessage.newError({
+              src: "Device Manager",
+              msg: "Cannot load device [uid="+pDevUID+"]. See help"
+            }));
+            return null;
+          }
+        })
+    );
   }
 
 

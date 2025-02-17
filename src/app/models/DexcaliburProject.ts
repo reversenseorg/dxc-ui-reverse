@@ -9,6 +9,9 @@ interface DigestSet {
     [type:string] :string
 }
 
+export type DexcaliburProjectUUID = string;
+
+
 export default class DexcaliburProject
 {
 
@@ -164,10 +167,13 @@ export default class DexcaliburProject
      * @param {String} pUID The UID of the project, an unique name for this project
      * @constructor
      */
-    constructor( pEngine:any, pUID:string){
+    constructor( pConfig:any){
+        for(let i in pConfig){
+            (this as any)[i] = pConfig[i];
+        }
 
-        this.engine = pEngine;
-        this.uid = pUID;
+        //this.engine = pEngine;
+        //this.uid = pUID;
     }
 
 
@@ -457,10 +463,10 @@ export default class DexcaliburProject
     }
 
     static fromJsonObject(pOptions:any):DexcaliburProject{
-        const o = new DexcaliburProject(null, pOptions.uid);
-        for(let p in pOptions){
+        const o = new DexcaliburProject( pOptions);
+        /*for(let p in pOptions){
             (o as any)[p] = pOptions[p] as any;
-        }
+        }*/
 
         return o;
     }

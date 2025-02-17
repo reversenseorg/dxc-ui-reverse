@@ -4,6 +4,10 @@ import {CommonModule, DatePipe, NgClass, NgSwitch} from "@angular/common";
 import {EopEditorComponent} from "./eop-editor/eop-editor.component";
 import {EopPhaseEditorComponent} from "./eop-editor/eop-phase-editor.component";
 import {FormsModule} from "@angular/forms";
+import {DeviceRoutingModule} from "./device-routing.module";
+import {ViewportDeviceComponent} from "./viewport-device/viewport-device.component";
+import {CoreModule} from "../../core/core.module";
+import {DeviceResolver} from "./ctrl/device-resolver.service";
 
 
 @NgModule({
@@ -13,15 +17,19 @@ import {FormsModule} from "@angular/forms";
         NgClass,
         DatePipe,
         NgSwitch,
-        FormsModule
+        FormsModule,
+        DeviceRoutingModule,
+        CoreModule
     ],
     exports: [
         EopEditorComponent,
-        EopPhaseEditorComponent
+        EopPhaseEditorComponent,
+        ViewportDeviceComponent
     ],
     declarations: [
         EopEditorComponent,
-        EopPhaseEditorComponent
+        EopPhaseEditorComponent,
+        ViewportDeviceComponent
     ]
 })
 export class DeviceModule { }

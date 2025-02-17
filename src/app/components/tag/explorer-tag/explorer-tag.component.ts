@@ -267,7 +267,7 @@ import TagCategory from "../../../models/tags/TagCategory";
    * @method
    */
   isExpandable( pItem:any): boolean {
-    return (pItem.__ == NodeInternalType.TAG_CATEGORY || pItem.__ == NodeInternalType.REMOTE_TAG_CATEGORY );
+    return (pItem.__ == NodeInternalType.TAG_CATEGORY);
   }
 
   /**
@@ -290,7 +290,7 @@ import TagCategory from "../../../models/tags/TagCategory";
   }
 
   itemHasChildren( pItem:any, pType='p'): boolean {
-    return (pItem.__ == NodeInternalType.TAG_CATEGORY || pItem.__ == NodeInternalType.REMOTE_TAG_CATEGORY );
+    return (pItem.__ == NodeInternalType.TAG_CATEGORY );
   }
 
   itemHasLazyChildren( pItem:any, pType ='p'): boolean {

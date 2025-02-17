@@ -81,6 +81,8 @@ import {RuntimeEventsService} from "./components/events/ctrl/events.service";
 import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
 import {ModalSendIntentComponent} from "./components/topology/modal-intent/modal-send-intent.component";
 import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
+import {ViewportComponent} from "./base/viewport/viewport.component";
+import {IViewportContainer} from "./base/viewport/IViewportContainer";
 
 
 interface StageSet {
@@ -93,6 +95,12 @@ interface StageSet {
   providedIn: 'root'
 })
 export class ControllerService {
+
+  vp:ViewportComponent;
+  /**
+   * Keeo a ref to active viewport container
+   */
+  activeCtn:Nullable<IViewportContainer> = null;
 
   helper: Nullable<HelperController> = null;
   private _s:StageSet = {};
@@ -125,6 +133,23 @@ export class ControllerService {
     console.log("Before menu rendered");
     this.appmenuService.render();
     console.log("Menu rendered");
+  }
+
+
+  setActiveTab(pVp:Nullable<IViewportContainer>):void {
+    this.activeCtn = pVp;
+  }
+
+  getActiveTab():Nullable<IViewportContainer> {
+    return this.activeCtn ;
+  }
+
+  setViewport(pVp:ViewportComponent):void {
+    this.vp = pVp;
+  }
+
+  getViewport():ViewportComponent {
+    return this.vp;
   }
 
   addStage(pName:string, pApp:StageComponent):void {
@@ -338,5 +363,10 @@ export class ControllerService {
     this.hookAfterControllersInit(ctrls);
 
     return ctrls;
+  }
+
+  isActiveViewport(pUID:number):boolean{
+    console.log(this.activeCtn!=null,this.activeCtn?.id,pUID);
+    return (this.activeCtn!=null) && (this.activeCtn.id==pUID);
   }
 }

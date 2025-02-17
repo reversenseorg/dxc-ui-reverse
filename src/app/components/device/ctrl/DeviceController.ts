@@ -1,17 +1,9 @@
 import {IController, IControllerOptions} from "../../../base/controllers/IController.interface";
-import {Subject} from "rxjs";
-import {ViewportView} from "../../../cmp/ViewportView";
-import {ComponentFactoryResolver} from "@angular/core";
-import {AppComponent} from "../../../app.component";
 import {StageComponent} from "../../stage/stage.component";
-import {OutputMessage} from "../../../cmp/OutputMessage";
 import {Device} from "../../../models/Device";
-import {WorkspaceController} from "../../workspace/ctrl/WorkspaceController";
-import {IconModel} from "../../../base/icon/IconModel";
 import {UiController} from "../../../base/controllers/UiController";
-import {DEVICE_PANEL, ViewportDeviceComponent} from "../viewport-device/viewport-device.component";
+import {DEVICE_PANEL} from "../viewport-device/viewport-device.component";
 import {Nullable} from "../../../base/Nullable";
-import {IStringIndex} from "../../../base/IStringIndex";
 import {DeviceManagerService} from "./device-manager.service";
 
 

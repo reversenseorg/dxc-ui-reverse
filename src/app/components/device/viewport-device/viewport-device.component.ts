@@ -28,6 +28,10 @@ import ModelSyscall from "../../../models/ModelSyscall";
 import {ElectronService} from "../../../core/services";
 import {Nullable} from "../../../base/Nullable";
 import {PrivilegedExecutionStrategy} from "../../../models/devices/PrivilegedExecutionStrategy";
+import {ActivatedRoute} from "@angular/router";
+import {ViewportResolver} from "../../../base/ViewportResolver";
+import {ControllerService} from "../../../controller.service";
+import {DeviceResolver} from "../ctrl/device-resolver.service";
 
 
 export const DEVICE_PANEL = {
@@ -45,6 +49,7 @@ export const DEVICE_PANEL = {
   selector: 'app-viewport-device',
   templateUrl: './viewport-device.component.html',
   styleUrls: ['./viewport-device.component.scss','../../../forms.scss'],
+  providers: [DeviceResolver]
   //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewportContainer {
@@ -55,6 +60,10 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
   @Input() uid: string;
   @Input() data: Device;
   @Input() controller: DeviceController;
+  /**
+   * Useless
+   * @deprecated
+   */
   @Input() parent: ViewportComponent;
   @Input() height: number;
   @Input() width: number;
@@ -160,14 +169,20 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
 
 
   constructor(
+      private _route:ActivatedRoute,
+    private ctrlSvc:ControllerService,
     private dmService: DeviceManagerService,
     private hookSvc: HookService,
     private electronSvc:ElectronService,
     private outputSvc:OutputService,
     private changeDetectorRef: ChangeDetectorRef
     ) {
-
     this.height = 300;
+
+    if(this._route.snapshot.data.device!==null){
+      //this.data = this._route.snapshot.data.device;
+      //this.ctrlSvc.getStage('main').showDevice(this._route.snapshot.data.device);
+    }
   }
 
   /**
@@ -393,4 +408,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     });
   }
 
+  isHidden():boolean {
+    return !this.ctrlSvc.isActiveViewport(this.id) || (this.data==null);
+  }
 }

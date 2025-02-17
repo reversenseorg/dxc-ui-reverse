@@ -1,9 +1,9 @@
-
 import ModelSyscall from "./ModelSyscall";
 import {IBridge} from "./IBridge";
 import DeviceProfile from "./DeviceProfile";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {OperatingSystem} from "./OperatingSystem";
 
 export enum EDevType  {
     UNKNOW=0x0,
@@ -13,14 +13,6 @@ export enum EDevType  {
     SDB= 0x4
 };
 const DEV_NAME = ['unknow','usb','emu','adb','sdb'];
-
-
-export enum EOsType  {
-    ANDROID= 0x0,
-    LINUX= 0x1,
-    TIZEN= 0x2
-};
-const OS_NAME = ['android','linux','tizen'];
 
 
 interface BridgeList {
@@ -39,7 +31,7 @@ export class Device
     /**
      * @field
      */
-    type:Nullable<EOsType> = null;
+    type:OperatingSystem = OperatingSystem.NONE;
 
     /**
      * Flag. TRUE if currently connected, else FALSE

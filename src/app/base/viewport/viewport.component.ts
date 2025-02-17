@@ -21,6 +21,7 @@ import {Subject} from "rxjs";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {Nullable} from "../Nullable";
 import {UIException} from "../error/UIException";
+import {ControllerService} from "../../controller.service";
 
 
 @Component({
@@ -60,9 +61,11 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
+    private _ctrlSvc:ControllerService,
     tooltipConfig: NgbTooltipConfig
   ) {
     tooltipConfig.tooltipClass = "dxc-tooltip-vp";
+    this._ctrlSvc.setViewport(this);
   }
 
   ngOnInit(): void {
@@ -343,6 +346,8 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
 
     this.activeCtn = pCmp.instance;
     this.activeCmp = pCmp;
+
+    this._ctrlSvc.setActiveTab(this.activeCtn);
 
     if(oldCmp!=null) oldCmp.hostView.detectChanges();
     //pCmp.hostView.detectChanges();

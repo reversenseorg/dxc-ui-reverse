@@ -3,6 +3,7 @@ import {ProjectsListComponent} from "./project-list/projects-list.component";
 import {DxcBaseModule} from "../../base/dxc-base.module";
 import {CommonModule, DatePipe, NgClass, NgSwitch} from "@angular/common";
 import {ProjectCardComponent} from "./project-card/project-card.component";
+import {ProjectMgtRoutingModule} from "./project-routing.module";
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import {ProjectCardComponent} from "./project-card/project-card.component";
         DxcBaseModule,
         NgClass,
         DatePipe,
-        NgSwitch
+        NgSwitch,
+        ProjectMgtRoutingModule
     ],
     exports: [
         ProjectsListComponent,

@@ -1,14 +1,13 @@
 import {UserAccount} from "./UserAccount";
-import {Nullable} from "../../base/Nullable";
 
 export class Person {
 
-    private _firstname: Nullable<string>;
-    private _lastname: Nullable<string>;
-    private _mail: Nullable<string>;
-    private _bio: Nullable<string>;
+    private _firstname:string;
+    private _lastname:string;
+    private _mail:string;
+    private _bio:string;
 
-    get firstname():  Nullable<string> {
+    get firstname(): string {
         return this._firstname;
     }
 
@@ -16,7 +15,7 @@ export class Person {
         this._firstname = value;
     }
 
-    get lastname():  Nullable<string> {
+    get lastname(): string {
         return this._lastname;
     }
 
@@ -24,7 +23,7 @@ export class Person {
         this._lastname = value;
     }
 
-    get mail():  Nullable<string> {
+    get mail(): string {
         return this._mail;
     }
 
@@ -32,7 +31,7 @@ export class Person {
         this._mail = value;
     }
 
-    get bio():  Nullable<string> {
+    get bio(): string {
         return this._bio;
     }
 

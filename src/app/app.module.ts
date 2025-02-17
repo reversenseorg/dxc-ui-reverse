@@ -49,7 +49,6 @@ import {TerminalHookComponent} from "./components/hooks/terminal-hooks/terminal-
 import {ViewportHookJavaComponent} from "./components/hooks/viewport-hooks/viewport-hook-javahook.component";
 import { ViewportInspectorComponent } from './components/inspector/viewport-inspector/viewport-inspector.component';
 import {BreadcrumbComponent, BreadcrumbItemComponent} from './base/breadcrumb/breadcrumb.component';
-import {ViewportSplittedComponent} from "./base/viewport-splitted/viewport-splitted.component";
 import {NgTerminalModule} from "ng-terminal";
 import { XtermComponent } from './base/xterm/xterm.component';
 import { StatebarComponent } from './base/statebar/statebar.component';
@@ -76,7 +75,6 @@ import {ViewportCodeFieldComponent} from "./components/code/viewport-code/viewpo
 import {BookmarkButtonComponent} from "./components/bookmark/bookmarkbtn.component";
 import {ExplorerTopoComponent} from "./components/topology/explorer-topo/explorer-topo.component";
 import {ViewportEditorComponent} from "./components/viewer/vp-editor/viewport-editor.component";
-//import {ModalMethodComponent} from "./components/code/modal-method/modal-method.component";
 import {ViewportTopoActivityComponent} from "./components/topology/viewport-topo/viewport-topo-activity.component";
 import {ViewportTopoProviderComponent} from "./components/topology/viewport-topo/viewport-topo-provider.component";
 import {ViewportTopoReceiverComponent} from "./components/topology/viewport-topo/viewport-topo-receiver.component";
@@ -93,7 +91,6 @@ import {ModalPasswdAuthComponent} from "./components/auth/modal-login/modal-pass
 import {ModalProjectAnalConfigComponent} from "./components/project/modal-project-anal-config/modal-project-anal-config.component";
 import {ModalHookJavaNewComponent} from "./components/hooks/modal-hook-java-new/modal-hook-java-new.component";
 import {ModalHookKeypointNewComponent} from "./components/hooks/modal-hook-keypoint-new/modal-hook-keypoint-new.component";
-import {ViewportDeviceComponent} from "./components/device/viewport-device/viewport-device.component";
 import {ModalSelectKpComponent} from "./components/hooks/modal-select-kp/modal-select-kp.component";
 import {ModalInterruptorSettingsComponent} from "./components/hooks/modal-interruptor-settings/modal-interruptor-settings.component";
 import {ModalNewFragmentComponent} from "./components/hooks/modal-new-fragment/modal-new-fragment.component";
@@ -109,7 +106,6 @@ import {ExplorerAuditComponent} from "./components/audit/explorer-audit/explorer
 import {TargetOsListComponent} from "./components/device/target-list.component";
 import {VirtualDeviceSettingsComponent} from "./components/device/virtual-device.component";
 import {PlatformListComponent} from "./components/device/platform-list.component";
-//import {ButtonComponent} from "./base/button/btn.component";
 import {ButtonRefreshComponent} from "./base/button/btn-refresh.component";
 import {DeviceListComponent} from "./components/device/device-list.component";
 import {ViewportAuditComponent} from "./components/audit/viewport-audit/viewport-audit.component";
@@ -143,7 +139,7 @@ import {CodeEmulatorComponent} from "./components/code/emulator/emulator.compone
 import {ControlViewComponent} from "./components/audit/control-view/control-view.component";
 import {AssessViewComponent} from "./components/audit/assessment-view/assess-view.component";
 import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
-//import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
+import {ViewportResolver} from "./base/ViewportResolver";
 
 
 // AoT requires an exported function for factories
@@ -171,7 +167,6 @@ import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-e
     MenuComponent,
     ContextMenuComponent,
     ContextItemComponent,
-    ViewportSplittedComponent,
 
     RefComponent,
 //        GridCellComponent,
@@ -202,7 +197,6 @@ import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-e
     ViewportCodeClassComponent,
     ViewportCodeMethComponent,
     ViewportCodeFieldComponent,
-    ViewportDeviceComponent,
 
     ModalRenameComponent,
 //        ModalMethodComponent,
@@ -340,7 +334,8 @@ import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-e
   providers: [
     ControllerService,
     SettingsService,
-    DexcaliburServerService
+    DexcaliburServerService,
+    ViewportResolver
     //NgbTooltipConfig
   ],
   exports: [

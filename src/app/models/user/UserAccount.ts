@@ -1,34 +1,59 @@
 import {Person} from "./Person";
-import {UserRole} from "./acl/rbac/UserRole";
-import {IStringIndex} from "../../base/IStringIndex";
-import {Nullable} from "../../base/Nullable";
+import {INode} from "../INode";
+import {NodeInternalType} from "../NodeInternalType";
+import {OrganizationUnitUUID} from "../orgs/OrganizationUnit";
 
+export enum UserAccountType {
+    LOCAL='local',
+    FEDERATED='federated'
+}
 export type UserAccountUUID = string;
+export type RoleUUID = string;
 
-export class UserAccount implements IStringIndex<any>{
+export interface UserAccountOptions extends Record<string, any> {
+    _uid?:UserAccountUUID,
+    _person?: Person,
+    _roles?:RoleUUID[],
+    _username?:string,
+    _time?:string,
+    _locked?:boolean,
+    _type?:UserAccountType;
+    _authorized_ips?:string[];
+    _projects?:any[],
+    _orgs?:OrganizationUnitUUID[]
+}
 
-    private _uid:Nullable<string>  = null;
-    private _person: Nullable<Person> = null;
-    private _role:Nullable<UserRole>  = null;
-    private _username:Nullable<string> = null;
-    private _password:Nullable<string> = null;
-    private _salt:Nullable<string> = null;
-    private _padding:Nullable<string> = null;
-    private _time:Nullable<string> = null;
+export class UserAccount implements  INode {
+
+    __:NodeInternalType = NodeInternalType.USER_ACCOUNT;
+
+    private _uid:UserAccountUUID;
+    private _person: Person;
+
+    private _roles:RoleUUID[] = [];
+    private _username:string;
+    private _time:string;
+    private _authorized_ips:string[] = [];
+    private _type:UserAccountType = UserAccountType.LOCAL;
     private _locked:boolean = false;
+    private _orgs:OrganizationUnitUUID[] = [];
+    private _attrs:any = {};
+
+    tags:number[] = [];
+
+    /**
+     * Projects
+     */
+    private _projects:string[] = [];
 
 
-    constructor(pConfig:any = null) {
+    constructor(pConfig:UserAccountOptions = {}) {
         if(pConfig != null){
-            for(let i in pConfig) (this as IStringIndex<any>)[i] = pConfig[i];
-        }
-        // TODO : replace by incremental uid
-        if(this._uid==null && this._username!=null){
-            this._uid = this._username;
+            for(let i in pConfig) (this as any)[i] = pConfig[i];
         }
     }
 
-    get person(): Nullable<Person> {
+    get person(): Person {
         return this._person;
     }
 
@@ -36,7 +61,7 @@ export class UserAccount implements IStringIndex<any>{
         this._person = value;
     }
 
-    get username(): Nullable<string> {
+    get username(): string {
         return this._username;
     }
 
@@ -44,31 +69,7 @@ export class UserAccount implements IStringIndex<any>{
         this._username = value;
     }
 
-    get password():  Nullable<string> {
-        return this._password;
-    }
-
-    set password(value: string) {
-        this._password = value;
-    }
-
-    get salt():  Nullable<string> {
-        return this._salt;
-    }
-
-    set salt(value: string) {
-        this._salt = value;
-    }
-
-    get padding():  Nullable<string> {
-        return this._padding;
-    }
-
-    set padding(value: string) {
-        this._padding = value;
-    }
-
-    get time():  Nullable<string> {
+    get time(): string {
         return this._time;
     }
 
@@ -80,22 +81,16 @@ export class UserAccount implements IStringIndex<any>{
         this._locked = value;
     }
 
-    get role():  Nullable<string> {
-        if(this._role != null){
-            return this._role.name;
-        }else{
-            return null;
-        }
+    getType():UserAccountType {
+        return this._type;
     }
 
-
-    setUserRole( pRole:UserRole): UserAccount {
-        this._role = pRole;
-        return this;
+    setType( pType:UserAccountType):void {
+        this._type = pType;
     }
 
-    getUserRole( ): Nullable<UserRole> {
-        return this._role;
+    getRoles():RoleUUID[] {
+        return this._roles;
     }
 
     isLocked():boolean {
@@ -106,7 +101,6 @@ export class UserAccount implements IStringIndex<any>{
         this._locked = true;
     }
 
-
     unlock():void {
         this._locked = false;
     }
@@ -115,17 +109,41 @@ export class UserAccount implements IStringIndex<any>{
         return (this._username === pUsername);
     }
 
-    getUID(): Nullable<string> {
-        return this.username;
+
+    getUID():UserAccountUUID {
+        return this._uid; //username;
     }
 
-    /**
-     * To compare two user account
-     *
-     * @param pAccount
-     */
-    is( pAccount:UserAccount):boolean {
-        // TODO : replace by uid
-        return (this._username===pAccount.username) && (this._password===pAccount.password);
+    getAuthorizedIPs():string[] {
+        return this._authorized_ips;
+    }
+
+    addAuthorizedIP( pIpAddress:string):void {
+        if(this._authorized_ips.indexOf(pIpAddress)==-1){
+            this._authorized_ips.push(pIpAddress);
+        }
+    }
+
+    getOrgUnits():OrganizationUnitUUID[] {
+        return this._orgs;
+    }
+
+    isIpFiltered():boolean {
+        return (this._authorized_ips.length>0);
+    }
+
+    toJsonObject(): any {
+        let o:any = {};
+
+        o._uid = this.getUID();
+        o._person = (this._person!=null ? this.person : null);
+        o._roles = this._roles;
+        o._username = this._username;
+        o._time = this._time;
+        o._locked = this._locked;
+        o._type = this._type;
+        o._authorized_ips = this._authorized_ips;
+
+        return o;
     }
 }

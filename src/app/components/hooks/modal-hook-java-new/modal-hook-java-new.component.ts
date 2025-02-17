@@ -106,10 +106,6 @@ export class ModalHookJavaNewComponent extends AbstractKeyboardNavigable impleme
       }
     });
 
-    /*
-    this.hookSvc.listKeyPoints().subscribe( (pKPs:KeyPoint[])=>{
-      this.keypoints = pKPs;
-    })*/
   }
 
 

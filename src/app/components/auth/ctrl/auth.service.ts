@@ -150,7 +150,7 @@ export class AuthService extends DxcApiService{
           username:data.username,
           uid:data.uid
         });
-        u.setUserRole( new UserRole(data.role.uid, data.role.name));
+        //u.setUserRole( new UserRole(data.role.uid, data.role.name));
         return u;
       }else{
         this.outputSvc.alert(OutputMessage.newError({

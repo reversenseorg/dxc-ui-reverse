@@ -610,6 +610,10 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
    */
   refresh( pSelected:Nullable<string> = null) {
 
+    if(!this.projectReady){
+      // cannot refresh until the project is ready
+      return;
+    }
 
     if(pSelected == null){
       pSelected = this.selected;

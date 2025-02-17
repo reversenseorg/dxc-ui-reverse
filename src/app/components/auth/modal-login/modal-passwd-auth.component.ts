@@ -129,7 +129,7 @@ export class ModalPasswdAuthComponent extends AbstractKeyboardNavigable implemen
 
 
   close():void {
-    this.modal.hide('close');
+    if(this.modal !=null) this.modal.hide('close');
   }
 
   showHelp() {

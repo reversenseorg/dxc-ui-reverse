@@ -7,7 +7,6 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import {ProjectService} from "../ctrl/project.service";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {Nullable} from "../../../base/Nullable";

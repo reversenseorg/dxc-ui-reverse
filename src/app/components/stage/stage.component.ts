@@ -5,8 +5,8 @@ import {
   ComponentFactoryResolver,
   ElementRef,
   HostListener,
-  OnInit,
-  ViewChild
+  OnInit, QueryList,
+  ViewChild, ViewChildren
 } from "@angular/core";
 import {SettingsService} from "../settings/ctrl/settings.service";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
@@ -42,6 +42,7 @@ import {WebsocketEvent, WebsocketEventType} from "../../base/websocket/Websocket
 import {Nullable} from "../../base/Nullable";
 import {UIException} from "../../base/error/UIException";
 import {ActivatedRoute} from "@angular/router";
+import {ViewportComponent} from "../../base/viewport/viewport.component";
 
 
 // size restriction (percent)
@@ -1075,6 +1076,7 @@ export class StageComponent implements OnInit, AfterViewInit {
   }
 
   showDevice(device: any) {
+    console.log("SHOW DEVICE : ",device);
     this.getController('ctrl:device').open(device);
   }
 

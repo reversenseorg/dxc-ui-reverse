@@ -1,5 +1,4 @@
-import {Nullable} from "../base/Nullable";
-import {IStringIndex} from "../base/IStringIndex";
+
 
 export enum NodeInternalType {
   BASIC_BLOCK,
@@ -66,11 +65,29 @@ export enum NodeInternalType {
   INSPECTOR_PLUGIN,
   SCAN_ORDER,
   LOG,
-  REMOTE_TAG_CATEGORY= 100000,
-  REMOTE_TAG= 100001
+  ASSURANCE_REPORT,
+  PROJECT_INPUT,
+  PRIMITIVE_TYPE,
+  OBJECT_TYPE,
+  BOM,
+  OPERATOR,
+  REVERSENSE_PRODUCT,
+  ANDROID_MANIFEST,
+  UI_ROLE,
+  UI_CMP_TYPE,
+  UI_CMP,
+  UI_EVT_TYPE,
+  UI_EVT,
+  RESOURCE,
+  ORG_UNIT,
+  APP_UNIT,
+  USER_GROUP,
+  CREDENTIAL,
+  CONNECTION,
+  ACL_ROLE
 }
 
-export const NodeInternalTypeName:Record<number, string> = {
+export const NodeInternalTypeName = {
   [NodeInternalType.BASIC_BLOCK]: "BASIC_BLOCK",
   [NodeInternalType.CLASS]: "CLASS",
   [NodeInternalType.METHOD]: "METHOD",
@@ -135,7 +152,27 @@ export const NodeInternalTypeName:Record<number, string> = {
   [NodeInternalType.INSPECTOR_PLUGIN]: "INSPECTOR_PLUGIN",
   [NodeInternalType.SCAN_ORDER]: "SCAN_ORDER",
   [NodeInternalType.LOG]: "LOG",
+  [NodeInternalType.ASSURANCE_REPORT]: "ASSURANCE_REPORT",
+  [NodeInternalType.PROJECT_INPUT]: "PROJECT_INPUT",
+  [NodeInternalType.BOM]: "BOM",
+  [NodeInternalType.OPERATOR]: "OPERATOR",
+  [NodeInternalType.REVERSENSE_PRODUCT]: "REVERSENSE_PRODUCT",
+  [NodeInternalType.ANDROID_MANIFEST]: "ANDROID_MANIFEST",
+  [NodeInternalType.UI_ROLE]: "UI_ROLE",
+  [NodeInternalType.UI_CMP_TYPE]: "UI_CMP_TYPE",
+  [NodeInternalType.UI_CMP]: "UI_CMP",
+  [NodeInternalType.UI_EVT_TYPE]: "UI_EVT_TYPE",
+  [NodeInternalType.UI_EVT]: "UI_EVT",
+  [NodeInternalType.RESOURCE]: "RESOURCE",
+  [NodeInternalType.ORG_UNIT]: "ORG_UNIT",
+  [NodeInternalType.APP_UNIT]: "APP_UNIT",
+  [NodeInternalType.USER_GROUP]: "USER_GROUP",
+  [NodeInternalType.CREDENTIAL]: "CREDENTIAL",
+  [NodeInternalType.CONNECTION]: "CONNECTION",
+  [NodeInternalType.ACL_ROLE]: "ACL_ROLE"
 }
+
+
 
 
 /**
@@ -144,7 +181,7 @@ export const NodeInternalTypeName:Record<number, string> = {
  */
 export class NodeTypeHelper {
 
-  static UID_MAPPING:IStringIndex<any> = {
+  static UID_MAPPING = {
     [NodeInternalType.BASIC_BLOCK]: "name",
     [NodeInternalType.CLASS]: "name",
     [NodeInternalType.METHOD]: "__signature__",
@@ -163,10 +200,10 @@ export class NodeTypeHelper {
    * @param pNode
    * @param pNodeType
    */
-  static getUIDof( pNode:any, pNodeType:Nullable<string> = null):string{
-    const type = (pNodeType == null ? pNode.__ : pNodeType);
+  static getUIDof( pNode:any, pNodeType:number = -1):string{
+    const type = (pNodeType == -1 ? pNode.__ : pNodeType);
 
-    const pptUID = NodeTypeHelper.UID_MAPPING[type];
+    const pptUID = (NodeTypeHelper.UID_MAPPING as any)[type];
     console.log(pNode, type, pptUID);
     if(pptUID != null){
       return pNode[pptUID];
