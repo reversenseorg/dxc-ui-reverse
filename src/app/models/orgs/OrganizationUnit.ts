@@ -2,7 +2,6 @@ import {NodeInternalType} from "../NodeInternalType";
 import {UserAccountUUID} from "../user/UserAccount";
 import {Connection} from "./auth/Connection";
 import {UserGroup} from "../user/UserGroup";
-import {AuthModule, AuthModuleType} from "../user/auth/AuthModule";
 import {Nullable} from "../../base/Nullable";
 
 
@@ -17,7 +16,7 @@ export interface OrganizationUnitOptions {
     description?:string;
     owner?:string;
     members?:UserAccountUUID[];
-    authModules?:AuthModule[];
+    authModules?:any[];
     connections?:Connection[];
     devices?:string[];
     deviceTpls?:string[];
@@ -36,7 +35,7 @@ export class OrganizationUnit {
     companyName: string;
     description:string;
     owner:string;
-    authModules: AuthModule[] = [];
+    authModules: any[] = [];
     connections: Connection[] = [];
     devices: string[] = [];
     deviceTpls: any[] = [];
@@ -65,18 +64,6 @@ export class OrganizationUnit {
 
     getUID():string {
         return this.uuid;
-    }
-
-    getAuthModules():AuthModule[] {
-        return this.authModules;
-    }
-
-    getAuthModuleByType(pType:AuthModuleType):Nullable<AuthModule> {
-        return this.authModules.find(x => x.type===pType);
-    }
-
-    getAuthModuleByUUID(pUUID:string):Nullable<AuthModule> {
-        return this.authModules.find(x => x.getUID()===pUUID);
     }
 
     toJsonObject(pOption?: any): any {
