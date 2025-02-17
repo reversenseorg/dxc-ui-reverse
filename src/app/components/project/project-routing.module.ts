@@ -41,6 +41,6 @@ import {ProjectResolver} from "./ctrl/project-resolver.service";
     }
   ])],
   exports: [RouterModule],
-  providers: [ProjectResolver]
+  // providers: [ProjectResolver]
 })
 export class ProjectMgtRoutingModule { }
