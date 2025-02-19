@@ -22,6 +22,8 @@ import {OutputMessage} from "../../../cmp/OutputMessage";
 import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
 import {Nullable} from "../../../base/Nullable";
+import DexcaliburProject from "../../../models/DexcaliburProject";
+import {ProjectService} from "../../project/ctrl/project.service";
 
 
 interface EventSources {
@@ -63,21 +65,33 @@ export class ModalInterruptorSettingsComponent extends AbstractKeyboardNavigable
   currentKP:Nullable<KeyPoint> = null;
   selectedKP:Nullable<KeyPoint> = null;
   kpList:KeyPoint[] = [];
+  projectReady = false;
 
   constructor( private changeDetectorRef: ChangeDetectorRef,
                private outputSvc:OutputService,
+               private _projSvc: ProjectService,
                private kbSvc:KeyboardNavigationService,
                private hookSvc:HookService) {
     super();
+
+    this._projSvc.onProjectReady.subscribe( (pProject:DexcaliburProject)=>{
+      this.projectReady = true;
+      this.refresh();
+    });
   }
 
   ngOnInit(): void {
     this.kbSvc.register(this);
+    this.refresh();
+  }
+
+  refresh(){
+    if(!this.projectReady) return;
+
     this.hookSvc.listKeyPoints().subscribe( (kp:KeyPoint[]) => {
       this.kpList = kp;
     });
   }
-
 
   onKeyPress(pEvent: any) {
     switch(pEvent.code){

@@ -23,6 +23,8 @@ import Hook from "../../../models/Hook";
 import KeyPoint from "../../../models/KeyPoint";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
+import DexcaliburProject from "../../../models/DexcaliburProject";
+import {ProjectService} from "../../project/ctrl/project.service";
 
 
 interface EventSources {
@@ -66,13 +68,24 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
   selectedKP:Nullable<KeyPoint> = null;
   kpList:KeyPoint[] = [];
   moment = "load";
+  projectReady  = false;
 
   constructor( private changeDetectorRef: ChangeDetectorRef,
                private outputSvc:OutputService,
+               private _projSvc:ProjectService,
                private kbSvc:KeyboardNavigationService,
                private hookSvc:HookService) {
     super();
 
+    this._projSvc.onProjectReady.subscribe( (pProject:DexcaliburProject)=>{
+      this.projectReady = true;
+      this.refresh();
+    });
+
+
+    this._projSvc.onProjectClose.subscribe( (pProject:DexcaliburProject)=>{
+      this.projectReady = false;
+    });
   }
 
   ngOnInit(): void {
@@ -89,13 +102,13 @@ export class ModalSelectKpComponent extends AbstractKeyboardNavigable implements
     this.refresh();
   }
 
+
   refresh(){
+    if(!this.projectReady) return;
+
     this.hookSvc.listKeyPoints(true).subscribe( (kp:KeyPoint[]) => {
-      /*if(kp !== null && Array.isArray(kp)){
-        gInstance.kpList = kp;
-      }else{
-        gInstance.kpList = [];
-      }*/
+      // nothing to do because the service will issue 'update' event into onKeyPointListChange(), and trigger
+      // component update
     });
   }
 

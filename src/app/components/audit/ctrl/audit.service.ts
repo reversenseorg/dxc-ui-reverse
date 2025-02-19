@@ -20,6 +20,7 @@ import {ContextMenuEvent} from "../../../base/context-menu/context-menu.componen
 import {ProjectService} from "../../project/ctrl/project.service";
 import {ScanOrder} from "../../../models/ScanOrder";
 import DexcaliburProject from "../../../models/DexcaliburProject";
+import {OrganizationUnitUUID} from "../../../models/orgs/OrganizationUnit";
 
 export enum CheckEventState {
   NEW= 'new',
@@ -235,9 +236,11 @@ export class AuditService extends DxcApiService{
     }));
   }
 
-  getModels():Observable<AssuranceModel[]> {
+  getModels(pOrgUnit:Nullable<OrganizationUnitUUID> = null):Observable<AssuranceModel[]> {
     return this._process(
-      this.endpoints['audit']['models']
+      this.endpoints['audit']['models'], {
+          oid: (pOrgUnit!=null ? pOrgUnit : localStorage.getItem('org.current')),
+        }
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
