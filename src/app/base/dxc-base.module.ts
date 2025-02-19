@@ -16,7 +16,6 @@ import {FormsModule} from "@angular/forms";
 import {PreviewerComponent} from "./previewer/previewer.component";
 import {MetaComponent} from "./meta/meta.component";
 import {AppMenuComponent} from "./appmenu/app-menu.component";
-import {AppMenuService} from "./appmenu/app-menu.service";
 import {BoxComponent} from "./box/box.component";
 import {PaginatorComponent} from "./paging/dxc-paginator.component";
 import {DxcButtonComponent} from "./button/btn.component";
