@@ -90,13 +90,14 @@ export class DxcApiService {
 
     if(gAuthProfile==null){
       gAuthProfile = {
-        ssl: false,
-        ip: "127.0.0.1",
-        port: "8080"
+        ssl: (document.location.protocol=='https:'),
+        ip: document.location.hostname, //"127.0.0.1",
+        port: document.location.port //"8080"
       };
     }
 
-    this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
+    //this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
+    this._baseURL = document.location.protocol+'//'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
     /*
     const sub = DxcApiService.baseUrlUpdate$.subscribe((pURL)=>{
       this._baseURL = pURL;
@@ -117,43 +118,6 @@ export class DxcApiService {
         DxcApiService.baseUrlUpdate$.next((gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api');
       });
     }*/
-
-
-
-    /*
-    if(gAuthProfile==null){
-      if(params.get('auth')!=null){
-        gAuthProfile = JSON.parse(atob(params.get('auth') as string));
-        console.log("[AUTH PROFILE] Saving profile ",gAuthProfile);
-        this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
-        // persist
-        this._saveAuthProfile('profile:default',gAuthProfile);
-        console.log(this._baseURL)
-      }else{
-        try{
-          gAuthProfile = this._restoreAuthProfile('profile:default');
-          this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
-          console.log("[AUTH PROFILE] Profile restored ",gAuthProfile);
-        }catch(err){
-          console.log("[AUTH PROFILE] Profile not found. Creating new one :",gAuthProfile);
-          this._baseURL = location.protocol+'//'+location.host+'/api';
-
-          location.host.split(":")[0]
-          gAuthProfile = {
-            ssl: location.protocol.endsWith('s'),
-            ip: location.host.split(":")[0],
-            port: location.port
-          };
-        }
-
-      }
-      console.log("BaseURL = "+this._baseURL)
-    }else{
-     //this._baseURL = location.protocol+'//'+location.host+'/api';
-      this._baseURL = (gAuthProfile.ssl===true?'https':'http')+'://'+gAuthProfile.ip+':'+gAuthProfile.port+'/api';
-
-    }*/
-
   }
 
   /**
