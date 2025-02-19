@@ -46,7 +46,6 @@ export class AppMenuComponent {
                  private changeDetectorRef:ChangeDetectorRef) {
         this.appmenuSvc.onTemplateUpdate$.subscribe((pEvt:MenuUpdateEvent)=>{
             if(pEvt.update){
-                //console.log("[APP-MENU] Update rendering ", this.entries);
                 this.changeDetectorRef.detectChanges();
                 this.appmenuSvc.onMenuRendered$.next(this._items);
             }else{
