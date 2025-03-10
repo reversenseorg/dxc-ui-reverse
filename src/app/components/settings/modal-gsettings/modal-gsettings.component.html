@@ -233,13 +233,16 @@
                 <label for="srv_heapsize">Max heap size (Mb)</label>
               </div>
               <div class="col-9">
-                <input type="number" id="srv_heapsize" name="srv_heapsize" class="dxc-frm-input dxc-input-sm" min="2048" [(ngModel)]="srv.heapSize.value" (keyup.enter)="doSave('srv', srv.heapSize)">
-                <span *ngIf="srv.heapSize.saved===true">
-                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
-                </span>
-                <span *ngIf="srv.heapSize.saved===false">
-                  &nbsp;Error !
-                </span>
+                  <ng-container *ngIf="srv!=null && srv.heapSize!=null">
+                      <input type="number" id="srv_heapsize" name="srv_heapsize" class="dxc-frm-input dxc-input-sm" min="2048" [(ngModel)]="srv.heapSize.value" (keyup.enter)="doSave('srv', srv.heapSize)">
+                      <span *ngIf="srv.heapSize.saved===true">
+                          <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
+                        </span>
+                              <span *ngIf="srv.heapSize.saved===false">
+                          &nbsp;Error !
+                        </span>
+                  </ng-container>
+
               </div>
             </div>
             <div class="row">
@@ -275,13 +278,16 @@
                 <label for="srv_reg">Registry URL</label>
               </div>
               <div class="col-9">
-                <input type="text" id="srv_reg" name="srv_reg" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registry.value" (keyup.enter)="doSave('srv', srv.registry)">
-                <span *ngIf="srv.registry.saved===true">
-                  <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
-                </span>
-                <span *ngIf="srv.registry.saved===false">
-                  &nbsp;Error !
-                </span>
+                  <ng-container *ngIf="srv">
+                      <input type="text" id="srv_reg" name="srv_reg" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registry.value" (keyup.enter)="doSave('srv', srv.registry)">
+                      <span *ngIf="srv.registry.saved===true">
+                          <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
+                        </span>
+                              <span *ngIf="srv.registry.saved===false">
+                          &nbsp;Error !
+                        </span>
+                  </ng-container>
+
               </div>
             </div>
             <div class="row">
@@ -289,27 +295,36 @@
                 <label for="srv_regapi">Registry API URL</label>
               </div>
               <div class="col-9">
-                <input type="text" name="srv_regapi" id="srv_regapi" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registryAPI.value" (change)="doSave('srv', srv.registryAPI)">
-                <span *ngIf="srv.registryAPI.saved===true">
+
+                  <ng-container *ngIf="srv">
+                      <input type="text" name="srv_regapi" id="srv_regapi" class="dxc-frm-input dxc-input-sm wide" min="2048" [(ngModel)]="srv.registryAPI.value" (change)="doSave('srv', srv.registryAPI)">
+                      <span *ngIf="srv.registryAPI.saved===true">
                   <dxc-icon [model]="gIcons['CHECK']"></dxc-icon>&nbsp;Saved
                 </span>
-                <span *ngIf="srv.registryAPI.saved===false">
+                      <span *ngIf="srv.registryAPI.saved===false">
                   &nbsp;Error !
                 </span>
+                  </ng-container>
+
               </div>
             </div>
 
 
-            <h3>Workspace</h3>
+              <ng-container *ngIf="srv">
+                  <h3>Workspace</h3>
 
-            <div class="row">
-              <div class="col-3">
-                <label>Location</label>
-              </div>
-              <div class="col-9">
-                <span id="srv_ws_path" class="dxc-text-100 font-italic">{{ srv.workspace.value }}</span>
-              </div>
-            </div>
+                  <div class="row">
+                      <div class="col-3">
+                          <label>Location</label>
+                      </div>
+                      <div class="col-9">
+                          <span id="srv_ws_path" class="dxc-text-100 font-italic">{{ srv.workspace.value }}</span>
+                      </div>
+                  </div>
+              </ng-container>
+
+
+
 
           </div>
         </div>
