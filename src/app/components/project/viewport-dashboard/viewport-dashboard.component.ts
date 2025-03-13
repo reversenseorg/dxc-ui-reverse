@@ -18,6 +18,7 @@ import {HookService} from "../../hooks/ctrl/hook.service";
 import Application from '../../../models/Application';
 import {Nullable} from "../../../base/Nullable";
 import {TopologyController} from "../../topology/ctrl/TopologyController";
+import {ProjectResolver} from "../ctrl/project-resolver.service";
 
 enum INFO_TYPE {
   APP,
@@ -38,7 +39,8 @@ enum INFO_TYPE {
 @Component({
   selector: 'app-viewport-project-dash',
   templateUrl: './viewport-dashboard.component.html',
-  styleUrls: ['../../../base/expandable-list/expandable-list.component.scss', './viewport-dashboard.component.scss']
+  styleUrls: ['../../../base/expandable-list/expandable-list.component.scss', './viewport-dashboard.component.scss'],
+  providers: [ProjectResolver]
 })
 export class ViewportProjectDashboardComponent implements OnInit, IViewportContainer {
 

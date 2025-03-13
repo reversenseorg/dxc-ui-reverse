@@ -194,7 +194,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
     this.settSvc.listServerSettings().subscribe( (pSettings:ServerSettings) => {
       console.log(pSettings);
       this.srv = pSettings;
-      if(!this.srv.hasOwnProperty('heapSize') ||this.srv.heapSize==null){
+      if(this.srv!=null && !this.srv.hasOwnProperty('heapSize') ||this.srv.heapSize==null){
         this.srv.heapSize = { name:"heapSize", value:4096};
       }
     });

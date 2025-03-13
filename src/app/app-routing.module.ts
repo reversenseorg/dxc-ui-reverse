@@ -21,19 +21,19 @@ import {IsAuthenticatedGuard} from "./IsAuthenticateGuard";
               {
                   path: 'home/:id',
                   component: StageComponent
-              },{
+              },/*{
                   path: 'project/:puid/device/:duid',
                   component: StageComponent
-              },{
+              },*/{
                   path: 'device/**',
                   component: StageComponent
               },{
                   path: 'home/:id/code/:node/:node_uid',
                   component: StageComponent
-              },{
+              }/*,{
                   path: '**',
                   redirectTo: '/home/-'
-              },{
+              }*/,{
                   path: '',
                   redirectTo: '/home/-'
               }

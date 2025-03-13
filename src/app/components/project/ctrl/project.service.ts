@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpEventType} from '@angular/common/http';
-import {finalize, Observable, Subject} from 'rxjs';
+import {finalize, from, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
 import DexcaliburProject from "../../../models/DexcaliburProject";
@@ -443,6 +443,8 @@ export class ProjectService extends DxcApiService {
 
           this.switchTo(vProject).subscribe((vData:DexcaliburProject)=>{
               console.log('[PROJECT SVC] switched to project: ', vProject);
+
+              alert("Project switched, reditec"+'/home/'+vProject.uid)
               this._location.replaceState('/home/'+vProject.uid,'');
           })
 
@@ -567,7 +569,7 @@ export class ProjectService extends DxcApiService {
    * @param pRefreshAppMenu
    * @private
    */
-  private _beforeProjectReady( pEl:any, pRefreshAppMenu = true){
+   _beforeProjectReady( pEl:any, pRefreshAppMenu = true){
       if(DxcApiToken.exists("puid")){
           this.tagSvc.listTags().subscribe((vtags)=>{
               this.onProjectReady.next(pEl);
@@ -610,7 +612,6 @@ export class ProjectService extends DxcApiService {
         if(pEl.success) {
           DxcApiToken.remove("puid");
           DxcApiToken.create("puid",pProject.uid);
-
 
           this.getProjectInfo(pProject).subscribe((pEvent)=>{
             this._refreshDefaultDeviceFor(pEvent);
@@ -942,7 +943,7 @@ export class ProjectService extends DxcApiService {
  * To switch
  * @param pProject
  */
-  switchTo(pProject:DexcaliburProject):Observable<any> {
+  switchTo(pProject:DexcaliburProject, pSelect = true):Observable<any> {
 
       console.log("Switch to > ",pProject);
 
@@ -960,7 +961,11 @@ export class ProjectService extends DxcApiService {
         this._refreshDefaultDeviceFor(pProject);
         this.selected = pProject;
         // select remotely for the current user
-        return this.selectActiveProject(pProject);
+        if(pSelect){
+            return this.selectActiveProject(pProject);
+        }else{
+            return from([pProject]);
+        }
   }
 
   /**
@@ -971,7 +976,7 @@ export class ProjectService extends DxcApiService {
    * @method
    * @since 1.0.0
    */
-  private _refreshDefaultDeviceFor( pProject:DexcaliburProject):Device{
+   _refreshDefaultDeviceFor( pProject:DexcaliburProject):Device{
     if(typeof (pProject.device)==='string'){
       const devUID = pProject.device;
       this.devSvc.listDevices(DeviceCacheFlavor.CACHE_FIRST).subscribe( (vDevs:Device[]) => {

@@ -113,10 +113,22 @@ export class AssuranceModelInfoCardComponent extends DxcComponent implements OnI
    *
    * @param {number} pLength
    */
-  shortDescription(pLength:number):string {
+  shortDescription(pLength:number = -1):string {
     if(this.model.description==null){
       return "This assurance model has not description"
     }
+    return "";
+  }
+
+  author():string  {
+    return ""
+  }
+
+  version() {
+    return "";
+  }
+
+  implementor() {
     return "";
   }
 }

@@ -10,6 +10,8 @@ import {
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {Nullable} from "../../../base/Nullable";
+import {DeviceResolver} from "../../device/ctrl/device-resolver.service";
+import {ProjectResolver} from "../ctrl/project-resolver.service";
 
 let ctr = 0;
 
@@ -44,7 +46,8 @@ export interface TargetApp {
         }
       }
       
-    `]
+    `],
+    providers: [ProjectResolver]
 })
 export class ProjectCardComponent implements OnInit {
 

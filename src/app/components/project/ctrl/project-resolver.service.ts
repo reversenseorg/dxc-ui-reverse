@@ -17,19 +17,22 @@ export class ProjectResolver {
 
     resolve(pRoute: ActivatedRouteSnapshot, pState: RouterStateSnapshot): any {
 
+
         // intercept oute resolve
         this._prjSvc.getProject(pRoute.params.uid).subscribe((vProjState)=>{
 
             console.log("ProjectResolver > ",vProjState);
 
+
+
             if(vProjState.loaded && (vProjState.project!=null)){
 
-                DxcApiToken.remove("puid");
-                DxcApiToken.create("puid",vProjState.project.uid);
+                this._prjSvc._beforeProjectReady(vProjState.project,true);
 
                 this._prjSvc.switchTo(vProjState.project).subscribe(()=>{
                     console.log('[PROJECT SVC] switched to project: ', vProjState.project);
-                    (this._prjSvc as any)._location.replaceState('/home/'+pRoute.params.uid,'');
+                    //(this._prjSvc as any)._location.replaceState('/home/'+pRoute.params.uid,'');
+                    this._prjSvc._refreshDefaultDeviceFor(vProjState.project as DexcaliburProject);
                 });
             }
 

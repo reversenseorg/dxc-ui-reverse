@@ -113,7 +113,7 @@ import {SearchResultListComponent} from "./components/search/search-result-list/
 import {CodeEditorModule} from "./components/code-editor/code-editor.module";
 import {MenuComponent} from "./base/menu/menu.component";
 import {ModalSelectHookComponent} from "./components/hooks/modal-select-hook/modal-select-hook.component";
-import {CommonModule} from "@angular/common";
+import {APP_BASE_HREF, CommonModule} from "@angular/common";
 import {ExplorerTagComponent} from "./components/tag/explorer-tag/explorer-tag.component";
 import {TagBadgeComponent} from "./components/tag/tag-badge/tag-badge.component";
 import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-editor.component";
@@ -313,6 +313,7 @@ import {ViewportResolver} from "./base/ViewportResolver";
     OsApiProjectionListComponent
   ],
   imports: [
+    DxcBaseModule,
     AppRoutingModule,
     CommonModule,
     BrowserModule,
@@ -324,7 +325,6 @@ import {ViewportResolver} from "./base/ViewportResolver";
     CodeEditorModule,
     ReactiveFormsModule,
     NgTerminalModule,
-    DxcBaseModule,
     DxcClientModule,
 
     ProjectModule,
@@ -335,7 +335,12 @@ import {ViewportResolver} from "./base/ViewportResolver";
     ControllerService,
     SettingsService,
     DexcaliburServerService,
-    ViewportResolver
+    ViewportResolver,
+    /*{
+      provide: APP_BASE_HREF,
+      deps: [],
+      useFactory: () => window.location.pathname
+    }*/
     //NgbTooltipConfig
   ],
   exports: [

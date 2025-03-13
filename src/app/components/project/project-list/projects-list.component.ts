@@ -14,6 +14,8 @@ import {Nullable} from "../../../base/Nullable";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import {IconModel} from "../../../base/icon/IconModel";
+import {DeviceResolver} from "../../device/ctrl/device-resolver.service";
+import {ProjectResolver} from "../ctrl/project-resolver.service";
 
 let ctr = 0;
 
@@ -51,6 +53,7 @@ export interface TargetApp {
         cursor: pointer;
       }
     `],
+    providers: [ProjectResolver],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectsListComponent implements OnInit {
@@ -137,6 +140,7 @@ export class ProjectsListComponent implements OnInit {
 
     openProject(pProject:DexcaliburProject) {
         if(pProject.ready){
+            alert("Project ready, reditec")
             window.open(location.protocol+"//"+location.hostname+":"+location.port+"/pro/#/home/"+pProject.uid, "_blank");
         }else{
             if(pProject.meta.hasOwnProperty('openning') && pProject.meta.openning!=1){
