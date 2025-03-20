@@ -23,8 +23,7 @@ import {
   MerlinSearchRequest,
   Operation,
   OperationDefinition,
-  OperationRequirementType,
-  OperationType,
+  OperationRequirementType, OperationType,
   SupportedOperations
 } from "../../../models/search/MerlinSearchRequest";
 import {OutputMessage} from "../../../cmp/OutputMessage";
@@ -255,6 +254,46 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
     console.log(this.buildingRequest);
   }
 
+
+
+  /**
+   * To append a new operation
+   */
+  private _buildCurrentOperation():Nullable<Operation> {
+    let ope:Operation;
+    let req:MerlinSearchRequest;
+
+    if(this.newOpe==null || this.newNode==null){
+      return null;
+    }
+
+    req = new MerlinSearchRequest(this.newNode.type, []);
+
+    // get
+    switch ((this.newOpe).type){
+      case OperationType.SEARCH:
+        req.search(this.pattern, this.options);
+        break;
+      case OperationType.FILTER:
+        req.filter(this.pattern);
+        break;
+      case OperationType.UNION:
+        //this.buildingRequest.union(this.pattern);
+        break;
+      case OperationType.JOIN:
+        //this.buildingRequest.union(this.pattern);
+        break;
+        /*case OperationType.TIME:
+          this.buildingRequest.before(this.pattern);
+          break;*/
+      case OperationType.SELECT:
+        req.select(this.pattern);
+        break;
+    }
+
+    return req.getLatestOperation()
+  }
+
   resetNewOperation(){
 
     this.newOpe = null;
@@ -273,6 +312,8 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
   private _getCurrentOperations():Operation[] {
     const opes:Operation[] = []
 
+    const last = this._buildCurrentOperation()
+    if(last!=null) opes.push(last);
 
     return opes;
   }
@@ -296,7 +337,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
       )
     }
 
-    this.auditSvc.runRule(null,{ request: "" }).subscribe((res)=>{
+    this.auditSvc.runRule(null,oneRule).subscribe((res)=>{
       console.log("Execute MERLIN Request",res);
 
       //this.idle = true;
@@ -344,7 +385,8 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
         ||(this.newOpe?.req==OperationRequirementType.PATTERN);
   }
 
-  getOperationString(pOpe: Operation) {
-
+  getOperationString(pReq: any) {
+    // MerlinSearchRequest
+    return pReq.toSearchString();
   }
 }

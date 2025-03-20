@@ -21,6 +21,7 @@ import {ProjectService} from "../../project/ctrl/project.service";
 import {ScanOrder} from "../../../models/ScanOrder";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {OrganizationUnitUUID} from "../../../models/orgs/OrganizationUnit";
+import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
 
 export enum CheckEventState {
   NEW= 'new',
@@ -358,7 +359,14 @@ export class AuditService extends DxcApiService{
       results: []
     });
 
-    return this._searchSvc.executeRaw(pRule.request.__stringified.substring(1)).pipe(map((pRes:any)=>{
+    let req:string;
+    if(pRule.request.__stringified==null){
+      req = pRule.request.__stringified = (pRule.request as MerlinSearchRequest).toSearchString();
+    }else{
+      req = pRule.request.__stringified.substring(1);
+    }
+
+    return this._searchSvc.executeRaw(req).pipe(map((pRes:any)=>{
       let checkEvt:CheckResult;
       if(pRes.success){
         checkEvt = {

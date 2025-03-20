@@ -962,7 +962,7 @@ export class ProjectService extends DxcApiService {
         this.selected = pProject;
         // select remotely for the current user
         if(pSelect){
-            return this.selectActiveProject(pProject);
+            return from([pProject]); //this.selectActiveProject(pProject);
         }else{
             return from([pProject]);
         }

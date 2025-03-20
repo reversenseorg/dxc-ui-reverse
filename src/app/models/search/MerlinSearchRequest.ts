@@ -621,14 +621,14 @@ export class MerlinSearchRequest {
     }
 
 
-    if((typeof this._type)==="string"){
+    /*if((typeof this._type)==="string"){
       s += "."+this._type;
     }else{
-      s += "."+MerlinSearchAPI.getMethodFromNodeType((this._type as any).getType());
-    }
+      s += "."+MerlinSearchAPI.getMethodFromNodeType( (typeof this._type==="number")? this._type : (this._type as any).getType());
+    }*/
 
 
-    return s+MerlinSearchRequest.stringify(this.getOperations());
+    return s+MerlinSearchRequest.stringify(this.getOperations(),this._type);
   }
 
   static load(){
