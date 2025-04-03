@@ -47,6 +47,9 @@ export class AuthService extends DxcApiService{
           check: { method: 'GET', url:'/remote/check', format:'json'},
           logout: { method: 'GET', url:'/remote/logout', format:'json', auth:false /* removed */},
         },
+        ws: {
+          ticket: { method: 'POST', url:'/user/account/wsticket', format:'json'},
+        },
         connections: {
           list: { method: 'GET', url:'/remote/connections', format:'json', auth:false}
         },
@@ -123,8 +126,8 @@ export class AuthService extends DxcApiService{
       if(pEl.success){
         const data = pEl.data;
         info.user = new UserAccount({
-          username:data.username,
-          uid:data.uid
+          _username:data.username,
+          _uid:data.uid
         });
         info.user.setUserRole( new UserRole(data.role.uid, data.role.name));
         info.restored = true;
@@ -147,8 +150,8 @@ export class AuthService extends DxcApiService{
       if(pEl.success){
         const data = pEl.data;
         const u:UserAccount = new UserAccount({
-          username:data.username,
-          uid:data.uid
+          _username:data.username,
+          _uid:data.uid
         });
         //u.setUserRole( new UserRole(data.role.uid, data.role.name));
         return u;
@@ -318,6 +321,29 @@ export class AuthService extends DxcApiService{
           src: "Authentication",
           msg: pEl.msg
         }));
+      }
+    }));
+  }
+
+  /**
+   * To generate a new ws
+   */
+  getWsAuthTicket():Observable<Nullable<string>> {
+    return this._process(
+        this.endpoints['ws']['ticket']
+    ).pipe( map((pEl:any)=>{
+      if(pEl.success){
+        this.outputSvc.print(OutputMessage.newSuccess({
+          src: "Authentication",
+          msg: "Generate WS authentication ticket"
+        }));
+        return pEl.data;
+      }else{
+        this.outputSvc.print(OutputMessage.newError({
+          src: "Authentication",
+          msg: "Cannot etablish websocket connection"
+        }));
+        return null;
       }
     }));
   }

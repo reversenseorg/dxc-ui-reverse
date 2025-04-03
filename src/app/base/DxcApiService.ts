@@ -180,6 +180,10 @@ export class DxcApiService {
       case "GET":
         url += `${url.indexOf('?')>-1? '&':'?'}_t=${Date.now()}`;
         for(const i in pOptions){
+
+          if(i==null || pOptions==null){
+            console.log("delegateProcess GET ERROR : ",i,pEndpoint,pOptions);
+          }
           if(i[0]!=':')
             url += `&${i}=${pOptions[i]}`;
           else
@@ -233,7 +237,14 @@ export class DxcApiService {
 
         if(!pHttpOptions.reportProgress){
           body = { _t: Date.now() };
+
           for(const i in pOptions){
+
+
+            if(i==null || pOptions==null){
+              console.log("delegateProcess W BODY ERROR : ",i,pEndpoint,pOptions);
+            }
+
             if(i[0]!=':')
               body[i] = pOptions[i];
             else

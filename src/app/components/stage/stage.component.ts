@@ -44,6 +44,7 @@ import {UIException} from "../../base/error/UIException";
 import {ActivatedRoute} from "@angular/router";
 import {ViewportComponent} from "../../base/viewport/viewport.component";
 
+let iiii=0;
 
 // size restriction (percent)
 const MIN_LEFTP_W = 200; // px
@@ -215,6 +216,10 @@ export class StageComponent implements OnInit, AfterViewInit {
   progressTitle = "Progress";
   progressValue = 0;
 
+  private wsInit: boolean = false
+
+
+
   constructor(
     private elementRef: ElementRef,
     private ctrlService: ControllerService,
@@ -228,6 +233,12 @@ export class StageComponent implements OnInit, AfterViewInit {
     private _activatedRoute:ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector:ChangeDetectorRef) {
+
+    if(iiii>0){
+      return;
+    }
+
+    iiii++;
 
     // try to restore default conenction
    // this.authSvc.getConnectionStringFromURI();
@@ -265,18 +276,40 @@ export class StageComponent implements OnInit, AfterViewInit {
     });
 
 
+
     this.settingsService.listNetworkSettings().subscribe((vSettings)=>{
 
       if(vSettings==null) return;
 
       const connParam = DxcApiService.getAuthProfile();
       console.log(connParam);
-      if(connParam!=null){
-        // init websocket
-        const addr = ((connParam.ssl==true)?'wss':'ws')+'://'+connParam.ip+':'+vSettings.ws.value+'/';
-        this.ws = new WebsocketClient(addr,'term-protocol');
-        this.wsServer$.next(WebsocketEvent.newConnectionReady(this.ws));
+
+      if(this.wsInit==false){
+        this.wsInit = true;
+        this.authSvc.getWsAuthTicket().subscribe((vTok:Nullable<string>)=>{
+          if(connParam!=null){
+            // init websocket
+            const addr = ((connParam.ssl==true)?'wss':'ws')+'://'+connParam.ip+':'+vSettings.ws.value+'/';
+
+            /*if(vTok!=null){
+              this.ws.setAuthToken(vTok);
+            }*/
+
+            this.authSvc.getUserInfo().subscribe((vUser)=>{
+              if(vUser!=null){
+                //this.ws.setUserAccount(vUser);
+
+                console.log("getUserInfo",vUser);
+                this.ws = new WebsocketClient(addr,'term-protocol', vUser, vTok!=null ? vTok : "");
+                this.wsServer$.next(WebsocketEvent.newConnectionReady(this.ws));
+              }
+            });
+          }
+        });
       }
+
+
+
     })
 
 

@@ -59,6 +59,7 @@ export class SettingsService extends DxcApiService {
   listNetworkSettings():Observable<Nullable<WebServerSettings>> {
     return this._process( this.endpoints['global']['list'], {type:'web'})
       .pipe(map( pRes => {
+        console.log(pRes)
         if(!pRes.success){
           this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Settings"}));
           return null;

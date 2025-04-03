@@ -233,27 +233,6 @@ export default class DexcaliburProject
         return "";
     }
 
-    /**
-     * To detect if there is a project with the specified UID
-     *
-     * @param {String} pUID Project UID
-     * @returns {Boolean} TRUE if a project exists, else FALSE
-     * @method
-     */
-    static exists( pUID:string):boolean{
-        /*
-        // refresh
-          let proj = DexcaliburWorkspace.getInstance().listProjects();
-          let status = false;
-
-          proj.map((vProject)=>{
-              if(vProject === pUID)
-                  status = true;
-          });
-  */
-        return false;
-    }
-
 
     /**
      * To get the project UID

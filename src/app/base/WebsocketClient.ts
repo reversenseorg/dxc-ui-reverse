@@ -5,6 +5,7 @@ import {Nullable} from "./Nullable";
 import {UIException} from "./error/UIException";
 import {WebsocketClientException} from "./error/WebsocketClientException";
 import {IStringIndex} from "./IStringIndex";
+import {UserAccount, UserAccountUUID} from "../models/user/UserAccount";
 
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
@@ -27,6 +28,9 @@ export abstract class WebsocketChannel {
   group:Nullable<string> = null;
   data:string = '';
   ready:boolean = false;
+
+  token:string = "";
+  user:UserAccountUUID = "";
 
   in: Subject<any> = new Subject<any>();
   out: Subject<any> = new Subject<any>();
@@ -56,12 +60,22 @@ export abstract class WebsocketChannel {
    */
   send( pData:any ){
     pData.data.sessid = this.sessid;
-    this.sendRaw(pData);
+      this.sendRaw(pData);
   }
 
   sendRaw( pData:any ){
     pData.data.localid = this.localid;
+    pData.token = this.token;
+    pData.user = this.user;
     this.in.next(pData);
+  }
+
+  setToken(pTok:string):void {
+    this.token = pTok;
+  }
+
+  setUser(pUUID:UserAccountUUID):void {
+    this.user = pUUID;
   }
 
   getSessID():string {
@@ -103,9 +117,13 @@ export class WebsocketClient
   readonly host: string;
 
   ready:boolean = false;
+  token:string;
+  user:Nullable<UserAccount> = null;
 
-  constructor(pHost:string, pProtocol:string) {
+  constructor(pHost:string, pProtocol:string, pUser:Nullable<UserAccount> = null, pToken = "") {
 
+    this.user = pUser;
+    this.token = pToken;
     this.endpoints = null;
     this.host = pHost;
     this._client = new W3CWebSocket(pHost, pProtocol);
@@ -163,6 +181,15 @@ export class WebsocketClient
     // subscribe dispatcher
 
   }
+
+  setUserAccount(pUser:UserAccount):void {
+    this.user = pUser;
+  }
+
+  setAuthToken(pToken:string){
+    this.token = pToken;
+  }
+
 
   /**
    * To start ping<->pong with server to keep channel open
@@ -222,7 +249,6 @@ export class WebsocketClient
    * @param pChannel
    */
   registerChannel( pChannel:WebsocketChannel):void{
-    console.log("RegisterChannel", pChannel);
 
     pChannel.in.subscribe( (pData:any)=> {
       this._send.next(pData);
@@ -232,6 +258,14 @@ export class WebsocketClient
       pChannel.localid = this.generateLocalUUID('_');
     }
 
+    console.log("RegisterChannel BEFORE", this.token, this.user,(this.user as any).getUID() );
+
     this._channels[pChannel.localid] = pChannel;
+    this._channels[pChannel.localid].setToken(this.token);
+    if(this.user!=null){
+      this._channels[pChannel.localid].setUser((this.user as any).getUID());
+    }
+
+    console.log("RegisterChannel", pChannel, this);
   }
 }

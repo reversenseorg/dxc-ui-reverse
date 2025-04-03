@@ -364,6 +364,7 @@ export class HookSession {
       }
     };
     this.channel.localid = this.uid;
+   // this.channel.token =
   }
   /**
    * To set an observable where error messages will be pushed

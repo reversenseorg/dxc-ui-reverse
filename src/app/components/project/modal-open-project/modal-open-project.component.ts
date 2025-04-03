@@ -185,7 +185,7 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
   }
 
   refresh():void {
-    this.projSvc.listProjects().subscribe( (pEvent)=>{
+    this.projSvc.listProjects2().subscribe( (pEvent)=>{
       this.projects = pEvent;
       this.projectsCount = pEvent.length;
     });

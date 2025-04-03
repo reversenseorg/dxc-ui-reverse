@@ -194,7 +194,7 @@ export class ProjectService extends DxcApiService {
     super(
       {
         workspace: {
-          list: { method: 'GET', url:'/workspace/list', format:'json', auth:false /* removed */},
+          list: { method: 'GET', url:'/workspace/list', format:'json', auth:false /* removed */}, // DEPRECATED
           open: { method: 'GET', url:'/workspace/open', format:'json', auth:false /* removed */},
           status: { method: 'GET', url:'/status', format:'json'},
           new: { method: 'POST', url:'/workspace/new', format:'json', auth:false /* removed */},
@@ -486,6 +486,7 @@ export class ProjectService extends DxcApiService {
    *
    * @return {Observable<DexcaliburProject[]>} An array containing all projects
    * @method
+   * @deprecated
    */
   listProjects():Observable<DexcaliburProject[]>{
     return this._process(

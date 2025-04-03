@@ -140,6 +140,7 @@ import {ControlViewComponent} from "./components/audit/control-view/control-view
 import {AssessViewComponent} from "./components/audit/assessment-view/assess-view.component";
 import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
 import {ViewportResolver} from "./base/ViewportResolver";
+import {CodeModule} from "./components/code/code.module";
 
 
 // AoT requires an exported function for factories
@@ -328,7 +329,8 @@ import {ViewportResolver} from "./base/ViewportResolver";
     DxcClientModule,
 
     ProjectModule,
-    DeviceModule
+    DeviceModule,
+    CodeModule
     //ProjectManagementModule
   ],
   providers: [
