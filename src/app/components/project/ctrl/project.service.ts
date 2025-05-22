@@ -444,7 +444,6 @@ export class ProjectService extends DxcApiService {
           this.switchTo(vProject).subscribe((vData:DexcaliburProject)=>{
               console.log('[PROJECT SVC] switched to project: ', vProject);
 
-              alert("Project switched, reditec"+'/home/'+vProject.uid)
               this._location.replaceState('/home/'+vProject.uid,'');
           })
 
@@ -959,8 +958,12 @@ export class ProjectService extends DxcApiService {
         DxcApiToken.remove("puid");
         DxcApiToken.create("puid", pProject.uid)
 
+
+
         this._refreshDefaultDeviceFor(pProject);
         this.selected = pProject;
+        this._beforeProjectReady(pProject);
+
         // select remotely for the current user
         if(pSelect){
             return from([pProject]); //this.selectActiveProject(pProject);

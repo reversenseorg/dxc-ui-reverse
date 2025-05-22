@@ -155,5 +155,8 @@ $dark-scrollbar-bg: #555;
   --thumbBG: #{$dark-scrollbar-color};
   --scrollbarBG: #{$dark-scrollbar-bg};
 
-  --code-font: "JetBrains Mono"
+  --code-font: "JetBrains Mono";
+
+  --table-thead-bg: #{$dark-scrollbar-bg};
+  --table-thead-border: 1px solid #574b32;
 }

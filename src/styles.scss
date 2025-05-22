@@ -1091,8 +1091,18 @@ div.dxc-list {
 }
 
 .dxc-table {
-  th, td {
-    padding: 5px 0 5px 10px;
+
+  th > div {
+    background-color: var(--table-thead-bg);
+    border: var(--table-thead-border);
+  }
+
+  th > div, td  {
+    padding: 0 0 0 1em;
+  }
+
+  tr.focus > td {
+    background-color: #606e6e;
   }
 }
 
@@ -1154,4 +1164,28 @@ button:focus {
 
 .fill-height {
   height: 100%;
+}
+
+.w-full {
+  width: 100%
+}
+
+.h-full {
+  height: 100%;
+}
+
+.param-section {
+
+  padding-left: 1em;
+
+  & > h5.title {
+    font-size: 0.9em;
+    margin-top: 1em;
+    border-bottom: 1px dashed var(--nav-tabbg-hover);
+  }
+
+  & > .param {
+    font-size: 0.7em;
+  }
+
 }

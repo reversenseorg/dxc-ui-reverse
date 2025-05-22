@@ -20,6 +20,9 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {from, Observable} from "rxjs";
 import * as ace from "ace-builds";
 import {IconModel} from "../../../base/icon/IconModel";
+import {CodeSymbolTableComponent} from "./symbol-table.component";
+import DDVM_SymbolTable from "../../../models/vm/DDVM_SymbolTable";
+import {CodeEmuLoggerComponent} from "./emu-logs.component";
 
 let ctr = 0;
 
@@ -58,6 +61,7 @@ interface DDVM_Option {
      */
     v?:any,
     val?:any,
+    pos?:number,
     label?: string,
     arg?:any;
     children?: DDVM_Option[],
@@ -73,44 +77,56 @@ interface DDVM_Option {
 @Component({
     selector: 'dxc-code-emulator',
     template: `
-        <div #vm class="row view-outer g-0" (contextmenu)="openVmMenu($event)" [ngStyle]="{height:vmedHeight+'px'}">
+        <div #vm class="row view-outer g-0" (contextmenu)="openVmMenu($event)" [ngStyle]="{height: '100%' }">
             <div class="col-lg-8">
-                <ace-editor #vmEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+                <ace-editor #vmEditor theme="monokai" [ngStyle]="{'height':'100%'}" style="overflow: auto;z-index:0; height:100%"></ace-editor>
             </div>
             <div class="col-lg-4" style="overflow-y: scroll">
                 <app-subnavbar [type]="'navbar'" [inlineStyle]="{ 'background-color': '#333'}" [parent]="this">
                     <ng-container main>
-                        <app-subnavbar-btn [active]="true" [icon]="gIcons['INTERNAL']">&nbsp;Configuration</app-subnavbar-btn>
-                        <app-subnavbar-btn [icon]="gIcons['INTERNAL']">&nbsp;Options</app-subnavbar-btn>
+                        <app-subnavbar-btn [active]="optTab=='args'" [icon]="gIcons['INTERNAL']" (click)="optTab='args'">&nbsp;Arguments</app-subnavbar-btn>
+                        <app-subnavbar-btn [active]="optTab=='ctx'"[icon]="gIcons['INTERNAL']" (click)="optTab='ctx'">&nbsp;Options</app-subnavbar-btn>
                         <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="ddvmExec()">&nbsp;Run</app-subnavbar-btn>
                     </ng-container>
                 </app-subnavbar>
-
-                <div class="row g-0">
-                    
-                </div>
-                <app-expandable-list
-                        *ngIf="ddvmOpts">
-
-                    <ng-template #expCodeItem let-itemObj="item" >
-
-                <span *ngIf="itemObj._t=='c'" class="border-bottom-1 border-white">
-                  <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
-                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                    
-                  <span *ngIf="itemObj._c=='p' && node?.__==NodeInternalType.METHOD" class="badge rounded-pill  badge-sm ml-2" [ngClass]="{ 'text-bg-secondary':node.args.length==0, 'text-bg-success':node.args.length>0 }">{{ node.args.length }}</span>
-                </span>
-
-                        <span *ngIf="itemObj._t=='p'">
-                  <b class="dxc-text-clear100">{{ itemObj.label }}</b>
-                  <input [(ngModel)]="itemObj.sym" type="checkbox" class="dxc-fr dxc-frm-input ml-2 mr-1" />symbolic&nbsp;
-                  <input [(ngModel)]="itemObj.val" [class.dxc-hidden]="itemObj.sym" [disabled]="itemObj.sym" name="input" type="text" class="dxc-frm-input pl-1 ml-2"/>
-                </span>
-
-                        <div class="row g-0"  *ngIf="itemObj._t=='o'">
+                <div class="param-section w-full p-0">
+                    <ng-container *ngIf="optTab=='args'">
+                        <table class="w-full h-full dxc-text-std dxc-table">
+                            <thead>
+                                <th style="width: 10%">
+                                    <div class="w-full border-1 pl-2">#</div>
+                                </th>
+                                <th style="width: 40%">
+                                    <div class="w-full border-1 pl-2">Arg</div>
+                                </th>
+                                <th style="width: 50%">
+                                    <div class="w-full border-1 pl-2">Value</div></th>
+                            </thead>
+                            <tbody>
+                            <ng-container *ngIf="ddvmOpts.args.children!=null && ddvmOpts.args.children.length>0; else noArgs">
+                                <tr *ngFor="let itemObj of ddvmOpts.args.children">
+                                    <td class="text-center"><i class="dxc-text-clear100">{{ itemObj.pos }}</i></td>
+                                    <td><i class="dxc-text-clear100">{{ itemObj.label }}</i></td>
+                                    <td>
+                                        <input [(ngModel)]="itemObj.sym" type="checkbox" class="dxc-fr dxc-frm-input ml-2 mr-1" /><i>Symbolic</i>
+                                        <input [(ngModel)]="itemObj.val" [class.dxc-hidden]="itemObj.sym" [disabled]="itemObj.sym==true" name="input" type="text" class="dxc-frm-input pl-1 ml-2"/>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noArgs>
+                                <tr>
+                                    <td colspan="2" class="text-center p-2">This function has not arguments</td>
+                                </tr>
+                            </ng-template>
+                            </tbody>
+                        </table>
+                    </ng-container>
+                    <ng-container *ngIf="optTab=='ctx'">
+                        <h5 class="title m-1">{{ ddvmOpts.context.label }}</h5>
+                        <div class="row param m-1" *ngFor="let itemObj of ddvmOpts.context.children">
                             <ng-container *ngIf="itemObj.ft=='c'; else noCheckbox">
                                 <div class="col-2" >
-                                    <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
+                                    <dxc-icon  *ngIf="itemObj._i" [model]="itemObj._i"></dxc-icon>
                                     <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
                                 </div>
                                 <div class="col-10">
@@ -126,46 +142,15 @@ interface DDVM_Option {
                                     <input *ngIf="itemObj.ft=='i'" [(ngModel)]="itemObj.v" type="text" class="dxc-frm-input"/>
                                 </div>
                             </ng-template>
-                        </div>
-                        <!--
-                        <span *ngIf="itemObj._t=='o'">
-                            
-                  <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
-                  <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
-                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                  <ng-container *ngIf="itemObj.ft!='c'">
-                    <br>
-                    <span class="pl-2">
-                    <input *ngIf="itemObj.ft=='n'" [(ngModel)]="itemObj.v" type="number" class="dxc-frm-input"/>
-                    <input *ngIf="itemObj.ft=='i'" [(ngModel)]="itemObj.v" type="text" class="dxc-frm-input"/>
-                  </span>
-                  </ng-container>
-
-                </span>-->
-
-                        <span *ngIf="itemObj._t=='e'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
-                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                </span>
-
-                    </ng-template>
-
-                    <ng-container *ngFor="let dev of ddvmOpts | keyvalue">
-
-
-                        <app-expandable-item
-                                [itemTpl]="expCodeItem"
-                                [item]="dev.value"
-                                [provider]="this"
-                                [itemType]="dev.value._t"
-                                [expandableFn]="ddvmItemHasChildren"
-                                (itemFocus)="ddvmOnItemFocus($event)"
-                        >
-
-                        </app-expandable-item>
+                            </div>
                     </ng-container>
-                </app-expandable-list>
-
+                </div>
+                <!--<span *ngIf="itemObj._t=='c'" class="border-bottom-1 border-white">
+                  <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
+                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
+                    
+                  <span *ngIf="itemObj._c=='p' && node?.__==NodeInternalType.METHOD" class="badge rounded-pill  badge-sm ml-2" [ngClass]="{ 'text-bg-secondary':node.args.length==0, 'text-bg-success':node.args.length>0 }">{{ node.args.length }}</span>
+                </span>-->
             </div>
         </div>
     `,
@@ -186,6 +171,7 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
     @Input() parentLayout:any = null;
 
 
+    optTab = 'args'
 
     vmedHeight: number = 200;
 
@@ -195,6 +181,8 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
         tags: [],
         error: null
     };
+
+    sym:DDVM_SymbolTable;
 
     /*
         loadClassFirst:boolean =  false;
@@ -261,6 +249,9 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
 
     private _vmLog:any[] = [];
 
+    private _symTabs:CodeSymbolTableComponent[] = [];
+    private _loggers:CodeEmuLoggerComponent[] = [];
+
     constructor(
         private _outputSvc: OutputService,
         private codeSvc: CodeControllerService,
@@ -287,9 +278,9 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
 
         this.vmedHeight = this.height; //this.height; //vSizes.bottom.height-this.topNavEl.nativeElement.offsetHeight;
 
-        vmEditor.container.style.height = this.vmedHeight+'px';
+        //vmEditor.container.style.height = this.vmedHeight+'px';
         vmEditor.container.style.minHeight = this.vmedHeight+'px';
-        vmEditor.container.style.maxHeight = this.vmedHeight+'px';
+        //vmEditor.container.style.maxHeight = this.vmedHeight+'px';
 
         this.vmEditor.mode = 'javascript';
         this.vmEditor.value = "Ready for emulation";
@@ -370,19 +361,14 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
                         console.log(vArg,this.ddvmOpts.args);
                         this.ddvmOpts.args?.children?.push({
                             _t: 'p',
-                            label: 'Arg_'+vOffset,
+                            label: vArg.name,
+                            pos: vOffset,
                             arg: vArg,
                             val: '',
                             ft: 'i',
                             sym: true
                         });
                     })
-                }else{
-                    this.ddvmOpts.args.children.push({
-                        _t: 'e',
-                        _i: GLOBAL_ICONS['WARNING'],
-                        label: 'This methods has not parameters'
-                    });
                 }
             }
         }
@@ -396,24 +382,33 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
             this.vm = vRes;
             this._vmLog = [];
 
-            if(vRes.instr.length>0){
-                if(vRes.instr[0].indexOf('// An ')==0){
-                    (this.node as any).__vm_code = vRes.instr[0]+" See VM logs."
-                    this._vmLog.push({
-                        t:"e", v:vRes.instr[1]
-                    });
-                }else{
-                    (this.node as any).__vm_code = vRes.instr.join(`
- `);
+            if(vRes.success){
+                if(vRes.data.instr.length>0){
+                    if(vRes.data.instr[0].indexOf('// An ')==0){
+                        (this.node as any).__vm_code = vRes.data.instr[0]+" See VM logs."
+                        this._vmLog.push({
+                            t:"e", v:vRes.data.instr[1]
+                        });
+                    }else{
+                        (this.node as any).__vm_code = vRes.data.instr.join(`\n`);
+                        this._vmLog.push({
+                            t:"i", v:"Execution done successfully"
+                        });
+                    }
                 }
+
+                if(vRes.data.events.length>0){
+                    this._vmLog = this._vmLog.concat(vRes.data.events);
+                    this.refreshLogs();
+                }
+
+                //this.showDxcVM();
+                //this.vmLogs.emit(this._vmLog);
+            }else{
+                this._vmLog = [{ t:"e", v:"DDVM crashed" }];
+                this.refreshLogs();
             }
 
-            if(vRes.events.length>0){
-                this._vmLog = this._vmLog.concat(vRes.events);
-            }
-
-            this.showDxcVM();
-            this.vmLogs.emit(this._vmLog);
         });
     }
 
@@ -448,4 +443,31 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
     }
 
     protected readonly NodeInternalType = NodeInternalType;
+
+    addSymbolTableView( pSymtabCmp:CodeSymbolTableComponent):void {
+        this._symTabs.push(pSymtabCmp);
+    }
+
+    addLogOutput(pLoggerCmp:CodeEmuLoggerComponent):void {
+        this._loggers.push(pLoggerCmp);
+    }
+
+    nextStep() {
+        this._symTabs.map(s => {
+            s.update(this.sym);
+        })
+    }
+
+    refreshLogs():void {
+        this._loggers.map( vLogger => {
+            vLogger.update(this._vmLog);
+        })
+    }
+
+    resume(){
+
+    }
+
+
+
 }

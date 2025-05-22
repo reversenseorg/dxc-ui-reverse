@@ -50,6 +50,8 @@ import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {TaintPurpose} from "../ctrl/common";
+import {TaintCase, TaintCaseOpts} from "../../../models/analyzer/TaintCase";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -898,5 +900,15 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   doSmartRename(pSubject: any) {
     
+  }
+
+  /**
+   * To add
+   *
+   * @param subject
+   * @param param2
+   */
+  taint(pSubject: any, pStep: string) {
+
   }
 }

@@ -26,6 +26,9 @@ import {AbstractHook} from "../../../models/AbstractHook";
 import {Tag} from "../../../models/tags/Tag";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {Nullable} from "../../../base/Nullable";
+import {CodeSymbolTableComponent} from "../emulator/symbol-table.component";
+import {CodeEmulatorComponent} from "../emulator/emulator.component";
+import {CodeEmuLoggerComponent} from "../emulator/emu-logs.component";
 
 
 
@@ -46,6 +49,11 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   @Input() width: number;
   @ViewChild('codeEditor') codeEditor:any;
   //@ViewChild('vmEditor') vmEditor:any;
+
+  @ViewChild(CodeSymbolTableComponent) symbolTableCmp!:Nullable<CodeSymbolTableComponent>;
+  @ViewChild(CodeEmulatorComponent) emuCmp!:Nullable<CodeEmulatorComponent>;
+  @ViewChild(CodeEmuLoggerComponent) emuLogsCmp!:Nullable<CodeEmuLoggerComponent>;
+
 
   @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
   @ViewChild('editor',{ read:ElementRef, static:false}) editorEl:ElementRef;
@@ -321,6 +329,10 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
     this.vmLog = pRes;
   }
 
+  showVmSym( pRes:any = null):void{
+    this.activeBottom = 'sym';
+  }
+
   removeNOP() {
 
   }
@@ -455,8 +467,23 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       }
     }
 
+    if(this.emuCmp!=null){
+      if(this.symbolTableCmp!=null){
+        this.emuCmp.addSymbolTableView(this.symbolTableCmp);
+      }
+
+      if(this.emuLogsCmp!=null){
+        this.emuCmp.addLogOutput(this.emuLogsCmp);
+      }
+
+    }
+
+
+
+    //this.symbolTable
 
     this.activeTop = 'vm';
+    this.activeBottom = 'vml';
   }
 
   openVmMenu($event: MouseEvent) {

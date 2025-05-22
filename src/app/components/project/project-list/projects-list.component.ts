@@ -31,7 +31,75 @@ export interface TargetApp {
 
 @Component({
     selector: 'dxs-projects-list',
-    templateUrl: './projects-list.component.html',
+    // templateUrl: './projects-list.component.html',
+    template: `
+        <div>
+            <h5 *ngIf="title">{{ title }}</h5>
+            <div *ngIf="description!=null">
+                <p>{{ description }}</p>
+            </div>
+            
+            <app-subnavbar  [type]="'navbar'"  [opts]="true" [parent]="this">
+                <ng-container options>
+                    <!--app-subnavbar-btn  (click)="showModel()">Details</app-subnavbar-btn>-->
+                    <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refreshProjects()"></app-subnavbar-btn>
+                    <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
+                    <app-subnavbar-btn  [icon]="gIcons['PLUS']" (click)="newProject()"></app-subnavbar-btn>
+                    <app-subnavbar-btn  [disable]="selected==null" [icon]="removeIcon" (click)="deleteProject(selected)"></app-subnavbar-btn>
+                </ng-container>
+            </app-subnavbar>
+
+
+            <div class="h-full w-full"  [ngStyle]="{'height':height+'px', 'border-bottom':'none'}" style="overflow-y: auto">
+                <table class="w-full dxc-table" >
+                    <thead>
+                    <th style="width:6%"><div class="dxc-text-std">OS</div></th>
+                    <th style="width:55%"><div class="dxc-text-std">Name</div></th>
+                    <th style="width:15%"><div class="dxc-text-std">Version</div></th>
+                    <th style="width:12%"><div class="dxc-text-std">Open</div></th>
+                    <th style="width:12%"><div class="dxc-text-std">Created</div></th>
+                    </thead>
+                    <tbody style="background: #333">
+                    <ng-container *ngIf="projectList.length>0; else noProj">
+                        <tr *ngFor="let project of window; let index = index" [ngClass]="{'focus':(project.uid==selected?.uid)}" (dblclick)="dblclickProject(project)" (click)="selectProject(project, 'click')">
+                            <td class="text-center">
+                                <ng-container [ngSwitch]="project.os">
+                                    <dxc-icon *ngSwitchCase="'fireos'" [model]="gIcons['FIREOS']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'android'" [model]="gIcons['ANDROID']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'linux'" [model]="gIcons['LINUX']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'android2'" [model]="gIcons['ANDROID']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'ios'" [model]="gIcons['IOS']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'macos'" [model]="gIcons['IOS']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'tizen'" [model]="gIcons['ANDROID']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'webos'" [model]="gIcons['ANDROID']"></dxc-icon>
+                                    <dxc-icon *ngSwitchCase="'window'" [model]="gIcons['ANDROID']"></dxc-icon>
+                                </ng-container>
+                            </td>
+                            <td>{{ project.pkg }}</td>
+                            <td>{{ project.meta.versionName }}</td>
+                            <td>{{ project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{ project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <!--<div class="col-lg-2">
+                                <dxc-meta [label]="project.archs[0]"> </dxc-meta>
+                            </div>-->
+                        </tr>
+                    </ng-container>
+                    <ng-template #noProj>
+                        <tr>
+                            <td colspan="5" class="dxc-text-std text-center">Loading projects ...</td>
+                        </tr>
+                    </ng-template>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div *ngIf="pagignation" class="dxc-navbar">
+                <div class="col-lg-6 offset-6">
+                    <dxc-paginator [rows]="rows"  [totalRecords]="projectList.length" (onPageChange)="onPageChange($event)"></dxc-paginator>
+                </div>
+            </div>
+        </div>
+    `,
     styles:[`
       .dxc-grid-body div.row {
         &:hover {
@@ -140,7 +208,6 @@ export class ProjectsListComponent implements OnInit {
 
     openProject(pProject:DexcaliburProject) {
         if(pProject.ready){
-            alert("Project ready, reditec")
             window.open(location.protocol+"//"+location.hostname+":"+location.port+"/pro/#/home/"+pProject.uid, "_blank");
         }else{
             if(pProject.meta.hasOwnProperty('openning') && pProject.meta.openning!=1){

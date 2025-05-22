@@ -785,8 +785,8 @@ export class CodeControllerService extends DxcApiService{
         this.outputSvc.print(OutputMessage.newSuccess({ msg:"Method ["+vRes+"] has been successfully emulated and simplified", src:"Bytecode Analyzer" }));
 
 
-        return vRes.data;
        }
+       return vRes;
     }))
   }
 

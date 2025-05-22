@@ -43,6 +43,8 @@ import {Nullable} from "../../base/Nullable";
 import {UIException} from "../../base/error/UIException";
 import {ActivatedRoute} from "@angular/router";
 import {ViewportComponent} from "../../base/viewport/viewport.component";
+import {NodeInternalType} from "../../models/NodeInternalType";
+import ModelMethod from "../../models/ModelMethod";
 
 let iiii=0;
 
@@ -267,7 +269,7 @@ export class StageComponent implements OnInit, AfterViewInit {
         if (puid != null) {
           this.authSvc.onLogin$.next({
             project: puid,
-            node_id: c.node_id,
+            node_uid: decodeURI(btoa(c.node_uid)),
             node: c.node
           })
         }else{
@@ -516,6 +518,24 @@ export class StageComponent implements OnInit, AfterViewInit {
         };
 
         this.initStatusChannel();
+
+
+        if(pEvent.extra!=null && pEvent.extra.node!=null){
+          let node:Nullable<any> = null;
+          switch(pEvent.extra.node){
+            case NodeInternalType.METHOD:
+              node = new ModelMethod({
+                __signature__: pEvent.extra.node_uid
+              });
+              break;
+          }
+
+          if(node!=null){
+            this.getController('ctrl:code-main').showItem(node,'code');
+          }
+
+        }
+
 
 
       }

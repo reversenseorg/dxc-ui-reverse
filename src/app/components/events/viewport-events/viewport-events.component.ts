@@ -10,18 +10,28 @@ import {RuntimeEventController} from "../ctrl/RuntimeEventController";
 import {RuntimeEventType} from "../../../models/hook/RuntimeEvent";
 import {RTEVENT_ICONS} from "../icons";
 import {IconModelCollection} from "../../../base/icon/IconModel";
+import {IDxRefreshable} from "../../../base/common/common";
+import HookSession from "../../../models/hook/HookSession";
+import {Nullable} from "../../../base/Nullable";
 
 @Component({
   selector: 'app-viewport-events',
-  templateUrl: './viewport-events.component.html',
-  styleUrls: ['./viewport-events.component.scss']
+  template: `
+    <div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-hook">
+
+    </div>
+  `,
+  styles: [`
+    
+  `]
+  //styleUrls: ['./viewport-events.component.scss']
 })
-export class ViewportEventsComponent implements OnInit, IViewportContainer {
+export class ViewportEventsComponent implements OnInit, IViewportContainer, IDxRefreshable {
 
 
   @Input() controller: RuntimeEventController;
   @Input() parent: ViewportComponent;
-  //@ContentChildren(ViewportInspectorClassComponent) classCmp: QueryList<ViewportCodeClassComponent>;
+  @Input() session: Nullable<HookSession> = null
 
 
   NODE_TYPES = NodeInternalType;
@@ -81,6 +91,10 @@ export class ViewportEventsComponent implements OnInit, IViewportContainer {
         this.view.tab.color = 'dxc-text-clear100';
         break;
     }
+  }
+
+  dxRefresh(){
+
   }
 
   /**

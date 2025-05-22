@@ -129,79 +129,9 @@
         </div>
       </div>
 
-      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
-              <dxc-code-emulator [parentLayout]="layout" [node]="data" (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
-
-        <!--<div #vm class="row view-outer g-0"(contextmenu)="openVmMenu($event)">
-          <div class="col-lg-8">
-            <ace-editor #vmEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
-          </div>
-          <div class="col-lg-4" style="overflow-y: scroll">
-            <app-subnavbar [type]="'navbar'" [inlineStyle]="{ 'background-color': '#333'}" [parent]="this">
-              <ng-container main>
-                <app-subnavbar-btn [active]="true" [icon]="gIcons['INTERNAL']">&nbsp;Configuration</app-subnavbar-btn>
-                <app-subnavbar-btn [icon]="gIcons['PLAY']" (click)="ddvmExec()">&nbsp;Run</app-subnavbar-btn>
-              </ng-container>
-            </app-subnavbar>
-
-            <app-expandable-list
-              *ngIf="ddvmOpts">
-
-              <ng-template #expCodeItem let-itemObj="item" >
-
-                <span *ngIf="itemObj._t=='c'" class="border-bottom-1 border-white">
-                  <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
-                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                  <span *ngIf="itemObj._c=='p'" class="badge rounded-pill  badge-sm ml-2" [ngClass]="{ 'text-bg-secondary':data.args.length==0, 'text-bg-success':data.args.length>0 }">{{ data.args.length }}</span>
-                </span>
-
-                <span *ngIf="itemObj._t=='p'">
-                  <b class="dxc-text-clear100">{{ itemObj.label }}</b>
-                  <input [(ngModel)]="itemObj.sym" type="checkbox" class="dxc-fr dxc-frm-input ml-2 mr-1" />symbolic&nbsp;
-                  <input [(ngModel)]="itemObj.val" [class.dxc-hidden]="itemObj.sym" [disabled]="itemObj.sym" name="input" type="text" class="dxc-frm-input pl-1 ml-2"/>
-                </span>
-
-                <span *ngIf="itemObj._t=='o'">
-                  <dxc-icon  *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
-                  <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
-                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                  <ng-container *ngIf="itemObj.ft!='c'">
-                    <br>
-                    <span class="pl-2">
-                    <input *ngIf="itemObj.ft=='n'" [(ngModel)]="itemObj.v" type="number" class="dxc-frm-input"/>
-                    <input *ngIf="itemObj.ft=='i'" [(ngModel)]="itemObj.v" type="text" class="dxc-frm-input"/>
-                  </span>
-                  </ng-container>
-
-                </span>
-
-                <span *ngIf="itemObj._t=='e'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._i"></dxc-icon>
-                  <span class="dxc-text-clear100">{{ itemObj.label }}</span>
-                </span>
-
-              </ng-template>
-
-              <ng-container *ngFor="let dev of ddvmOpts">
-
-
-                <app-expandable-item
-                  [itemTpl]="expCodeItem"
-                  [item]="dev"
-                  [provider]="this"
-                  [itemType]="dev._t"
-                  [expandableFn]="ddvmItemHasChildren"
-                  (itemFocus)="ddvmOnItemFocus($event)"
-                >
-
-                </app-expandable-item>
-              </ng-container>
-            </app-expandable-list>
-
-          </div>
-        </div>-->
+      <div class="container-fluid view-outer" [ngStyle]="{'height':'100%'}" [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
+          <dxc-code-emulator [parentLayout]="layout" [node]="data" (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
       </div>
-
     </ng-container>
 
 
@@ -213,7 +143,8 @@
           <app-subnavbar-btn *ngIf="hooksMsg!=null && hooksMsg.length>0" [active]="activeBottom=='hm'" [icon]="gIcons['LIST']" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeBottom=='xt'" [icon]="icons['XREF']"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeBottom=='xf'" [icon]="icons['XREF']"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeBottom=='vml'" (click)="showVmLogs()">Dxc VM Logs</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="activeTop=='vm'" [active]="activeBottom=='vml'" (click)="showVmLogs()">DDVM Logs</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="activeTop=='vm'" [active]="activeBottom=='sym'" (click)="showVmSym()">DDVM Local Symbols</app-subnavbar-btn>
         </ng-container>
         <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
           <ng-container *ngFor="let act of data.frontController.actions">
@@ -228,8 +159,8 @@
           <dxc-xref-list [header]="false" [xrefto]="true" [node]="data"></dxc-xref-list>
       </div>
 
-      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='vm')">
-
+      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='sym')">
+          <dxc-code-symbol-table></dxc-code-symbol-table>
       </div>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xf')">
@@ -318,30 +249,10 @@
 
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='vml')">
-
-        <ng-container *ngIf="vm!=null; else noVM">
-          <div class="row dxc-grid-header">
-            <div class="col-lg-12">Event</div>
-          </div>
-          <ng-container *ngFor="let hk of vmLog">
-            <div class="row dxc-grid-body dxc-no-hover">
-              <div class="col-lg-10 m-2">
-                <ng-container *ngIf="hk.t=='e'">
-                  <b class="text-danger">VM Exception</b>
-                </ng-container>
-                <pre class="dxc-text-clear75">{{ hk.v }}</pre>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-        <ng-template #noVM>
-          <div class="row"><div class="col-lg-12 text-center">
-            <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
-            This method has not been emulated into Dexcalibur VM.
-          </div></div>
-        </ng-template>
-
+        <dxc-code-emu-log></dxc-code-emu-log>
       </div>
+
+
 
     </ng-container>
 

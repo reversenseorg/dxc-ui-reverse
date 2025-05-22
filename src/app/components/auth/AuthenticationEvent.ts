@@ -88,4 +88,8 @@ export class AuthenticationEvent {
     return this.conn.name;
   }
 
+  appendExtra(pExtra:any):AuthenticationEvent {
+    this.extra = pExtra;
+    return this;
+  }
 }

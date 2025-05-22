@@ -202,6 +202,7 @@
   <app-context-item [separator]="true" [label]="'Trace value'" (itemclick)="trackValueOf(ctxMenuState.subject, { type:PRESET_HOOK.TRACK_PARAM })"></app-context-item>
   <app-context-item [label]="'Tamper value'" (itemclick)="trackValueOf(ctxMenuState.subject.name, { type:PRESET_HOOK.TAMPER_PARAM })"></app-context-item>
   <app-context-item [icon]="gIcons['GEN_HOOK']" [label]="'More hook ...'" (itemclick)="createHook(ctxMenuState.subject.name, {type:'param' })"></app-context-item>
+  <app-context-item [separator]="true" [label]="'Taint : use as source'" (itemclick)="taint(ctxMenuState.subject, 'source')"></app-context-item>
   <app-context-item [separator]="true" [label]="'Copy class name'" (itemclick)="copyAttr(ctxMenuState.subject, 'simpleName')"></app-context-item>
   <app-context-item [label]="'Copy FQCN'" (itemclick)="copyAttr(ctxMenuState.subject, 'name')"></app-context-item>
   <app-context-item [label]="'Copy package name'" (itemclick)="copyAttr(ctxMenuState.subject.package.name)"></app-context-item>

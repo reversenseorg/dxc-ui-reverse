@@ -20,7 +20,10 @@ import {IsAuthenticatedGuard} from "./IsAuthenticateGuard";
                   loadChildren: () => import('./components/device/device.module').then(m => m.DeviceModule) },
               {
                   path: 'home/:id',
-                  component: StageComponent
+                  component: StageComponent,
+                  data: {
+                      code: false
+                  }
               },/*{
                   path: 'project/:puid/device/:duid',
                   component: StageComponent
@@ -29,7 +32,10 @@ import {IsAuthenticatedGuard} from "./IsAuthenticateGuard";
                   component: StageComponent
               },{
                   path: 'home/:id/code/:node/:node_uid',
-                  component: StageComponent
+                  component: StageComponent,
+                  data: {
+                      code: true
+                  }
               }/*,{
                   path: '**',
                   redirectTo: '/home/-'

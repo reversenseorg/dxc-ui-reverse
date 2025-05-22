@@ -94,7 +94,19 @@ export class AuthService extends DxcApiService{
         if(pInfo!=null){
           // authentication is ok
           console.log("[AUTH SERVICE] Authentication done.");
-          this.onAuthentication.next(AuthenticationEvent.newSuccess(new DxcApiToken("local",""), pInfo));
+          const success = AuthenticationEvent.newSuccess(new DxcApiToken("local",""), pInfo);
+
+
+          if(vEvent.node!=null && vEvent.node_uid!=null){
+            // navigate to /code/:node/node_uid
+            success.appendExtra({
+              node: vEvent.node,
+              node_uid: vEvent.node_uid
+            });
+          }
+
+          this.onAuthentication.next(success);
+
         }else{
           location.href = "https://www.reversense.com";
         }

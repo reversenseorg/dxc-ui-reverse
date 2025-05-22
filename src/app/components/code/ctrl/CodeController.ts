@@ -241,6 +241,15 @@ export class CodeController extends UiController implements IController {
       case NodeInternalType.FUNC:
         this.app?.getController('ctrl:native-main').open(pObj,'code');
         break;
+      case NodeInternalType.CLASS:
+        if(typeof pObj==='string')
+          this.open({ _t:'c', name:pObj}, 'ctxm');
+        else
+          this.open({ _t:'c', name:pObj.name}, 'ctxm');
+        break;
+      case NodeInternalType.STRING:
+        //this.app?.getController('ctrl:native-main').open(pObj,'code');
+        break;
       default:
         this.open( pObj, 'ctxm');
         break;

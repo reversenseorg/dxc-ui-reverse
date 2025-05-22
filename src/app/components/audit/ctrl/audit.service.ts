@@ -100,7 +100,7 @@ export class AuditService extends DxcApiService{
           scheduler_info: { method: 'GET', url:'/node/scheduler/info', format:'json', auth:false, puid:false},
           order: { method: 'POST', url:'/audit/order/scan', format:'json', auth:false, puid:true},
           orderFromScratch: { method: 'POST', url:'/audit/order/scan?_puid=:puid', format:'json', auth:false, puid:false},
-        },
+        }
       }, _http, outputSvc);
 
     /*

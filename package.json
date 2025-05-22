@@ -1,5 +1,5 @@
 {
-  "name": "@dexcalibur/dxc-ui-reverse",
+  "name": "@reversense/dxc-ui-reverse",
   "version": "1.2.0",
   "scripts": {
     "ng": "ng",
