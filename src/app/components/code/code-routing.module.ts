@@ -2,7 +2,7 @@ import {ActivatedRouteSnapshot, RouterModule, RouterStateSnapshot} from "@angula
 import {inject, NgModule} from "@angular/core";
 import {ProjectResolver} from "../project/ctrl/project-resolver.service";
 import {CodeResolver} from "./code-resolver.service";
-
+import {ProjectCodeDirectResolver} from "../project/ctrl/project-code-resolver.service";
 
 @NgModule({
   imports: [RouterModule.forChild([{

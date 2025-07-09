@@ -1,6 +1,9 @@
 <div [class.dxc-hidden]="offset != parent.active" class="explorer-code" #explCodeRef (click)="kbSvc.focus(this)">
     <app-explorer-navbar [explorer]="this" id="{{ view.getNavID() }}" (menuItemClick)="onMenuItemClick($event)">
-      <ng-container opts>
+        <ng-container menu>
+
+        </ng-container>
+        <ng-container opts>
         <button class="btn-option" [ngbTooltip]="'Refresh list'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
         <button class="btn-option" [ngbTooltip]="'Search in ..'" (click)="search()"><fa-icon [icon]="['fas','magnifying-glass']"></fa-icon></button>
         <!--<button class="btn-option" (click)="filter()"><fa-icon [icon]="['fas','filter']"></fa-icon></button>-->
@@ -14,8 +17,7 @@
     </ul>-->
 
     <div class="explorer-list-root" #explCodeCtnRef>
-      <app-expandable-list
-        *ngIf="projectReady">
+      <app-expandable-list *ngIf="projectReady">
 
         <ng-container *ngFor="let pkg of packages[selected]; trackBy: itemIdentify">
 
@@ -146,7 +148,6 @@
           </app-expandable-item>
         </ng-container>
       </app-expandable-list>
-      <p>{{checkRendering()}}</p>
       <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
         <dxc-icon [model]="gIcons['SPINNER']"></dxc-icon>&nbsp;Loading
         Open a project first.

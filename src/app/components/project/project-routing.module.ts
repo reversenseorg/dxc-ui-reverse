@@ -6,6 +6,7 @@ import {OpenProjectComponent} from "./open-project.component";
 import {SvcStatusComponent} from "./SvcStatus.component";
 import {ProjectResolver} from "./ctrl/project-resolver.service";
 import {DeviceResolver} from "../device/ctrl/device-resolver.service";
+import {ProjectCodeDirectResolver} from "./ctrl/project-code-resolver.service";
 
 
 @NgModule({

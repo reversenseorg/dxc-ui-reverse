@@ -31,6 +31,9 @@ import {ContextMenuEvent} from "../../../base/context-menu/context-menu.componen
 import {CodeController} from "./CodeController";
 import {CODE_ICONS} from "../icons";
 import {Tag} from "../../../models/tags/Tag";
+import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
+import {MerlinRule} from "../../../models/search/MerlinRule";
+import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -75,15 +78,11 @@ export class CodeControllerService extends DxcApiService{
                private outputSvc:OutputService,
                private http:HttpClient) {
     super({
+      libs: {
+        list:  { method: 'GET', url: '/code/libraries', format: 'json', auth:false /* removed */, puid: true }
+      },
       package: {
         app: {
-          method: 'GET',
-          url: '/code/package?format=tree&filter2=tags:ds&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
-          format: 'json',
-          auth:false /* removed */,
-          puid: true
-        },
-        app_libs: {
           method: 'GET',
           url: '/code/package?format=tree&filter2=tags:ds&fields=name,children<ModelClass>.simpleName,children<ModelPackage>.sname',
           format: 'json',
@@ -150,6 +149,9 @@ export class CodeControllerService extends DxcApiService{
       finder: {
         search: {method: 'GET', url: '/code/finder', format: 'json', auth:false /* removed */, puid: true},
         androidXref: {method: 'GET', url: '/code/android/xref/:type/:id', format: 'json', auth:false /* removed */, puid: true},
+      },
+      merlin: {
+        search: {method: 'POST', url: '/code/merlin/search', format: 'json', auth:false /* removed */, puid: true},
       },
       vm: {
         simplify: {method: 'POST', url: '/code/method/simplify/:id', format: 'json', auth:false /* removed */, puid: true}
@@ -238,7 +240,10 @@ export class CodeControllerService extends DxcApiService{
       }, {
         label: 'Transforms',
         submenu: [{
-          label: "Rename random symbols"
+          label: "Rename random symbols",
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
+            //this.onMenuClick.next({item: 'curr-callers', win: pBrowserWindow});
+          }
         }, {
           label: "Remove useless jumps"
         }, {
@@ -348,7 +353,6 @@ export class CodeControllerService extends DxcApiService{
 
     let ppt = 'children';
 
-    console.log("isClassAbstract", pClass, this._asbtractTag);
     if(pClass[ppt] == null) {
       ppt = 'methods';
       if (pClass[ppt] == null) {
@@ -364,6 +368,7 @@ export class CodeControllerService extends DxcApiService{
 
     return false;
   }
+
   getIconOf(pType:string, pItem:any = null):IconModel {
     if(pItem!=null){
       switch (pItem.__){
@@ -915,5 +920,54 @@ export class CodeControllerService extends DxcApiService{
     if(sym==null) sym="";
 
     return sym;
+  }
+
+  /**
+   *
+   * @param pProjUID
+   */
+  listNativeLibraries():Observable<ModelFile[]> {
+    return this._process(this.endpoints.libs.list).pipe(
+        map( (pObs:any)=>{
+          if(pObs.success){
+
+            let notReady = 0;
+            let data:any[] = [];
+
+            pObs.data.map((vFile:any)=>{
+              data.push(new ModelFile(vFile));
+            });
+
+            if(notReady>0){
+              this.outputSvc.print(OutputMessage.newWarning({
+                src:'Native Analyzer',
+                msg:'It seems some native executables ('+notReady+') are not yet analyzed. Please refresh later.'
+              }));
+            }
+
+            console.log(data);
+            return data;
+          }else{
+            this.outputSvc.print( OutputMessage.newError({ msg: pObs.msg }))
+            return [];
+          }
+        })
+    );
+  }
+
+  merlinSearch(pRequest:MerlinSearchRequest):Observable<any[]> {
+    return this._process(this.endpoints.merlin.search, { request:pRequest.toJsonObject() }).pipe(
+        map( (pObs:any)=>{
+          if(pObs.success){
+
+            console.log(pObs);
+
+            return pObs.data;
+          }else{
+            this.outputSvc.print( OutputMessage.newError({ msg: pObs.msg }))
+            return [];
+          }
+        })
+    );
   }
 }

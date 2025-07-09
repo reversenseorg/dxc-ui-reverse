@@ -1,19 +1,24 @@
 <div class="row m-0 dxc-explorer-vpnav expl-navbar" #snavRef>
   <div class="col-lg-6 text-left nav">
-    <div *ngIf="explorer.view.nav !=null && explorer.view.nav.hasDropDown()" ngbDropdown class="d-inline-block nav-menu">
+      <dxc-dropdown *ngIf="explorer.view.nav !=null && explorer.view.nav.hasDropDown()"
+                    [options]="explorer.view.nav.menu.items"
+                    [selected]="explorer.view.nav"
+                    (click)="onItemSelect2($event)"
+      >
+
+      </dxc-dropdown>
+    <!--<div *ngIf="false && explorer.view.nav !=null && explorer.view.nav.hasDropDown()" ngbDropdown class="d-inline-block nav-menu">
       <button [ngClass]="explorer.view.nav.color" class="btn dxc-text-clear100" [id]="'dropdownBasic'+explorer.offset" ngbDropdownToggle>
         <dxc-icon *ngIf="explorer.view.nav.icon" [model]="explorer.view.nav.icon"></dxc-icon>
-        <!--<fa-icon class="dxc-icon" [icon]="[explorer.view.nav.icon.type, explorer.view.nav.icon.name]" [ngClass]="explorer.view.nav.icon.color1"></fa-icon>-->
         {{ explorer.view.nav.label  }}
       </button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
         <button *ngFor="let item of explorer.view.nav.menu.items" [ngClass]="item.color" (click)="onItemSelect(item,$event)"  ngbDropdownItem>
           <dxc-icon *ngIf="item.icon" [model]="item.icon"></dxc-icon>
-          <!--<fa-icon class="dxc-icon" [icon]="[item.icon.type,item.icon.name]" [ngClass]="item.icon.color1"></fa-icon>-->
           {{ item.label }}
         </button>
       </div>
-    </div>
+    </div>-->
     <div class="nav-title" *ngIf="explorer.view.nav!=null && explorer.view.nav.hasDropDown()==false">
       <dxc-icon [model]="explorer.view.nav.icon"></dxc-icon>
       <!--<fa-icon class="dxc-icon" [icon]="[explorer.view.nav.icon.type, explorer.view.nav.icon.name]" [ngClass]="explorer.view.nav.icon.color1"></fa-icon>-->

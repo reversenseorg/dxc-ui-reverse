@@ -36,6 +36,8 @@ export interface MenuViewOptions extends IStringIndex<any> {
 }
 export class MenuView {
 
+  selected = -1;
+
   items:MenuItem<any>[] = [];
 
   constructor(pConfig:MenuViewOptions={}) {

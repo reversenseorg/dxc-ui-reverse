@@ -34,6 +34,7 @@ export class SearchRequestCondition {
   opts:SearchOptions = { not:false };
 
   private _re:RegExp|null = null;
+  error: any = {}
 
   constructor(pConfig:any) {
     for(let i in pConfig){
@@ -49,6 +50,11 @@ export class SearchRequestCondition {
 
   hasPattern():boolean {
     return (this.pattern != null);
+  }
+
+
+  setError(pOptions:any):void {
+    this.error = pOptions;
   }
 
   turnAsRegexp(pSkipClean = false):void{
@@ -67,6 +73,7 @@ export class SearchRequestCondition {
           && (lastDeliminiter > 0)){
 
         const reFlags = p.substring(lastDeliminiter+1);
+        this.pattern = this.pattern.substring(1,lastDeliminiter)
         this._re = new RegExp(p.substring(1,lastDeliminiter), reFlags);
         return;
       }

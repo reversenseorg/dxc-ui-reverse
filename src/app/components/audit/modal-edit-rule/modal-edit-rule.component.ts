@@ -29,6 +29,7 @@ import {
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 
 export interface OperationChoice {
   value: string,
@@ -146,6 +147,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
   constructor(
                public auditSvc:AuditService,
                private _projectSvc:ProjectService,
+               private _codeSvc:CodeControllerService,
                private _outputSvc:OutputService,
                private _changeDetector:ChangeDetectorRef,
                private kbSvc:KeyboardNavigationService) {
@@ -338,7 +340,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
     }
 
     this.auditSvc.runRule(null,oneRule).subscribe((res)=>{
-      console.log("Execute MERLIN Request",res);
+      console.log("Execute MERLIN Request (as rule)",res);
 
       //this.idle = true;
       //this.onScanning.emit(this.idle);
@@ -349,6 +351,38 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
       }else{
         this.onDryRunEnd.emit({ success:false, res: [] });
       }
+    });
+  }
+
+  /**
+   * To execute as a simple Search
+   */
+  execAsSearch() {
+    if(!this._projectSvc.isProjectIsOpen()){
+      this._outputSvc.alert(OutputMessage.newError({msg:"Open a project first"}));
+      return;
+    }
+
+    //this.idle = false;
+    //this.onScanning.emit(this.idle);
+    //this._changeDetector.detectChanges();
+
+    this._codeSvc.merlinSearch(new MerlinSearchRequest(
+        (this.newNode as NodeChoice).type,
+        this._getCurrentOperations()
+    )).subscribe((res:any)=>{
+      console.log("Execute MERLIN Request (as code search)",res);
+
+
+      //this.idle = true;
+      //this.onScanning.emit(this.idle);
+
+      /*this._changeDetector.detectChanges();
+      if(res.event.state==CheckEventState.SUCCESS){
+        this.onDryRunEnd.emit({ success:true, res: res.results });
+      }else{
+        this.onDryRunEnd.emit({ success:false, res: [] });
+      }*/
     });
   }
 

@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -24,7 +25,8 @@ import {CodeItem} from "./CodeItem";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {ModifierFormat} from "../../../models/AccessFlags";
 import {
-  ContextMenuComponent, ContextMenuEvent,
+  ContextMenuComponent,
+  ContextMenuEvent,
   ContextMenuList,
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
@@ -50,8 +52,8 @@ import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
 import {IStringIndex} from "../../../base/IStringIndex";
-import {TaintPurpose} from "../ctrl/common";
-import {TaintCase, TaintCaseOpts} from "../../../models/analyzer/TaintCase";
+import ModelFile from "../../../models/ModelFile";
+import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -178,30 +180,35 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
       nav: new NavbarSimpleView({
         selected: this.selected,
         menu: new MenuView({
+          selected: 5,
           items: [
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.APP,
               label:'Application',
               color: 'dxc-text-clear75',
-              icon: GLOBAL_ICONS['WINDOW']
+              icon: GLOBAL_ICONS['WINDOW'],
+              click: ()=>{ this.showApplicationCode(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.APP_LIBS,
               label:'Application Libs',
               color: 'dxc-text-clear75',
-              icon: GLOBAL_ICONS['WINDOW']
+              icon: GLOBAL_ICONS['WINDOW'],
+              click: ()=>{ this.showApplicationLibs(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.ANDROID_API,
               label:'Android API',
               color: 'dxc-text-clear75',
-              icon: GLOBAL_ICONS['ANDROID']
+              icon: GLOBAL_ICONS['ANDROID'],
+              click: ()=>{ this.showOsApi(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.ANDROID_FWK,
               label:'Android Internals',
               color: 'dxc-text-clear75',
-              icon: GLOBAL_ICONS['ANDROID']
+              icon: GLOBAL_ICONS['ANDROID'],
+              click: ()=>{ this.showOsApi(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.VENDOR,
@@ -209,7 +216,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               color: 'dxc-text-clear75',
               icon: GLOBAL_ICONS['INTERNAL']
             }),
-
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.ALL,
               label:'All',
@@ -250,12 +256,12 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   }
 
-  r = 0;
+  /*r = 0;
   checkRendering(){
     this.r++;
     //console.log(this.r);
-    return true;
-  }
+    return ;
+  }*/
 
   ngOnInit(): void {
     this.kbSvc.register(this);
@@ -421,6 +427,11 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     return (pItem._t=='c' || pItem._t=='p' || pItem.__==NodeInternalType.FILE); //pItem.children.length>0;
   }
 
+  /**
+   * Callback from expandable
+   * @param pItem
+   * @param pType
+   */
   expand( pItem:any, pType:string): Observable<CodeItem[]> {
     let data:any = null;
 
@@ -577,7 +588,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   itemHasLazyChildren( pItem:any, pType ='p'): boolean {
     return (pItem.children.length==1 && pItem.children[0]._t=="wait");
   }
-
 
   itemGetChildren( pItem:any):any{
     return pItem.children;
@@ -752,6 +762,155 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
       this.selected = pEvent.item.id;
   }
 
+
+
+  showOsApi():void{
+
+    this.codeService
+        .merlinSearch(MerlinSearchRequest.fromCondition(
+            NodeInternalType.PACKAGE,{  name: "/^[^.]+$/"  }, { not:false }
+        ).filter("@discover.internal"))
+        .subscribe((packages:any) => {
+          let c: any;
+          let p = 0;
+
+          const pkgList:CodeItem[] = [];
+
+
+          packages.map((pPkg: any) => {
+
+
+
+            if( !this.tags.INTERNAL.match(pPkg) && (pPkg._t!=null) ){
+              pPkg._icon = this.codeService.getIconOf(pPkg._t);
+            }
+
+            ///
+
+            if (pPkg.tags.length == 0 || this.tags.INTERNAL.match(pPkg)) {
+
+              if(this.tags.STATIC.match(pPkg)){
+                pPkg._icon = this.codeService.getIconOf('p-mx');
+              }else{
+                pPkg._icon = this.codeService.getIconOf('p-di');
+              }
+
+              c = [];
+              pPkg.children.map((vChild: any) => {
+                if (pPkg._t == 'c') {
+                  pPkg._icon = this.icons['CLASS'];
+                } else {
+                  pPkg._icon = this.icons['PKG_INT'];
+                }
+                if (this.tags.INTERNAL.match(vChild)) {
+                  if (vChild._t == 'c') {
+                    vChild._icon = this.icons['CLASS'];
+                  } else {
+                    vChild._icon = this.icons['PKG'];
+                  }
+                  vChild._e = true;
+                  c.push(vChild);
+                }
+              });
+              pPkg.children = c;
+              pkgList.push(pPkg);
+            }
+          });
+
+          this.packages[CODE_SUBVIEW.ANDROID_API] = pkgList;
+          this.selected = CODE_SUBVIEW.ANDROID_API;
+          this.changeDetectorRef.detectChanges();
+        });
+  }
+
+
+  showApplicationCode():void{
+
+    this.controller.service
+        .listPackages(CODE_SUBVIEW.APP)
+        .subscribe((packages:any) => {
+          let c: any;
+          let p = 0;
+
+          this.packages[CODE_SUBVIEW.APP] = [];
+
+
+          packages.map((pPkg: any, pIndex: number) => {
+
+
+            if (p > 0 && (p % 200 === 0)) {
+              console.log("detect changes", p);
+              //this.changeDetectorRef.detectChanges();
+              //this.changeDetectorRef.markForCheck();
+            }
+
+            if (this.tags.STATIC.match(pPkg) || this.tags.DYNAMIC.match(pPkg)) {
+
+              if (pPkg._t == 'c') {
+                // it happens when a class is not contaiend into a package
+                pPkg._icon = this.icons['CLASS'];
+                this.packages[CODE_SUBVIEW.APP].push(pPkg);
+                p++;
+
+                return;
+              }
+
+              c = [];
+              pPkg._icon = this.icons['PKG'];
+
+              pPkg.children.map((vChild: any) => {
+                if (this.tags.STATIC.match(vChild) || this.tags.DYNAMIC.match(vChild)) {
+                  if (vChild._t == 'c') {
+                    vChild._icon = this.icons['CLASS'];
+                  } else {
+                    vChild._icon = this.icons['PKG'];
+                  }
+                  vChild._e = true;
+                  c.push(vChild);
+                }
+              });
+              pPkg.children = c;
+              this.packages[CODE_SUBVIEW.APP].push(pPkg);
+              p++;
+            }
+          });
+
+          console.log("detect changes", p);
+          //this.changeDetectorRef.detectChanges();
+
+        });
+  }
+
+
+
+  showApplicationLibs():void {
+    this.controller.service
+        .listNativeLibraries()
+        .subscribe((vLibs:ModelFile[]) => {
+
+          vLibs.map((vFile:any)=>{
+            vFile._icon = this.codeService.getIconOf('e');
+            vFile.$r = true;
+            /*
+            if(vFile.__p!=null){
+              if(!vFile.__p.hasOwnProperty('f_list')){
+                vFile.$r = false;
+              }else{
+                vFile.children = Object.values(vFile.__p.f_list);
+                vFile.children.map((vSelf:any) => {
+                  vSelf._icon = this.codeService.getIconOf('m');
+                  vSelf.__ = NodeInternalType.FUNC;
+                  vSelf._e = true;
+                });
+              }
+            }*/
+          });
+
+          this.packages[CODE_SUBVIEW.APP_LIBS] = vLibs as any[];
+          this.selected = CODE_SUBVIEW.APP_LIBS;
+          this.changeDetectorRef.detectChanges();
+      });
+  }
   reset():void {
     this.packages[CODE_SUBVIEW.APP] = [];
     this.packages[CODE_SUBVIEW.APP_LIBS] = [];

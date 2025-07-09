@@ -141,6 +141,7 @@ import {AssessViewComponent} from "./components/audit/assessment-view/assess-vie
 import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
 import {ViewportResolver} from "./base/ViewportResolver";
 import {CodeModule} from "./components/code/code.module";
+import {DxcDropdownComponent} from "./base/common/dropdown";
 
 
 // AoT requires an exported function for factories
@@ -313,26 +314,27 @@ import {CodeModule} from "./components/code/code.module";
 
     OsApiProjectionListComponent
   ],
-  imports: [
-    DxcBaseModule,
-    AppRoutingModule,
-    CommonModule,
-    BrowserModule,
-    CoreModule,
-    FormsModule,
-    HttpClientModule,
-    FontAwesomeModule,
-    NgbModule,
-    CodeEditorModule,
-    ReactiveFormsModule,
-    NgTerminalModule,
-    DxcClientModule,
+    imports: [
+        DxcBaseModule,
+        AppRoutingModule,
+        CommonModule,
+        BrowserModule,
+        CoreModule,
+        FormsModule,
+        HttpClientModule,
+        FontAwesomeModule,
+        NgbModule,
+        CodeEditorModule,
+        ReactiveFormsModule,
+        NgTerminalModule,
+        DxcClientModule,
 
-    ProjectModule,
-    DeviceModule,
-    CodeModule
-    //ProjectManagementModule
-  ],
+        ProjectModule,
+        DeviceModule,
+        CodeModule,
+        DxcDropdownComponent,
+        //ProjectManagementModule
+    ],
   providers: [
     ControllerService,
     SettingsService,
