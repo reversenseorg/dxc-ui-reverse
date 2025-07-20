@@ -10,7 +10,8 @@ export enum MetadataTopic {
 export enum MetadataType {
     TEXT,
     ANY,
-    URI
+    URI,
+    PARAM
 }
 
 
