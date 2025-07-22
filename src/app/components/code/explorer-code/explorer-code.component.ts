@@ -338,7 +338,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
               if(vMeth==null) return;
 
-                this.codeService.disassMethod(vMeth.__signature__ as string).subscribe((pCode: any) => {
+                this.codeService.disassMethod({
+                  __: NodeInternalType.METHOD,
+                  _uid: vMeth.__signature__
+                }).subscribe((pCode: any) => {
                   //console.log(pCode);
        /*           let code: string = '';
 
@@ -363,7 +366,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               });
 
         }else if(pMethod.__view_code==undefined){
-          this.codeService.disassMethod(pMethod.__signature__ as string).subscribe( (pCode:Nullable<string>)=>{
+          this.codeService.disassMethod({
+            __: NodeInternalType.METHOD,
+            _uid: pMethod.__signature__ as string
+          }).subscribe( (pCode:Nullable<string>)=>{
             pMethod.__view_code = pCode;
             //this.modalMethod.open(pMethod);
           })

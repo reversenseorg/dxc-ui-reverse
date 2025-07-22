@@ -18,6 +18,9 @@ import {IsAuthenticatedGuard} from "./IsAuthenticateGuard";
               { path: 'device',
                   canActivate: [IsAuthenticatedGuard],
                   loadChildren: () => import('./components/device/device.module').then(m => m.DeviceModule) },
+              { path: 'code',
+                  canActivate: [IsAuthenticatedGuard],
+                  loadChildren: () => import('./components/code/code.module').then(m => m.CodeModule) },
               {
                   path: 'home/:id',
                   component: StageComponent,

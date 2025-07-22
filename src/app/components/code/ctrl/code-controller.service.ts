@@ -34,6 +34,8 @@ import {Tag} from "../../../models/tags/Tag";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 import {MerlinRule} from "../../../models/search/MerlinRule";
 import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
+import {DxApiResponse, INodeRef} from "../../../base/common/common";
+import {IController} from "../../../base/controllers/IController.interface";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -56,6 +58,8 @@ export class CodeControllerService extends DxcApiService{
   private _tags:any = [];
 
   tags:any = {};
+
+  ctrl:Nullable<IController> = null;
 
   onMenuClick:Subject<CodeMenuEvent> = new Subject<CodeMenuEvent>();
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
@@ -150,8 +154,12 @@ export class CodeControllerService extends DxcApiService{
         search: {method: 'GET', url: '/code/finder', format: 'json', auth:false /* removed */, puid: true},
         androidXref: {method: 'GET', url: '/code/android/xref/:type/:id', format: 'json', auth:false /* removed */, puid: true},
       },
+      direct: {
+        disass: { method:'POST', url:'/code/direct/:puid/:nodetype/disass', format:'json', auth:false, puid:true },
+        search: { method:'POST', url:'/code/direct/:puid/:nodetype/search', format:'json', auth:false, puid:true },
+      }, // { puid:pProjectUID, nodetype:pRef.__, nodeuid:pRef._uid }
       merlin: {
-        search: {method: 'POST', url: '/code/merlin/search', format: 'json', auth:false /* removed */, puid: true},
+        search: {method: 'POST', url: '/code/merlin/search', format: 'json', auth:false /* removed */, puid: true}
       },
       vm: {
         simplify: {method: 'POST', url: '/code/method/simplify/:id', format: 'json', auth:false /* removed */, puid: true}
@@ -703,19 +711,27 @@ export class CodeControllerService extends DxcApiService{
     );
   }
 
-  disassMethod( pRef:string):Observable<Nullable<string>> {
-    return this._process(
-      this.endpoints['method']['disass'],
-      {
-        'id': pRef
-      }
-    ).pipe(map( pRes => {
+  disassMethod( pRef:INodeRef, pDirect = false,
+                pProject:Nullable<DexcaliburProjectUUID> = null):Observable<Nullable<string>> {
+
+    let ep:EndpointInfo, opt:any;
+    if(!pDirect){
+      ep = this.endpoints['method']['disass'];
+      opt = { id: pRef._uid };
+    }else{
+      ep = this.endpoints['direct']['disass'];
+      opt =  { puid:(pProject), nodetype:pRef.__, nodeuid:pRef._uid };
+    }
+
+    console.log(ep,opt);
+    return this._process(ep,opt).pipe(map( pRes => {
       if(!pRes.success){
         this.outputSvc.print(OutputMessage.newError({ msg:pRes.msg, src:"Bytecode Analyzer" }));
         return null;
       }else{
         let code = '';
 
+        pRes.data.format = "smali";
         pRes.data.smali = "";
 
         pRes.data.disass.map((pBB:any) => {
@@ -969,5 +985,64 @@ export class CodeControllerService extends DxcApiService{
           }
         })
     );
+  }
+
+
+  retrieveNode<T>(pProjectUID: DexcaliburProjectUUID, pRef:INodeRef):Observable<DxApiResponse<Nullable<T>>> {
+    return this._process(
+        this.endpoints.direct.search,
+        { puid:pProjectUID, nodetype:pRef.__, nodeuid:pRef._uid }
+    ).pipe(
+        map(vRes => {
+
+          if(!vRes.success){
+            return  { success: false, msg: (vRes.msg!=null? vRes.msg:""), data: null };
+          }
+
+          return  {
+            success: vRes.success,
+            msg: (vRes.msg!=null? vRes.msg:""),
+            data: (vRes.data!=null ? this.createNodeFromRef<T>( pRef, vRes.data) : null)
+          };
+        })
+    )
+  }
+
+  setController(pCtrl: IController) {
+    this.ctrl = pCtrl;
+  }
+
+  getController<T>():Nullable<T> {
+    return this.ctrl as T;
+  }
+
+  /**
+   *
+   * @param pRef
+   * @param pRaw
+   */
+  createNodeFromRef<T>(pRef:INodeRef, pRaw:any):Nullable<T> {
+
+    let node:any = null;
+    let type = (typeof pRef.__==="string"? parseInt(pRef.__,10):pRef.__);
+
+    switch(type){
+      case NodeInternalType.METHOD:
+        node = new ModelMethod(pRaw);
+        break;
+      case NodeInternalType.CLASS:
+        node = new ModelClass(pRaw);
+        break;
+      case NodeInternalType.FIELD:
+        node = new ModelField(pRaw);
+        break;
+      case NodeInternalType.FUNC:
+        node = new ModelFunction(pRaw);
+        break;
+    }
+
+
+
+    return node;
   }
 }

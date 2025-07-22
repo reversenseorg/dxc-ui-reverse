@@ -29,6 +29,7 @@ import {Nullable} from "../../../base/Nullable";
 import {CodeSymbolTableComponent} from "../emulator/symbol-table.component";
 import {CodeEmulatorComponent} from "../emulator/emulator.component";
 import {CodeEmuLoggerComponent} from "../emulator/emu-logs.component";
+import {NodeInternalType} from "../../../models/NodeInternalType";
 
 
 
@@ -424,7 +425,10 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   showBytecode() {
-    this.codeSvc.disassMethod(this.data.__signature__).subscribe((pRes:any)=> {
+    this.codeSvc.disassMethod({
+      __: NodeInternalType.METHOD,
+      _uid: this.data.__signature__
+    }).subscribe((pRes:any)=> {
       console.log(pRes);
       this.codeEditor.mode = 'smali';
       this.codeEditor.value = pRes.smali; //this.data.__view_code;

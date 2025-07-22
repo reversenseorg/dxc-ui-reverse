@@ -4,6 +4,8 @@ import {CodeControllerService} from "./ctrl/code-controller.service";
 import {ControllerService} from "../../controller.service";
 import {ProjectService} from "../project/ctrl/project.service";
 import DexcaliburProject from "../../models/DexcaliburProject";
+import {Nullable} from "../../base/Nullable";
+import {CodeController} from "./ctrl/CodeController";
 
 
 @Injectable()
@@ -18,16 +20,32 @@ export class CodeResolver {
     resolve(pRoute: ActivatedRouteSnapshot, pState: RouterStateSnapshot): any {
 
 
+        // get code, ..
+        const nodeType = pRoute.params.type
+        const nodeUid = pRoute.params.nuid
+
+        this._svc.retrieveNode<any>(pRoute.params.uid, { __:nodeType, _uid:decodeURIComponent(atob(nodeUid)) }).subscribe((vNode   )=>{
+            console.log("CodeResolver > ",vNode);
+
+            const c = this._svc.getController<Nullable<CodeController>>();
+            console.log("CodeResolver > ctrl > ",c,vNode);
+
+            (vNode.data as any).__puid__ = pRoute.params.uid;
+
+            if(vNode.data!=null && c!=null){
+                c.showItem(vNode.data, true);
+            }
+        })
+
+        /*
         // intercept oute resolve
         this._prjSvc.getProject(pRoute.params.uid).subscribe((vProjState)=>{
 
-            console.log("CodeResolver > ",vProjState);
 
 
-            // get code, ..
-            const nodeType = pRoute.params.node
-            const nodeUid = pRoute.params.nuid
 
+
+            /*
             if(vProjState.loaded && (vProjState.project!=null)){
 
                 this._prjSvc._beforeProjectReady(vProjState.project,true);
@@ -73,6 +91,6 @@ export class CodeResolver {
 
         });*/
 
-        return ;
+        //return ;
     }
 }

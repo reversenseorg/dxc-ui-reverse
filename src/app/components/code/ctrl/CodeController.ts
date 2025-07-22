@@ -55,6 +55,8 @@ export class CodeController extends UiController implements IController {
     this.service.displayNode$.subscribe((vEvent)=>{
       this.showItem(vEvent.node);
     });
+
+    this.service.setController(this);
   }
 
 
@@ -121,7 +123,7 @@ export class CodeController extends UiController implements IController {
    * @param pInstruction
    * @param pOptions
    */
-  openMethodAt( pMethod:ModelMethod|string, pInstruction:Nullable<ModelInstruction> = null, pOptions:any = null){
+  openMethodAt( pMethod:ModelMethod|string, pInstruction:Nullable<ModelInstruction> = null, pOptions:any = null, pDirect = false){
     let target:ModelMethod;
 
     if(typeof (pMethod)=='string'){
@@ -134,6 +136,40 @@ export class CodeController extends UiController implements IController {
       throw new Error("openMethodAt() failed");
     }
 
+    if(pDirect){
+      (pMethod as any)._t = 'm';
+      (pMethod as any)._icon = ((target as any)._icon != null)? (target as any)._icon : this.gIcons['METHOD'];
+
+      if(pInstruction != null){
+        (pMethod as any).focus = pInstruction;
+      }
+
+      (pMethod as any).__view_code = "test";
+      //this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pMethod, uid:pOptions.vid });
+
+
+      this.service.disassMethod({
+        __: NodeInternalType.METHOD,
+        _uid: target.__signature__
+      }, pDirect, (pMethod.hasOwnProperty('__puid__')?(pMethod as any).__puid__:"-")).subscribe( (pCode:any)=>{
+        let code = '';
+
+        console.log("Direct disass > ",pCode);
+
+        pCode.disass.map((pBB:any) => {         pBB.instr.map((pInstr:any) => {           code += pInstr.value+`
+`;
+        })
+          code += `
+`;
+        })
+        (pMethod as any).__view_code = code;
+
+
+        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pMethod, uid:pOptions.vid });
+      });
+      return;
+    }
+
     this.service.getMethod(target.__signature__,true).subscribe( (pObs:any)=>{
       console.log(pObs);
       pObs._t = 'm';
@@ -144,7 +180,10 @@ export class CodeController extends UiController implements IController {
       }
 
 
-      this.service.disassMethod(target.__signature__ as string).subscribe( (pCode:any)=>{
+      this.service.disassMethod({
+        __: NodeInternalType.METHOD,
+        _uid: target.__signature__
+      }).subscribe( (pCode:any)=>{
         let code = '';
 
         pCode.disass.map((pBB:any) => {         pBB.instr.map((pInstr:any) => {           code += pInstr.value+`
@@ -173,7 +212,7 @@ export class CodeController extends UiController implements IController {
    * @method
    * @since 1.0.0
    */
-  open(pItem: any, pSrc:any = 'vp', pInstruction:Nullable<ModelInstruction> = null): void{
+  open(pItem: any, pSrc:any = 'vp', pInstruction:Nullable<ModelInstruction> = null, pDirect = false): void{
 
 
     console.log("CodeController > open >  ",pItem,pSrc);
@@ -198,7 +237,7 @@ export class CodeController extends UiController implements IController {
     let uid:Nullable<string> = null;
     switch(pItem.__){
       case NodeInternalType.METHOD:
-        this.openMethodAt(pItem,pInstruction, { vid:vid });
+        this.openMethodAt(pItem,pInstruction, { vid:vid }, pDirect);
         break;
       case NodeInternalType.CLASS:
         this.service.getClass(pItem.name).subscribe( (pObs:any)=>{
@@ -232,26 +271,26 @@ export class CodeController extends UiController implements IController {
 
 
 
-  showItem( pObj:any):void{
+  showItem( pObj:any, pDirect = false):void{
     console.log('show item>', pObj);
     switch(pObj.__){
       case NodeInternalType.FILE:
-        this.app?.getController('ctrl:native-main').open(pObj,'code');
+        this.app?.getController('ctrl:native-main').open(pObj,'code',pDirect);
         break;
       case NodeInternalType.FUNC:
-        this.app?.getController('ctrl:native-main').open(pObj,'code');
+        this.app?.getController('ctrl:native-main').open(pObj,'code',pDirect);
         break;
       case NodeInternalType.CLASS:
         if(typeof pObj==='string')
-          this.open({ _t:'c', name:pObj}, 'ctxm');
+          this.open({ _t:'c', name:pObj}, 'ctxm', null, pDirect);
         else
-          this.open({ _t:'c', name:pObj.name}, 'ctxm');
+          this.open({ _t:'c', name:pObj.name}, 'ctxm', null,pDirect);
         break;
       case NodeInternalType.STRING:
         //this.app?.getController('ctrl:native-main').open(pObj,'code');
         break;
       default:
-        this.open( pObj, 'ctxm');
+        this.open( pObj, 'ctxm', null, pDirect);
         break;
     }
   }
