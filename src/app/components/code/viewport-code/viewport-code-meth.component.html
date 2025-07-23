@@ -139,12 +139,12 @@
     <ng-container nav-bottom>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
-          <app-subnavbar-btn *ngIf="hooks!=null && hooks.length>0" [active]="activeBottom=='hk'" [icon]="gIcons['HOOKS']" (click)="showHooks()">Hooks</app-subnavbar-btn>
-          <app-subnavbar-btn *ngIf="hooksMsg!=null && hooksMsg.length>0" [active]="activeBottom=='hm'" [icon]="gIcons['LIST']" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="!direct && hooks!=null && hooks.length>0" [active]="activeBottom=='hk'" [icon]="gIcons['HOOKS']" (click)="showHooks()">Hooks</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="!direct && hooksMsg!=null && hooksMsg.length>0" [active]="activeBottom=='hm'" [icon]="gIcons['LIST']" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeBottom=='xt'" [icon]="icons['XREF']"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeBottom=='xf'" [icon]="icons['XREF']"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
-          <app-subnavbar-btn *ngIf="activeTop=='vm'" [active]="activeBottom=='vml'" (click)="showVmLogs()">DDVM Logs</app-subnavbar-btn>
-            <app-subnavbar-btn *ngIf="activeTop=='vm'" [active]="activeBottom=='sym'" (click)="showVmSym()">DDVM Local Symbols</app-subnavbar-btn>
+          <app-subnavbar-btn *ngIf="!direct && activeTop=='vm'" [active]="activeBottom=='vml'" (click)="showVmLogs()">DDVM Logs</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="!direct && activeTop=='vm'" [active]="activeBottom=='sym'" (click)="showVmSym()">DDVM Local Symbols</app-subnavbar-btn>
         </ng-container>
         <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
           <ng-container *ngFor="let act of data.frontController.actions">
@@ -156,7 +156,7 @@
     <ng-container body-bottom>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xt')">
-          <dxc-xref-list [header]="false" [xrefto]="true" [node]="data"></dxc-xref-list>
+          <dxc-xref-list *ngIf="!direct" [header]="false" [xrefto]="true" [node]="data"></dxc-xref-list>
       </div>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='sym')">
@@ -164,10 +164,10 @@
       </div>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xf')">
-          <dxc-xref-list [header]="false" [xreffrom]="true" [node]="data"></dxc-xref-list>
+          <dxc-xref-list *ngIf="!direct"  [header]="false" [xreffrom]="true" [node]="data"></dxc-xref-list>
       </div>
 
-      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='hk')">
+      <div *ngIf="!direct"  class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='hk')">
 
         <ng-container *ngIf="hooksLen>0; else noHooks">
           <div class="row dxc-grid-header">

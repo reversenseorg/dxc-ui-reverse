@@ -152,20 +152,8 @@ export class CodeController extends UiController implements IController {
         __: NodeInternalType.METHOD,
         _uid: target.__signature__
       }, pDirect, (pMethod.hasOwnProperty('__puid__')?(pMethod as any).__puid__:"-")).subscribe( (pCode:any)=>{
-        let code = '';
-
-        console.log("Direct disass > ",pCode);
-
-        pCode.disass.map((pBB:any) => {         pBB.instr.map((pInstr:any) => {           code += pInstr.value+`
-`;
-        })
-          code += `
-`;
-        })
-        (pMethod as any).__view_code = code;
-
-
-        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pMethod, uid:pOptions.vid });
+        (pMethod as any).__view_code = pCode.smali;
+        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pMethod, uid:pOptions.vid, opts:{direct:true} });
       });
       return;
     }
@@ -195,7 +183,7 @@ export class CodeController extends UiController implements IController {
         pObs.__view_code = code;
 
 
-        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pObs, uid:pOptions.vid });
+        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pObs, uid:pOptions.vid, opts:{direct:false} });
       });
     });
 

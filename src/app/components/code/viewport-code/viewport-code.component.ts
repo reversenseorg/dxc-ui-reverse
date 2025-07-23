@@ -33,6 +33,7 @@ export class ViewportCodeComponent implements OnInit, AfterViewInit, IViewportCo
   @ContentChildren(ViewportCodeClassComponent) classCmp: QueryList<ViewportCodeClassComponent>;
 
   icons:any = CODE_ICONS;
+  opts: { direct:boolean } = {direct:false};
 
   id: number = -1;
   uid: string = '';

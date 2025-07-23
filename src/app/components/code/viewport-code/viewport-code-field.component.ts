@@ -29,6 +29,7 @@ export class ViewportCodeFieldComponent implements OnInit, AfterViewInit {
   @Input() height: number;
   @Input() width: number;
 
+  @Input() direct = false;
   @ViewChild(ViewportSplittedComponent) layout:ViewportSplittedComponent;
   @ViewChild('metadata',{ read:ElementRef, static:false}) metadataEl:ElementRef;
 

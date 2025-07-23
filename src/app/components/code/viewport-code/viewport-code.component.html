@@ -1,18 +1,18 @@
 <div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-code">
 
   <ng-container *ngIf="data._t=='m'">
-    <app-viewport-code-meth [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="controller"></app-viewport-code-meth>
+    <app-viewport-code-meth [direct]="opts.direct" [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="controller"></app-viewport-code-meth>
   </ng-container>
 
   <ng-container *ngIf="data._t=='c'">
-    <app-viewport-code-class [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="controller"></app-viewport-code-class>
+    <app-viewport-code-class [direct]="opts.direct" [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="controller"></app-viewport-code-class>
   </ng-container>
 
   <ng-container *ngIf="data._t=='p'">
-    <app-viewport-code-package [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="controller"></app-viewport-code-package>
+    <app-viewport-code-package [direct]="opts.direct" [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="controller"></app-viewport-code-package>
   </ng-container>
 
   <ng-container *ngIf="data._t=='f'">
-    <app-viewport-code-field [data]="data" [width]="size.width" [height]="size.height"  [parent]="this.parent" [controller]="controller"></app-viewport-code-field>
+    <app-viewport-code-field [direct]="opts.direct" [data]="data" [width]="size.width" [height]="size.height"  [parent]="this.parent" [controller]="controller"></app-viewport-code-field>
   </ng-container>
 </div>

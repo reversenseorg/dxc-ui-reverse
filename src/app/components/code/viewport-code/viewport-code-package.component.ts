@@ -32,6 +32,7 @@ export class ViewportCodePackageComponent implements OnInit {
 
 
 
+  @Input() direct = false;
 
   id: number = -1;
   icons:any = CODE_ICONS;

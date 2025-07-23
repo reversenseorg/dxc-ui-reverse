@@ -369,8 +369,8 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           this.codeService.disassMethod({
             __: NodeInternalType.METHOD,
             _uid: pMethod.__signature__ as string
-          }).subscribe( (pCode:Nullable<string>)=>{
-            pMethod.__view_code = pCode;
+          }).subscribe( (pCode:Nullable<any>)=>{
+            pMethod.__view_code = pCode.smali;
             //this.modalMethod.open(pMethod);
           })
         }else{

@@ -384,6 +384,10 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     this.idCTR++;
     cmpRef.instance.id = this.idCTR;
     cmpRef.instance.uid = pView.uid;
+    if(pView.opts!=null){
+      cmpRef.instance.opts = pView.opts;
+    }
+
     //cmpRef.instance.height = this.ctnHeight;
 
     this.cmps.push(cmpRef);

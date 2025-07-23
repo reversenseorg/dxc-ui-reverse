@@ -28,14 +28,13 @@ import {INode} from "../../../models/INode";
 import {ModelFunction} from "../../../models/ModelFunction";
 import ModelPackage from "../../../models/ModelPackage";
 import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
-import {CodeController} from "./CodeController";
 import {CODE_ICONS} from "../icons";
 import {Tag} from "../../../models/tags/Tag";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
-import {MerlinRule} from "../../../models/search/MerlinRule";
 import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
 import {DxApiResponse, INodeRef} from "../../../base/common/common";
 import {IController} from "../../../base/controllers/IController.interface";
+import {DxcApiToken} from "../../../base/DxcApiToken";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -530,45 +529,34 @@ export class CodeControllerService extends DxcApiService{
   }
 
 
-  getClass( pQuery:string, pComplete:boolean = false):Observable<CodeItem> {
+  getClass( pQuery:string, pDirect = false):Observable<any> {
 
-    if(pComplete){
-      return this._process(
-        this.endpoints['class']['info'],
-        {
-          'id': pQuery
-        }
-      ).pipe(map((pRes:any)=>{
-        if(pRes.err){
-          this.outputSvc.print(OutputMessage.newError({ msg:"Class not found", src:"Bytecode Analyzer"  }));
-          return null;
-        }else{
-          return pRes;
-        }
+      if(pDirect){
+        const p = DxcApiToken.getInstance("puid");
+        return this.retrieveNode<ModelClass>(
+            (p!=null ? p.getToken() : ""),
+            {
+              __: NodeInternalType.CLASS,
+              _uid: pQuery
+            }
+        );
+      }else{
+        return this._process(
+            this.endpoints['class']['info'],
+            {
+              'id': pQuery
+            }
+        ).pipe(map((pRes:any)=>{
+          if(pRes.err){
+            this.outputSvc.print(OutputMessage.newError({ msg:"Class not found", src:"Bytecode Analyzer"  }));
+            return null;
+          }else{
+            return pRes;
+          }
 
-      }));
-    }else{
-      return this._process(
-        /*this.endpoints['finder']['search'],
-        {
-          ':query': encodeURIComponent(btoa(`get.class("${pQuery}")`))
-        }*/
+        }));
+      }
 
-        this.endpoints['class']['info'],
-        {
-          'id': pQuery
-        }
-      ).pipe(map( pRes => {
-        if(pRes.success===false){
-          this.outputSvc.print(OutputMessage.newError({ msg:"Class not found", src:"Bytecode Analyzer" }));
-          return null;
-        }else{
-          return pRes;
-        }
-
-
-      }));
-    }
   }
 
   getConnectionStringFromURI():DexcaliburConnectionParams|null {
@@ -712,7 +700,7 @@ export class CodeControllerService extends DxcApiService{
   }
 
   disassMethod( pRef:INodeRef, pDirect = false,
-                pProject:Nullable<DexcaliburProjectUUID> = null):Observable<Nullable<string>> {
+                pProject:Nullable<DexcaliburProjectUUID> = null):Observable<Nullable<{ format:string, smali:string, disass:any }>> {
 
     let ep:EndpointInfo, opt:any;
     if(!pDirect){
@@ -744,7 +732,7 @@ export class CodeControllerService extends DxcApiService{
         })
         pRes.data.smali = code;
 
-        this.outputSvc.print(OutputMessage.newSuccess({ msg:"Method ["+pRef+"] has been successfully disassembled", src:"Bytecode Analyzer" }));
+        this.outputSvc.print(OutputMessage.newSuccess({ msg:"Method ["+pRef._uid+"] has been successfully disassembled", src:"Bytecode Analyzer" }));
 
         return pRes.data;
       }

@@ -48,6 +48,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   @Input() parent: ViewportComponent;
   @Input() height: number;
   @Input() width: number;
+  @Input() direct = false;
   @ViewChild('codeEditor') codeEditor:any;
   //@ViewChild('vmEditor') vmEditor:any;
 
@@ -166,7 +167,10 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
     }*/
 
     if(changes.hasOwnProperty('data')){
-      this.controller.service.getClass((changes as any).data.currentValue.enclosingClass).subscribe( (vClass:any) => {
+      this.controller.service.getClass((changes as any).data.currentValue.enclosingClass, this.direct).subscribe( (vClass:any) => {
+
+        console.log(vClass);
+
         this.data.enclosingClass = vClass.data;
         // mark arguments as class
 

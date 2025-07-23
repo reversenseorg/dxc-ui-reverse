@@ -3,7 +3,7 @@ import {HttpClient, HttpEventType} from '@angular/common/http';
 import {finalize, from, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
-import DexcaliburProject from "../../../models/DexcaliburProject";
+import DexcaliburProject, {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
@@ -176,6 +176,7 @@ export class ProjectService extends DxcApiService {
      * @field
      */
   private _uploaded:Record<string, Nullable<string>> = {};
+
 
   /**
    *
