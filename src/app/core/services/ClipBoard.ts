@@ -1,5 +1,5 @@
 import {DxcSelection} from "./SelectionManager";
-import {Nullable} from "../../../base/Nullable";
+import {Nullable} from "../../base/Nullable";
 
 export class ClipBoard {
   

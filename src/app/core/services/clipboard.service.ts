@@ -13,7 +13,7 @@ import {DxcSelection, DxcSelectionType, SelectionManager} from "./SelectionManag
 @Injectable({
   providedIn: 'root'
 })
-export class ElectronService {
+export class ClipboardService {
 
   private _sm:SelectionManager;
   clipboard: ClipBoard ;

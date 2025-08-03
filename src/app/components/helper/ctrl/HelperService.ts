@@ -1,8 +1,8 @@
 import {HttpClient} from "@angular/common/http";
-import {Observable, Subject} from "rxjs";
+import { Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AppMenuService} from "../../../base/appmenu/app-menu.service";
-import {DexcaliburServerService, ElectronService} from "../../../core/services";
+import { ClipboardService} from "../../../core/services/clipboard.service";
 
 
 export interface HelpDoc {
@@ -63,7 +63,7 @@ export class HelperService {
   onShowDoc$: Subject<HelpDoc> = new Subject();
 
   constructor( private appmenuSvc:AppMenuService,
-               private eSvc:ElectronService,
+               private eSvc:ClipboardService,
                private http:HttpClient) {
 
     this.appmenuSvc.addMenu({

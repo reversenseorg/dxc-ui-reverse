@@ -1,8 +1,6 @@
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {finalize, from, Observable, Subject} from "rxjs";
-import {environment} from "../../environments/environment";
+import {HttpClient} from "@angular/common/http";
+import { from, Observable, Subject} from "rxjs";
 import {Utils} from "../cmp/Utils";
-import {Injectable} from "@angular/core";
 import {DxcApiToken} from "./DxcApiToken";
 import {DexcaliburConnectionParams} from "../models/remote/DexcaliburConnectionParams";
 import {WebApiWindowing} from "./WebApiWindowing";
@@ -10,21 +8,8 @@ import {OutputService} from "../components/output/ctrl/output.service";
 import {OutputMessage} from "../cmp/OutputMessage";
 import {Nullable} from "./Nullable";
 import {IStringIndex} from "./IStringIndex";
-import {UIException} from "./error/UIException";
 import {map} from "rxjs/operators";
-
-/*
-export interface ServerResponse {
-  success: boolean;
-  data?: any;
-  msg?: string;
-}*/
-
-export interface ServerLocation {
-  ssl:boolean;
-  ip: string;
-  port: string;
-}
+import {DxApiResponse} from "./common/common";
 
 export interface EndpointInfo {
   method :string;
@@ -369,5 +354,16 @@ export class DxcApiService {
       //headers: new HttpHeaders().append('Content-Type', 'multipart/form-data'),
       reportProgress: true,
     });
+  }
+
+  protected _processApiRequest<T>( pEndpoint:EndpointInfo, pOptions:any,
+                                   pPostProcess:Nullable<(vData:any)=>T> = null):Observable<DxApiResponse<T>>{
+    return this._process(pEndpoint,pOptions).pipe(map((pEl:any)=>{
+      return {
+        success: pEl.success,
+        msg: (!pEl.success ? pEl.msg : null),
+        data: (pEl.success ? (pPostProcess!=null ? pPostProcess.call(null,pEl.data):pEl.data) : null),
+      }
+    }));
   }
 }

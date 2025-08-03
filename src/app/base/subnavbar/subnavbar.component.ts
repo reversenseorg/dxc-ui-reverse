@@ -20,7 +20,7 @@ import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 import {NgbDropdown, NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {IconModel} from "../icon/IconModel";
 import {Subject} from "rxjs";
-import {ElectronService} from "../../core/services";
+import {ClipboardService} from "../../core/services/clipboard.service";
 import {Nullable} from "../Nullable";
 import {IStringIndex} from "../IStringIndex";
 
@@ -57,7 +57,7 @@ export class SubnavbarInputComponent implements AfterViewInit {
 
 
 
-  constructor( private electronSvc:ElectronService) {
+  constructor( private electronSvc:ClipboardService) {
 
   }
 

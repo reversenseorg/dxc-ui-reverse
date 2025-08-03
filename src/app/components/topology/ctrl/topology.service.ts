@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {merge, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DxcApiService} from "../../../base/DxcApiService";
-import {AppMenuService, MenuEvent} from "../../../base/appmenu/app-menu.service";
+import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import AndroidActivity from "../../../models/android/AndroidActivity";
 import AndroidProvider from "../../../models/android/AndroidProvider";
 import AndroidService from "../../../models/android/AndroidService";
@@ -16,13 +16,27 @@ import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import AndroidComponent from "../../../models/android/AndroidComponent";
-import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {IntentFilter} from "../../../models/android/IntentFilter";
 import {Nullable} from "../../../base/Nullable";
 import {IntentDataCriteria} from "../../../models/android/Intent";
 import {FilesystemService} from "../../file/ctrl/FilesystemService";
+import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
+import {DxApiResponse} from "../../../base/common/common";
 
+export type ComponentTypeUID = string;
+
+export interface ComponentType {
+  id: ComponentTypeUID;
+  name: string;
+  description: string;
+  node: NodeInternalType;
+}
+
+export interface TopologyInfo {
+  cmps: Record<ComponentTypeUID, number>;
+  types: ComponentType[];
+}
 
 export interface TopologyMenuEvent {
   scope?:string;
@@ -63,6 +77,10 @@ export class TopologyService extends DxcApiService {
     super(
       {
         app: {
+          // generic components
+          cmpList: { method:'GET', url:'/cmps/list', format: 'json', auth:false /* removed */, puid:true },
+          cmpTypes: { method:'GET', url:'/cmps/types', format: 'json', auth:false /* removed */, puid:true },
+
           act: { method:'GET', url:'/android/activities', format: 'json', auth:false /* removed */, puid:true },
           serv: { method:'GET', url:'/android/services', format: 'json', auth:false /* removed */, puid:true },
           prov: { method:'GET', url:'/android/providers', format: 'json', auth:false /* removed */, puid:true },
@@ -254,7 +272,8 @@ export class TopologyService extends DxcApiService {
       this.endpoints['app']['prov']
     ).pipe(map((pObs)=>{
       if(pObs.success){
-        return pObs.data;
+        //if(Array.isArray(pObs.data)
+        return pObs.data.map((x:any)=>new AndroidProvider(x));
       }else{
         this.outputSvc.print(OutputMessage.newError({
           src: "Topology",
@@ -452,6 +471,20 @@ export class TopologyService extends DxcApiService {
     this._modals['prepareIntent'].filter = pIntentFilter;
     this._modals['prepareIntent'].criteria = pCriteria;
     this._modals['prepareIntent'].show();
+  }
+
+  getCmpsInfo(pProject:DexcaliburProjectUUID):Observable<DxApiResponse<TopologyInfo>> {
+    return this._processApiRequest<TopologyInfo>(
+        this.endpoints.app.cmpsList,
+        { prj: pProject }
+    );
+  }
+
+  getCmpsList(pProject:DexcaliburProjectUUID):Observable<DxApiResponse<TopologyInfo>>  {
+    return this._processApiRequest(
+        this.endpoints.app.cmpsTypes,
+        { prj: pProject }
+    )
   }
 }
 

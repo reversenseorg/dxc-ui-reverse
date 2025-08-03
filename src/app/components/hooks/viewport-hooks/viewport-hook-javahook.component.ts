@@ -15,7 +15,7 @@ import JavaMethodHook from "../../../models/JavaMethodHook";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {UIException} from "../../../base/error/UIException";
 import {IStringIndex} from "../../../base/IStringIndex";
 import HookTemplateFragment from "../../../models/hook/HookTemplateFragment";
@@ -99,7 +99,7 @@ export class ViewportHookJavaComponent implements OnInit, AfterViewInit, IViewpo
   events: RuntimeEvent<any>[] = [];
 
   constructor( private hookSvc:HookService,
-               private electronSvc:ElectronService,
+               private electronSvc:ClipboardService,
                private codeSvc:CodeControllerService) {
 
   }

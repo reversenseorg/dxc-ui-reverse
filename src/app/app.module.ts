@@ -56,7 +56,6 @@ import {CoreModule} from "./core/core.module";
 import {DxcClientModule} from "./dxc-client/dxc-client.module";
 import {SplashComponent} from "./components/project/splash.component";
 import {StageComponent} from "./components/stage/stage.component";
-import {DexcaliburServerService} from "./core/services/dexcalibur/dxc.service";
 import {DxcBaseModule} from "./base/dxc-base.module";
 import {ExplorerDeviceComponent} from "./components/device/explorer-device/explorer-device.component";
 import {ModalDmComponent} from "./components/device/modal-dm/modal-dm.component";
@@ -64,7 +63,6 @@ import {TerminalOutputComponent} from "./components/output/terminal-output/termi
 import {ProjectMgtComponent} from "./components/project/project-mgt.component";
 import {NewProjectComponent} from "./components/project/new-project.component";
 import {OpenProjectComponent} from "./components/project/open-project.component";
-import {SvcStatusComponent} from "./components/project/SvcStatus.component";
 import {ViewportSplashComponent} from "./components/project/viewport-project/viewport-splash.component";
 import {ModalActiveProjectComponent} from "./components/project/modals/active-project.component";
 import {ModalNewProjectComponent} from "./components/project/modal-new-project/modal-new-project.component";
@@ -181,7 +179,6 @@ import {DxcDropdownComponent} from "./base/common/dropdown";
     ProjectMgtComponent,
     NewProjectComponent,
     OpenProjectComponent,
-    SvcStatusComponent,
     ViewportSplashComponent,
     ViewportProjectDashboardComponent,
     ModalActiveProjectComponent,
@@ -338,14 +335,7 @@ import {DxcDropdownComponent} from "./base/common/dropdown";
   providers: [
     ControllerService,
     SettingsService,
-    DexcaliburServerService,
-    ViewportResolver,
-    /*{
-      provide: APP_BASE_HREF,
-      deps: [],
-      useFactory: () => window.location.pathname
-    }*/
-    //NgbTooltipConfig
+    ViewportResolver
   ],
   exports: [
     NavbarComponent,

@@ -18,7 +18,7 @@ import {TerminalItem} from "../../cmp/TerminalItem";
 import {ViewportController} from "../../base/viewport/ViewportController";
 import {Observable, Subject} from "rxjs";
 import {ControllerService} from "../../controller.service";
-import {ElectronService} from "../../core/services";
+import {ClipboardService} from "../../core/services/clipboard.service";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 import {OutputMessage} from "../../cmp/OutputMessage";
 import {OutputService} from "../output/ctrl/output.service";
@@ -36,7 +36,7 @@ import {ModalGlobalSettingsComponent} from "../settings/modal-gsettings/modal-gs
 import {KeyboardNavigationService} from "../../base/keyboard/keyboard-navigation.service";
 import {DeviceManagerService} from "../device/ctrl/device-manager.service";
 import {STAGE_ICONS} from "./icons";
-import {PasteLocation, PasteLocationType} from "../../core/services/electron/SelectionManager";
+import {PasteLocation, PasteLocationType} from "../../core/services/SelectionManager";
 import {DxcApiService} from "../../base/DxcApiService";
 import {WebsocketEvent, WebsocketEventType} from "../../base/websocket/WebsocketEvent";
 import {Nullable} from "../../base/Nullable";
@@ -231,7 +231,7 @@ export class StageComponent implements OnInit, AfterViewInit {
     private devSvc:DeviceManagerService,
     private authSvc:AuthService,
     private kbSvc:KeyboardNavigationService,
-    private eSvc: ElectronService,
+    private eSvc: ClipboardService,
     private _activatedRoute:ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector:ChangeDetectorRef) {

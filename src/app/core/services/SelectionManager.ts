@@ -1,4 +1,4 @@
-import {Nullable} from "../../../base/Nullable";
+import {Nullable} from "../../base/Nullable";
 import {Subject} from "rxjs";
 
 

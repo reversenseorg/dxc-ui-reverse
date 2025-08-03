@@ -16,7 +16,7 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Subject} from "rxjs";
 import {ViewerController} from "../ctrl/ViewerController";
 import {SubnavbarComponent} from "../../../base/subnavbar/subnavbar.component";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 
 
 // @ts-ignore
@@ -63,7 +63,7 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
   activeWidth: number = 60;
   searchBar: boolean = false;
 
-  constructor( private eSvc:ElectronService) { }
+  constructor( private eSvc:ClipboardService) { }
 
   ngOnInit(): void {
     console.log(this.data);

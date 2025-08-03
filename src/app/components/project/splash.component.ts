@@ -1,12 +1,4 @@
 import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from "@angular/core";
-import {ITerminalContainer} from "../../base/terminal/ITerminalContainer";
-import {TerminalComponent} from "../../base/terminal/terminal.component";
-import {WorkspaceController} from "../workspace/ctrl/WorkspaceController";
-import {ActivatedRoute, Router} from "@angular/router";
-
-// import { IpcRenderer} from 'electron';
-import {ElectronService} from "../../core/services";
-import {DexcaliburServerService} from "../../core/services/dexcalibur/dxc.service";
 import {ControllerService} from "../../controller.service";
 
 
@@ -55,7 +47,6 @@ const PKG_INFO = require("../../../../package.json");
           </div>
           <div class="col menu-view">
             <dxc-project-open *ngIf="active=='open'"></dxc-project-open>
-            <dxc-svc-status *ngIf="active=='infp'"></dxc-svc-status>
           </div>
         </div>
       </div>
@@ -87,10 +78,7 @@ export class SplashComponent implements OnInit,OnChanges {
   dxcStatus: boolean = false;
 
   constructor(
-    private router:Router,
-    private activeRoute:ActivatedRoute,
-    private ctrlService:ControllerService,
-    private electronService: ElectronService) {
+    private ctrlService:ControllerService) {
 
   }
 
@@ -114,10 +102,6 @@ export class SplashComponent implements OnInit,OnChanges {
   private initializeIpcRenderer() {
 
       try {
-        /*this.ipcRenderer = this.electronService.ipcRenderer;
-        this.ipcRenderer.on('dxc-started', ()=>{
-          this.dxcStatus = true;
-        });*/
         this.dxcStatus = true;
       } catch (e) {
         throw e;

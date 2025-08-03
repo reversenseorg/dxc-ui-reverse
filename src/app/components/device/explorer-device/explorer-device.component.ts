@@ -35,7 +35,7 @@ import {ExpandableItemComponent} from "../../../base/expandable-list/expandable-
 import {ViewerController} from "../../viewer/ctrl/ViewerController";
 import AppPackage from "../../../models/AppPackage";
 import {HookService} from "../../hooks/ctrl/hook.service";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {FILE_ICONS} from "../../file/icons";
@@ -162,7 +162,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
                private fsSvc: FilesystemService,
                private route: ActivatedRoute,
                private hookSvc: HookService,
-               private electronSvc: ElectronService,
+               private electronSvc: ClipboardService,
                private outputSvc: OutputService,
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
@@ -1166,5 +1166,17 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
      this.hookSvc.startServer({dev:pDevice.getUID()}).subscribe(()=>{
 
      })
+  }
+
+  getPsTextStyle(pO:any):any {
+    const styles:any = {};
+    if(pO.NAME!=null){
+      if(pO.NAME[0]==='[') styles['dxc-text-50'] = true;
+      if(/frida/.test(pO.NAME)) styles['dxc-salmon'] = true;
+    }
+    else if((pO.USER!=null)&&(pO.USER[0]=='u')){
+      styles['text-warning'] = true;
+    }
+    return styles;
   }
 }

@@ -11,7 +11,7 @@ import {NgTerminal} from "ng-terminal";
 import {Subject} from "rxjs";
 import {TerminalInfo, TerminalSession, TerminalSessionType} from "../ctrl/TerminalSession";
 import {SubnavbarComponent} from "../../../base/subnavbar/subnavbar.component";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {WorkspaceService} from "../ctrl/workspace.service";
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {WebsocketEvent, WebsocketEventType} from "../../../base/websocket/WebsocketEvent";
@@ -87,7 +87,7 @@ export class TerminalWorkspaceComponent extends AbstractKeyboardNavigable implem
   activeTerm: any = null;
   @Input() activeSession: Nullable<TerminalSession> = null;
 
-  constructor(private wsSvc:WorkspaceService, private eSvc:ElectronService) {
+  constructor(private wsSvc:WorkspaceService, private eSvc:ClipboardService) {
     super();
   }
 

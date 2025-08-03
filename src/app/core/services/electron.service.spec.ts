@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ElectronService } from './electron.service';
+import { ClipboardService } from './clipboard.service';
 
-describe('ElectronService', () => {
+describe('ClipboardService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ElectronService = TestBed.get(ElectronService);
+    const service: ClipboardService = TestBed.get(ClipboardService);
     expect(service).toBeTruthy();
   });
 });

@@ -34,7 +34,7 @@ import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigat
 import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {AuthService} from "../../auth/ctrl/auth.service";
 import {AuthenticationEvent, AuthenticationEventType} from "../../auth/AuthenticationEvent";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
@@ -141,7 +141,7 @@ export class ModalGlobalSettingsComponent extends AbstractKeyboardNavigable impl
   @ViewChild('newPwd2',{read:ElementRef, static:true}) newPwd2El:ElementRef;
 
   constructor( private changeDetectorRef: ChangeDetectorRef,
-               private electronSvc:ElectronService,
+               private electronSvc:ClipboardService,
                private devSvc:DeviceManagerService,
                private platformSvc:PlatformService,
                private outputSvc:OutputService,

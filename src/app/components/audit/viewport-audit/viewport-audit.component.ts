@@ -18,7 +18,7 @@ import {TOPO_ICONS} from "../../topology/icons";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import ModelSyscall from "../../../models/ModelSyscall";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {AuditController} from '../ctrl/AuditController';
 import {AuditService} from "../ctrl/audit.service";
 import AssuranceModel from "../../../models/audit/common/AssuranceModel";
@@ -168,7 +168,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
     private auditService: AuditService,
     private projectService: ProjectService,
     private searchService: SearchService,
-    private electronSvc:ElectronService,
+    private electronSvc:ClipboardService,
     private outputSvc:OutputService,
     private domSanitizer:DomSanitizer/*,
     private _changeRef:ChangeDetectorRef*/) {

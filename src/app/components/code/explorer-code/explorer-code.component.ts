@@ -38,7 +38,7 @@ import {IKeyboardNavigable} from "../../../base/keyboard/IKeyboardNavigable";
 import ModelMethod from "../../../models/ModelMethod";
 import {CodeControllerService} from "../ctrl/code-controller.service";
 import {HookFragmentPresetOptions, HookFragmentPresetType, HookService} from "../../hooks/ctrl/hook.service";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import ModelClass from "../../../models/ModelClass";
 import {nextCUID} from "../../../base/keyboard/AbstractKeyboardNavigable";
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
@@ -46,7 +46,7 @@ import {NodeInternalType} from "../../../models/NodeInternalType";
 import {NativeService} from "../../native/ctrl/native.service";
 import {TagService} from "../../tag/ctrl/tag.service";
 import {SelectionUtils} from "../../../core/services/dexcalibur/SelectionUtils";
-import {DxcSelectionType} from "../../../core/services/electron/SelectionManager";
+import {DxcSelectionType} from "../../../core/services/SelectionManager";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
@@ -157,7 +157,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   constructor( private projectService:ProjectService,
                private codeService:CodeControllerService,
-               private electronSvc:ElectronService,
+               private electronSvc:ClipboardService,
                private hookSvc:HookService,
                private tagSvc:TagService,
                private nativeSvc:NativeService,

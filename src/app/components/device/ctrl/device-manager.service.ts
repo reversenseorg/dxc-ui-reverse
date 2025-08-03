@@ -9,7 +9,7 @@ import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import AppPackage from "../../../models/AppPackage";
 import DeviceProfile, {BuildProfile, SystemProfile} from "../../../models/DeviceProfile";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import ModelSyscall from "../../../models/ModelSyscall";
 import {DEVICE_PANEL} from "../viewport-device/viewport-device.component";
 import {Nullable} from "../../../base/Nullable";
@@ -75,7 +75,7 @@ export class DeviceManagerService extends DxcApiService {
   onDeviceListRefresh: Subject<Device[]> = new Subject<Device[]>();
 
   constructor( private appmenuSvc:AppMenuService,
-               private electronSvc:ElectronService,
+               private electronSvc:ClipboardService,
                private outputSvc:OutputService,
                _http:HttpClient) {
     super(

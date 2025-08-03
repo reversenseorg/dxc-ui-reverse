@@ -25,7 +25,7 @@ import {OutputService} from "../../output/ctrl/output.service";
 import {HookService} from "../../hooks/ctrl/hook.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import ModelSyscall from "../../../models/ModelSyscall";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {Nullable} from "../../../base/Nullable";
 import {PrivilegedExecutionStrategy} from "../../../models/devices/PrivilegedExecutionStrategy";
 import {ActivatedRoute} from "@angular/router";
@@ -173,7 +173,7 @@ export class ViewportDeviceComponent implements OnInit, AfterViewInit, IViewport
     private ctrlSvc:ControllerService,
     private dmService: DeviceManagerService,
     private hookSvc: HookService,
-    private electronSvc:ElectronService,
+    private electronSvc:ClipboardService,
     private outputSvc:OutputService,
     private changeDetectorRef: ChangeDetectorRef
     ) {

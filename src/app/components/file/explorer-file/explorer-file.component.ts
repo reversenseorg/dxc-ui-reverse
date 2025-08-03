@@ -23,7 +23,7 @@ import {map} from "rxjs/operators";
 import {IconModel, IconModelCollection} from "../../../base/icon/IconModel";
 import ModelFile from "../../../models/ModelFile";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
@@ -91,7 +91,7 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
    *
    */
   constructor( private fsSvc:FilesystemService,
-               private electronSvc:ElectronService,
+               private electronSvc:ClipboardService,
                private projectSvc:ProjectService,
 
                ngbTooltipConfig:NgbTooltipConfig) {

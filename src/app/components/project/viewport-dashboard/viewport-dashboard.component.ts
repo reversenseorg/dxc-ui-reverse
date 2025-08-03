@@ -13,7 +13,7 @@ import {HOOK_ICONS} from "../../hooks/icons";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {ContextMenuList, ContextMenuState} from "../../../base/context-menu/context-menu.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {HookService} from "../../hooks/ctrl/hook.service";
 import Application from '../../../models/Application';
 import {Nullable} from "../../../base/Nullable";
@@ -91,7 +91,7 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
   };
 
   constructor( private projectSvc:ProjectService,
-               private eSvc:ElectronService,
+               private eSvc:ClipboardService,
                private hookSvc:HookService,
                private inspSvc:InspectorService ) {
 

@@ -11,7 +11,7 @@ import {HOOK_ICONS} from "../../hooks/icons";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {ContextMenuList, ContextMenuState} from "../../../base/context-menu/context-menu.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import Application from '../../../models/Application';
 import {PrivacyService} from "../ctrl/privacy.service";
 import {ProjectService} from '../../project/ctrl/project.service';
@@ -99,7 +99,7 @@ export class ViewportPrivacyDashboardComponent implements OnInit, IViewportConta
   constructor( private projectSvc:ProjectService,
 
                private topoSvc:TopologyService,
-               private eSvc:ElectronService,
+               private eSvc:ClipboardService,
                private privSvc:PrivacyService) {
 
   }

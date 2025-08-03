@@ -22,7 +22,7 @@ import {Nullable} from "../../../base/Nullable";
 import {DexcaliburConnectionParams} from "../../../models/remote/DexcaliburConnectionParams";
 import {AuthenticationEvent, AuthenticationEventType} from "../../auth/AuthenticationEvent";
 import {AuthService} from "../../auth/ctrl/auth.service";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {MenuItem} from "../../../base/menu/MenuItem";
 import {INode} from "../../../models/INode";
 import {ModelFunction} from "../../../models/ModelFunction";
@@ -70,7 +70,7 @@ export class TaintAnalyzerService extends DxcApiService{
 
   constructor( private appmenuSvc:AppMenuService,
                private authSvc:AuthService,
-               private eSvc:ElectronService,
+               private eSvc:ClipboardService,
                private projectSvc:ProjectService,
                private tagSvc:TagService,
                private outputSvc:OutputService,

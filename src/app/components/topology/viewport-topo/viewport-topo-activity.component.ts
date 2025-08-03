@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {TOPO_ICONS} from "../icons";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
@@ -28,7 +28,7 @@ import {ViewportTab} from "../../../cmp/ViewportTab";
   templateUrl: './viewport-topo-activity.component.html',
   styleUrls: ['./viewport-topo.component.scss']
 })
-export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, IViewportContainer, ExpandableProvider {
+export class ViewportTopoActivityComponent implements OnInit, OnChanges, AfterViewInit, IViewportContainer, ExpandableProvider {
 
   @Input() item: any;
   @Input() data: any; // ModelMethod
@@ -91,6 +91,11 @@ export class ViewportTopoActivityComponent implements OnChanges, AfterViewInit, 
   }
 
   // ----- END of IViewportContainer  -------
+
+  ngOnInit() {
+    const l =  (this.data as AndroidComponent).getLabel();
+    if(l!=null) this.view.tab.label = l;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
 

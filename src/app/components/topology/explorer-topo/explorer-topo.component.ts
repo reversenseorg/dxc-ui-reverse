@@ -235,6 +235,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
       })
     });
 
+    // TODO : make it agnostics
 
     this.data[this.SUBVIEW.ACT] = { _t: 'f', _s:0, children: [], name: 'Activities', _c: NodeInternalType.ANDROID_ACTIVITY, _icon: TOPO_ICONS['ACTIVITIES'] };
     this.data[this.SUBVIEW.PROV] = { _t: 'f', _s:0, children: [], name: 'Providers', _c: NodeInternalType.ANDROID_PROVIDER, _icon: TOPO_ICONS['PROVIDER'] };
@@ -387,6 +388,11 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   }
 
   refresh():void {
+
+    /*this.topoSvc.getCmpsInfo().subscribe(vInfo => {
+
+    });*/
+
     this.topoSvc
       .getActivities()
       .subscribe((pActs:AndroidActivity[]) => {

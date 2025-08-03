@@ -89,7 +89,6 @@ export class AuditService extends DxcApiService{
           model: { method: 'GET', url:'/audit/model/:model', format:'json', auth:false /* removed */, puid:true},
           models: { method: 'GET', url:'/audit/models', format:'json', auth:false, puid:false},
           dashboard: { method: 'GET', url:'/audit/dashboard/:model', format:'json', auth:false /* removed */, puid:true},
-          scan: { method: 'POST', url:'/audit/scan/:model', format:'json', auth:false /* removed */, puid:true},
           scanInfo: { method: 'POST', url:'/audit/scanInfo', format:'json', auth:false /* removed */, puid:true},
           controls: { method: 'POST', url:'/audit/controls/:model', format:'json', auth:false /* removed */, puid:true},
         },
@@ -268,31 +267,6 @@ export class AuditService extends DxcApiService{
     }));
   }
 
-  scan(pProjectUID:string, pModelId:string):Observable<Nullable<AssuranceReport>> {
-    return this._process(
-      this.endpoints['audit']['scan'],
-      { model: pModelId }
-    ).pipe(map( (pEl:any) => {
-
-      if(pEl.success){
-
-        const report:AssuranceReport = AssuranceReport.fromJsonObject(pEl.data);
-
-        this.outputSvc.print(OutputMessage.newSuccess({
-          src: "Audit",
-          msg: `Scan reports have been retrieved`
-        }));
-        //this.onAuthentication.next(AuthenticationEvent.newLogoutSuccess());
-        return report;
-      }else{
-        this.outputSvc.print(OutputMessage.newError({
-          src: "Audit",
-          msg: `Audit scan failed`
-        }));
-        return null;
-      }
-    }));
-  }
 
   newScanOrder(pProjectUID:string, pModelId:string):Observable<Nullable<AssuranceReport>> {
     return this._process(

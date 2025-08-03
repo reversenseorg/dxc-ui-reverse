@@ -24,7 +24,7 @@ import {
   ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
 import {from, Observable} from "rxjs";
-import {ElectronService} from "../../../core/services";
+import {ClipboardService} from "../../../core/services/clipboard.service";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import {AuditController} from "../ctrl/AuditController";
@@ -102,7 +102,7 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   constructor( private auditSvc:AuditService,
                private outputSvc:OutputService,
                private codeSvc:CodeControllerService,
-               private electronSvc:ElectronService,
+               private electronSvc:ClipboardService,
                private projectSvc:ProjectService,
                private changeDetectorRef:ChangeDetectorRef,
                ngbTooltipConfig:NgbTooltipConfig) {

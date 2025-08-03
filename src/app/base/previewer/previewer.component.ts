@@ -2,7 +2,7 @@
 
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
-import {ElectronService} from "../../core/services";
+import {ClipboardService} from "../../core/services/clipboard.service";
 import {IStringIndex} from "../IStringIndex";
 
 /**
@@ -35,7 +35,7 @@ export class PreviewerComponent implements OnInit, OnChanges {
 
   preview:string = '';
 
-  constructor( private elecSvc:ElectronService) {
+  constructor( private elecSvc:ClipboardService) {
 
   }
 

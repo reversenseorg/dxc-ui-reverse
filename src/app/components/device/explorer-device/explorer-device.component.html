@@ -82,7 +82,7 @@
 
 
           <span *ngIf="itemObj._t=='p'" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'ps',itemObj)">
-            <div class="row" [ngClass]="{ 'dxc-text-50':((itemObj.NAME!=null)&&(itemObj.NAME[0]=='[')), 'text-warning':((itemObj.USER!=null)&&(itemObj.USER[0]=='u')) }">
+            <div class="row" [ngClass]="getPsTextStyle(itemObj)">
               <div class="col-2">{{ itemObj.PID }}</div>
               <div class="col-3">{{ itemObj.USER }}</div>
               <div class="col-6">{{ itemObj.NAME }}</div>

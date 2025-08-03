@@ -38,6 +38,8 @@ export class CodeResolver {
                 return;
             }
 
+            sessionStorage.setItem("puid",pRoute.params.uid);
+            sessionStorage.setItem("mode","direct");
 
             const tok = DxcApiToken.getInstance("puid");
             if(tok!=null){
