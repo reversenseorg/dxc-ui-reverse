@@ -154,8 +154,9 @@ export class CodeControllerService extends DxcApiService{
         androidXref: {method: 'GET', url: '/code/android/xref/:type/:id', format: 'json', auth:false /* removed */, puid: true},
       },
       direct: {
-        disass: { method:'POST', url:'/code/direct/:puid/:nodetype/disass', format:'json', auth:false, puid:true },
-        search: { method:'POST', url:'/code/direct/:puid/:nodetype/search', format:'json', auth:false, puid:true },
+        // puid MUST be FALSE
+        disass: { method:'POST', url:'/code/direct/:puid/:nodetype/disass', format:'json', auth:false, puid:false },
+        search: { method:'POST', url:'/code/direct/:puid/:nodetype/search', format:'json', auth:false, puid:false },
       }, // { puid:pProjectUID, nodetype:pRef.__, nodeuid:pRef._uid }
       merlin: {
         search: {method: 'POST', url: '/code/merlin/search', format: 'json', auth:false /* removed */, puid: true}
@@ -272,24 +273,14 @@ export class CodeControllerService extends DxcApiService{
           label: "Remove SSL Pining",
           enabled: false
         }]
-      }, {
+      }/*, {
         label: 'Export',
         submenu: [{
           label: "Rebuild APK"
         }]
-      }]
+      }*/]
     }, 2);
 
-    /*this.appmenuSvc.addMenu({
-        id:'emu',
-        label: 'Emulator',
-        enabled:false,
-        submenu:[{
-          label: 'Dexcalibur DVM (disabled)',
-        },{
-          label: 'QEMU (disabled)',
-        }]
-    }, 5);*/
 
     this.eSvc.getSelectionManager().onSelect$.subscribe((pNode:any)=>{
 
