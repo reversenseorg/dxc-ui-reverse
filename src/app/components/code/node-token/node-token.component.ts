@@ -10,20 +10,16 @@ import {
 } from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../../../base/Nullable";
-import {OutputService} from "../../output/ctrl/output.service";
 import {Tag} from "../../../models/tags/Tag";
-import ModelMethod from "../../../models/ModelMethod";
-import ModelClass from "../../../models/ModelClass";
-import ModelField from "../../../models/ModelField";
 import {IconModel, IconModelCollection} from "../../../base/icon/IconModel";
 import {CODE_ICONS} from "../icons";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {INode} from "../../../models/INode";
-import {TagService} from "../../tag/ctrl/tag.service";
-import {ModelFunction} from "../../../models/ModelFunction";
-import ModelPackage from "../../../models/ModelPackage";
 import {CodeControllerService} from "../ctrl/code-controller.service";
+import {INodeRef} from "../../../base/common/common";
+import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
+import {tags} from "@angular-devkit/core";
 
 let ctr = 0;
 
@@ -40,7 +36,7 @@ export interface TargetApp {
 @Component({
     selector: 'dxc-node-token',
     template: `
-        <ng-container *ngIf="interactive; else noInter">
+        <ng-container *ngIf="err==null && interactive && item!=null; else noInter">
             <span *ngIf="nodeIcon!=null" [ngClass]="'badge dxc-no-gutters dxc-meta '+css" [ngStyle]="style">
                 <dxc-icon [model]="nodeIcon"></dxc-icon>
             </span>
@@ -82,6 +78,12 @@ export interface TargetApp {
                         <dxc-node-alias [item]="item.ret" [text]="getSymbol(item.ret)"></dxc-node-alias>
                     </ng-container>
                 </ng-container>
+                <ng-container *ngSwitchCase="NODE_TYPE.STRING">
+                    <span (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event,'str',item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
+                        <dxc-icon [model]="cIcons.STRING"></dxc-icon>
+                        <dxc-node-alias [item]="item" [text]="item.sym"></dxc-node-alias>
+                    </span>
+                </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.FUNC">
                     <span (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event,'func',item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
                         <dxc-icon [model]="cIcons.NATIVE"></dxc-icon>
@@ -89,14 +91,22 @@ export interface TargetApp {
                     </span>
                 </ng-container>
             </ng-container>
+            <ng-container *ngIf="tags">
+                <dxc-tag-badge *ngFor="let t of item.tags" [tagUUID]="t"></dxc-tag-badge>
+            </ng-container>
         </ng-container>
         <ng-template #noInter>
-            <ng-container (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event, 'meth', item)">
+            
+            <ng-container *ngIf="err==null; else errmsg" (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event, 'meth', item)">
                 <span *ngIf="nodeIcon!=null" [ngClass]="'badge dxc-no-gutters dxc-meta '+css" [ngStyle]="style">
                     <dxc-icon [model]="nodeIcon"></dxc-icon>
                 </span>
                 <span [ngClass]="'badge dxc-no-gutters symbol '+cssValue" [ngStyle]="styleValue">{{ getSymbol()  }}</span>
             </ng-container>
+            <ng-template #errmsg>
+                <fa-icon [icon]="['fas','times-circle']" class="ms-2 ps-1 pe-1 dxc-text-yellow"></fa-icon>
+                <span class="ps-2">Node not found</span>
+            </ng-template>
         </ng-template>
     `,
     styleUrls: ['../explorer-code/explorer-code.component.scss'],
@@ -106,14 +116,16 @@ export interface TargetApp {
           font-size: 0.8rem;
         }
     `],
-    providers: [NgbTooltipConfig],
+    providers: [
+        NgbTooltipConfig
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NodeTokenComponent implements OnInit, AfterViewInit {
+export class NodeTokenComponent implements OnInit {
 
     readonly NODE_TYPE = NodeInternalType;
 
-    @Input() item:any; //ModelMethod|ModelClass|ModelField|ModelFunction|ModelPackage;
+    @Input() item:any = null; //ModelMethod|ModelClass|ModelField|ModelFunction|ModelPackage;
 
     @Input() hookstatus = false;
     @Input() interactive = true;
@@ -124,12 +136,18 @@ export class NodeTokenComponent implements OnInit, AfterViewInit {
     @Input() css:string = "";
     @Input() cssValue:string = "";
 
-
+    @Input() ref:Nullable<INodeRef> = null;
     @Input() full = false;
+
+    /**
+     * To show tag badges
+     */
+    @Input() tags = false;
 
     @Input() format:Nullable<string> = null;
     @Input() noAlias = false;
 
+    err:Nullable<string> = null;
 
 
 
@@ -143,21 +161,29 @@ export class NodeTokenComponent implements OnInit, AfterViewInit {
 
 
     constructor(
-        private _outputSvc: OutputService,
-        private tagSvc: TagService,
         public codeSvc: CodeControllerService,
         private changeRef:ChangeDetectorRef) {
 
     }
 
-    ngAfterViewInit() {
-        //this.nodeIcon = (this.type=="to")? CODE_ICONS.XREF_TO : CODE_ICONS.XREF_FROM;
-        console.log(this);
-        this.changeRef.detectChanges();
-    }
 
     ngOnInit() {
-
+        if(this.ref!=null){
+            if(sessionStorage.getItem('puid')!=null){
+                this.codeSvc.retrieveNode<any>(
+                    sessionStorage.getItem('puid') as DexcaliburProjectUUID,
+                    this.ref as INodeRef
+                ).subscribe((vNode)=>{
+                    console.log("Retrieved node : ",vNode);
+                    if(vNode.success){
+                        this.item = vNode.data;
+                        this.changeRef.detectChanges();
+                    }else{
+                        this.err = 'not_found';
+                    }
+                })
+            }
+        }
     }
 
     /**
@@ -178,6 +204,7 @@ export class NodeTokenComponent implements OnInit, AfterViewInit {
     getSymbol(pItem:Nullable<INode> = null):string {
 
         const itm = (pItem!=null ? pItem : this.item);
+        console.log("getSymbol() of ",itm,typeof pItem==='string');
         if(typeof pItem==='string'){
             return pItem;
         }else {
@@ -190,4 +217,5 @@ export class NodeTokenComponent implements OnInit, AfterViewInit {
 
     }
 
+    protected readonly GLOBAL_ICONS = GLOBAL_ICONS;
 }

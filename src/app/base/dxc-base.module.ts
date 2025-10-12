@@ -13,50 +13,51 @@ import {
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {ModalProgressComponent} from "./modal-progress/modal-progress.component";
 import {FormsModule} from "@angular/forms";
-import {PreviewerComponent} from "./previewer/previewer.component";
-import {MetaComponent} from "./meta/meta.component";
 import {AppMenuComponent} from "./appmenu/app-menu.component";
 import {BoxComponent} from "./box/box.component";
 import {PaginatorComponent} from "./paging/dxc-paginator.component";
 import {DxcButtonComponent} from "./button/btn.component";
 import {AppMenuItemComponent} from "./appmenu/app-menu-item.component";
+import {ExpandableListComponent} from "./expandable-list/expandable-list.component";
+import {ExpandableItemComponent} from "./expandable-list/expandable-item.component";
+import {ContextMenuComponent} from "./context-menu/context-menu.component";
+import {ExpandableDirective} from "./expandable-list/expandable.directive";
+import {ContextItemComponent} from "./context-menu/context-item.component";
 
 @NgModule({
   declarations: [
-    ModalBaseComponent,
-    IconComponent,
     SubnavbarComponent,
     SubnavbarButtonComponent,
     SubnavbarTabComponent,
     SubnavbarMenuComponent,
     SubnavbarInputComponent,
     SubnavbarLabelComponent,
-    ModalProgressComponent,
-    PreviewerComponent,
-    MetaComponent,
     BoxComponent,
     AppMenuComponent,
     AppMenuItemComponent,
     PaginatorComponent,
-    DxcButtonComponent
+    DxcButtonComponent,
+    ExpandableListComponent,
+    ExpandableItemComponent,
+    ContextMenuComponent,
+  ContextItemComponent,
   ],
     exports: [
-        ModalBaseComponent,
-        IconComponent,
         SubnavbarComponent,
         SubnavbarButtonComponent,
         SubnavbarTabComponent,
         SubnavbarMenuComponent,
         SubnavbarInputComponent,
         SubnavbarLabelComponent,
-        ModalProgressComponent,
-        PreviewerComponent,
-        MetaComponent,
         AppMenuComponent,
         AppMenuItemComponent,
         BoxComponent,
         PaginatorComponent,
         DxcButtonComponent,
+        ExpandableListComponent,
+        ExpandableItemComponent,
+        ContextMenuComponent,
+        ContextItemComponent,
     ],
     imports: [
         CommonModule,
@@ -64,6 +65,10 @@ import {AppMenuItemComponent} from "./appmenu/app-menu-item.component";
         NgbModule,
         CoreModule,
         FormsModule,
+        ModalBaseComponent,
+        ModalProgressComponent,
+        IconComponent,
+        ExpandableDirective
     ]
 })
 export class DxcBaseModule { }

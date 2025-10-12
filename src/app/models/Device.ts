@@ -20,6 +20,8 @@ interface BridgeList {
 }
 
 
+export type DeviceUUID = string;
+
  /**
  * This class represents a device
  *

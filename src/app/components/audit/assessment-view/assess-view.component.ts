@@ -137,7 +137,6 @@ export class AssessViewComponent implements AfterViewInit {
       case AnalysisType.DAST:
         return "DAST";
       case AnalysisType.SAST:
-        return "SAST";
       case AnalysisType.IAST:
         return "IAST";
     }

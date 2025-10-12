@@ -5,6 +5,7 @@ import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle} from "@ng-bootstrap/ng-bootstrap";
 import {Nullable} from "../Nullable";
 import {MenuView} from "../../cmp/MenuView";
+import {IconComponent} from "../icon/icon.component";
 
 
 export interface MenuItem {
@@ -23,6 +24,7 @@ export interface MenuItem {
     standalone: true,
     imports: [
         DxcBaseModule,
+        IconComponent,
         NgIf,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -65,7 +67,8 @@ export class DxcDropdownItemComponent {
         NgbDropdownItem,
         NgbDropdownMenu,
         NgbDropdownToggle,
-        NgClass
+        NgClass,
+        IconComponent
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

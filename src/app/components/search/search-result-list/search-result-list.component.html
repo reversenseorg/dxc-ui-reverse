@@ -85,12 +85,12 @@
       </ng-container>
 
       <ng-container *ngIf="e.__==NODE_TYPES.STRING">
-        <div class="col-lg-6" (dblclick)="openView(e)">
-          <dxc-preview [type]="'s'" [data]="e.value" [length]="32"></dxc-preview>
+        <div class="col-lg-12" (dblclick)="openView(e)">
+           <dxc-preview [type]="'s'" [data]="e.value" [length]="64"></dxc-preview>
         </div>
-        <div class="col-lg-6" (dblclick)="openLazyView(e.instr.method,'invoke')">
+          <!--<div class="col-lg-6 col-6" (dblclick)="openLazyView(e.instr.method,'invoke')">
           <dxc-preview *ngIf="e.instr" [length]="50" [data]="e.instr.method"></dxc-preview>
-        </div>
+        </div>-->
       </ng-container>
 
       <ng-container *ngIf="e.__==NODE_TYPES.ANDROID_ACTIVITY">

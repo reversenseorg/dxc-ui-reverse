@@ -110,7 +110,7 @@ export class SubnavbarInputComponent implements AfterViewInit {
 @Component({
   selector: 'app-subnavbar-btn',
   template: `
-      <button [ngbTooltip]="tooltip" [class.active]="active" [class.vertical]="vert" [class.disable]="disable" [class.separator]="separator" [ngClass]="color" class="btn dxc-text-clear100 nav-btn" #btn>
+      <button [ngbTooltip]="tooltip" [class.active]="active" [class.vertical]="vert" [class.disable]="disable" [class.separator]="separator" [ngClass]="'btn dxc-text-clear100 nav-btn '+color"  #btn>
         <dxc-icon *ngIf="trail" [model]="_trailIcon" [color1]="'trail-arrow-neg'"></dxc-icon>
         <dxc-icon *ngIf="icon" [model]="icon" [fw]="fwicon" ></dxc-icon>
         <!--<fa-icon *ngIf="icon" class="dxc-icon" [icon]="[iconView.type, iconView.name]" [ngClass]="iconView.color1"></fa-icon>-->
@@ -133,7 +133,7 @@ export class SubnavbarInputComponent implements AfterViewInit {
 export class SubnavbarButtonComponent implements AfterViewInit {
 
   _trailIcon: IconModel = GLOBAL_ICONS['TRAIL'];
-  @Input() color: string;
+  @Input() color: string = '';
   @Input() vert: boolean = false;
   @Input() active: boolean = false;
   @Input() icon: Nullable<IconModel> = null;

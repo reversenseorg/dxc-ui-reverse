@@ -18,7 +18,7 @@ export interface IconEmptyOptions extends IStringIndex<any> {
 }
 
 export interface IconImgOptions extends IStringIndex<any> {
-  iconType: ICON_TYPE;
+  iconType?: ICON_TYPE;
   type:IconPrefix;
   name:IconName;
   color1:string;
@@ -29,13 +29,13 @@ export interface IconImgOptions extends IStringIndex<any> {
 }
 
 export interface IconTextOptions extends IStringIndex<any> {
-  iconType: ICON_TYPE;
+  iconType?: ICON_TYPE;
   label:string;
   color1:string;
 }
 
 export interface IconSvgOptions extends IStringIndex<any> {
-  iconType: ICON_TYPE;
+  iconType?: ICON_TYPE;
   src:string;
   styles?:IStringIndex<string>;
   color1:string;

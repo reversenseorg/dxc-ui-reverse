@@ -448,6 +448,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           .listPackages( this.selected, '^'+pItem.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+'$')
           .pipe(
             map( (pObs:any)=>{
+
               pObs[0].children.map((vSelf:any) => {
                 vSelf._icon = this.codeService.getIconOf(vSelf._t);
 

@@ -4,6 +4,8 @@ import {Nullable} from "../Nullable";
 import {IStringIndex} from "../IStringIndex";
 import {IconName, IconPrefix} from "@fortawesome/fontawesome-common-types";
 import {NodeInternalType} from "../../models/NodeInternalType";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {NgClass, NgStyle, NgSwitch, NgSwitchCase} from "@angular/common";
 
 
 // [ngStyle]="{ '--fa-primary-color':color1, '--fa-secondary-color':color2 }"
@@ -36,7 +38,15 @@ import {NodeInternalType} from "../../models/NodeInternalType";
         <span [ngStyle]="style" [ngClass]="color1"><ng-content select="[before]"></ng-content>{{ label }}<ng-content select="[after]"></ng-content></span>
       </ng-template>-->
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    FontAwesomeModule,
+    NgSwitch,
+    NgSwitchCase,
+    NgClass,
+    NgStyle
+  ]
 })
 export class IconComponent implements OnInit, OnChanges {
 

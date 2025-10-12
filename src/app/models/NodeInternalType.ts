@@ -1,5 +1,6 @@
 
 
+
 export enum NodeInternalType {
   BASIC_BLOCK,
   CLASS,
@@ -84,10 +85,24 @@ export enum NodeInternalType {
   USER_GROUP,
   CREDENTIAL,
   CONNECTION,
-  ACL_ROLE
+  ACL_ROLE,
+  SECRET,
+  DEVICE_TPL,
+  DEVICE_INST,
+  PROJECT_ORDER,
+  INTERNAL_STATE,
+  UPLOAD,
+  ENGINE_NODE,
+  WORKFLOW,
+  INDICATOR,
+  UI_STATE,
+  UI_TRANSITION,
+  PARAMETER,
+  RETURN,
+  POLICY
 }
 
-export const NodeInternalTypeName = {
+export const NodeInternalTypeName:Record<number, string> = {
   [NodeInternalType.BASIC_BLOCK]: "BASIC_BLOCK",
   [NodeInternalType.CLASS]: "CLASS",
   [NodeInternalType.METHOD]: "METHOD",
@@ -169,8 +184,28 @@ export const NodeInternalTypeName = {
   [NodeInternalType.USER_GROUP]: "USER_GROUP",
   [NodeInternalType.CREDENTIAL]: "CREDENTIAL",
   [NodeInternalType.CONNECTION]: "CONNECTION",
-  [NodeInternalType.ACL_ROLE]: "ACL_ROLE"
+  [NodeInternalType.ACL_ROLE]: "ACL_ROLE",
+  [NodeInternalType.SECRET]: "SECRET",
+  [NodeInternalType.DEVICE_TPL]: "DEVICE_TPL",
+  [NodeInternalType.DEVICE_INST]: "DEVICE_INST",
+  [NodeInternalType.PROJECT_ORDER]: "PROJECT_ORDER",
+  [NodeInternalType.INTERNAL_STATE]: "INTERNAL_STATE",
+  [NodeInternalType.UPLOAD]: "UPLOAD",
+  [NodeInternalType.ENGINE_NODE]: "ENGINE_NODE",
+  [NodeInternalType.WORKFLOW]: "WORKFLOW",
+  [NodeInternalType.INDICATOR]: "INDICATOR",
+  [NodeInternalType.PARAMETER]: "PARAMETER",
+  [NodeInternalType.RETURN]: "RETURN",
+  [NodeInternalType.POLICY]: "POLICY"
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -212,3 +247,11 @@ export class NodeTypeHelper {
     }
   }
 }
+
+
+
+export interface INodeRef {
+  __:NodeInternalType;
+  _uid:any;
+}
+

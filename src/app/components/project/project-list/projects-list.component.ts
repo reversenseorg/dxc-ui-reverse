@@ -42,7 +42,7 @@ export interface TargetApp {
             <app-subnavbar  [type]="'navbar'"  [opts]="true" [parent]="this">
                 <ng-container options>
                     <!--app-subnavbar-btn  (click)="showModel()">Details</app-subnavbar-btn>-->
-                    <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refreshProjects()"></app-subnavbar-btn>
+                    <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refreshProjects(windowStartAt,rows)"></app-subnavbar-btn>
                     <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
                     <app-subnavbar-btn  [icon]="gIcons['PLUS']" (click)="newProject()"></app-subnavbar-btn>
                     <app-subnavbar-btn  [disable]="selected==null" [icon]="removeIcon" (click)="deleteProject(selected)"></app-subnavbar-btn>
@@ -95,7 +95,7 @@ export interface TargetApp {
             
             <div *ngIf="pagignation" class="dxc-navbar">
                 <div class="col-lg-6 offset-6">
-                    <dxc-paginator [rows]="rows"  [totalRecords]="projectList.length" (onPageChange)="onPageChange($event)"></dxc-paginator>
+                    <dxc-paginator [rows]="rows" [totalRecords]="-1" (onPageChange)="onPageChange($event)"></dxc-paginator>
                 </div>
             </div>
         </div>
@@ -166,6 +166,7 @@ export class ProjectsListComponent implements OnInit {
      * @field
      */
     confirmInput: string = "";
+    page: { offset: number; size: number } = { offset:0, size:20};
 
     constructor(
         private _projectSvc: ProjectService,
@@ -186,7 +187,7 @@ export class ProjectsListComponent implements OnInit {
             this.rows = -1;
         }
 
-        this.refreshProjects();
+        this.refreshProjects(this.windowStartAt, this.rows);
     }
 
 
@@ -197,35 +198,12 @@ export class ProjectsListComponent implements OnInit {
     }
 
 
-
     doOnSelection(pType:string,pSymbol: string):void {
-
         /*this.selected[pType].map((x:any) => {
             ((this as IStringIndex<any>)[pSymbol] as any).apply(this, x);
         })*/
-
     }
 
-    openProject(pProject:DexcaliburProject) {
-        if(pProject.ready){
-            window.open(location.protocol+"//"+location.hostname+":"+location.port+"/pro/#/home/"+pProject.uid, "_blank");
-        }else{
-            if(pProject.meta.hasOwnProperty('openning') && pProject.meta.openning!=1){
-                // nothing to do, latter cancel
-            }else{
-                pProject.meta.openning = 1;
-                this._projectSvc.openProject(pProject).subscribe((vData:any)=>{
-                    if(vData.success){
-                        pProject.meta.openning = 0;
-                        pProject.ready = true;
-                    }else{
-                        pProject.meta.openning = 0;
-                        pProject.meta.openningFailed = 1;
-                    }
-                })
-            }
-        }
-    }
 
     selectProject(pObject: any, pType:string) {
         this.selected = pObject;
@@ -238,8 +216,8 @@ export class ProjectsListComponent implements OnInit {
     }
 
 
-    refreshProjects(pResetUI  = false) {
-        this._projectSvc.listProjects2().subscribe((vProj:DexcaliburProject[])=>{
+    refreshProjects(pPage:number, pRows:number, pResetUI  = false) {
+        this._projectSvc.listProjects2(pPage, pRows).subscribe((vProj:DexcaliburProject[])=>{
             //console.log("refreshProjects > ",vProj);
 
             this.projectList = vProj.sort((a:DexcaliburProject,b:DexcaliburProject)=>{
@@ -248,8 +226,9 @@ export class ProjectsListComponent implements OnInit {
                 return dateA>dateB ? -1 : 1;
             });
 
+
             if(this.pagignation){
-                this.window = this.projectList.slice(this.windowStartAt, this.windowStartAt+this.rows);
+                this.window = this.projectList; //.slice(this.windowStartAt, this.windowStartAt+this.rows);
             }else if(this.window.length==0 || pResetUI){
                 this.windowStartAt = 0;
                 this.window = this.projectList; //.slice(this.windowStartAt, this.windowStartAt+this.rows);
@@ -279,7 +258,7 @@ export class ProjectsListComponent implements OnInit {
                         this.removeIcon = GLOBAL_ICONS.CHECK;
                         this.selectProject(null,"delete");
                         this._outputSvc.print( OutputMessage.newSuccess({ src:"Project Manager", msg:`Project "${pProject.uid}" has been removed.`}));
-                        this.refreshProjects();
+                        this.refreshProjects(this.windowStartAt, this.rows);
                     }else{
                         this.removeIcon = GLOBAL_ICONS.WARNING;
                         this.changeRef.detectChanges();
@@ -305,10 +284,6 @@ export class ProjectsListComponent implements OnInit {
         }
     }
 
-    /*pageChange(pEvent: PaginatorState) {
-        const start = (pEvent.first as number)*(pEvent.rows as number);
-        this.window = this.projectList.slice(start, start+(pEvent.rows as number));
-    }*/
 
     protected readonly gIcons = GLOBAL_ICONS;
     focusEl: any = null;
@@ -322,7 +297,11 @@ export class ProjectsListComponent implements OnInit {
     }
 
     onPageChange(pEvent: {offset:number, size:number }) {
-        this.window = this.projectList.slice(pEvent.offset, pEvent.offset+pEvent.size);
+        //this.window = this.projectList.slice(pEvent.offset, pEvent.offset+pEvent.size);
+        this.page = pEvent;
+
+        this.refreshProjects(pEvent.offset, pEvent.size);
+
         console.log(pEvent.offset,pEvent.size,this.window);
     }
 }

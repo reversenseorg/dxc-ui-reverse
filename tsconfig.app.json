@@ -2,8 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "baseUrl": "",
+    "skipLibCheck": true,
     "types": [
-      "@angular/localize"
+      "@angular/localize",
+      "hammerjs"
     ]
   },
   "include": [
@@ -11,6 +13,7 @@
   ],
   "exclude": [
     "**/*.spec.ts",
+    "node_modules/@antfu/utils/**/*.ts",
     "./src/app/components/hooks/modal-manage-keypoint/modal-manage-keypoint.component.ts",
     "./src/app/base/grid/*.ts"
   ],

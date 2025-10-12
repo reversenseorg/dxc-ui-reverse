@@ -1,4 +1,4 @@
-import {Nullable} from "../../common";
+import {Nullable} from "../../../base/Nullable";
 
 
 export enum AvatarType {

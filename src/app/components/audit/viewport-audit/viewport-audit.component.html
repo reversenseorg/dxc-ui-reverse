@@ -41,7 +41,9 @@
               </ul>
             </div>
             <div class="col-4 p-3">
-              <div class="card" style="width: 18rem;">
+
+                <dxc-audit-model-card [model]="data"></dxc-audit-model-card>
+              <!--<div class="card" style="width: 18rem;">
                   <img src="..." class="card-img-top" alt="...">
                   <div class="card-body">
 
@@ -63,7 +65,7 @@
                       <a href="#" class="card-link">Website</a>
                       <a href="#" class="card-link">Download</a>
                   </div>
-              </div>
+              </div>-->
             </div>
           </div>
 
@@ -243,6 +245,7 @@
         <div class="container-fluid p-2 " [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='rl')">
           <ng-container *ngIf="selectedData && (selectedType=='cass')">
             <h4 class=" dxc-text-std">{{ selectedData.name }}</h4>
+              <!-- add meta -->
             <i>( <span class="dxc-text-yellow">#{{selectedData.id}}</span> )</i>
 
 
@@ -278,11 +281,12 @@
           <ng-container *ngIf="selectedData && (selectedType=='control')">
             <div class="row">
               <div class="dxc-text-std" [ngClass]="(selectedData!=null && selectedData.country==null)? 'col-8' : 'col-12' ">
-                <h4>{{ selectedData.name }}</h4>
+                <h4>{{ selectedData.name }}&nbsp;
+                    <span *ngIf="selectedData?.country" class="fi" [ngClass]="'fi-'+selectedData?.country.code"></span></h4>
                 <i>( <span class="dxc-text-yellow">#{{selectedData.id}}</span> )</i>
                 <div>
-                  <ng-container *ngFor="let cat of selectedData.category">
-                    <dxc-meta [label]="cat" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
+                  <ng-container *ngFor="let cat of selectedData.metadata; let i=index">
+                    <dxc-meta *ngIf="cat.value != null" [label]="cat.value" [css]="'text-bg-info dxc-meta ml-2'"></dxc-meta>
                   </ng-container>
                 </div>
 
@@ -298,14 +302,6 @@
                       <span> No resource</span>
                   </ng-template>
 
-              </div>
-              <div *ngIf="selectedData!=null && selectedData.country!=null" class="col-4">
-                <div class="card">
-
-                  <b>Company :</b><span>{{ selectedData.name }}</span>
-                  <span *ngIf="selectedData?.country" class="fi" [ngClass]="'fi-'+selectedData?.country.code"></span>
-
-                </div>
               </div>
             </div>
 

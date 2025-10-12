@@ -199,14 +199,6 @@ export class ModalNewProjectComponent extends AbstractKeyboardNavigable implemen
       this.outputSvc.alert(new OutputMessage({ msg:err.message }))
     }
 
-
-/*
-      this.close();
-      this.projSvc.startOpening( this.project);
-      //console.log(this.selected);
-      this.projSvc.openProject(this.selected).subscribe( (pResult)=>{
-        console.log(pResult);
-      } );*/
   }
 
   checkDevice(pDevice:Device) {

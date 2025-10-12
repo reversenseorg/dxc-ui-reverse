@@ -1,6 +1,8 @@
 import {MerlinPrimitive, MerlinType} from "../../search/Merlin";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {Metadata} from "./Metadata";
+import {MatchOccurence} from "./AssuranceReport";
 
 export enum TestType {
     VT, // check if implemented
@@ -8,13 +10,55 @@ export enum TestType {
 }
 
 export enum AnalysisType {
-    SAST,
-    DAST,
+    /**
+     * Rules perform search on graph
+     *
+     *
+     * Evidence is composed of :
+     * - Search Request / Rule and its matching results
+     * - Commit ID of Hook Workspace
+     */
+    SAST, // support VT/PT
+
+    /**
+     * Rules create hook, if the hook is trigged, the rule is satisfied
+     *
+     *
+     * Evidence is composed of :
+     * - Search Request / Rule and its matching results
+     * - Hooks
+     * - Hook traces
+     * - Commit ID of Hook Workspace
+     */
+    DAST, // support VT/PT
+
+    /**
+     * Rules create hook and optionnally action, if the hook and/or action is trigged, and if resulting
+     * RuntimeEvent is trigged, the rule is satisfied.
+     *
+     * Evidence is composed of :
+     * - Runtime Events, including hook message
+     * - Search Request / Rule and its results used to generate hooks
+     * - Hooks
+     * - Hook traces
+     * - Commit ID of Hook Workspace
+     */
     IAST
 }
 
 
-export interface ControlAssessmentOpts extends IStringIndex<any>{
+export enum DataOperation {
+    SOURCING,
+    PROCESSING,
+    STORING,
+    SHARING,
+    ENCRYPTING,
+    DECRYPTING,
+    HASHING
+}
+
+
+export interface ControlAssessmentOpts {
     id?:string;
 
     name?:string;
@@ -28,6 +72,8 @@ export interface ControlAssessmentOpts extends IStringIndex<any>{
     analType?:AnalysisType;
 
     rules?:MerlinPrimitive[];
+    matches?:any[];
+    metadata?:Metadata[];
 
 }
 
@@ -44,16 +90,27 @@ export default class ControlAssessment {
 
     links = "";
 
+    metadata:Metadata[] = [];
+
     testType:TestType = TestType.VT;
 
     analType:AnalysisType = AnalysisType.SAST;
 
     rules:MerlinPrimitive[] = [];
 
-    matches:any[] = [];
+    matches:MatchOccurence<any>[] = [];
 
-    constructor( pConfig:Nullable<ControlAssessmentOpts> = null) {
-        if(pConfig!=null) for(const i in pConfig) (this as IStringIndex<any>)[i]=pConfig[i];
+    constructor( pConfig:ControlAssessmentOpts = {}) {
+
+        if(pConfig.id!=null) this.id = pConfig.id;
+        if(pConfig.name!=null) this.name = pConfig.name;
+        if(pConfig.description!=null) this.description = pConfig.description;
+        if(pConfig.links!=null) this.links = pConfig.links;
+        if(pConfig.testType!=null) this.testType = pConfig.testType;
+        if(pConfig.analType!=null) this.analType = pConfig.analType;
+        if(pConfig.rules!=null) this.rules = pConfig.rules;
+        if(pConfig.matches!=null) this.matches = pConfig.matches;
+        if(pConfig.metadata!=null) this.metadata = pConfig.metadata;
     }
 
     getRules():MerlinPrimitive[] {
@@ -70,13 +127,18 @@ export default class ControlAssessment {
         for(const i in this){
             switch (i){
                 case "matches":
-                    o.matches = [];
-                    this.matches.map((x:any) => {                       o.matches.push( x.toJsonObject());
-                    });
+                    o.matches = this.matches;
                     break;
                 case "rules":
                     o.rules = [];
-                    this.rules.map((x:any) => {                      o.rules.push( x.toJsonObject());
+                    this.rules.map( x => {
+
+
+                        if(x.toJsonObject!=null){
+                            o.rules.push(x.toJsonObject());
+                        }else{
+                            o.rules.push(x);
+                        }
                     });
                     break;
                 default:
@@ -88,8 +150,17 @@ export default class ControlAssessment {
     }
 
     static fromJsonObject(pOpts:any):ControlAssessment {
-      const a = new ControlAssessment(pOpts);
+        const a = new ControlAssessment(pOpts);
 
-      return a;
+        return a;
+    }
+
+
+    isControl(): boolean {
+        return false;
+    }
+
+    isControlAssessment(): boolean {
+        return true;
     }
 }

@@ -11,6 +11,7 @@ profile:
 #  - name: <SomeEnabledInspectionId>
 include:
   - name: CheckDependencyLicenses
+  - name: VulnerableLibrariesLocal
 #Disable inspections
 #exclude:
 #  - name: <SomeDisabledInspectionId>

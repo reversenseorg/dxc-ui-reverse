@@ -165,7 +165,6 @@ export class AppMenuItemComponent implements AfterViewInit {
 
 
     ngAfterViewInit() {
-        console.log("AppMenuIetmCmp > ", this.item);
 
         if(this.item.onChange$!=null){
             this.subscription = this.item.onChange$.subscribe((vEvt:any)=>{

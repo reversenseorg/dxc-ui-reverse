@@ -15,6 +15,7 @@ import {DeviceCacheFlavor, DeviceManagerService} from "../../device/ctrl/device-
 import {TagService} from "../../tag/ctrl/tag.service";
 import {Nullable} from "../../../base/Nullable";
 import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 export interface ProjectMenuEvent extends MenuEvent {
   win?:any
@@ -191,6 +192,7 @@ export class ProjectService extends DxcApiService {
                private tagSvc:TagService,
                private outputSvc:OutputService,
                private _location: Location,
+               private _router:Router,
                protected override _http:HttpClient) {
     super(
       {
@@ -410,11 +412,11 @@ export class ProjectService extends DxcApiService {
                     }
                 });
 
-                this.listProjects2().subscribe( (pEvent)=>{
+                /*this.listProjects2(0,500).subscribe( (pEvent)=>{
                   this.projects = pEvent;
                   console.log("[PROJECT SVC] List of projects ",pEvent);
                   this.onRefreshAll.next(this.projects );
-                });
+                });*/
 
 
             break;
@@ -513,9 +515,11 @@ export class ProjectService extends DxcApiService {
      * @return {Observable<DexcaliburProject[]>} An array containing all projects
      * @method
      */
-    listProjects2():Observable<DexcaliburProject[]>{
+    listProjects2(pOffset:number, pSize:number):Observable<DexcaliburProject[]>{
         return this._process(
-            this.endpoints.project.list, {}
+            this.endpoints.project.list, {
+                offset:pOffset, size:pSize
+            }
         ).pipe(
             map((pEl:any)=>{
 
@@ -608,23 +612,33 @@ export class ProjectService extends DxcApiService {
     ).pipe(
       map((pEl:any)=>{
 
+          console.log('opening project: ',pEl);
+
         this.setLock(false);
 
-        if(pEl.success) {
+        if(pEl.success && pEl.data.ready) {
           DxcApiToken.remove("puid");
           DxcApiToken.create("puid",pProject.uid);
 
-          this.getProjectInfo(pProject).subscribe((pEvent)=>{
-            this._refreshDefaultDeviceFor(pEvent);
-            this.selected = pEvent;
-            this._beforeProjectReady(pEl);
-           //this.onProjectReady.next(pEl);
-           // this.appmenuSvc.onProjectOpen();
-          });
 
+        this.stopOpening(pProject.uid, true, 100);
+
+          this._router.navigate(['project','puid',pProject.uid]);
+
+
+          /*
+          this.getProjectInfo(pProject).subscribe((pEvent)=>{
+
+              this.stopOpening( pEl.data.uid, true, 100);
+
+             this.switchTo(pProject).subscribe(()=>{
+
+             });
+
+          });*/
         }else{
-          this.stopOpening();
-          this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:pEl.msg}));
+            this.stopOpening( pEl.data.uid, true, 100);
+             this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:pEl.msg}));
         }
 
         return pEl;
@@ -750,6 +764,8 @@ export class ProjectService extends DxcApiService {
 
             if(pEl.success) {
 
+
+
               DxcApiToken.remove("puid");
               DxcApiToken.create("puid",pEl.data.uid);
               this.selected = new DexcaliburProject({
@@ -762,7 +778,7 @@ export class ProjectService extends DxcApiService {
 
               return pEl;
             }else{
-              this.stopOpening();
+              this.stopOpening( pEl.data.uid, true, 100);
               this.outputSvc.print( OutputMessage.newError({ src:"Project Manager", msg:pEl.msg}))
             }
           }
@@ -957,7 +973,8 @@ export class ProjectService extends DxcApiService {
         });*/
 
         DxcApiToken.remove("puid");
-        DxcApiToken.create("puid", pProject.uid)
+        DxcApiToken.create("puid", pProject.uid);
+        sessionStorage.setItem("puid", pProject.uid);
 
 
 
@@ -1005,8 +1022,8 @@ export class ProjectService extends DxcApiService {
     this.onProjectOpening.next({ project:pUID, creating:pCreating });
   }
 
-  stopOpening( ):void {
-    this.onProjectHaltOpening.next({});
+  stopOpening( pUID:string, pCreating = false, pProgress = -1, pMsg = 'Cannot open the project'  ):void {
+    this.onProjectHaltOpening.next({ project:pUID, creating:pCreating });
   }
 
   getPackageID( pActiveProject = 0):Nullable<string>{

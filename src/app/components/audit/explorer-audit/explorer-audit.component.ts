@@ -16,7 +16,6 @@ import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {SubExplorerComponent} from "../../../base/explorer/subexplorer.component";
 import {ExplorerTab} from "../../../cmp/ExplorerTab";
 import {ProjectService} from "../../project/ctrl/project.service";
-import DexcaliburProject from "../../../models/DexcaliburProject";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {
   ContextMenuComponent, ContextMenuEvent,
@@ -37,6 +36,7 @@ import {ICON_TYPE} from "../../../base/icon/IconModel";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
+import {Nullable} from "../../../base/Nullable";
 
 export enum AUDIT_SUBVIEW {
   THREATS="threat",
@@ -49,7 +49,7 @@ export enum AUDIT_SUBVIEW {
   templateUrl: './explorer-audit.component.html',
   styleUrls: ['./explorer-audit.component.scss'],
   providers: [NgbTooltipConfig],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplorerAuditComponent extends SubExplorerComponent<AuditController> implements OnInit, AfterViewInit, ExpandableProvider {
 
@@ -71,8 +71,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   override offset = 5;
 
-
-
   ctxMenu: ContextMenuList = {};
   ctxMenuState:ContextMenuState = { subject: null };
 
@@ -84,14 +82,8 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
     [AUDIT_SUBVIEW.REPORT]: [],
   }
 
-  activePool: any[] = [];
-
   selected = AUDIT_SUBVIEW.MODEL;
-
-
-  private projectReady = false;
-
-
+  focus:Nullable<string> = null;
 
   /**
    *
@@ -143,36 +135,6 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
 
   ngOnInit(): void {
 
-    /*this.auditSvc.getModels().subscribe( (pModels)=>{
-      this.dataPool[AUDIT_SUBVIEW.MODEL] = pModels;
-      return ;
-    });*/
-
-
-
-    this.projectSvc.onProjectReady.subscribe( (pProject:DexcaliburProject)=>{
-      this.projectReady = true;
-
-      /*this.auditSvc.getModels().subscribe( (pModels)=>{
-        this.dataPool[AUDIT_SUBVIEW.MODEL] = pModels;
-        return ;
-      });
-
-      this.auditSvc.getReports().subscribe( (pReports)=>{
-        this.dataPool[AUDIT_SUBVIEW.REPORT] = pReports;
-        return ;
-      });*/
-
-
-
-      //this.refresh();
-    });
-
-    this.projectSvc.onProjectClose.subscribe( (pProject:DexcaliburProject)=>{
-      this.projectReady = false;
-    });
-
-
     this.auditSvc.displayCtxMenu$.subscribe( (pObs:ContextMenuEvent)=>{
       this.displayCtxMenu(pObs.event, pObs.type, pObs.obj);
     });
@@ -223,26 +185,29 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
       pSelected = AUDIT_SUBVIEW.MODEL;
     }
 
+    console.log("REFRESH MODELS > selected > ",pSelected);
+
+    let obs:Observable<any[]>;
     switch (pSelected) {
       case AUDIT_SUBVIEW.MODEL:
-        this.controller.service
-          .getModels()
-          .subscribe((vModel) => {
-            console.log(vModel);
-            this.dataPool[AUDIT_SUBVIEW.MODEL] = vModel;
-          });
+        obs = this.controller.service
+          .getModels();
         break;
       case AUDIT_SUBVIEW.REPORT:
-        this.controller.service
-          .getReports()
-          .subscribe((vReport) => {
-            console.log("GET REPORTS > ",vReport);
-            this.dataPool[AUDIT_SUBVIEW.REPORT] = vReport;
-          });
+        obs = this.controller.service.getReports();
         break;
+      default:
+        return;
     }
 
-    this.changeDetectorRef.detectChanges();
+    if(obs!=null){
+      obs.subscribe((vObj) => {
+        this.dataPool[pSelected] = vObj;
+        console.log("REFRESH MODELS > selected > ",vObj);
+        this.changeDetectorRef.detectChanges();
+      });
+    }
+
   }
 
   drawExplorer(pSize:any):void {
@@ -294,6 +259,11 @@ export class ExplorerAuditComponent extends SubExplorerComponent<AuditController
   }
 
   open( pItem:any): any {
+    switch (pItem.__){
+      case NodeInternalType.ASSURANCE_MODEL: this.focus = pItem.id; break;
+      case NodeInternalType.ASSURANCE_REPORT: this.focus = pItem._uid; break;
+    }
+
     this.controller.open( pItem , 'expl');
     return null;
   }

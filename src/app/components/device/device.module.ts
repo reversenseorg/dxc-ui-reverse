@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
 import {DxcBaseModule} from "../../base/dxc-base.module";
 import {CommonModule, DatePipe, NgClass, NgSwitch} from "@angular/common";
 import {EopEditorComponent} from "./eop-editor/eop-editor.component";
@@ -8,9 +8,12 @@ import {DeviceRoutingModule} from "./device-routing.module";
 import {ViewportDeviceComponent} from "./viewport-device/viewport-device.component";
 import {CoreModule} from "../../core/core.module";
 import {DeviceResolver} from "./ctrl/device-resolver.service";
+import {IconComponent} from "../../base/icon/icon.component";
+import {MetaComponent} from "../../base/meta/meta.component";
 
 
 @NgModule({
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
         CommonModule,
         DxcBaseModule,
@@ -19,7 +22,9 @@ import {DeviceResolver} from "./ctrl/device-resolver.service";
         NgSwitch,
         FormsModule,
         DeviceRoutingModule,
-        CoreModule
+        CoreModule,
+
+        IconComponent,MetaComponent
     ],
     exports: [
         EopEditorComponent,

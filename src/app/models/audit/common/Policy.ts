@@ -1,0 +1,185 @@
+import {PolicyRule} from "./PolicyRule";
+import {Nullable} from "../../../base/Nullable";
+import {NodeInternalType} from "../../NodeInternalType";
+import {AssuranceModelUUID} from "./AssuranceModel";
+
+export enum PolicyZone {
+    NONE='none',
+    APP='app',
+    ORG='org',
+    PRJ='prj'
+}
+
+export type PolicyUUID = string;
+
+export interface PolicyOptions {
+    uuid?:PolicyUUID;
+    name?:string;
+    description?:string;
+    version?:string;
+    changes?:any[];
+    scope?:PolicyScope<any>;
+    enabled?:boolean;
+    rules?:PolicyRule[];
+    model?:AssuranceModelUUID;
+}
+
+/**
+ * Define what is the scope where this policy must be applied
+ *
+ * @interface
+ */
+export interface PolicyScope<T> {
+    type: PolicyZone;
+    uid?: T;
+}
+
+
+/**
+ * This object help to define how to analyze scan result, and
+ * what are the calls to action (CTA)
+ *
+ * This is a superclass for more specialized domain-driven policy
+ *
+ * @class
+ */
+export class Policy {
+
+    static SUPPORTED_ZONES:PolicyZone[] = [
+        PolicyZone.APP, PolicyZone.ORG,
+        PolicyZone.PRJ, PolicyZone.NONE
+    ];
+
+
+    __:NodeInternalType = NodeInternalType.POLICY;
+
+    // COMMON
+
+    uuid:PolicyUUID;
+
+    name:string;
+
+    description:string;
+
+    version:string;
+
+    changes:any[]=[];
+
+    scope:PolicyScope<any> = {
+        type: PolicyZone.NONE
+    };
+
+    enabled = false;
+
+    tags:number[] = [];
+
+    // CUSTOM
+
+    rules:PolicyRule[] = [];
+
+    model:Nullable<AssuranceModelUUID> = null;
+
+
+    constructor(pOptions:PolicyOptions = {}) {
+        if(pOptions.uuid!=null) this.uuid = pOptions.uuid;
+        if(pOptions.name!=null) this.name = pOptions.name;
+        if(pOptions.description!=null) this.description = pOptions.description;
+        if(pOptions.version!=null) this.version = pOptions.version;
+        if(pOptions.changes!=null) this.changes = pOptions.changes;
+        if(pOptions.scope!=null) this.scope = pOptions.scope;
+        if(pOptions.rules!=null) this.rules = pOptions.rules;
+        if(pOptions.enabled!=null) this.enabled = pOptions.enabled;
+        if(pOptions.model!=null) this.model = pOptions.model;
+    }
+
+    /**
+     *
+     */
+    getUID():PolicyUUID {
+        return this.uuid;
+    }
+
+    /**
+     *
+     * @param vUid
+     */
+    setUID(vUid:PolicyUUID):void {
+        this.uuid = vUid;
+    }
+
+    /**
+     * To add or replace a rule in the policy
+     *
+     * @param {PolicyRule} pRule
+     * @method
+     */
+    addRule(pRule:PolicyRule):void {
+
+        for(let i=0; i<this.rules.length; i++){
+            if(this.rules[i].name===pRule.name){
+                // replace existing rule
+                this.rules[i] = pRule;
+                return;
+            }
+        }
+
+        // the rule is not already in the list
+        this.rules.push(pRule);
+        return;
+    }
+
+    /**
+     * To remove a rule by the instance or name
+     *
+     * @param {PolicyRule|string} pRule
+     * @method
+     */
+    removeRule(pRule:PolicyRule|string):void {
+        if(typeof pRule==='string'){
+            this.rules = this.rules.filter( r => r.name!=pRule);
+        }else{
+            this.rules = this.rules.filter( r => r.name!=pRule.name);
+        }
+    }
+
+    /**
+     * To prepare to json serialized
+     *
+     * @method
+     */
+    toJsonObject():any{
+        let o = {
+            uuid:this.uuid,
+            name: this.name,
+            description: this.description,
+            version: this.version,
+            changes: this.changes,
+            scope:this.scope,
+            tags:this.tags,
+            enabled: this.enabled,
+            model: this.model,
+            rules: []
+        };
+
+        this.rules.map(r => {
+            (o.rules as any[]).push( r.toJsonObject());
+        })
+
+        return o;
+    }
+
+    static fromUnsafeObject(pOptions:PolicyOptions) {
+        const policy = new Policy({
+            ...pOptions,
+            rules: []
+        });
+
+        if(pOptions.rules!=null && pOptions.rules.length>0){
+            pOptions.rules.map(((vRule) => {
+                policy.addRule(new PolicyRule(vRule));
+            }));
+        }
+
+        return policy;
+    }
+}

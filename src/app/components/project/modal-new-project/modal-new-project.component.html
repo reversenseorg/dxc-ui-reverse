@@ -44,7 +44,6 @@
           <div>
             <label for="app-file" class="dxc-label-file" #appFile><span *ngIf="targetFileName!=null">{{ targetFileName }}</span><span *ngIf="targetFile==null">Pick a file</span></label>
             <input id="app-file" type="file" class="dxc-input-file" (change)="updateAppFile($event)"/>
-            <!--<dxc-preview *ngIf="targetFile!=null" [data]="targetFile" [length]="70"></dxc-preview>-->
           </div>
         </ng-container>
         <ng-container *ngIf="method=='url'">

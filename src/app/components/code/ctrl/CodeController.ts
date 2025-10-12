@@ -249,6 +249,16 @@ export class CodeController extends UiController implements IController {
           this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pObs.data, uid:vid });
         });
         break;
+      case NodeInternalType.STRING:
+        if(sessionStorage.getItem('puid')!=null){
+          this.service.retrieveNode(sessionStorage.getItem('puid') as string, pItem).subscribe( (pObs:any)=>{
+
+            pObs.data._icon = CODE_ICONS.STR;
+            this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pObs.data, uid:vid });
+          });
+        }
+
+        break;
     }
   }
 

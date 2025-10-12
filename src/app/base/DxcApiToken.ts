@@ -109,8 +109,20 @@ export class DxcApiToken {
       return Object.values(_TOKENS)[0];
     }
 
-    if(pName==null || _TOKENS.hasOwnProperty(pName)==false){
-      throw new AuthenticationException("API token not found");
+    if(pName==null){
+      throw new AuthenticationException("API token not found : name is null");
+    }
+
+    if(_TOKENS.hasOwnProperty(pName)==false){
+      if(localStorage.getItem(pName)!=null){
+        _TOKENS[pName] = new DxcApiToken(pName,localStorage.getItem(pName) as string);
+      }
+      if(sessionStorage.getItem(pName)!=null){
+        _TOKENS[pName] = new DxcApiToken(pName,sessionStorage.getItem(pName) as string);
+      }
+      if(_TOKENS[pName]==null){
+        throw new AuthenticationException("API token not found");
+      }
     }
 
     return _TOKENS[pName];

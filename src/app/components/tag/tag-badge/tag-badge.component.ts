@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -18,6 +11,8 @@ import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {TagService} from "../ctrl/tag.service";
 import {Tag} from "../../../models/tags/Tag";
 import {Nullable} from "../../../base/Nullable";
+import {NgClass, NgIf, NgStyle} from "@angular/common";
+import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 /**
  *
  */
@@ -36,7 +31,14 @@ import {Nullable} from "../../../base/Nullable";
             }
         }
    `],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone:true,
+    imports: [
+        NgIf,
+        NgbTooltip,
+        NgClass,
+        NgStyle
+    ]
 })
 export class TagBadgeComponent implements AfterViewInit,OnChanges {
 
@@ -53,7 +55,12 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
 
 
     gIcons:any = GLOBAL_ICONS;
-    _styles:any = {};
+    _styles:any = {
+        backgroundColor: (this.tag?.styles!=null ? (this.tag.styles as any).bgColor : '#aeff86'),
+        color: (this.tag?.styles!=null ? (this.tag.styles as any).color : '#2d8f02'),
+        border: '1px solid '+ (this.tag?.styles!=null ? (this.tag.styles as any).color : '#2d8f02'),
+        borderRadius: '0.5em'
+    };
 
     constructor( public tagSvc:TagService, private _changeDRef:ChangeDetectorRef) {
 
@@ -70,22 +77,34 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
             }
 
             this._styles = {
-                backgroundColor: (this.tag.styles as any).bgColor,
-                color: (this.tag.styles as any).color
+                backgroundColor: (this.tag.styles!=null ? (this.tag.styles as any).bgColor : '#aeff86'),
+                color: (this.tag.styles!=null ? (this.tag.styles as any).color : '#2d8f02'),
+                border: '1px solid '+ (this.tag.styles!=null ? (this.tag.styles as any).color : '#2d8f02'),
+                borderRadius: '0.5em'
             };
             this._changeDRef.detectChanges();
         }
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if(changes.hasOwnProperty('tag')){
+        if(changes.hasOwnProperty('tag') && changes['tag'].currentValue!=null){
             const ntag = changes['tag'].currentValue;
-            console.log(changes);
-            this._styles = {
-                backgroundColor: ntag.styles?.bgColor,
-                color: ntag.styles?.color
-            };
-            console.log(this._styles);
+            if(ntag.styles!=null){
+                this._styles = {
+                    backgroundColor: ntag.styles?.bgColor,
+                    color: ntag.styles?.color,
+                    border: `1px solid ${ntag.styles?.color}`,
+                    borderRadius: '0.5em'
+                };
+            }else{
+                this._styles = {
+                    backgroundColor:  '#aeff86',
+                    color:  '#2d8f02',
+                    border: '1px solid #2d8f02',
+                    borderRadius: '0.5em'
+                };
+            }
+
         }
         if(changes.hasOwnProperty('editable')){
             const editable = changes['editable'].currentValue;

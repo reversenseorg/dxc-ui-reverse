@@ -1,7 +1,7 @@
 <div class="container-fluid viewport-class">
   <div #metadata style="border-bottom:1px solid #777">
 
-    <span><b>Java Class : </b> {{ data.name }} </span><br>
+    <span><!--<b>Java Class : </b>--> {{ data.name }} </span><br>
     <span *ngIf="data.source" class="text-warning">
       &nbsp;<fa-icon [icon]="['fas','play']" class="text-warning icon-sm"></fa-icon>
       &nbsp;<b>Source file : </b> <span class="browsable" (click)="controller.locateAppFile(data.source)">{{ data.source }}</span>
@@ -23,6 +23,7 @@
     <ng-container nav-left>
       <app-subnavbar [type]="'navbar'"  [parent]="this">
         <ng-container main>
+          <app-subnavbar-btn [active]="activeLeft=='uml'"  (click)="showDiagram('cls')">Diagram</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='md'"  (click)="showModel()">Details</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showContents()">Contents</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['ANALYZE']" (click)="showInstance()">Instances</app-subnavbar-btn>
@@ -33,6 +34,9 @@
       </app-subnavbar>
     </ng-container>
     <ng-container body-left>
+        <div class="container-fluid view-outer dxc-list" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='uml')">
+            <dxs-diagram-class [classes]="[data]"></dxs-diagram-class>
+        </div>
       <div class="container-fluid view-outer dxc-list" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='md')">
         <!-- all children classes / all classes with same interface / heritage tree / android API xref / strings / byte arrays -->
         <!-- elements modified by reflection api -->

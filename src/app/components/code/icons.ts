@@ -107,5 +107,11 @@ export const CODE_ICONS = {
     iconType: ICON_TYPE.TEXT,
     label: 'XT: ',
     color1: 'text-info'
+  }),
+  STR: new IconModel({
+    iconType: ICON_TYPE.ICON,
+    type: 'fas',
+    name: 'font-case',
+    color1: 'dxc-icon-folders-internal'
   })
 };

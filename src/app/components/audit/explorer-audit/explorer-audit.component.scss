@@ -50,12 +50,16 @@
   display: none;
 }
 
+.explorer-list-root {
+  height:80%;
+  overflow-y: auto;;
+}
 
 .model-btn-grad {
   border: 0px;
   background-color: var(--menu-bg);
   border-radius: 5px;
-  margin:5px 10px;
+  margin: 5px 10px;
   padding: 1em;
 
   span {
@@ -73,12 +77,31 @@
 
   &:hover {
     cursor: pointer;
-    background-image: linear-gradient(to right, #06beb6 0%, #48b1bf  51%, #06beb6  100%);
+    background-image: linear-gradient(to right, #06beb6 0%, #48b1bf 51%, #06beb6 100%);
     transition: 0.5s;
     /*background-size: 200% auto;*/
     color: #000;
+
     span {
       color: #000;
+    }
+
+    p {
+      color: #fff;
+    }
+  }
+
+
+  &.focus {
+    background-image: linear-gradient(to right, #06beb6 0%, #48b1bf 51%, #06beb6 100%);
+    transition: 0.5s;
+    color: #000;
+    opacity: 0.6;
+    span {
+      color: #000;
+    }
+    p {
+      color: #fff;
     }
   }
 }

@@ -120,12 +120,4 @@ export class ViewportSplashComponent implements OnInit, AfterViewInit, IViewport
     this.size = pSize;
     this.changeDetector.detectChanges();
   }
-
-  performExtra( pActionName:string):void {
-
-  }
-
-  openGlobalSettings( pSubmenu:string):void {
-    //this.
-  }
 }

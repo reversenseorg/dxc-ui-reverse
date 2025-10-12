@@ -67,14 +67,14 @@ export default class ModelClass extends Savable
     annotations = [];
 
     // a list of the declared method
-    methods:IMethodSet = {};
+    methods:ModelMethod[] = []; // = {};
     inherit:IStringIndex<any> = {};
 
     // the count of methods inside the class
     _methCount:number = 0;
 
     // a list of the declared fields
-    fields:IStringIndex<ModelField> = {};
+    fields:ModelField[] = [];
 
     // the count of declared fields
     _fieldCount:number = 0;
@@ -115,76 +115,6 @@ export default class ModelClass extends Savable
       return this.name;
     }
 
-  /**
-     * @deprecated
-     */
-    hashcode():Nullable<string> {
-        return this.name;
-    }
-
-    help() {
-        let t ="+-------------------- HELP --------------------+";
-        t += EOL+"[-- Methods : ]";
-        t += EOL+"\t.dump()\tShow the class information (field, methods, modifiers, parents, etc...)";
-        t += EOL+"\t.hasField(<string>)\tCheck if the class define the given field";
-        t += EOL+"\t.hasMethod(<string>)\tCheck if the class define the given method";
-        t += EOL+"\t.help()\tThis help";
-        t += EOL+"[-- Properties : ]";
-        t += EOL+"\n\t.instr:<Instruction>\tGet the instruction";
-        t += EOL+"\n\t.caller:<Method>\tGet the method performing the call";
-        t += EOL+"\t.calleed:<*>\tGet the reference to the calleed";
-        t += EOL;
-
-        console.log(t);
-    }
-
-
-    /**
-     * To check if a field is defined whith the given name
-     * @param {String} name The name of a field
-     * @returns {Boolean} TRUE if the class contains a definition, else FALSE
-     */
-    hasField(name:string):boolean{
-        return (this.fields[name]!==undefined);
-    }
-
-
-    addField(field:ModelField){
-        this.fields[field.signature()] = field;
-    }
-
-    updateField(field:ModelField, override:boolean=false){
-        let diff:NodeCompare = this.fields[field.signature()].compare(field);
-        // if not identic => update, else nothiong to do
-        if(!diff.isIdentic()){
-            if(override)
-                this.fields[field.signature()] = field;
-        }
-    }
-
-
-    /**
-     * To check if a method is defined whith the given hashcode
-     * @param {String} hash The hashcode of the method
-     * @returns {Boolean} TRUE if the class contains a definition, else FALSE
-     */
-    hasMethod(hash:string):boolean{
-        return this.methods[hash]!==undefined;
-    }
-
-
-    addMethod(meth:ModelMethod){
-        this.methods[meth.signature()] = meth;
-    }
-
-    updateMethod(meth:ModelMethod, override:boolean=false){
-        let diff:NodeCompare = this.methods[meth.signature()].compare(meth);
-        // if not identic => update, else nothiong to do
-        if(!diff.isIdentic()){
-            if(override)
-                this.methods[meth.signature()] = meth;
-        }
-    }
 
 
     hasSuperClass():boolean{
@@ -526,6 +456,10 @@ export default class ModelClass extends Savable
 
     hasAlias():boolean {
         return false;
+    }
+
+    isAbstract():boolean {
+        return ((this.modifiers & Modifier.ABSTRACT) > 0);
     }
 
 }

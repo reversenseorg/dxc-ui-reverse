@@ -40,7 +40,12 @@ export interface ContextMenuState {
  */
 @Component({
   selector: 'app-context-menu',
-  templateUrl: './context-menu.component.html',
+  template: `
+    <div [class.dxc-hidden]="rendered==false" class="context-menu" #menu>
+    <ul class="dropdown-menu">
+      <ng-content></ng-content>
+    </ul>
+  </div>`,
   styleUrls: ['./context-menu.component.scss']
 })
 export class ContextMenuComponent implements OnInit, AfterContentInit {

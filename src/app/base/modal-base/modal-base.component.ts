@@ -13,6 +13,8 @@ import {
 import {Observable} from "rxjs";
 import {Nullable} from "../Nullable";
 import {StageComponent} from "../../components/stage/stage.component";
+import {NgIf, NgStyle} from "@angular/common";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 
 interface EventSources {
@@ -22,9 +24,35 @@ interface EventSources {
 
 @Component({
   selector: 'app-modal-base',
-  templateUrl: './modal-base.component.html',
-  styleUrls: ['./modal-base.component.scss','../../modal.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: `
+    <div [class.dxc-hidden]="isActive()" [class.dxc-ztop]="isOnZTop()" class="dxc-modal draggable"
+         [ngStyle]="{'display':'none'}" #modalComp (mousedown)="onMouseDown($event)">
+      <div *ngIf="!headless" class="container-fluid row head" #head>
+        <!--<div *ngIf="closable" class="col-lg-8 title"><ng-content select="[title]"></ng-content></div>-->
+        <div class="col-lg-12 title">
+          <ng-content select="[head]"></ng-content>
+          <div *ngIf="closable" class="head-opts" style="position: absolute; right:0px; top:0px;">
+            <ng-content select="[options]"></ng-content>
+            <span class="btn-close" (click)="hide('close')"><fa-icon [icon]="['fas','xmark']"></fa-icon></span>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid body" #body>
+        <ng-content select="[body]"></ng-content>
+      </div>
+      <div class="container-fluid footer" #footer>
+        <ng-content select="[footer]"></ng-content>
+      </div>
+    </div>
+  `,
+  styleUrls: ['./modal-base.component.scss', '../../modal.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    FontAwesomeModule,
+    NgStyle
+  ]
 })
 export class ModalBaseComponent implements OnInit, AfterContentInit {
 

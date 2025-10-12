@@ -4,6 +4,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {ClipboardService} from "../../core/services/clipboard.service";
 import {IStringIndex} from "../IStringIndex";
+import {NgIf} from "@angular/common";
 
 /**
  *
@@ -12,7 +13,7 @@ import {IStringIndex} from "../IStringIndex";
   selector: 'dxc-preview',
   template: `
     <ng-container *ngIf="inline">
-      <div (mouseover)="extendPreview($event)" (click)="select()" (mouseout)="collapsePreview($event)" class="dxc-preview">
+      <div (mouseover)="expanded = true" (click)="select()" (mouseout)="expanded = false" class="dxc-preview w-full">
         <pre *ngIf="!expanded" class="text-white mb-0 mt-0 dxc-preview-noscroll">{{ preview }}</pre>
         <pre *ngIf="expanded" class="text-white mb-0 mt-0 dxc-preview-noscroll dxc-preview-exp">{{ data }}</pre>
       </div>
@@ -21,9 +22,14 @@ import {IStringIndex} from "../IStringIndex";
   styles: [`
 
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf
+
+  ]
 })
-export class PreviewerComponent implements OnInit, OnChanges {
+export class PreviewerComponent implements OnChanges {
 
 
   @Input() inline:boolean = true;
@@ -37,9 +43,6 @@ export class PreviewerComponent implements OnInit, OnChanges {
 
   constructor( private elecSvc:ClipboardService) {
 
-  }
-
-  ngOnInit() {
   }
 
   ngOnChanges(pChanges: SimpleChanges) {
@@ -56,7 +59,7 @@ export class PreviewerComponent implements OnInit, OnChanges {
       switch (this.type) {
         case 's':
             if(this.data.length>this.length){
-              this.preview = this.data.substr(0,this.length)+'...';
+              this.preview = this.data.substring(0,this.length)+'...';
             }else{
               this.preview = this.data;
             }

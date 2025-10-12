@@ -24,10 +24,11 @@
 
           <ng-template #expFileItem let-itemObj="item">
 
-            <span class="dxc-text-std" style="border-radius: 2rem; margin-top:2px; border: 2px solid white; padding: 1em;" *ngIf="itemObj.__==_NODE.ASSURANCE_MODEL" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
+            <!--<span class="dxc-text-std" style="border-radius: 2rem; margin-top:2px; border: 2px solid white; padding: 1em;" *ngIf="itemObj.__==_NODE.ASSURANCE_MODEL" (contextmenu)="displayCtxMenu($event,'audit_model',itemObj)">
               <dxc-icon [model]="gIcons['LIBS']"></dxc-icon>
               <span class="margin-left:1em;font-size:1.2em;">{{ itemObj.name }}</span>
-            </span>
+                <p class="dxc-text-blue">{{ itemObj.scannerID }}</p>
+            </span>-->
 
             <span class="dxc-text-std" *ngIf="(itemObj.__!=_NODE.ASSURANCE_MODEL) && (itemObj.assessments!=null)" (contextmenu)="displayCtxMenu($event,'audit_rul',itemObj)">
               <dxc-icon [model]="gIcons['LIBS']" [color1]="'text-warning'"></dxc-icon>
@@ -58,10 +59,11 @@
     </ng-container>
 
     <ng-container *ngIf="selected=='model'">
-      <ng-container *ngFor="let model of dataPool[selected]">
-          <div class="row g-0 dxc-text-clear75 model-btn-grad" *ngIf="model.__==_NODE.ASSURANCE_MODEL" (click)="showModel(model,$event)" (contextmenu)="displayCtxMenu($event,'audit_model',model)">
+      <ng-container *ngFor="let model of dataPool.model">
+          <div class="row g-0 dxc-text-clear75 model-btn-grad" [ngClass]="{'focus':(focus==model.id)}" *ngIf="model.__==_NODE.ASSURANCE_MODEL" (click)="showModel(model,$event)" (contextmenu)="displayCtxMenu($event,'audit_model',model)">
             <div class="col-9 text-left">
               <span class="dxc-text-std ">{{ model.name }}</span>
+                <p class="dxc-text-blue">{{ model.scannerID }}</p>
             </div>
           </div>
       </ng-container>

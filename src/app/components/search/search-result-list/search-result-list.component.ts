@@ -48,7 +48,7 @@ const BINDING = {
 })
 export class SearchResultListComponent implements OnInit {
 
-  @Input() mainController:StageComponent;
+  @Input() mainController:Nullable<StageComponent>;
   @Input() controller:SearchController;
   @Input() results:any[] = [];
   @Input() hFull = false;
@@ -172,6 +172,8 @@ export class SearchResultListComponent implements OnInit {
 
   openView(e: any, opts:number = 0) {
 
+    if(this.mainController==null) return;
+
     switch (e.__) {
       case NodeInternalType.PACKAGE:
       case NodeInternalType.CLASS:
@@ -192,9 +194,7 @@ export class SearchResultListComponent implements OnInit {
         break;
 
       case NodeInternalType.STRING:
-        if(e.instr != null){
-          this.mainController.getController('ctrl:code-main').open({ __:NodeInternalType.METHOD, __signature__:e.instr.method}, 'mdl', e.instr);
-        }
+        this.mainController.getController('ctrl:code-main').open(e, 'mdl', e.instr);
         break;
 
       case NodeInternalType.FUNC:
@@ -215,6 +215,8 @@ export class SearchResultListComponent implements OnInit {
   }
 
   open($event: MouseEvent, e: any) {
+    if(this.mainController==null) return;
+
     switch(e._t){
       case 'c':
       case 'f':
@@ -224,6 +226,8 @@ export class SearchResultListComponent implements OnInit {
       case 's':
         this.codeService.getMethod(e.instr.method, true).subscribe( pData => {
           pData._t = 'm';
+          if(this.mainController==null) return;
+
           this.mainController.getController('ctrl:code-main').open(pData, 'mdl');
         });
         break;

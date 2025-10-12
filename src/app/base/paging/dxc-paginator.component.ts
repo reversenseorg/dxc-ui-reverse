@@ -14,7 +14,35 @@ import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
 
 @Component({
   selector: 'dxc-paginator',
-  templateUrl: './dxc-paginator.component.html',
+  template: `
+  <div class="row">
+    <div class="col-3" *ngIf="dropdownRowsPerPage">Items per page</div>
+    <div class="col-3" *ngIf="dropdownRowsPerPage">
+        <!--<div ngbDropdown [ngStyle]="_style" [ngClass]="_class">
+            <button class="btn dxc-text-clear100" [id]="'dropdownBasic'+id" ngbDropdownToggle (click)="openMenu()">
+                <dxc-icon *ngIf="trail" [model]="_trailIconNeg" [color1]="'trail-arrow-neg'"></dxc-icon>
+                {{ label  }}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="id" class="dxc-dropdown" #ddEl>
+                <button *ngFor="let item of navbar.menu.items" [ngClass]="item.color" (click)="onMenuItemSelect(item)"  ngbDropdownItem>
+                  <fa-icon class="dxc-icon" [icon]="[item.icon.type,item.icon.name]" [ngClass]="item.icon.color1"></fa-icon>
+                  {{ item.label }}
+                </button>
+            </div>
+        &nbsp;
+        </div>-->
+        &nbsp;
+    </div>
+    <div [class]="dropdownRowsPerPage? 'col-3':'col-6'" class="text-end">
+      {{ range.offset}}&nbsp;-&nbsp;{{ range.offset+range.size}}&nbsp;<ng-container *ngIf="totalRecords>0">of&nbsp;{{totalRecords}}</ng-container>
+    </div>
+    <div [class]="dropdownRowsPerPage? 'col-3':'col-6'" class="text-start">
+        <dxc-btn [borderless]="true" [icon]="gIcons['LEFT']" (click)="goTo('prev')"></dxc-btn>&nbsp;
+        <dxc-btn [borderless]="true" [icon]="gIcons['RIGHT']" (click)="goTo('next')"></dxc-btn>
+    </div>
+</div>
+
+  `,
   styleUrls: ['./dxc-paginator.component.scss','../../forms.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -27,9 +55,10 @@ export class PaginatorComponent implements OnInit {
   @Input() rows: number = -1;
   @Input() startAt: number = 0;
   @Input() page:number = 0;
-  @Input() totalRecords: number;
+  @Input() totalRecords: number = -1;
   @Input() dropdownRowsPerPage = false;
   @Input() pageSizes:number[] = [10,50,100];
+  @Input() showMax:boolean = false;
   @Output() onPageChange:EventEmitter<any> = new EventEmitter();
 
 
@@ -78,13 +107,16 @@ export class PaginatorComponent implements OnInit {
        page++;
        range.offset = page*this.rows;
 
-       if(range.offset>this.totalRecords){
-         return;
-       }
-
-       const d = this.totalRecords - range.offset;
-       if(d<this.rows){
-         range.size = d;
+       if(this.totalRecords>-1){
+         if(range.offset>this.totalRecords){
+           return;
+         }
+         const d = this.totalRecords - range.offset;
+         if(d<this.rows){
+           range.size = d;
+         }
+       }else{
+          range.size = this.rows;
        }
     }
 

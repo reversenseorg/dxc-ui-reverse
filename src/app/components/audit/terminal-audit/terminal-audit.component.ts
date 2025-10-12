@@ -156,7 +156,7 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
    *
    * @param pItem
    */
-  onResultClose(pItem:TabItem<CheckResult>): boolean {
+  onResultClose(pItem: any /*TabItem<CheckResult*/): boolean {
 
       delete this._resultsTabs[pItem.uid];
 
@@ -199,7 +199,7 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
    *
    * @param {HookSession} pSession
    */
-  switchResults(pRes: TabItem<CheckResult>) {
+  switchResults(pRes: any /*TabItem<CheckResult>*/) {
     console.log("switchResults > ",pRes);
     if(pRes.data==null) return;
 

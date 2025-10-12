@@ -11,6 +11,9 @@ import {
 } from '@angular/core';
 import {SubExplorerComponent} from "../explorer/subexplorer.component";
 import {Nullable} from "../Nullable";
+import {IconComponent} from "../icon/icon.component";
+import {DxcDropdownComponent} from "../common/dropdown";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-explorer-navbar',
@@ -45,9 +48,14 @@ import {Nullable} from "../Nullable";
     </div>
 
   `,
-  //templateUrl: './explorer-navbar.component.html',
   styleUrls: ['./explorer-navbar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    IconComponent,
+    DxcDropdownComponent,
+  ]
 })
 export class ExplorerNavbarComponent implements OnInit, OnChanges, AfterViewInit {
 

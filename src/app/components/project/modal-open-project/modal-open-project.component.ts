@@ -21,7 +21,49 @@ interface EventSources {
 
 @Component({
   selector: 'dxc-modal-open-project',
-  templateUrl: './modal-open-project.component.html',
+  template: `
+  <app-modal-base [name]="'openproj'" [closable]="closable" [width]="400" [height]="450" [mainController]="controller.app" (click)="kbSvc.focus(this)">
+    <div head class="dxc-modal-header">
+      Open project
+    </div>
+    <ng-container options>
+      <span><dxc-icon [model]="gIcons['REFRESH']" (click)="refresh()"></dxc-icon></span>
+    </ng-container>
+    <div body class="dxc-modal-body">
+        <div class="fullwidth-list" style="height:200px;">
+          <ng-container *ngFor="let proj of projects; let index = index">
+            <div class="row no-gutters" [ngClass]="focusEl==index?'focus':''" (click)="selectProject(proj, index)">
+              <div class="col-lg-10 offset-1 dxc-noselect">{{ proj.uid }}</div>
+              <div class="col-lg-1"><dxc-icon *ngIf="focusEl==index" [model]="gIcons['TRASH']" (click)="removeProject(proj)"></dxc-icon></div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="text-center dxc-text-clear100" style="width:100%;overflow-x:auto;color:#bbb;border-top:1px solid #777;padding:1em;" *ngIf="selected==null">
+          <i>Select a project to show details</i>
+        </div>
+        <div *ngIf="selected" style="width:100%;overflow-x:auto;color:#bbb;border-top:1px solid #777;padding:1em;">
+             <ng-container *ngIf="selected.uid">
+               <div class=" pl-1 dxc-text-clear75 text-capitalize"><i>Project :</i></div>
+              <div class=" pl-3 dxc-text-clear100">{{ selected.uid }}</div>
+            </ng-container>
+  
+            <ng-container *ngIf="selected.package">
+              <div class=" mt-2 pl-1 dxc-text-clear75 text-capitalize"><i>Package </i></div>
+              <div class=" pl-3 dxc-text-clear100 dxc-twrap">{{ selected.package }}</div>
+            </ng-container>
+  
+            <ng-container *ngIf="selected.platform">
+              <div class=" mt-2 pl-1 dxc-text-clear75 text-capitalize"><i>Platform </i></div>
+              <div class=" pl-3 dxc-text-clear100 dxc-twrap">{{ selected.platform }}</div>
+            </ng-container>
+        </div>
+    </div>
+    <div footer>
+        <button class="dxc-frm-btn" (click)="close()">Cancel</button>
+        <button class="dxc-frm-btn default" (click)="openProject()">Open</button>
+    </div>
+  </app-modal-base>
+  `,
   styleUrls: ['../../../modal.scss','../../../forms.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -69,27 +111,16 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
   }
 
   ngOnInit(): void {
-    this.refresh();
-
     this.kbSvc.register(this);
-
-
-    this.projSvc.onRefreshAll.subscribe( (pProjects:DexcaliburProject[])=>{
-      this.projects = pProjects;
-      this.projectsCount = pProjects.length;
-
-      if(this.projectsCount==0){
-        this.selected = null;
-      }
-    });
-
-    //this.onKeyboardEvent.subscribe( (pEvent) => { })
   }
-
 
 
   show():void{
     this.modal.show();
+
+    this.refresh();
+
+
     //this.kbSvc.focus()
     console.log("[MODAL PROJECT OPEN] show()");
     this.changeDetectorRef.detectChanges();
@@ -185,9 +216,15 @@ export class ModalOpenProjectComponent extends AbstractKeyboardNavigable impleme
   }
 
   refresh():void {
-    this.projSvc.listProjects2().subscribe( (pEvent)=>{
-      this.projects = pEvent;
-      this.projectsCount = pEvent.length;
+    this.projSvc.listProjects2(0,500).subscribe((pProjects:DexcaliburProject[])=>{
+      this.projects = pProjects;
+      this.projectsCount = pProjects.length;
+
+      if(this.projectsCount==0){
+        this.selected = null;
+      }
+
+      this.changeDetectorRef.detectChanges();
     });
   }
 }

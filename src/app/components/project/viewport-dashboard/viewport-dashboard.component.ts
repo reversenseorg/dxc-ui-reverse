@@ -38,7 +38,160 @@ enum INFO_TYPE {
 
 @Component({
   selector: 'app-viewport-project-dash',
-  templateUrl: './viewport-dashboard.component.html',
+  template: `
+    <div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-dbd">
+      <app-viewport-splitted [type]="'1:2'" [flex]="false" [controller]="controller" [parent]="this" [leftWidth]="50">
+        <ng-container body-left>
+          <app-viewport-splitted [type]="'2:1'" [flex]="false" [controller]="controller" [heightPct]="90"  [parent]="this" [topHeight]="50">
+            <ng-container nav-top>
+              <app-subnavbar>
+                <ng-container main>
+                  <app-subnavbar-btn [active]="true"  (click)="showInfo(TOPIC.PRJ)">Project</app-subnavbar-btn>
+                </ng-container>
+              </app-subnavbar>
+            </ng-container>
+            <ng-container body-top>
+
+
+              <div class="container-fluid" class="p-1" *ngIf="project">
+                <div class="row no-gutters"><div class="col-2 datapair-key">Project ID :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.uid }}</dxc-ref></div></div>
+                <div class="row no-gutters"><div class="col-2 datapair-key">Workspace :</div><div class="col-8 datapair-val"><dxc-ref>{{ project.uid}}</dxc-ref></div></div>
+                <div class="row no-gutters">
+                  <div class="col-2 datapair-key">Default device :</div>
+                  <div class="col-8 datapair-val" *ngIf="project.device!=null"><dxc-ref>{{ project.device.model }}</dxc-ref></div>
+                </div>
+              </div>
+
+
+              <!--
+              <app-expandable-list>
+  
+                <ng-template #expCodeItem let-itemObj="item" >
+  
+                  <span *ngIf="NODE_TYPES.INSPECTOR==itemObj.__" (contextmenu)="displayExtMenu($event,'inspector',itemObj)">
+                    <dxc-icon [model]="itemObj.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
+                    <span>{{ itemObj.name }}</span>
+                    <span *ngIf="itemObj.hookset && itemObj.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
+                    <span *ngIf="itemObj.listener.length>0" class="text-info">&nbsp;[rules]</span>
+                  </span>
+  
+  
+                </ng-template>
+  
+                <ng-container *ngFor="let insp of inspectors">
+                  <app-expandable-item
+                    [itemTpl]="expCodeItem"
+                    [item]="insp"
+                    [provider]="this"
+                    [itemType]="insp.__"
+                    (itemFocus)="onItemFocus('TL',$event)"
+                    (collapse)="onCollapse($event)"
+                    (expand)="onExpand($event)"
+                  >
+                  </app-expandable-item>
+                </ng-container>
+              </app-expandable-list>
+              -->
+
+
+            </ng-container>
+            <ng-container nav-bottom>
+              <app-subnavbar>
+                <ng-container main>
+                  <app-subnavbar-btn [active]="activeBL==TOPIC.RES"  (click)="showInfo(TOPIC.RES)">Ressources</app-subnavbar-btn>
+                  <app-subnavbar-btn [active]="activeBL==TOPIC.URL"  (click)="showInfo(TOPIC.URL)">URL</app-subnavbar-btn>
+                  <app-subnavbar-btn [active]="activeBL==TOPIC.BIN"  (click)="showInfo(TOPIC.BIN)">Binaries</app-subnavbar-btn>
+                </ng-container>
+              </app-subnavbar>
+            </ng-container>
+            <ng-container body-bottom>
+
+
+              <ng-container *ngIf="activeBL==TOPIC.URL">
+
+                <!--
+                <app-expandable-list>
+    
+                  <ng-template #expCodeItem let-itemObj="item" >
+    
+                    <span *ngIf="NODE_TYPES.INSPECTOR==itemObj.__" (contextmenu)="displayExtMenu($event,'inspector',itemObj)">
+                      <dxc-icon [model]="itemObj.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
+                      <span>{{ itemObj.name }}</span>
+                      <span *ngIf="itemObj.hookset && itemObj.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
+                      <span *ngIf="itemObj.listener.length>0" class="text-info">&nbsp;[rules]</span>
+                    </span>
+    
+    
+                  </ng-template>
+    
+                  <ng-container *ngFor="let insp of inspectors">
+                    <app-expandable-item
+                            [itemTpl]="expCodeItem"
+                            [item]="insp"
+                            [provider]="this"
+                            [itemType]="insp.__"
+                            (itemFocus)="onItemFocus('TL',$event)"
+                            (collapse)="onCollapse($event)"
+                            (expand)="onExpand($event)"
+                    >
+                    </app-expandable-item>
+                  </ng-container>
+                </app-expandable-list>-->
+              </ng-container>
+
+
+            </ng-container>
+          </app-viewport-splitted>
+        </ng-container>
+        <ng-container body-right>
+          <app-viewport-splitted [type]="'2:1'" [flex]="false" [controller]="controller" [heightPct]="90"  [parent]="this" [topHeight]="50">
+
+            <ng-container nav-top>
+              <app-subnavbar>
+                <ng-container main>
+                  <app-subnavbar-btn [active]="activeTR==TOPIC.TOP"  (click)="showInfo(TOPIC.TOP)">Topology</app-subnavbar-btn>
+                  <app-subnavbar-btn [active]="activeTR==TOPIC.ENT"  (click)="showInfo(TOPIC.ENT)">Entropy</app-subnavbar-btn>
+                </ng-container>
+              </app-subnavbar>
+            </ng-container>
+
+            <ng-container body-top>
+
+              <ng-container *ngIf="data._t=='taa'">
+                <app-viewport-topo-activity [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-activity>
+              </ng-container>
+
+              <ng-container *ngIf="data._t=='tas'">
+                <app-viewport-topo-service [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-service>
+              </ng-container>
+
+              <ng-container *ngIf="data._t=='tap'">
+                <app-viewport-topo-provider [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-provider>
+              </ng-container>
+
+              <ng-container *ngIf="data._t=='tar'">
+                <app-viewport-topo-receiver [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-receiver>
+              </ng-container>
+
+            </ng-container>
+
+            <ng-container nav-bottom>
+              <app-subnavbar>
+                <ng-container main>
+                  <app-subnavbar-btn [active]="activeBR==TOPIC.SEC"  (click)="showInfo(TOPIC.SEC)">Security</app-subnavbar-btn>
+                  <app-subnavbar-btn [active]="activeBR==TOPIC.STR"  (click)="showInfo(TOPIC.STR)">Strings</app-subnavbar-btn>
+                  <app-subnavbar-btn [active]="activeBR==TOPIC.NET"  (click)="showInfo(TOPIC.NET)">Network</app-subnavbar-btn>
+                </ng-container>
+              </app-subnavbar>
+            </ng-container>
+            <ng-container body-bottom>
+
+            </ng-container>
+          </app-viewport-splitted>
+        </ng-container>
+      </app-viewport-splitted>
+    </div>
+  `,
   styleUrls: ['../../../base/expandable-list/expandable-list.component.scss', './viewport-dashboard.component.scss'],
   providers: [ProjectResolver]
 })

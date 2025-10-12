@@ -1,0 +1,115 @@
+<div class="graph-explorer">
+  <!-- Barre d'outils -->
+  <div class="toolbar">
+    <div class="filter-section">
+      <label>Types de nœuds :</label>
+      <div class="node-type-filters">
+        <ng-container *ngFor="let nodeType of availableNodeTypes">
+          <label class="filter-checkbox">
+            <input 
+              type="checkbox" 
+              [checked]="selectedNodeTypes.has(nodeType.type)"
+              (change)="toggleNodeType(nodeType.type, $event)"
+            >
+            <span class="checkmark" [style.background-color]="nodeType.color"></span>
+            {{ nodeType.label }}
+          </label>
+        </ng-container>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button class="btn btn-sm btn-primary" (click)="fitToView()">
+        <dxc-icon [model]="icons.EXPAND"></dxc-icon> Ajuster
+      </button>
+      <button class="btn btn-sm btn-secondary" (click)="resetZoom()">
+          <dxc-icon [model]="icons['HOME']"></dxc-icon> Reset
+      </button>
+      <button 
+        class="btn btn-sm btn-info" 
+        [disabled]="selectedNodes.size === 0"
+        (click)="expandSelection()"
+      >
+          <dxc-icon [model]="icons.PLUS"></dxc-icon> Étendre ({{ selectedNodes.size }})
+      </button>
+      <button class="btn btn-sm btn-warning" (click)="clearGraph()">
+          <dxc-icon [model]="icons.TRASH"></dxc-icon> Effacer
+      </button>
+    </div>
+
+    <div class="search-section">
+      <div class="input-group">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Rechercher un nœud..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+        >
+        <button class="btn btn-outline-secondary" (click)="performSearch()">
+
+            <dxc-icon [model]="icons.SEARCH"></dxc-icon>
+
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="stats-bar" *ngIf="networkStats!=null">
+    <span class="stat">Nodes: {{ networkStats.nodeCount }}</span>
+    <span class="stat">Edges: {{ networkStats.edgeCount }}</span>
+    <span class="stat">Selected: {{ selectedNodes.size }}</span>
+    <span class="stat" *ngIf="networkStats.performance">
+      Rendu: {{ networkStats.performance }}ms
+    </span>
+  </div>
+
+  <!-- Container pour Vis-network -->
+  <div 
+    #networkContainer 
+    class="network-container"
+    [style.height.px]="height"
+  ></div>
+
+  <!-- Panneau d'informations sur le nœud sélectionné -->
+  <div class="node-info-panel" *ngIf="selectedNodeInfo" [@slideIn]>
+    <div class="panel-header">
+      <h6 *ngIf="selectedNodeInfo[0]!=null">{{ getNodeTypeLabel(selectedNodeInfo[0].nodeType) }}</h6>
+      <button class="btn btn-sm btn-outline-secondary" (click)="closeNodeInfo()">
+        <dxc-icon [model]="icons['TIMES']"></dxc-icon>
+      </button>
+    </div>
+    <div class="panel-content">
+      <div class="node-property" *ngFor="let prop of getNodeProperties(selectedNodeInfo)">
+        <strong>{{ prop.key }}:</strong>
+        <span [innerHTML]="prop.value"></span>
+      </div>
+      <div class="node-actions">
+          <ng-container  *ngIf="selectedNodeInfo[0] !=null">
+
+        <button 
+          class="btn btn-sm btn-primary" 
+          (click)="expandFromNode(selectedNodeInfo[0])"
+        >
+          Étendre depuis ce nœud
+        </button>
+              <button
+
+                      class="btn btn-sm btn-info"
+                      (click)="focusOnNode(selectedNodeInfo[0].id+'')"
+              >
+                  Centrer
+              </button>
+          </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>{{ loadingMessage }}</p>
+  </div>
+</div>

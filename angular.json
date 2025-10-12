@@ -32,7 +32,17 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "websocket",
+              "ace-builds",
+              "dayjs",
+              "cytoscape-cose-bilkent",
+              "@braintree/sanitize-url",
+              "cytoscape-fcose",
+              "vscode-jsonrpc",
+              "debug"
+            ]
           },
           "configurations": {
             "production": {

@@ -1,29 +1,12 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
-    OnInit,
-    Output
 } from '@angular/core';
-import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../../../base/Nullable";
-import {OutputService} from "../../output/ctrl/output.service";
-import {Tag} from "../../../models/tags/Tag";
-import ModelMethod from "../../../models/ModelMethod";
-import ModelClass from "../../../models/ModelClass";
-import ModelField from "../../../models/ModelField";
-import {IconModel, IconModelCollection} from "../../../base/icon/IconModel";
-import {CODE_ICONS} from "../icons";
-import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
+import {NgbTooltip, NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {NodeInternalType} from "../../../models/NodeInternalType";
-import {INode, Node} from "../../../models/INode";
-import {TagService} from "../../tag/ctrl/tag.service";
-import {ModelFunction} from "../../../models/ModelFunction";
-import ModelPackage from "../../../models/ModelPackage";
-import {CodeControllerService} from "../ctrl/code-controller.service";
+import {NgClass, NgIf} from "@angular/common";
 
 let ctr = 0;
 
@@ -40,7 +23,7 @@ export interface TargetApp {
 @Component({
     selector: 'dxc-node-alias',
     template: `
-        <ng-container *ngIf="item.alias!=null; else noAlias">
+        <ng-container *ngIf="hasAlias(); else noAlias">
             <span [ngClass]="aliasClass" [ngbTooltip]="getText()" >@{{ item.alias }}</span>
         </ng-container>
         <ng-template #noAlias>
@@ -49,16 +32,26 @@ export interface TargetApp {
     `,
     styleUrls: ['../explorer-code/explorer-code.component.scss'],
     providers: [NgbTooltipConfig],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgClass,
+        NgbTooltip,
+        NgIf
+    ]
 })
 export class NodeAliasComponent {
 
-    @Input() item:any; //ModelMethod|ModelClass|ModelField|ModelFunction|ModelPackage;
+    @Input() item:any = null; //ModelMethod|ModelClass|ModelField|ModelFunction|ModelPackage;
     @Input() text:Nullable<string> = null;
     @Input() aliasClass = "text-warning";
 
     constructor() {
 
+    }
+
+    hasAlias():boolean {
+        return (typeof this.item!=="string") && this.item!=null && this.item.alias!=null;
     }
 
 

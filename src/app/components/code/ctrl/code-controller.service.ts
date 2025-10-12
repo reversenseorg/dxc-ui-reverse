@@ -35,6 +35,7 @@ import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
 import {DxApiResponse, INodeRef} from "../../../base/common/common";
 import {IController} from "../../../base/controllers/IController.interface";
 import {DxcApiToken} from "../../../base/DxcApiToken";
+import ModelStringValue from "../../../models/ModelStringValue";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -1017,6 +1018,15 @@ export class CodeControllerService extends DxcApiService{
         break;
       case NodeInternalType.FUNC:
         node = new ModelFunction(pRaw);
+        break;
+      case NodeInternalType.STRING:
+        node = new ModelStringValue(pRaw);
+        break;
+      case NodeInternalType.PACKAGE:
+        node = new ModelPackage(pRaw);
+        break;
+      case NodeInternalType.FILE:
+        node = new ModelFile(pRaw);
         break;
     }
 

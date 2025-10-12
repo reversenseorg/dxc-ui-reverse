@@ -60,8 +60,6 @@ export class TopologyService extends DxcApiService {
   onMenuClick$:Subject<TopologyMenuEvent> = new Subject<TopologyMenuEvent>();
 
 
-  //onSearchReady:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
-  //onProjectOpening:Subject<DexcaliburProject> = new Subject<DexcaliburProject>();
 
   activities:AndroidActivity[] = [];
   providers:AndroidProvider[] = [];

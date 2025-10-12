@@ -136,10 +136,7 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   }
 
   ngAfterViewInit() {
-    // listener for splitted layout resize
-    this.layout.onLayoutResize.subscribe( (vSizes:any) => {
 
-    });
 
     // init layout
     this.layout.resize({
@@ -240,5 +237,10 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
 
   getMethodModifiers(mt: ModelMethod):IStringIndex<boolean> {
     return (mt as any).modifiers as IStringIndex<boolean> ;
+  }
+
+  showDiagram(pType: string) {
+    this.activeLeft = 'uml';
+    this.activeWidth = 100;
   }
 }

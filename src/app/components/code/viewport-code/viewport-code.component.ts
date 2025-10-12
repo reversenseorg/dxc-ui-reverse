@@ -19,6 +19,8 @@ import {ViewportCodeClassComponent} from "./viewport-code-class.component";
 import {IconModel} from "../../../base/icon/IconModel";
 import {CODE_ICONS} from "../icons";
 import {Subject} from "rxjs";
+import {NodeInternalType} from "../../../models/NodeInternalType";
+import ModelStringValue from "../../../models/ModelStringValue";
 
 
 @Component({
@@ -67,27 +69,32 @@ export class ViewportCodeComponent implements OnInit, AfterViewInit, IViewportCo
     this.view.tab.icon = pData._icon;
 
 
-    switch(pData._t){
-      case 'm':
+    switch(pData.__){
+      case NodeInternalType.METHOD:
         if(this.view.tab.icon==null)
           this.view.tab.icon = this.icons['METH'];
         this.view.tab.label = pData.name;
         this.view.tab.tip = pData.__signature__;
         this.view.tab.color = 'dxc-text-clear100';
         break;
-      case 'p':
+      case NodeInternalType.PACKAGE:
         this.view.tab.label = pData.name;
         this.view.tab.tip = pData.name;
         this.view.tab.color = 'dxc-text-clear100';
         break;
-      case 'c':
+      case NodeInternalType.CLASS:
         this.view.tab.label = pData.simpleName;
         this.view.tab.tip = pData.name;
         this.view.tab.color = 'dxc-text-clear100';
         break;
-      case 'f':
+      case NodeInternalType.FIELD:
         this.view.tab.label = pData.__signature__;
         this.view.tab.color = 'text-warning';
+        break;
+      case NodeInternalType.STRING:
+        this.view.tab.label = (pData as ModelStringValue).value?.substring(0,10)+"...";
+        this.view.tab.tip = pData.value;
+        this.view.tab.color = 'dxc-text-clear100';
         break;
     }
 
@@ -112,4 +119,6 @@ export class ViewportCodeComponent implements OnInit, AfterViewInit, IViewportCo
     this.resize$.next(pSize);
     this.size = pSize;
   }
+
+  protected readonly NodeInternalType = NodeInternalType;
 }

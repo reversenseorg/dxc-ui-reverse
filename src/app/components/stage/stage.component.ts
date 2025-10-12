@@ -491,6 +491,7 @@ export class StageComponent implements OnInit, AfterViewInit {
       this._progress$.next(new ModalProgressEvent({ progress:1, msg:'Starting ...'}));
     });
 
+    // update progress bar, if never start the modal is created
     this._progress$.subscribe( (pEvent:ModalProgressEvent)=>{
 
       if(!this.progressModal.isVisible()){
@@ -541,16 +542,6 @@ export class StageComponent implements OnInit, AfterViewInit {
       }
     });
 
-    /*
-    this.projectSvc.onProjectOpening.subscribe( (pEvent:ModalProgressEvent)=>{
-      console.log(pEvent);
-      if(!this.progressModal.isVisible()){
-        this.progressTitle = "Opening project...";
-        this.progressModal.progress = 30;
-        this.progressModal.show();
-      }
-    });
-    */
 
     this.projectSvc.onProjectReady.subscribe( (pEvent: any) => {
       this.projectReady = true;
@@ -568,7 +559,11 @@ export class StageComponent implements OnInit, AfterViewInit {
     });
 
     this.projectSvc.onProjectHaltOpening.subscribe( (pEvent: any) => {
+      console.log("onProjectHaltOpening > ",pEvent, this.progressModal);
       if(this.progressModal.isVisible()){
+        /*this.progressTitle = "Cannot open the project";
+        this.progressModal.progress = 100;
+        this.progressModal.style = "danger";*/
         this.progressModal.close();
       }
     });
@@ -1136,5 +1131,6 @@ export class StageComponent implements OnInit, AfterViewInit {
   focusView( pUID:string){
     this.viewport.vp.selectTabByUID2(pUID);
   }
+
 }
 

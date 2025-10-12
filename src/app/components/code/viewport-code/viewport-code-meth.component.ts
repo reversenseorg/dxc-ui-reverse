@@ -587,4 +587,12 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       node: (pItem!=null? pItem : this.item)
     });
   }
+
+  showGraph(pType:string) {
+        switch (pType){
+          case 'disassembly':
+            this.activeBottom = 'cfg';
+            break;
+        }
+    }
 }

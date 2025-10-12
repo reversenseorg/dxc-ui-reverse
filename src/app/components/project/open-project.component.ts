@@ -59,31 +59,12 @@ export class OpenProjectComponent implements OnInit {
   }
 
   ngOnInit(){
-    /*this.projectService.onRefreshAll.subscribe( (pProjects:DexcaliburProject[])=>{
-      this._updateProjectList(pProjects);
-    });*/
+
   }
 
-  private _updateProjectList(pProjects:DexcaliburProject[]):void {
-
-    // sort project by time by default
-    this.projects = pProjects.sort((vProjA, vProjB)=>{
-        return (vProjA.meta.lastOpenDate > vProjB.meta.lastOpenDate)? 1 : -1;
-    });
-
-    console.log("_updateProjectList > ",pProjects);
-
-    this.projectsCount = pProjects.length;
-    if (this.projectsCount == 0) {
-      this.selectedProject = null;
-    }
-    this.changeDetectorRef.detectChanges();
-  }
 
   refresh(){
-    this.projectService.listProjects2().subscribe( (pProjects:DexcaliburProject[])=>{
-      this._updateProjectList(pProjects);
-    });
+
   }
 
   openProject(pProj: Nullable<DexcaliburProject>=null) {
@@ -100,6 +81,8 @@ export class OpenProjectComponent implements OnInit {
           this.projectService.openProject(p).subscribe( (pResult)=>{
             if(pResult.success==true){
               //this.close();
+            }else{
+              this.outputSvc.alert(new OutputMessage({ msg:pResult.msg.message }))
             }
           });
         }catch (err:any) {

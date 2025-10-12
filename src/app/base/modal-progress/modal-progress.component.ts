@@ -8,10 +8,11 @@ import {
 import {Observable, Subject} from "rxjs";
 import {ModalBaseComponent} from "../modal-base/modal-base.component";
 import {GLOBAL_ICONS} from "../../cmp/GLOBAL_ICONS";
-import {NgbProgressbarConfig} from "@ng-bootstrap/ng-bootstrap";
+import {NgbProgressbar, NgbProgressbarConfig} from "@ng-bootstrap/ng-bootstrap";
 import {StageComponent} from "../../components/stage/stage.component";
 import {Nullable} from "../Nullable";
 import {IStringIndex} from "../IStringIndex";
+import {NgIf} from "@angular/common";
 
 
 interface EventSources {
@@ -46,9 +47,35 @@ export class ModalProgressEvent {
 
 @Component({
   selector: 'app-modal-progress',
-  templateUrl: './modal-progress.component.html',
-  styleUrls: ['./modal-progress.component.scss','../../forms.scss'],
-  providers: [NgbProgressbarConfig]
+  template: `
+    <app-modal-base [name]="'pgbar'" [closable]="closable" [width]="width" [height]="130"
+                    [mainController]="mainController" (open)="onOpen($event)">
+      <div head *ngIf="title!=null" class="dxc-modal-header">
+        {{ title }}
+      </div>
+      <div body class="dxc-modal-body">
+        <ngb-progressbar type="info" [animated]="true" [value]="100" [max]="100" height="10px"></ngb-progressbar>
+        <ng-container *ngIf="message">
+          <i class="dxc-text-clear100">{{ message }}</i>
+        </ng-container>
+      </div>
+
+      <div *ngIf="cancelable" footer class="row">
+        <div class="col-lg-6">&nbsp;</div>
+        <div class="col-lg-5 text-right pr-1 ml-0 mr-0">
+          <button class="dxc-frm-btn" (click)="onCancel()">Cancel</button>
+        </div>
+      </div>
+    </app-modal-base>
+  `,
+  styleUrls: ['./modal-progress.component.scss', '../../forms.scss'],
+  providers: [NgbProgressbarConfig],
+  imports: [
+    NgbProgressbar,
+    NgIf,
+    ModalBaseComponent
+  ],
+  standalone: true
 })
 export class ModalProgressComponent implements OnInit {
 
@@ -61,6 +88,7 @@ export class ModalProgressComponent implements OnInit {
   @Input() width:number = 200;
   @Input() animated:boolean = false;
   @Input() cancelable: boolean = false;
+  @Input() style: string = "info";
 
   /**
    * Modal title

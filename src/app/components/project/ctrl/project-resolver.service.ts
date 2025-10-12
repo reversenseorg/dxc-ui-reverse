@@ -17,7 +17,6 @@ export class ProjectResolver {
 
     resolve(pRoute: ActivatedRouteSnapshot, pState: RouterStateSnapshot): any {
 
-
         // intercept oute resolve
         this._prjSvc.getProject(pRoute.params.uid).subscribe((vProjState)=>{
 
@@ -34,6 +33,8 @@ export class ProjectResolver {
                     //(this._prjSvc as any)._location.replaceState('/home/'+pRoute.params.uid,'');
                     this._prjSvc._refreshDefaultDeviceFor(vProjState.project as DexcaliburProject);
                 });
+            }else{
+                console.log("ProjectResolver > ERROR : project not loaded");
             }
 
                 // show device in vp

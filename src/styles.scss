@@ -1009,7 +1009,7 @@ div.dxc-list {
 }
 
 .dxc-preview-exp {
-  position: absolute;
+  /* position: absolute; */
   top: 0;
   bottom: 0;
   left: 0;
@@ -1188,4 +1188,24 @@ button:focus {
     font-size: 0.7em;
   }
 
+}
+
+
+.dxc-subnavbar .dxc-navbar button.status {
+  height: 20px !important;
+
+  .running {
+    color: #4e9700;
+    height: 100%;
+  }
+
+  .unknown {
+    color: #ffffff;
+    height: 100%;
+  }
+
+  .stopped {
+    color: #b10000;
+    height: 100%;
+  }
 }

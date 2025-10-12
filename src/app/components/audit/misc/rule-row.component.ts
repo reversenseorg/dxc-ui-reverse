@@ -63,6 +63,11 @@ export class RuleRowComponent extends DxcComponent  {
       private _changeDetector:ChangeDetectorRef
   ) {
     super();
+
+  }
+
+  ngOnInit(){
+    console.log("DISPLAYED RULE ",this.rule);
   }
 
   /**

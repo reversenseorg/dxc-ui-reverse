@@ -382,7 +382,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     cmpRef.instance.controller = pView.ctrl;
     cmpRef.instance.configure(pView.data, pView.focus);
     this.idCTR++;
-    cmpRef.instance.id = this.idCTR;
+    cmpRef.instance.id = this.idCTR; // todo replace by noderef
     cmpRef.instance.uid = pView.uid;
     if(pView.opts!=null){
       cmpRef.instance.opts = pView.opts;

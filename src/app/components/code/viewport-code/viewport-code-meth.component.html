@@ -98,6 +98,7 @@
       <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
 
           <ng-container main>
+            <app-subnavbar-btn [active]="activeTop=='cfg'" [icon]="gIcons['LIST']" (click)="showGraph('disassembly')">&nbsp;CFG</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeTop=='bc'" [icon]="gIcons['LIST']" (click)="showBytecode()">&nbsp;Bytecode</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons['PLAY']" (click)="showDxcVM()">&nbsp;Dexcalibur VM</app-subnavbar-btn>
             <app-subnavbar-menu [label]="'Deobfuscation'" [icon]="gIcons['ANALYZE']">
@@ -128,6 +129,11 @@
           <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
         </div>
       </div>
+
+    <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')">
+        <app-graph-explorer [from]="data" [viewType]="'disassembly'"></app-graph-explorer>
+    </div>
+
 
       <div class="container-fluid view-outer" [ngStyle]="{'height':'100%'}" [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
           <dxc-code-emulator [parentLayout]="layout" [node]="data" (vmLogs)="showVmLogs($event)"></dxc-code-emulator>

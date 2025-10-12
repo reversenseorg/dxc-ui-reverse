@@ -30,6 +30,8 @@ import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {UIException} from "../../../base/error/UIException";
+import {ModalSendIntentComponent} from "../modal-intent/modal-send-intent.component";
+import {ModalSearchComponent} from "../../search/modal-search/modal-search.component";
 
 
 
@@ -119,6 +121,11 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
    */
   @ViewChildren(ExpandableItemComponent) expandableItems!: QueryList<ExpandableItemComponent<any>>;
 
+
+  @ViewChild(ModalSendIntentComponent) searchModal:ModalSendIntentComponent;
+
+
+
   protected _cuid:number = -1;
 
   onKeyboardEvent:Subject<any> = new Subject<any>();
@@ -129,9 +136,6 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
   selected:number = this.SUBVIEW.ALL;
   activeItem: any = null;
-
-
-
 
 
   //ctxMenuState:Nullable<ContextMenuState> = null;
