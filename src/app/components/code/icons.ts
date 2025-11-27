@@ -113,5 +113,16 @@ export const CODE_ICONS = {
     type: 'fas',
     name: 'font-case',
     color1: 'dxc-icon-folders-internal'
-  })
+  }),
+
+    ALIAS: new IconModel({
+        iconType: ICON_TYPE.TEXT,
+        label: '@:',
+        color1: 'dxc-text-75'
+    }),
+    ALIAS_HIDDEN: new IconModel({
+        iconType: ICON_TYPE.TEXT,
+        label: '@:',
+        color1: 'dxc-text-75 text-alias-hidden'
+    }),
 };
