@@ -13,6 +13,8 @@ import ModelFile from "../../../models/ModelFile";
 import {ModelFunction} from "../../../models/ModelFunction";
 import {OutputMessage} from "../../../cmp/OutputMessage";
 import {Nullable} from "../../../base/Nullable";
+import {NodeInternalType} from "../../../models/NodeInternalType";
+import ModelCpuInstruction from "../../../models/ModelCpuInstruction";
 
 
 // @ts-ignore
@@ -25,6 +27,8 @@ export class NativeService extends DxcApiService {
     discover_lib: "sections:f_list"
   }
 
+  private _ctxMenu:Record<string, any> = {};
+
   onNewXrefSearch: EventEmitter<any> = new EventEmitter<any>();
 
   constructor( private appmenuSvc:AppMenuService,
@@ -35,6 +39,7 @@ export class NativeService extends DxcApiService {
           list: {
             sections: { method: 'POST', url:'/probe/server/start', format:'json', auth:false /* removed */, puid:true },
             funcs: { method: 'GET', url:'/native/func', format:'json', auth:false /* removed */, puid:true },
+            syscalls: { method: 'GET', url:'/native/search/s_svc', format:'json', auth:false /* removed */, puid:true },
             imports: { method: 'GET', url:'/probe/server/status', format:'json', auth:false /* removed */, puid:true },
           },
           get: {
@@ -43,6 +48,11 @@ export class NativeService extends DxcApiService {
             disass_func: {method: 'GET', url:'/native/disass/func', format:'json', auth:false /* removed */, puid:true  },
             analyze: { method: 'GET', url:'/native/analysis', format:'json', auth:false /* removed */, puid:true },
             imports: { method: 'GET', url:'/native/imports', format:'json', auth:false /* removed */, puid:true },
+          },
+          func: {
+              decomp:  { method: 'POST', url:'/native/funcs/decompile', format:'json', auth:false /* removed */, puid:true },
+              xref:  { method: 'POST', url:'/native/funcs/xref', format:'json', auth:false /* removed */, puid:true },
+              emu:  { method: 'POST', url:'/native/emulate/create', format:'json', auth:false /* removed */, puid:true },
           },
           do: {
             file_anal: { method:'POST', url:'/native/analyze/file', format:'json', auth:false /* removed */, puid:true }
@@ -53,6 +63,7 @@ export class NativeService extends DxcApiService {
 
 
   }
+
 
   getFunction(pId:string):Observable<ModelFunction>{
     return this._process(
@@ -69,7 +80,7 @@ export class NativeService extends DxcApiService {
     );
   }
 
-  disass(pFn:string):Observable<ModelFunction>{
+  disass(pFn:string):Observable<ModelCpuInstruction[]>{
     return this._process(
       this.endpoints['get']['disass_func'],
       {
@@ -135,4 +146,93 @@ export class NativeService extends DxcApiService {
     );
   }
 
+    listSyscalls(pFileUid:string):Observable<any> {
+        return this._process(
+            this.endpoints['list']['syscalls'],
+            {
+                uid: pFileUid
+            }
+        ).pipe(
+            map((pEl:any)=>{
+
+                if(pEl.success){
+                    return pEl.data;
+                }else{
+                    this.outputSvc.print(OutputMessage.newError({
+                        src:'Native Analyzer',
+                        msg: 'Cannot extract syscalls from file "'+pFileUid+'" Cause : "'+pEl.msg
+                    }))
+                }
+
+            })
+        );
+    }
+
+    decompile(pFuncID:string, pOptions:any = {engine:"default"}):Observable<any> {
+        return this._process(
+            this.endpoints['func']['decomp'],
+            {
+                uid: pFuncID,
+                options: pOptions
+            }
+        ).pipe(
+            map((pEl:any)=>{
+
+                if(pEl.success){
+                    return pEl.data.dec;
+                }else{
+                    this.outputSvc.print(OutputMessage.newError({
+                        src:'Native Analyzer',
+                        msg: 'Cannot decompile function "'+pFuncID+'" Cause : "'+pEl.msg
+                    }))
+                }
+
+            })
+        );
+    }
+
+    listXref(pFuncID:string):Observable<any> {
+        return this._process(
+            this.endpoints['func']['xref'],
+            {
+                uid: pFuncID
+            }
+        ).pipe(
+            map((pEl:any)=>{
+
+                if(pEl.success){
+                    return pEl.data;
+                }else{
+                    this.outputSvc.print(OutputMessage.newError({
+                        src:'Native Analyzer',
+                        msg: 'Cannot extract xref from func "'+pFuncID+'" Cause : "'+pEl.msg
+                    }))
+                }
+
+            })
+        );
+    }
+
+    emulate(pFuncID: string) {
+        return this._process(
+            this.endpoints['func']['emu'],
+            {
+                uid: pFuncID,
+                type: NodeInternalType.FUNC
+            }
+        ).pipe(
+            map((pEl:any)=>{
+
+                if(pEl.success){
+                    return pEl.data;
+                }else{
+                    this.outputSvc.print(OutputMessage.newError({
+                        src:'Native Analyzer',
+                        msg: 'Cannot emulate func "'+pFuncID+'" Cause : "'+pEl.msg
+                    }))
+                }
+
+            })
+        );
+    }
 }

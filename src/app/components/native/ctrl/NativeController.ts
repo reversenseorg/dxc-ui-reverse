@@ -13,6 +13,8 @@ import {UiController} from "../../../base/controllers/UiController";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {Nullable} from "../../../base/Nullable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
+import {CODE_ICONS} from "../../code/icons";
+import {NATIVE_ICONS} from "../icons";
 
 
 export class NativeController extends UiController implements IController {
@@ -79,9 +81,19 @@ export class NativeController extends UiController implements IController {
   isAlreadyRendered(pItem:ModelFile):any {
     let f:any=null;
 
-    this.rendered.map((vItem:any) => {     if(vItem._uid === pItem._uid){
-        f = vItem;
-      }
+    this.rendered.map((vItem:any) => {
+        switch (pItem.__){
+            case NodeInternalType.FUNC:
+                if((pItem as any).__s!=null && vItem.__s=== (pItem as any).__s){
+                    f = vItem;
+                }
+                break;
+            default:
+                if(vItem._uid!=null && vItem._uid=== pItem._uid){
+                    f = vItem;
+                }
+                break;
+        }
     });
 
     return f;
@@ -91,7 +103,7 @@ export class NativeController extends UiController implements IController {
 
 
 
-  _show( pItem:ModelFile, pType:string):void {
+  _show( pItem:any, pType:string):void {
 
     let existingRef = this.isAlreadyRendered(pItem);
     let vid: string = this.id+':v'+this.rendered.length;
@@ -102,24 +114,20 @@ export class NativeController extends UiController implements IController {
       return;
     }
 
-    pItem._icon = FILE_ICONS['BIN'];
-    this.rendered.push({ item:pItem, uid:vid });
-    this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
-    /*
-    switch(pItem._t){
-      case NodeType.FILE:
+    let cmp = this.viewCmp.main;
+    switch (pItem.__) {
+        case NodeInternalType.FUNC:
+            cmp = this.viewCmp.func;
+            pItem._icon = NATIVE_ICONS['FUNC'];
+            break;
+        default:
+            pItem._icon = FILE_ICONS['BIN'];
+            break;
+    }
 
-        pItem._icon = GLOBAL_ICONS['FILE'];
-        this.rendered.push({ item:pItem, uid:vid });
-        this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
-        /*
-        this.service.getLibrary(pItem.getUID()).subscribe( (pData:data)=>{
-          pItem._icon = GLOBAL_ICONS['FILE'];
-          this.rendered.push({ item:pItem, uid:vid });
-          this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
-        });
-        break;
-    }*/
+
+      this.rendered.push({ item:pItem, uid:vid });
+      this.openView.next( { cmp: cmp,  ctrl:this, data:pItem, uid:vid });
   }
 
 }

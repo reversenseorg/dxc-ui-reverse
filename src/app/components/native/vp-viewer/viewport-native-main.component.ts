@@ -13,7 +13,11 @@ import {UIException} from "../../../base/error/UIException";
 
 @Component({
   selector: 'app-viewport-native',
-  templateUrl: './viewport-native-main.component.html',
+  template: `
+      <div [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"  class="container-fluid viewport-out viewport-native">
+          <dxc-viewport-native [data]="data" [height]="size.height"  [parent]="this.parent" [controller]="controller" [id]="id"></dxc-viewport-native>
+      </div>
+  `,
   styleUrls: ['./viewport-native.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 

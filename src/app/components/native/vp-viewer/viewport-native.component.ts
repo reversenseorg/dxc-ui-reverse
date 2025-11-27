@@ -1,13 +1,13 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit, QueryList,
-  SimpleChanges,
-  ViewChild,
-  ViewChildren
+    AfterViewInit, ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit, QueryList,
+    SimpleChanges,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {NATIVE_ICONS} from "../icons";
@@ -38,6 +38,11 @@ import {
 } from "../../hooks/ctrl/hook.service";
 import {Nullable} from "../../../base/Nullable";
 import ModelFile from "../../../models/ModelFile";
+import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
+import {NodeInternalType} from "../../../models/NodeInternalType";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {IconModelCollection} from "../../../base/icon/IconModel";
 
 
 
@@ -119,12 +124,18 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
   ctxMenu: ContextMenuList = {};
   ctxMenuState:ContextMenuState = { subject: null };
 
+  nIcons:IconModelCollection = NATIVE_ICONS;
+  funcs: ModelFunction[] = [];
+
   constructor(private nativeSvc:NativeService,
               private hookSvc:HookService,
-              private searchSvc:SearchService) {
+              private codeSvc:CodeControllerService,
+              private searchSvc:SearchService,
+              private chref:ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
+      console.log("Show native files",this.data);
   }
 
 
@@ -167,6 +178,12 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
       this.controller.registerCtxMenu(vMenu.name, this);
     });
 
+
+    this.refresh();
+  }
+
+  refresh(){
+      this.showFuncs();
   }
 
 
@@ -231,8 +248,39 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
     this.activeTopRight = pView;
   }
 
+  showFuncs():void {
+      console.log("showFuncs : ",this.data);
+      if(this.data == null || this.data._uid == null ) return;
+
+      this.codeSvc.merlinSearch(new MerlinSearchRequest(
+          NodeInternalType.FUNC,
+          [{
+              type:OperationType.SEARCH,
+              args: {
+                  pattern: "src._uid:"+this.data._uid,
+              }
+          }]
+      )).subscribe((vRes:any)=>{
+
+
+          console.log("Execute MERLIN Request (as native search : native) ",vRes);
+
+          vRes.map((vSelf:any) => {
+              vSelf._icon = this.nIcons['FUNC'];
+          });
+
+          this.funcs = vRes;
+          this.chref.detectChanges();
+      });
+  }
+
   show(pPpt: string, pName:string) {
     this.activeTopLeft = pName;
+    switch(pPpt) {
+        case 'fn_list':
+            this.showFuncs();
+            break;
+    }
   }
 
   showDetail(pType: string, pObj: any, pSubv:string):void {
@@ -242,14 +290,17 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
 
     switch(pType) {
       case 'fn':
-        this.selected.fn_off = pObj.addr;
+        this.selected.fn_off = pObj.addr
+        this.activeObj = pObj.__s;
+        this.chref.detectChanges();
+        /*
         this.nativeSvc.disass(pObj.__s).subscribe( pFunc => {
           console.log(pFunc);
           if(pFunc!=null) {
             this.activeObj = pFunc;
             this.activeTopRight = pSubv;
           }
-        });
+        });*/
         break;
       case 'sc':
         this.selected.sc_addr = pObj.paddr;
@@ -261,22 +312,6 @@ export class ViewportNativeComponent implements OnInit, OnChanges, AfterViewInit
     }
   }
 
-  disassAt( pAddr:number, pSize:number):void {
-
-  }
-
-  disassFunc(pFunc:ModelFunction) {
-    this.nativeSvc.disass(pFunc.signature())
-  }
-
-
-  getStyleForInstr(ins: any, offset: number):string {
-    if(this.activeItem !=null && ins.offset==this.activeItem.offset){
-      return 'active-item';
-    }else {
-      return "";
-    }
-  }
 
   goHook(pType: string, pSubject: any) {
     if(pType=='fn'){

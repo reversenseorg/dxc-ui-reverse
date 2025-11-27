@@ -23,7 +23,7 @@
     </ng-container>
     <ng-container body-left>
 
-      <div *ngIf="data && data.__p.f_list " class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='fl')" style="margin:0px; padding:0px; width:100%;">
+      <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='fl')" style="margin:0px; padding:0px; width:100%;">
 
         <div class="row no-gutters dxc-grid-header" style="border-bottom: 1px solid #aaa">
           <div class="col-lg-2" style="border-right:1px solid #aaa;"># Offset</div>
@@ -31,14 +31,14 @@
           <div class="col-lg-8">Symbol</div>
         </div>
 
-        <div *ngFor="let fn of data.__p.f_list | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
-             (contextmenu)="displayCtxMenu($event,id+'fn',fn.value)" (click)="showDetail('fn', fn.value, 'di')">
-          <div class="col-lg-2" [ngClass]="{ 'active' : (fn.value.hook!=null)}"  style="border-right:1px solid #aaa;">{{ fn.key }}</div>
-          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.value.sz }}</div>
+        <div *ngFor="let fn of funcs; let idx=index" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.addr)}"   style="border-bottom: 1px solid #aaa"
+             (contextmenu)="displayCtxMenu($event,id+'fn',fn)" (click)="showDetail('fn', fn, 'di')">
+          <div class="col-lg-2" [ngClass]="{ 'active' : (fn.hook!=null)}"  style="border-right:1px solid #aaa;">{{ idx }}</div>
+          <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.sz }}</div>
           <div class="col-lg-8">
-            {{ fn.value.name }}
-            <span class="text-warning" *ngIf="fn.value.alias">
-            @{{ fn.value.alias }}
+            {{ fn.name }}
+            <span class="text-warning" *ngIf="fn.alias">
+            @{{ fn.alias }}
             </span>
           </div>
         </div>
@@ -52,7 +52,7 @@
           <div class="col-lg-8">Symbol</div>
         </div>
 
-        <div *ngFor="let fn of data.__p.fn_list | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
+        <!--div *ngFor="let fn of data.__p.fn_list | keyvalue" class="row no-gutters dxc-grid-body" [ngClass]="{ 'active' : (selected.fn_off==fn.value.addr)}"   style="border-bottom: 1px solid #aaa"
              (contextmenu)="displayCtxMenu($event,id+'fn',fn.value)" (click)="showDetail('fn', fn.value, 'di')">
           <div class="col-lg-2" [ngClass]="{ 'active' : (fn.value.hook!=null)}"  style="border-right:1px solid #aaa;">{{ fn.key }}</div>
           <div class="col-lg-2" style="border-right:1px solid #aaa;">{{ fn.value.sz }}</div>
@@ -62,7 +62,7 @@
             @{{ fn.value.alias }}
             </span>
           </div>
-        </div>
+        </div>-->
       </div>
 
       <div *ngIf="data && data.__p.imp" class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='ii')" style="margin:0px; padding:0px; width:100%;">
@@ -95,7 +95,7 @@
           <div class="col-lg-2">Size</div>
         </div>
 
-        <div *ngFor="let is of data.__p.sections" [ngClass]="{ 'active' : (selected.sc_paddr==is.paddr)}" class="row no-gutters dxc-grid-body" style="border-bottom: 1px solid #aaa"
+        <div *ngFor="let is of data.sections" [ngClass]="{ 'active' : (selected.sc_paddr==is.paddr)}" class="row no-gutters dxc-grid-body" style="border-bottom: 1px solid #aaa"
              (contextmenu)="displayCtxMenu($event,id+'sc',is)" (click)="showDetail('sc', is, 'di')">
           <div class="col-lg-2" style="border-right:1px solid #aaa;">0x{{ is.paddr.toString(16) }}</div>
           <div class="col-lg-6" style="border-right:1px solid #aaa;">{{ is.name }}</div>
@@ -155,27 +155,8 @@
     </ng-container>
     <ng-container body-right>
 
-      <ng-container *ngIf="activeRight=='fn'">
-        <div *ngIf="activeObj" class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='di')" style="margin:0px; padding:0px;height:100%;overflow: scroll;background-color: #0c0c0c;">
-          <ng-container *ngFor="let ins of activeObj.instr; let offset=index">
-
-            <div *ngIf="ins.flags!=null && ins.flags.length>0" class="row no-gutters">
-              <div class="col-lg-10" [ngStyle]="{color: opstyle.flags.color}" style="font-family: 'Courier New', Courier, monospace;"><b>{{ ins?.flags[0] }}</b></div>
-            </div>
-            <div class="row no-gutters dxc-disass-row"  (contextmenu)="displayCtxMenu($event,id+'inst',ins)" [ngClass]="getStyleForInstr(ins, offset)">
-              <div class="col-lg-2">
-                <span *ngIf="offset==12" class="badge badge-sm dxc-meta text-bg-success">TRACKED</span>&nbsp;
-              </div>
-              <div class="col-lg-2" style="color:darkgrey;font-family: 'Courier New', Courier, monospace">0x{{ ins.offset.toString(16) }}</div>
-              <div class="col-lg-2" style="color:yellow;font-family: 'Courier New', Courier, monospace">{{ ins.bytes }}</div>
-              <div class="col-lg-6" [ngStyle]="{ 'color': opstyle.color[ins.type] }" style="color:white;font-family: 'Courier New', Courier, monospace">
-                <b>{{ ins.opcode }}</b>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-
-
+      <ng-container *ngIf="activeRight=='fn' && activeTopRight == 'di' ">
+        <dxs-disass-view [funcUID]="activeObj"></dxs-disass-view>
       </ng-container>
       <!--
       <div class="container-fluid" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='xr')">
