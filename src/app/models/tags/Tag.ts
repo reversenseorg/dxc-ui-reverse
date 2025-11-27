@@ -23,7 +23,7 @@ export class Tag implements INode
     _uid:string;
     descr:string;
     label:string;
-    styles:string
+    styles:any;
 
     private _fqn:string;
 
