@@ -24,6 +24,7 @@ import {MetaComponent} from "../../base/meta/meta.component";
 import {ViewportSplittedComponent} from "../../base/viewport-splitted/viewport-splitted.component";
 import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
+import {TopologyMapComponent} from "./topo-map.component";
 
 @NgModule({
     schemas: [
@@ -61,7 +62,8 @@ import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
         ViewportTopoActivityComponent,
         ViewportTopoProviderComponent,
         ViewportTopoReceiverComponent,
-        ViewportTopoServiceComponent
+        ViewportTopoServiceComponent,
+        TopologyMapComponent
     ],
     declarations: [
         ExplorerTopoComponent,
@@ -70,7 +72,8 @@ import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
         ViewportTopoActivityComponent,
         ViewportTopoProviderComponent,
         ViewportTopoReceiverComponent,
-        ViewportTopoServiceComponent
+        ViewportTopoServiceComponent,
+        TopologyMapComponent
     ]
 })
 export class TopologyModule { }

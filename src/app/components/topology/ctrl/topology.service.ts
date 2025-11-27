@@ -23,6 +23,7 @@ import {IntentDataCriteria} from "../../../models/android/Intent";
 import {FilesystemService} from "../../file/ctrl/FilesystemService";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 import {DxApiResponse} from "../../../base/common/common";
+import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 
 export type ComponentTypeUID = string;
 
@@ -69,6 +70,7 @@ export class TopologyService extends DxcApiService {
 
   constructor( private appmenuSvc:AppMenuService,
                private searchSvc:SearchService,
+               private codeSvc:CodeControllerService,
                private outputSvc:OutputService,
                private fsSvc:FilesystemService,
                protected override _http:HttpClient) {
@@ -203,7 +205,16 @@ export class TopologyService extends DxcApiService {
               //this.onMenuClick$.next({ item:NodeInternalType.DASHBOARD, product:"PRI_CLD_SSCAN" });
               this.onMenuClick$.next({ item:NodeInternalType.DASHBOARD, product:"privacy.generic" });
             }
-          }
+          },
+            {
+                label: 'Composition (SCA)',
+                click: (pMenuItem:any, pBrowserWindow:any ) => {
+                    this.onMenuClick$.next({
+                        item:NodeInternalType.PACKAGE,
+                        product:"sca"
+                    });
+                }
+            }
         ]
       }/*,{
         type: 'separator'
@@ -239,11 +250,20 @@ export class TopologyService extends DxcApiService {
 
     this.onMenuClick$.subscribe((pEvent:TopologyMenuEvent)=>{
         switch (pEvent.item){
-          case NodeInternalType.FILE:
-            if( pEvent.action=='open' && pEvent.filepath!=null){
-              this.fsSvc.viewNativeFileContent(pEvent.filepath, 'PKG');
-            }
-            break;
+            case NodeInternalType.FILE:
+                if( pEvent.action=='open' && pEvent.filepath!=null){
+                  this.fsSvc.viewNativeFileContent(pEvent.filepath, 'PKG');
+                }
+                break;
+            case NodeInternalType.DASHBOARD:
+                break;
+            case NodeInternalType.PACKAGE:
+                if(pEvent.product=='sca'){
+                    this.codeSvc.analyzeComposition().subscribe(()=>{
+
+                    });
+                }
+                break;
         }
     });
   }
