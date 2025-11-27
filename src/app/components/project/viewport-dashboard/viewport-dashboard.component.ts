@@ -156,8 +156,13 @@ enum INFO_TYPE {
             </ng-container>
 
             <ng-container body-top>
+                
+                <ng-container *ngIf="activeTR==TOPIC.TOP">
+                    <dxc-topo-map [project]="project"></dxc-topo-map>
+                </ng-container>
 
-              <ng-container *ngIf="data._t=='taa'">
+                
+              <!--<ng-container *ngIf="data._t=='taa'">
                 <app-viewport-topo-activity [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-activity>
               </ng-container>
 
@@ -171,7 +176,7 @@ enum INFO_TYPE {
 
               <ng-container *ngIf="data._t=='tar'">
                 <app-viewport-topo-receiver [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-receiver>
-              </ng-container>
+              </ng-container>-->
 
             </ng-container>
 
@@ -186,6 +191,10 @@ enum INFO_TYPE {
             </ng-container>
             <ng-container body-bottom>
 
+                <ng-container *ngIf="activeBR==TOPIC.SEC">
+                    <dxc-search-result-list [hFull]="true"></dxc-search-result-list>
+                </ng-container>
+                
             </ng-container>
           </app-viewport-splitted>
         </ng-container>
@@ -231,7 +240,7 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
   app: Nullable<Application> = null;
   project: Nullable<DexcaliburProject> = null;
 
-  activeTR: number = INFO_TYPE.TOP;
+  activeTR: number = this.TOPIC.TOP;
   activeTL: number = INFO_TYPE.APP;
   activeBR: number = INFO_TYPE.SEC;
   activeBL: number = INFO_TYPE.RES;
