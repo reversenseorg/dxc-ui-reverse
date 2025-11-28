@@ -1,14 +1,14 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    QueryList,
+    ViewChild,
+    ViewChildren
 } from '@angular/core';
 import {ExplorerView} from "../../../cmp/ExplorerView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
@@ -17,7 +17,7 @@ import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {SubExplorerComponent} from "../../../base/explorer/subexplorer.component";
 import {ExplorerTab} from "../../../cmp/ExplorerTab";
 import {ActivatedRoute} from "@angular/router";
-import {empty, Observable, Subject} from "rxjs";
+import {empty, from, Observable, Subject} from "rxjs";
 import {ModelPackage} from "../../../cmp/ModelPackage";
 import {map} from "rxjs/operators";
 import {CODE_SUBVIEW} from "./explorer-code.const";
@@ -25,10 +25,10 @@ import {CodeItem} from "./CodeItem";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {ModifierFormat} from "../../../models/AccessFlags";
 import {
-  ContextMenuComponent,
-  ContextMenuEvent,
-  ContextMenuList,
-  ContextMenuState
+    ContextMenuComponent,
+    ContextMenuEvent,
+    ContextMenuList,
+    ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
 import {CodeController} from "../ctrl/CodeController";
 import {CODE_ICONS} from "../icons";
@@ -53,7 +53,9 @@ import {Nullable} from "../../../base/Nullable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
 import {IStringIndex} from "../../../base/IStringIndex";
 import ModelFile from "../../../models/ModelFile";
-import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
+import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
+import {NATIVE_ICONS} from "../../native/icons";
+import {ModelFunction} from "../../../models/ModelFunction";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -143,6 +145,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   activeItem: any = null;
 
   override icons:IconModelCollection = CODE_ICONS;
+  nIcons:IconModelCollection = NATIVE_ICONS;
   override gIcons:IconModelCollection = GLOBAL_ICONS;
 
   override offset:number = 0;
@@ -154,6 +157,9 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   packages:CodeItem[][] = [];
 
   projectReady:boolean = false;
+    opts:any = {
+        alias: true
+    };
 
   constructor( private projectService:ProjectService,
                private codeService:CodeControllerService,
@@ -294,6 +300,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
             let t1 = (new Date()).getTime();
 
+
             for(let i=0; i<frames; i++){
 
               console.log('update package');
@@ -430,9 +437,124 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   isExpandable( pItem:any):boolean {
-    return (pItem._t=='c' || pItem._t=='p' || pItem.__==NodeInternalType.FILE); //pItem.children.length>0;
+    return (pItem._t=='c' || pItem._t=='p' || pItem.__==NodeInternalType.FILE || pItem.___!=null); //pItem.children.length>0;
   }
 
+
+  private _expandFakeCat( pItem:any, pType:string): Observable<CodeItem[]> {
+      switch(pItem.___){
+          case "funcs":
+              return this.codeService.merlinSearch(new MerlinSearchRequest(
+                  NodeInternalType.FUNC,
+                  [{
+                      type:OperationType.SEARCH,
+                      args: {
+                          pattern: "src._uid:"+pItem._obj._uid,
+                      }
+                  }]
+              )).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : file content) ",vRes);
+
+                  vRes = vRes.filter((f:any) => {
+                      if(!f.name.startsWith("sym.imp.")){
+                          f._style = {
+                              color: (f.name.startsWith("sym.")? "#00e7ff" : "#777" )
+                          };
+                          f._icon = this.nIcons['FUNC'];
+                          return true;
+                      }else{
+                          return false;
+                      }
+                  });
+
+                  pItem.children = vRes;
+              })) as  Observable<any>;
+              break;
+          case "exp":
+              return this.codeService.merlinSearch(new MerlinSearchRequest(
+                  NodeInternalType.FUNC,
+                  [{
+                      type:OperationType.SEARCH,
+                      args: {
+                          pattern: "src._uid:"+pItem._obj._uid,
+                      }
+                  }]
+              )).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : file content) ",vRes);
+
+                  vRes.map((vSelf:any) => {
+                      vSelf._icon = this.nIcons['FUNC'];
+                  });
+
+
+                  pItem.children = vRes;
+              })) as  Observable<any>;
+              break;
+          case "imp":
+              return this.codeService.merlinSearch(new MerlinSearchRequest(
+                  NodeInternalType.FUNC,
+                  [{
+                      type:OperationType.SEARCH,
+                      args: {
+                          pattern: "src._uid:"+pItem._obj._uid
+                      }
+                  },{
+                      type:OperationType.FILTER,
+                      args: {
+                          pattern: "name:/^sym\.imp\./"
+                      }
+                  }]
+              )).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : imported func) ",vRes);
+
+                  vRes.map((vSelf:any) => {
+                      vSelf._icon = this.nIcons['FUNC'];
+                      vSelf.name = vSelf.name.substring(8);
+                  });
+
+                  pItem.children = vRes;
+              })) as  Observable<any>;
+              break;
+          case "sect":
+              console.log("List sections : ",pItem._obj);
+              (pItem._obj as any).sections.map((s: any) => {
+                  s.__ = NodeInternalType.EXEC_SECTION;
+              });
+              pItem.children = (pItem._obj as any).sections;
+
+              return from([
+                  (pItem._obj as any).sections
+              ]);
+              break;
+          case "strings":
+              /*return this.nativeSvc.listStrings(pItem._obj._uid).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : imported func) ",vRes);
+
+                  vRes.map((vSelf:any) => {
+                      vSelf._icon = this.nIcons['FUNC'];
+                  });
+
+                  pItem.children = vRes;
+              })) as  Observable<any>;*/
+              return from([ ]);
+              break;
+          case "syscalls":
+              return this.nativeSvc.listSyscalls(pItem._obj._uid).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : imported func) ",vRes);
+
+                  vRes.map((vSelf:any) => {
+                      vSelf._icon = this.nIcons['FUNC'];
+                  });
+
+                  pItem.children = vRes;
+              })) as  Observable<any>;
+              break;
+          default:
+              return from([ ]);
+              break;
+
+      }
+  }
   /**
    * Callback from expandable
    * @param pItem
@@ -441,6 +563,26 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   expand( pItem:any, pType:string): Observable<CodeItem[]> {
     let data:any = null;
 
+    console.log("Code explorer : expand : ",pItem, pType);
+
+    if(pItem.___!=null){
+        return this._expandFakeCat(pItem,pType);
+    }
+
+    switch (pItem.__) {
+        case NodeInternalType.FILE:
+            pItem.children = [
+                { _icon: this.nIcons['FUNC'],  ___:'funcs', _obj: pItem, children:[] },
+                { _icon: this.nIcons['SECTIONS'],  ___:'sect', _obj: pItem, children:[] },
+                { _icon: this.nIcons['IMPORTS'],  ___:'imp', _obj: pItem, children:[] },
+                { _icon: this.nIcons['EXPORTS'],  ___:'exp', _obj: pItem, children:[] },
+                { _icon: this.icons['STR'],  ___:'strings', _obj: pItem, children:[] },
+                { _icon: this.nIcons['SYSCALL'],  ___:'syscalls', _obj: pItem, children:[] },
+            ]
+
+            return from([pItem.children as CodeItem[]]);
+
+    }
 
     switch(pType){
       case 'p':
@@ -544,7 +686,16 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   open( pItem:any): any {
-    this.controller.open( pItem, 'expl');
+      switch (pItem.__) {
+          case NodeInternalType.FUNC:
+          case NodeInternalType.FILE:
+              this.controller.showItem(pItem);
+              break;
+          default:
+              this.controller.open( pItem, 'expl');
+              break;
+
+      }
     return null;
   }
 
@@ -1077,4 +1228,14 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   taint(pSubject: any, pStep: string) {
 
   }
+
+    checkOpt(pAlias: string, pVal:any = null) {
+          this.opts[pAlias] = pVal;
+    }
+
+    startEmu(pFn: any) {
+        this.nativeSvc.emulate(pFn.__s).subscribe( (pRes:any)=>{
+            console.log("EMULATOR CONFIG :",pRes);
+        })
+    }
 }

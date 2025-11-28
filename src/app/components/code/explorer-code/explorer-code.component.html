@@ -6,6 +6,9 @@
         <ng-container opts>
         <button class="btn-option" [ngbTooltip]="'Refresh list'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
         <button class="btn-option" [ngbTooltip]="'Search in ..'" (click)="search()"><fa-icon [icon]="['fas','magnifying-glass']"></fa-icon></button>
+        <button class="btn-option" [ngbTooltip]="'Hide alias'" (click)="checkOpt('alias', (opts.alias==true ? false : true ) )">
+            <dxc-icon [model]="opts.alias?icons.ALIAS:icons.ALIAS_HIDDEN"></dxc-icon>
+        </button>
         <!--<button class="btn-option" (click)="filter()"><fa-icon [icon]="['fas','filter']"></fa-icon></button>-->
       </ng-container>
     </app-explorer-navbar>
@@ -40,7 +43,7 @@
             <span *ngIf="NODE_TYPES.CLASS==itemObj.__" #classTpl (contextmenu)="displayCtxMenu($event,'clazz',itemObj)">
               <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'"></dxc-meta>
-              <div *ngIf="itemObj.alias; then aliasedClz else stdClz"></div>
+              <div *ngIf="(itemObj.alias && opts.alias); then aliasedClz else stdClz"></div>
               <ng-template #aliasedClz>
                 <span class="text-warning">@{{ itemObj.alias }}</span>
               </ng-template>
@@ -104,18 +107,23 @@
             </span>
 
             <span *ngIf="NODE_TYPES.FUNC==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'fun',itemObj)">
-
-
               <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
               <div *ngIf="itemObj.alias!=null; then aliasedSym else stdSym"></div>
               <ng-template #aliasedSym>
                 <i class="text-info"> @{{ itemObj.alias }}</i>
               </ng-template>
               <ng-template #stdSym>
-                {{ itemObj.name  }}
+                  <span [ngStyle]="{ color:itemObj._style.color  }">{{ itemObj.name  }}</span>
               </ng-template>
+            </span>
 
-
+            <span *ngIf="NODE_TYPES.EXEC_SECTION==itemObj.__" (contextmenu)="displayCtxMenu($event,'sect',itemObj)">
+                <div class="row">
+                  <div class="col-3">[0x{{ itemObj.vaddr }}]</div>
+                  <div class="col-2">{{ itemObj.memsz }}</div>
+                  <div class="col-3">{{ itemObj.perm }}</div>
+                  <div class="col-4">{{ itemObj.name }}</div>
+                </div>
             </span>
 
             <span *ngIf="itemObj._t=='b'" #byteTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
@@ -129,6 +137,33 @@
                 {{ itemObj.sname  }}
               </ng-template>
             </span>
+
+
+
+              <span *ngIf="itemObj.___!=null && itemObj.___==='funcs'">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  Functions
+             </span>
+              <span *ngIf="itemObj.___!=null && itemObj.___==='sect'">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  Sections
+             </span>
+              <span *ngIf="itemObj.___!=null && itemObj.___==='syscalls'">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  Syscalls
+             </span>
+              <span *ngIf="itemObj.___!=null && itemObj.___==='strings'">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  Strings
+             </span>
+              <span *ngIf="itemObj.___!=null && itemObj.___==='imp'">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  Imports
+             </span>
+              <span *ngIf="itemObj.___!=null && itemObj.___==='exp'">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  Exports
+             </span>
 
 
 
@@ -265,7 +300,8 @@
   <app-context-item [label]="'Tamper param value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_PARAM  })"></app-context-item>
   <app-context-item [label]="'Generate empty hook'" [icon]="gIcons['GEN_HOOK']"  (click)="trackValueOf( ctxMenuState.subject, {type: PRESET_HOOK.NONE  } )"></app-context-item>
   <app-context-item [label]="'Add bookmark'" [icon]="gIcons['BOOKMARK']"  (click)="addBookmark(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [separator]="true" [label]="'New KeyPoint before call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_bef'})"></app-context-item>
+    <app-context-item [label]="'Emulate'" [icon]="gIcons['PLAY']"  (click)="startEmu(ctxMenuState.subject)"></app-context-item>
+    <app-context-item [separator]="true" [label]="'New KeyPoint before call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_bef'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint after call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_aft'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint on dlsym'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_dlsym'})"></app-context-item>
 </app-context-menu>

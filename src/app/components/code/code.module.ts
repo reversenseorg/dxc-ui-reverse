@@ -21,6 +21,12 @@ import {ViewportCodeMethComponent} from "./viewport-code/viewport-code-meth.comp
 import {ViewportCodeFieldComponent} from "./viewport-code/viewport-code-field.component";
 import {ViewportCodeComponent} from "./viewport-code/viewport-code.component";
 import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {CodeEditorModule} from "../code-editor/code-editor.module";
+import {AppModule} from "../../app.module";
+import {ModalRenameComponent} from "./modal-rename/modal-rename.component";
+import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -42,6 +48,10 @@ import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
         TagBadgeComponent,
         ExplorerNavbarComponent,
         NodeAliasComponent,
+        FontAwesomeModule,
+        CodeEditorModule,
+        ModalBaseComponent,
+        ReactiveFormsModule,
     ],
     exports: [
         CodeSymbolTableComponent,
@@ -56,7 +66,9 @@ import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
         ViewportCodeMethComponent,
         ViewportCodeFieldComponent,
         ViewportCodeClassComponent,
-        ViewportCodeStringComponent
+        ViewportCodeStringComponent,
+
+        ModalRenameComponent
 
     ],
     declarations: [
@@ -71,7 +83,9 @@ import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
         ViewportCodeClassComponent,
         ViewportCodeMethComponent,
         ViewportCodeFieldComponent,
-        ViewportCodeClassComponent
+        ViewportCodeClassComponent,
+
+        ModalRenameComponent
 
     ]
 })
