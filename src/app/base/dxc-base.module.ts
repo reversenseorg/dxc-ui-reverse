@@ -23,6 +23,7 @@ import {ExpandableItemComponent} from "./expandable-list/expandable-item.compone
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {ExpandableDirective} from "./expandable-list/expandable.directive";
 import {ContextItemComponent} from "./context-menu/context-item.component";
+import {DxcHelperBtnComponent} from "../components/helper/dxc-helper.component";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {ContextItemComponent} from "./context-menu/context-item.component";
     ExpandableListComponent,
     ExpandableItemComponent,
     ContextMenuComponent,
-  ContextItemComponent,
+    ContextItemComponent,
+    DxcHelperBtnComponent
   ],
     exports: [
         SubnavbarComponent,
@@ -58,6 +60,7 @@ import {ContextItemComponent} from "./context-menu/context-item.component";
         ExpandableItemComponent,
         ContextMenuComponent,
         ContextItemComponent,
+        DxcHelperBtnComponent
     ],
     imports: [
         CommonModule,
@@ -68,7 +71,8 @@ import {ContextItemComponent} from "./context-menu/context-item.component";
         ModalBaseComponent,
         ModalProgressComponent,
         IconComponent,
-        ExpandableDirective
+        ExpandableDirective,
+
     ]
 })
 export class DxcBaseModule { }

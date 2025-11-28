@@ -32,15 +32,9 @@ import {ViewportDirective} from "./base/viewport/viewport.directive";
 import { TerminalWorkspaceComponent } from './components/workspace/terminal-workspace/terminal-workspace.component';
 import {TerminalDirective} from "./base/terminal/terminal.directive";
 import { TerminalExecComponent } from './components/workspace/terminal-exec/terminal-exec.component';
-import { ContextMenuComponent } from './base/context-menu/context-menu.component';
-import {ContextItemComponent} from "./base/context-menu/context-item.component";
-import {ViewportCodeClassComponent} from "./components/code/viewport-code/viewport-code-class.component";
-import {ViewportCodeMethComponent} from "./components/code/viewport-code/viewport-code-meth.component";
 import {SettingsService} from "./components/settings/ctrl/settings.service";
 import {TerminalHelperComponent} from "./components/helper/terminal-helper/terminal-helper.component";
-import { ModalRenameComponent } from './components/code/modal-rename/modal-rename.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {ViewportCodePackageComponent} from "./components/code/viewport-code/viewport-code-package.component";
 import { ViewportHookComponent } from './components/hooks/viewport-hooks/viewport-hook.component';
 import {TerminalHookComponent} from "./components/hooks/terminal-hooks/terminal-hook.component";
 import {ViewportHookJavaComponent} from "./components/hooks/viewport-hooks/viewport-hook-javahook.component";
@@ -85,7 +79,6 @@ import {ViewportHookScriptComponent} from "./components/hooks/viewport-hooks/vie
 import {ModalNewSettingComponent} from "./components/settings/modal-new-setting/modal-new-setting.component";
 import {ViewportHookKpComponent} from "./components/hooks/viewport-hooks/viewport-hook-kp.component";
 import {RefComponent} from "./base/ref/ref.component";
-import {DxcHelperBtnComponent} from "./components/helper/dxc-helper.component";
 import {ViewportProjectDashboardComponent} from "./components/project/viewport-dashboard/viewport-dashboard.component";
 import {ModalLogoutComponent} from "./components/auth/modal-logout/modal-logout.component";
 import {ViewportPrivacyDashboardComponent} from "./components/privacy/viewport-privacy/viewport-privacy.component";
@@ -129,6 +122,8 @@ import {SearchModule} from "./components/search/search.module";
 import {ExplorerNavbarComponent} from "./base/explorer-navbar/explorer-navbar.component";
 import {ProjectStatusComponent} from "./components/project/project-loaded.component";
 import {TopologyModule} from "./components/topology/topo.module";
+import {NativeModule} from "./components/native/native.module";
+import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewport-native-func.component";
 
 
 // AoT requires an exported function for factories
@@ -171,15 +166,6 @@ import {TopologyModule} from "./components/topology/topo.module";
 
     CodeEmulatorComponent,
 
-    // dxc components
-    // ExplorerCodeComponent,
-    // ViewportCodePackageComponent,
-    // ViewportCodeClassComponent,
-    // ViewportCodeMethComponent,
-    // ViewportCodeFieldComponent,
-
-    ModalRenameComponent,
-//        ModalMethodComponent,
 
     ExplorerDirective,
     ViewportDirective,
@@ -224,16 +210,13 @@ import {TopologyModule} from "./components/topology/topo.module";
     IntentPatternComponent,
 
     ViewportNativeMainComponent,
+      ViewportNativeFuncComponent,
     ViewportNativeComponent,
 
     BookmarkButtonComponent,
 
     ViewportEditorComponent,
     DxcInputValidationDirective,
-
-
-    // helper
-    DxcHelperBtnComponent,
 
     // generic alert
     ModalAlertComponent,
@@ -291,30 +274,32 @@ import {TopologyModule} from "./components/topology/topo.module";
 
         //AssuranceModelInfoCardComponent,
 
-         ModalBaseComponent,
+        ModalBaseComponent,
         ModalProgressComponent,
         //ProjectManagementModule
 
-      ViewportSplittedComponent,
+        ViewportSplittedComponent,
 
-      MetaComponent,
-      IconComponent,
-      TagBadgeComponent,
-      ExplorerNavbarComponent,
-      NodeAliasComponent,
-      ProjectStatusComponent,
+        MetaComponent,
+        IconComponent,
+        TagBadgeComponent,
+        ExplorerNavbarComponent,
+        NodeAliasComponent,
+        ProjectStatusComponent,
 
-      ExpandableDirective,
+        ExpandableDirective,
+        NativeModule,
     ],
   providers: [
     ControllerService,
     SettingsService,
     ViewportResolver
   ],
-  exports: [
-    NavbarComponent,
-    DxcInputValidationDirective
-  ],
+    exports: [
+        NavbarComponent,
+        DxcInputValidationDirective,
+        ViewportNativeComponent,
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

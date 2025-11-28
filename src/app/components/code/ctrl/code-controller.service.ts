@@ -164,6 +164,9 @@ export class CodeControllerService extends DxcApiService{
       },
       vm: {
         simplify: {method: 'POST', url: '/code/method/simplify/:id', format: 'json', auth:false /* removed */, puid: true}
+      },
+      analysis: {
+          sca: {method: 'POST', url: '/code/analysis/sca', format: 'json', auth:false /* removed */, puid: true}
       }
     }, http, outputSvc);
     //let ser:SerializeFilter = new SerializeFilter();
@@ -1034,4 +1037,26 @@ export class CodeControllerService extends DxcApiService{
 
     return node;
   }
+
+    analyzeComposition():Observable<DxApiResponse<any>> {
+        return this._process(
+            this.endpoints.analysis.sca,
+            { }
+        ).pipe(
+            map(vRes => {
+
+                console.log("SCA Analysis : ",vRes);
+
+                if(!vRes.success){
+                    return  { success: false, msg: (vRes.msg!=null? vRes.msg:""), data: null };
+                }
+
+                return  {
+                    success: vRes.success,
+                    msg: (vRes.msg!=null? vRes.msg:""),
+                    data: null
+                };
+            })
+        )
+    }
 }
