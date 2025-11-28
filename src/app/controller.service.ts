@@ -83,6 +83,7 @@ import {ModalSendIntentComponent} from "./components/topology/modal-intent/modal
 import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-edit-rule.component";
 import {ViewportComponent} from "./base/viewport/viewport.component";
 import {IViewportContainer} from "./base/viewport/IViewportContainer";
+import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewport-native-func.component";
 
 
 interface StageSet {
@@ -103,6 +104,8 @@ export class ControllerService {
   activeCtn:Nullable<IViewportContainer> = null;
 
   helper: Nullable<HelperController> = null;
+
+  all:IController[] = [];
   private _s:StageSet = {};
 
   constructor(
@@ -167,6 +170,12 @@ export class ControllerService {
     return this.helper;
   }
 
+
+  getController<T>(pName:string):Nullable<T> {
+      return this.all.find(x=>{
+          return x.name == pName;
+      }) as Nullable<T>;
+  }
   /**
    *
    */
@@ -179,7 +188,8 @@ export class ControllerService {
    * @param pControllers
    */
   hookAfterControllersInit(pControllers:IController[]):void {
-    this.appmenuService.render();
+      this.all = pControllers;
+      this.appmenuService.render();
   }
 
 
@@ -315,7 +325,8 @@ export class ControllerService {
       new NativeController({
         service: this.nativeSvc,
         viewCmp: {
-          main: ViewportNativeMainComponent
+          main: ViewportNativeMainComponent,
+          func: ViewportNativeFuncComponent,
         },
       }),
       new PlatformController({
