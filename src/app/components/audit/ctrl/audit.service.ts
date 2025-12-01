@@ -38,9 +38,16 @@ export interface CheckEvent {
   state: CheckEventState;
 }
 
-export interface CheckResult {
+export interface IResults {
+    results: any[];
+}
+export interface CheckResult extends IResults{
   event: CheckEvent
-  results: any[];
+}
+
+
+export interface SearchResult extends IResults {
+    search: any;
 }
 
 export interface EditorEvent {
@@ -70,7 +77,8 @@ export class AuditService extends DxcApiService{
 
   displayCtxMenu$:Subject<ContextMenuEvent> = new Subject<ContextMenuEvent>();
 
-  onCheckAction$:Subject<CheckResult> = new Subject<CheckResult>();
+  onCheckAction$:Subject<CheckResult|SearchResult> = new Subject<CheckResult|SearchResult>();
+
   private refreshScans$: Subject<any> = new Subject<any>();
   openEditor$: Subject<EditorEvent> = new Subject<EditorEvent>();
 

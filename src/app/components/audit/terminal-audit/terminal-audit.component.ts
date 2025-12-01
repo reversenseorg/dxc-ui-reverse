@@ -29,7 +29,7 @@ import {AuditController} from "../ctrl/AuditController";
 import {HOOK_ICONS} from "../../hooks/icons";
 import {SearchService} from "../../search/ctrl/search.service";
 import {HookService} from "../../hooks/ctrl/hook.service";
-import {AuditService, CheckEvent, CheckEventState, CheckResult} from "../ctrl/audit.service";
+import {AuditService, CheckEvent, CheckEventState, CheckResult, IResults, SearchResult} from "../ctrl/audit.service";
 import {SearchController} from "../../search/ctrl/SearchController";
 
 
@@ -99,7 +99,7 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
 
   _active:string = "";
   _tabStack:string[] = [];
-  _resultsTabs: Record<string, TabItem<CheckResult>> = {};
+  _resultsTabs: Record<string, TabItem<CheckResult|SearchResult>> = {};
 
   constructor(private prjSvc:ProjectService,
               private hookSvc:HookService,
@@ -114,21 +114,26 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
   }
 
   ngOnInit(): void {
-    this.auditSvc.onCheckAction$.subscribe((vRes:CheckResult)=>{
+    this.auditSvc.onCheckAction$.subscribe((vRes:CheckResult|SearchResult)=>{
       if(this.controller.app != null){
         // focus "Audit results" tab
         this.controller.app.terminalCmp.selectTabByLabel(TAB_LABEL);
       }
 
-      switch (vRes.event.state){
-        case CheckEventState.NEW:
-          this.newTab(vRes);
-          break;
-        case CheckEventState.FAIL:
-        case CheckEventState.SUCCESS:
-          this.updateTab(vRes);
-          break;
+      if((vRes as any).event!=null){
+          switch ((vRes as any).event.state){
+              case CheckEventState.NEW:
+                  this.newTab(vRes as any);
+                  break;
+              case CheckEventState.FAIL:
+              case CheckEventState.SUCCESS:
+                  this.updateTab(vRes as any);
+                  break;
+          }
+      }else if((vRes as any).search!=null){
+          this.newSearchTab(vRes as any);
       }
+
     });
 
   }
@@ -213,12 +218,17 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
   }
 
   getUIDfromEvent(pEvent:CheckEvent):string {
-    console.log("getUIDfromEvent > ",pEvent);
-    return `${(pEvent.assessment!=null?pEvent.assessment.id:'a')}:${pEvent.rule!=null?pEvent.rule.request.__stringified:'r'}:${pEvent.startTime}`
+    const uid =  `${(pEvent.assessment!=null?pEvent.assessment.id:'a')}:${pEvent.rule!=null?pEvent.rule.request.__stringified:'r'}:${pEvent.startTime}`
+    console.log("getUIDfromEvent > ",uid);
+    return uid;
+  }
+
+  getUIDfromSearch(pEvent:any):string {
+      console.log("getUIDfromSearch > ",pEvent.query);
+      return pEvent.query;
   }
 
   newTab(pResult:CheckResult) {
-
 
     if(this.controller.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
@@ -249,7 +259,40 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
     this.changeRef.detectChanges();
   }
 
-  getTabItems():TabItem<CheckResult>[] {
+
+
+    newSearchTab(pResult:SearchResult) {
+
+        if(this.controller.app==null){
+            throw  UIException.APP_NOT_INITIALIZED();
+        }
+
+        const tabUID = this.getUIDfromSearch(pResult.search);
+
+        if(this._resultsTabs[tabUID]!=null){
+            // fail safe, this case should be never reached
+            //this.updateTab(pResult);
+            return;
+        }
+
+        if(this._active!=null && this._resultsTabs[this._active]!=null){
+            this._resultsTabs[this._active].active = false;
+        }
+
+        this._active = tabUID;
+        this._tabStack.push(tabUID);
+        this._resultsTabs[tabUID] = {
+            uid: tabUID,
+            icon: null,
+            label: pResult.search.query,
+            active: true,
+            data: pResult
+        };
+
+        this.changeRef.detectChanges();
+    }
+
+  getTabItems():TabItem<any>[] {
     return Object.values(this._resultsTabs);
   }
 
@@ -306,7 +349,7 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
 
   }
 
-  isDisplayed(pItem: TabItem<CheckResult>):("block"|"none") {
+  isDisplayed(pItem: TabItem<CheckResult|SearchResult>):("block"|"none") {
     if(pItem.data==null) return "none";
 
     if(pItem.uid==this._active){

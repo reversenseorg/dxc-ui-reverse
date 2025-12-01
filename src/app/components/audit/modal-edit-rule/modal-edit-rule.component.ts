@@ -16,7 +16,7 @@ import {AbstractKeyboardNavigable} from "../../../base/keyboard/AbstractKeyboard
 import {KeyboardNavigationService} from "../../../base/keyboard/keyboard-navigation.service";
 import {Nullable} from "../../../base/Nullable";
 import {Tag} from "../../../models/tags/Tag";
-import {AuditService, CheckEventState} from "../ctrl/audit.service";
+import {AuditService, CheckEventState, CheckResult, SearchResult} from "../ctrl/audit.service";
 import {OperatingSystem} from "../../../models/OperatingSystem";
 import {UIException} from "../../../base/error/UIException";
 import {
@@ -193,7 +193,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
   onOpen( pEvent:any){
     const tag = pEvent.target.options;
     console.log("RULE EDITOR : ",tag);
-    this.description = tag.descr;
+    if(tag!=null && tag.descr!=null) this.description = tag.descr;
   }
 
   close(){
@@ -363,26 +363,25 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
       return;
     }
 
-    //this.idle = false;
-    //this.onScanning.emit(this.idle);
-    //this._changeDetector.detectChanges();
+    const req = new MerlinSearchRequest(
+      (this.newNode as NodeChoice).type,
+      this._getCurrentOperations()
+    );
 
-    this._codeSvc.merlinSearch(new MerlinSearchRequest(
-        (this.newNode as NodeChoice).type,
-        this._getCurrentOperations()
-    )).subscribe((res:any)=>{
-      console.log("Execute MERLIN Request (as code search)",res);
+    this._codeSvc.merlinSearch(req).subscribe((pRes:any)=>{
+        console.log("Execute MERLIN Request (as code search)",pRes);
 
+        let r:SearchResult = {
+            search:{
+                query:req.toSearchString()
+            },
+            results: []
+        };
 
-      //this.idle = true;
-      //this.onScanning.emit(this.idle);
+        r.results = (pRes!=null && pRes.length>0 ? pRes : [] );
 
-      /*this._changeDetector.detectChanges();
-      if(res.event.state==CheckEventState.SUCCESS){
-        this.onDryRunEnd.emit({ success:true, res: res.results });
-      }else{
-        this.onDryRunEnd.emit({ success:false, res: [] });
-      }*/
+        this.auditSvc.onCheckAction$.next(r);
+
     });
   }
 
