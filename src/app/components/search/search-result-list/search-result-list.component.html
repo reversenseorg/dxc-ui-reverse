@@ -84,6 +84,19 @@
         </div>
       </ng-container>
 
+        <ng-container *ngIf="e.__==NODE_TYPES.FILE">
+            <div class="col-lg-1">
+                <dxc-icon [model]="gIcons['FILE']"></dxc-icon>&nbsp; {{ e.scope.__i }}
+            </div>
+            <div class="col-lg-1">{{ e.size }}</div>
+            <div class="col-lg-7">{{ e._r }}</div>
+            <div class="col-lg-3">
+                <ng-container *ngFor="let t of e.tags">
+                    <dxc-tag-badge [tagUUID]="t" [editable]="false"></dxc-tag-badge>
+                </ng-container>
+            </div>
+        </ng-container>
+
       <ng-container *ngIf="e.__==NODE_TYPES.STRING">
         <div class="col-lg-12" (dblclick)="openView(e)">
            <dxc-preview [type]="'s'" [data]="e.value" [length]="64"></dxc-preview>
