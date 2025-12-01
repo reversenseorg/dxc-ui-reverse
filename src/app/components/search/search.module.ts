@@ -10,6 +10,7 @@ import {SearchResultListComponent} from "./search-result-list/search-result-list
 import {PreviewerComponent} from "../../base/previewer/previewer.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 import {ExplorerNavbarComponent} from "../../base/explorer-navbar/explorer-navbar.component";
+import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {ExplorerNavbarComponent} from "../../base/explorer-navbar/explorer-navba
         MetaComponent,
         PreviewerComponent,
         ModalBaseComponent,
-        ExplorerNavbarComponent
+        ExplorerNavbarComponent,
+        TagBadgeComponent
     ],
     exports: [
         TerminalSearchComponent,

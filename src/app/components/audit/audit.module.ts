@@ -22,6 +22,7 @@ import {ContextMenuComponent} from "../../base/context-menu/context-menu.compone
 import {DxcBaseModule} from "../../base/dxc-base.module";
 import {ExpandableListComponent} from "../../base/expandable-list/expandable-list.component";
 import {MetaComponent} from "../../base/meta/meta.component";
+import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 
 @NgModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -66,6 +67,7 @@ import {MetaComponent} from "../../base/meta/meta.component";
         MetaComponent,
         NgForOf,
         NgIf,
+        ModalBaseComponent,
 
 
     ]

@@ -26,7 +26,6 @@ import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
             <ng-template #auto>
                 {{ label!=null ? label : tag._uid }}
             </ng-template>
-            
         </span>
    `,
     styles: [`
