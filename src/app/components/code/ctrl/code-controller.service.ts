@@ -134,7 +134,8 @@ export class CodeControllerService extends DxcApiService{
         disass: {method: 'GET', url: '/code/method/disass/:id', format: 'json', auth:false /* removed */, puid: true},
         edit: {method: 'PUT', url: '/code/method/:id', format: 'json', auth:false /* removed */, puid: true},
         info: {method: 'GET', url: '/code/method/:id', format: 'json', auth:false /* removed */, puid: true},
-        xref: {method: 'GET', url: '/code/method/xref/:id', format: 'json', auth:false /* removed */, puid: true}
+        xref: {method: 'GET', url: '/code/method/xref/:id', format: 'json', auth:false /* removed */, puid: true},
+        xrefs: {method: 'GET', url: '/code/xref/:node/:id', format: 'json', auth:false /* removed */, puid: true}
       },
       class: {
         edit: {method: 'PUT', url: '/code/class/:id', format: 'json', auth:false /* removed */, puid: true},
@@ -192,6 +193,11 @@ export class CodeControllerService extends DxcApiService{
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'search'});
         }
+      },{
+          label: "Merlin search",
+          click: (pMenuItem:any, pBrowserWindow:any ) => {
+              this.onMenuClick.next({item: 'search-mql', win: pBrowserWindow});
+          }
       }, {
         type: 'separator'
       }, {
@@ -219,8 +225,8 @@ export class CodeControllerService extends DxcApiService{
         }
       }, {
         type: 'separator'
-      }, {
-        label: 'Search',
+      },{
+        label: 'Contextual search',
         submenu: [{
           label: "System calls",
           click: (pMenuItem:any, pBrowserWindow:any ) => {
@@ -646,8 +652,33 @@ export class CodeControllerService extends DxcApiService{
   }
 
 
+    /**
+     *
+     * @param pMethod
+     * @param pType
+     */
+    getXref( pType:number, pNodeUid:string, pDirection:string):Observable<any> {
 
-  getModelMethod( pSignature:string, pPullClass = false):Observable<Nullable<ModelMethod>> {
+        return this._process(
+            this.endpoints['method']['xrefs'],
+            {
+                'id': pNodeUid,
+                'node': pType,
+                'dir': pDirection
+            }
+        ).pipe(map((pRes:any)=>{
+            if(pRes.data == null){
+                this.outputSvc.print(OutputMessage.newError({ msg:"Class not found", src:"Bytecode Analyzer" }));
+                return [];
+            }else{
+                return pRes.data;
+            }
+        }));
+    }
+
+
+
+    getModelMethod( pSignature:string, pPullClass = false):Observable<Nullable<ModelMethod>> {
     return this.getMethod(pSignature).pipe( map((pObs:any) => {
         if(pObs.data != undefined && Object.keys(pObs.data).length>0){
           return new ModelMethod(pObs.data);

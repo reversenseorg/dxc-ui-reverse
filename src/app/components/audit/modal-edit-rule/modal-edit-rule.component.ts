@@ -173,6 +173,10 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
       this.modal.show();
     });
 
+    this._codeSvc.onMenuClick.subscribe((x)=>{
+        this.modal.show();
+    });
+
     this.searchCtrl = this.controller.app.getController('ctrl:search');
   }
 

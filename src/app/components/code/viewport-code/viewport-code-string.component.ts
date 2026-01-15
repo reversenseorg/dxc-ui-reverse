@@ -119,6 +119,8 @@ export class ViewportCodeStringComponent implements AfterViewInit {
         height: pSize.height-this.metadataEl.nativeElement.offsetHeight-30
       });
     });
+
+    console.log("Viewport Code String", this.data);
   }
 
   configure( pData:any):void {

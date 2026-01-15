@@ -56,6 +56,7 @@
 
 <app-modal-progress [cancelable]="true" [progress$]="progress$" [title]="progressTitle" [progress]="100" [width]="450" [cancel]="onModalProgressCancel" [closable]="true" [controller]="this" [mainController]="this"></app-modal-progress>
 <dxc-modal-search [mainController]="this"></dxc-modal-search>
+<dxc-modal-edit-rule *ngIf="getController('ctrl:privacy')!=null" [controller]="getController('ctrl:privacy')" [title]="'Merlin search'"></dxc-modal-edit-rule>
 <dxc-modal-alert [mainController]="this"></dxc-modal-alert>
 <dxc-modal-passwd-auth [mainController]="this"></dxc-modal-passwd-auth>
 <!--<dxc-modal-global-settings [mainController]="this"></dxc-modal-global-settings>-->

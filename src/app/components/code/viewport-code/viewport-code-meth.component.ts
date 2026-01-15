@@ -291,18 +291,28 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   showXrefTo() {
+      console.log('showXrefTo', this.data);
     if(this.data.__s != null){
-
+        alert(this.data.__s);
     }else{
+
+        this.codeSvc.getXref( NodeInternalType.METHOD, this.data.__signature__, 'to')
+            .subscribe( (pData:any)=>{
+                this.data._callers = pData;
+                this.activeBottom = 'xt';
+            });
+
+        /*
       this.codeSvc.getMethodXref( this.data.__signature__, 'to').subscribe( (pData:any)=>{
         this.data._callers = pData;
         this.activeBottom = 'xt';
-      });
+      });*/
     }
   }
 
 
   showXrefFrom() {
+      console.log('showXrefFrom', this.data);
     if(this.data.__s != null){
 
     }else{
