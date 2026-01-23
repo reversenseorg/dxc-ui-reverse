@@ -14,6 +14,18 @@ export interface ValidateOptions {
   strict?: boolean
 }
 
+export interface SearchRequestConditionOpts extends Record<string,any>{
+    depth?:Nullable<number>;
+    tag?: Nullable<Tag>;
+    tagKey?: Nullable<string>;
+    pattern?: Nullable<string>;
+    field?: Nullable<string>;
+    raw?:Nullable<string>;
+    regexp?:Nullable<boolean>;
+    opts?:SearchOptions;
+}
+
+
 /**
  * Represent a condition from a search request
  *
@@ -24,7 +36,7 @@ export class SearchRequestCondition {
   static WILDCARD = '*';
 
   depth = 3;
-  tag: Tag|null = null;
+  tag: Nullable<Tag> = null;
   tagKey: string|null = null;
   pattern: string|null = null;
   field: string|null = null;
@@ -36,7 +48,7 @@ export class SearchRequestCondition {
   private _re:RegExp|null = null;
   error: any = {}
 
-  constructor(pConfig:any) {
+  constructor(pConfig:SearchRequestConditionOpts) {
     for(let i in pConfig){
       if(this.hasOwnProperty(i)){
         (this as Record<string,any>)[i] = pConfig[i];

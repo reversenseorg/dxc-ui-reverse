@@ -49,6 +49,7 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
 
     @Input() tag:Tag|null = null;
     @Input() tagUUID:number = -1;
+    @Input() tagID:Nullable<string> = null;
 
     @Input() editable = false;
 
@@ -129,6 +130,9 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
                 };
             }
 
+        }
+        if(changes.hasOwnProperty('tagID')){
+            this.tag = this.tagSvc.getTagByName(changes['tagID'].currentValue);
         }
         if(changes.hasOwnProperty('editable')){
             const editable = changes['editable'].currentValue;

@@ -161,7 +161,8 @@ export class CodeControllerService extends DxcApiService{
         search: { method:'POST', url:'/code/direct/:puid/:nodetype/search', format:'json', auth:false, puid:false },
       }, // { puid:pProjectUID, nodetype:pRef.__, nodeuid:pRef._uid }
       merlin: {
-        search: {method: 'POST', url: '/code/merlin/search', format: 'json', auth:false /* removed */, puid: true}
+        search: {method: 'POST', url: '/code/merlin/search', format: 'json', auth:false /* removed */, puid: true},
+        nodeInfo: {method: 'GET', url: '/code/nodeinfo/:type', format: 'json', auth:false /* removed */, puid: true}
       },
       vm: {
         simplify: {method: 'POST', url: '/code/method/simplify/:id', format: 'json', auth:false /* removed */, puid: true}
@@ -1001,6 +1002,18 @@ export class CodeControllerService extends DxcApiService{
     );
   }
 
+    getNodeProperties(pNode:number):Observable<any[]> {
+        return this._process(this.endpoints.merlin.nodeInfo, { type: pNode }).pipe(
+            map( (pObs:any)=>{
+                if(pObs.success){
+                    return pObs.data;
+                }else{
+                    this.outputSvc.print( OutputMessage.newError({ msg: pObs.msg }))
+                    return [];
+                }
+            })
+        );
+    }
 
   retrieveNode<T>(pProjectUID: DexcaliburProjectUUID, pRef:INodeRef):Observable<DxApiResponse<Nullable<T>>> {
     return this._process(

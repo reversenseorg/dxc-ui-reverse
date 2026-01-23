@@ -23,6 +23,7 @@ import {DxcBaseModule} from "../../base/dxc-base.module";
 import {ExpandableListComponent} from "../../base/expandable-list/expandable-list.component";
 import {MetaComponent} from "../../base/meta/meta.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
+import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
 
 @NgModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -68,6 +69,7 @@ import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
         NgForOf,
         NgIf,
         ModalBaseComponent,
+        TagBadgeComponent,
 
 
     ]

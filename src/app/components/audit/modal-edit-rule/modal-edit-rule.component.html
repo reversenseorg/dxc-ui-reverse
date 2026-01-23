@@ -1,9 +1,9 @@
-<app-modal-base [name]="'tag_info'" (open)="onOpen($event)" [draggable]="false" [closable]="true"  [width]="700" [height]="400" [mainController]="controller.app">
+<app-modal-base [name]="'tag_info'" (open)="onOpen($event)" [draggable]="true" [closable]="true"  [width]="700" [height]="400" [mainController]="controller.app">
   <div head class="dxc-modal-header">
     {{ title }}
   </div>
   <div body class="dxc-modal-body p-2">
-      <div class="row g-0">
+      <div class="row g-0" *ngIf="chooseOs">
           <div class="col-4 dxc-text-std dxc-text-75">
               <b>Operating System :</b>
           </div>
@@ -15,6 +15,39 @@
               </select>
           </div>
       </div>
+
+
+      <div *ngIf="steps.length>0" class="row g-0 mt-1" [ngStyle]="{ borderTop: '1px solid #fff'}">
+          <div class="col-12">
+              <ng-container *ngFor="let step of steps; let o=index">
+                  <div class="row g-0">
+                      <div class="col-1">
+                          <dxc-icon [model]="gIcons['UP']" [color1]="'dxc-text-100'"></dxc-icon>
+                          <dxc-icon [model]="gIcons['DOWN']" [color1]="'dxc-text-100'"></dxc-icon>
+                      </div>
+                      <div class="col-2">
+                          <dxc-meta [label]="getOperationString(step.type)" [css]="'dxc-herb'"></dxc-meta>
+                      </div>
+                      <ng-container [ngSwitch]="step.type">
+                          <ng-container *ngSwitchCase="OperationType.SEARCH">
+                              <div class="col-5">
+                                  <code *ngIf="step.args.pattern">{{ step.args.pattern[0].pattern }}</code>
+                                  <dxc-tag-badge *ngIf="step.args.pattern && step.args.pattern[0].tag" [tagID]="step.args.pattern[0].tag">{{ step.args.pattern[0].pattern }}</dxc-tag-badge>
+                              </div>
+                              <div class="col-3">
+                                  <dxc-meta *ngIf="step.args.pattern && step.args.pattern[0].regexp" [label]="'regexp'" [css]="'dxc-herb'"></dxc-meta>
+                              </div>
+                          </ng-container>
+                      </ng-container>
+                      <div class="col-1">
+                          <dxc-icon [model]="gIcons['EDIT']" [color1]="'dxc-text-100'" (click)="doStep(step,o,'edit')"></dxc-icon>
+                          <dxc-icon [model]="gIcons['TRASH']" [color1]="'dxc-text-100'" (click)="doStep(step,o,'drop')"></dxc-icon>
+                      </div>
+                  </div>
+              </ng-container>
+          </div>
+      </div>
+
 
       <div class="row g-0 mt-1">
           <div class="col-2">
@@ -31,45 +64,46 @@
                   </ng-container>
               </select>
           </div>
-          <div class="col-7 ps-1">
-              <input  *ngIf="isPatternRequired()" type="text" class="dxc-frm-input" [ngStyle]="{'width':'90%'}"  [(ngModel)]="pattern" />
+
+
+          <div class="col-2" *ngIf="nodePpts.length>0">
+              <ng-container *ngIf="parentNodes.length>0">
+                  <div  *ngFor="let part of parentNodes; let i=index">
+                      <select (change)="onNodeParentChange($event,part,i)"  class="dxc-input">
+                          <ng-container *ngFor="let altp of part.alt">
+                              <option [selected]="(part.ppt.name==altp.name)" [value]="altp.name">{{altp.name}}</option>
+                          </ng-container>
+                      </select>
+                  </div>
+              </ng-container>
+
+              <select [(ngModel)]="newNodePpt" (ngModelChange)="onNodePptChange($event)"  class="dxc-input ms-2">
+                  <ng-container *ngFor="let node of nodePpts">
+                      <option [value]="node.name">{{node.name}}</option>
+                  </ng-container>
+              </select>
+          </div>
+
+          <div class="col-4" *ngIf="newNodePpt!=null">
+              <ng-container [ngSwitch]="condInputType">
+                  <input  *ngSwitchCase="'string'" type="text" class="dxc-frm-input ms-3" [ngStyle]="{'width':'95%'}"  [(ngModel)]="pattern" />
+                  <input  *ngSwitchCase="'object'" type="text" class="dxc-frm-input ms-3" [ngStyle]="{'width':'95%'}"  [(ngModel)]="pattern" />
+                  <input  *ngSwitchCase="['number','integer']" type="number" class="dxc-frm-input ms-3" [ngStyle]="{'width':'95%'}"  [(ngModel)]="pattern" />
+                  <input  *ngSwitchCase="'boolean'" type="checkbox" class="dxc-frm-input ms-3" [ngStyle]="{'width':'95%'}"  [(ngModel)]="pattern" />
+                  <input  *ngSwitchDefault type="text" class="dxc-frm-input ms-3" [ngStyle]="{'width':'95%'}"  [(ngModel)]="pattern" />
+              </ng-container>
           </div>
           <div class="col-1">
-                <dxc-icon [model]="gIcons['PLAY']" (click)="execSingle()"></dxc-icon>
-              <dxc-icon [model]="gIcons['FIND']" (click)="execAsSearch()"></dxc-icon>
+              <dxc-btn [ngbTooltip]="'Enable/Disable regular expression'" [ngClass]="'mr-1'" [borderless]="true" [styles]="{ 'background': (reEnabled?'#01279750':'transparent') }" [label]="'.*'" (click)="reEnabled=!reEnabled"></dxc-btn>
+          </div>
+          <div class="col-1">
+               <dxc-icon *ngIf="auditMode" [model]="gIcons['PLAY']" (click)="execSingle()"></dxc-icon>
+               <dxc-icon [model]="gIcons['FIND']" (click)="execAsSearch()"></dxc-icon>
                <dxc-icon [model]="gIcons['PLUS']" [ngClass]="'ps-1'" (click)="addOperation()"></dxc-icon>
           </div>
       </div>
 
-      <div class="row g-0 mt-1" [ngStyle]="{ borderTop: '1px solid #fff'}">
-          <div class="col-12">
-              <ng-container *ngFor="let step of steps">
-                  <div class="row g-0">
-                      <div class="col-1">
-                          <dxc-icon [model]="gIcons['UP']" [color1]="'dxc-text-100'"></dxc-icon>
-                          <dxc-icon [model]="gIcons['DOWN']" [color1]="'dxc-text-100'"></dxc-icon>
-                      </div>
-                      <div class="col-1">
-                          {{ getOperationString(step) }}
-                      </div>
-                      <div class="col-8">
-                          <code>{{ step.args }}</code>
-                      </div>
-                  </div>
-              </ng-container>
-              <!--
-              <dxc-search-result-list [hFull]="true" [results]="dryrunResults" [controller]="searchCtrl" [mainController]="controller.app"></dxc-search-result-list>
-                -->
-          </div>
-      </div>
 
-      <div class="row g-0 mt-1">
-          <div class="col-12">
-              <!--
-              <dxc-search-result-list [hFull]="true" [results]="dryrunResults" [controller]="searchCtrl" [mainController]="controller.app"></dxc-search-result-list>
-                -->
-          </div>
-      </div>
   </div>
   <div footer>
     <button class="dxc-frm-btn" (click)="close()">Close</button>

@@ -239,4 +239,6 @@ export class SearchResultListComponent implements OnInit {
         break;
     }
   }
+
+    protected readonly Number = Number;
 }

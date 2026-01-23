@@ -1,5 +1,5 @@
 import {NodeInternalType, NodeInternalTypeName} from "../NodeInternalType";
-import {SearchRequestCondition, ValidateOptions} from "./SearchRequestCondition";
+import {SearchRequestCondition, SearchRequestConditionOpts, ValidateOptions} from "./SearchRequestCondition";
 import {MerlinPrimitive, MerlinType} from "./Merlin";
 import {OperatingSystem} from "../OperatingSystem";
 import {NodeType} from "../NodeType";
@@ -114,7 +114,7 @@ export interface TimeOperationArgs {
 
 export interface Operation {
   type: OperationType,
-  args: SearchOperationArgs | InnerjoinOperationArgs | TimeOperationArgs | ValidateOperationArgs | WindowingOperationArgs | NestedRequestOperationArgs | AggregationOperationArgs | TaintOperationArgs ;
+  args: SearchOperationArgs | InnerjoinOperationArgs | TimeOperationArgs | ValidateOperationArgs | WindowingOperationArgs | NestedRequestOperationArgs | AggregationOperationArgs | TaintOperationArgs | any ;
 }
 
 interface SearchRequestOptions {
@@ -420,6 +420,8 @@ export class MerlinSearchRequest {
   }
 
 
+
+
   /**
    *
    * @param pSearchContext
@@ -609,10 +611,38 @@ export class MerlinSearchRequest {
   }
 
   search( pRequest:string, pOptions:SearchOptions = { not:false }):MerlinSearchRequest {
-    this._oper.push({ type: OperationType.SEARCH, args:{ pattern: [MerlinSearchRequest.parseCondition2(pRequest,pOptions)] } });
+    this._oper.push({
+        type: OperationType.SEARCH,
+        args:{
+            pattern: [
+                MerlinSearchRequest.parseCondition2(pRequest,pOptions)
+            ]
+        } });
     this._search++;
     return this;
   }
+
+    searchObj( pRequest:SearchRequestConditionOpts, pOptions:SearchOptions = { not:false }):MerlinSearchRequest {
+        this._oper.push({
+            type: OperationType.SEARCH,
+            args:{
+                pattern: [
+                    //MerlinSearchRequest.parseCondition2(pRequest,pOptions)
+                    new SearchRequestCondition({
+                        field: pRequest.field,
+                        pattern:  pRequest.pattern,
+                        tag: pRequest.tag,
+                        regexp: pRequest.regexp,
+                        raw: pRequest.raw,
+                        opts: pOptions,
+                        tagKey: pRequest.tagKey
+                    })
+                ]
+            } });
+        this._search++;
+        return this;
+    }
+
 
   not( pRequest:string, pOptions:SearchOptions = { not:true }):MerlinSearchRequest {
      // force
@@ -748,14 +778,6 @@ export class MerlinSearchRequest {
         s += "macos()";
         break;
     }
-
-
-    /*if((typeof this._type)==="string"){
-      s += "."+this._type;
-    }else{
-      s += "."+MerlinSearchAPI.getMethodFromNodeType( (typeof this._type==="number")? this._type : (this._type as any).getType());
-    }*/
-
 
     return s+MerlinSearchRequest.stringify(this.getOperations(),this._type);
   }

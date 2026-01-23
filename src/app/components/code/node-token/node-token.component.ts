@@ -20,6 +20,7 @@ import {CodeControllerService} from "../ctrl/code-controller.service";
 import {INodeRef} from "../../../base/common/common";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 import {tags} from "@angular-devkit/core";
+import {FilesystemService} from "../../file/ctrl/FilesystemService";
 
 let ctr = 0;
 
@@ -90,18 +91,23 @@ export interface TargetApp {
                         <dxc-node-alias [item]="item" [text]="item.sym"></dxc-node-alias>
                     </span>
                 </ng-container>
+                <ng-container *ngSwitchCase="NODE_TYPE.FILE">
+                    <span (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event,'bin',item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
+                        <dxc-icon [model]="gIcons.BIN"></dxc-icon>
+                        <dxc-node-alias [item]="item" [text]="item._r"></dxc-node-alias>
+                    </span>
+                </ng-container>
             </ng-container>
             <ng-container *ngIf="tags">
                 <dxc-tag-badge *ngFor="let t of item.tags" [tagUUID]="t"></dxc-tag-badge>
             </ng-container>
         </ng-container>
         <ng-template #noInter>
-            
             <ng-container *ngIf="err==null; else errmsg" (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event, 'meth', item)">
                 <span *ngIf="nodeIcon!=null" [ngClass]="'badge dxc-no-gutters dxc-meta '+css" [ngStyle]="style">
                     <dxc-icon [model]="nodeIcon"></dxc-icon>
                 </span>
-                <span [ngClass]="'badge dxc-no-gutters symbol '+cssValue" [ngStyle]="styleValue">{{ getSymbol()  }}</span>
+                <span *ngIf="item" [ngClass]="'badge dxc-no-gutters symbol '+cssValue" [ngStyle]="styleValue">{{ getSymbol()  }}</span>
             </ng-container>
             <ng-template #errmsg>
                 <fa-icon [icon]="['fas','times-circle']" class="ms-2 ps-1 pe-1 dxc-text-yellow"></fa-icon>
@@ -168,13 +174,15 @@ export class NodeTokenComponent implements OnInit {
 
 
     ngOnInit() {
+
+        console.log("Retrieved node on init : ",this.ref);
         if(this.ref!=null){
             if(sessionStorage.getItem('puid')!=null){
                 this.codeSvc.retrieveNode<any>(
                     sessionStorage.getItem('puid') as DexcaliburProjectUUID,
                     this.ref as INodeRef
                 ).subscribe((vNode)=>{
-                    console.log("Retrieved node : ",vNode);
+                    console.log("Retrieved node : ",this.ref,vNode);
                     if(vNode.success){
                         this.item = vNode.data;
                         this.changeRef.detectChanges();

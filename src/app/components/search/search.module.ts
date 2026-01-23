@@ -11,6 +11,7 @@ import {PreviewerComponent} from "../../base/previewer/previewer.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 import {ExplorerNavbarComponent} from "../../base/explorer-navbar/explorer-navbar.component";
 import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
+import {CodeModule} from "../code/code.module";
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
         PreviewerComponent,
         ModalBaseComponent,
         ExplorerNavbarComponent,
-        TagBadgeComponent
+        TagBadgeComponent,
+        CodeModule
     ],
     exports: [
         TerminalSearchComponent,
