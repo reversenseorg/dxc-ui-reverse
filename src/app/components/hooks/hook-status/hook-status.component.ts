@@ -11,7 +11,7 @@ import {
 import {OutputService} from "../../output/ctrl/output.service";
 import ModelMethod from "../../../models/ModelMethod";
 import {HOOK_ICONS} from "../icons";
-import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
+import {NgbTooltip, NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {ModelFunction} from "../../../models/ModelFunction";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {HookService} from "../ctrl/hook.service";
@@ -19,6 +19,9 @@ import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import {IconModel} from "../../../base/icon/IconModel";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {IconComponent} from "../../../base/icon/icon.component";
+import {Nullable} from "../../../base/Nullable";
+import {INodeRef} from "../../../base/common/common";
 
 let ctr = 0;
 
@@ -39,12 +42,18 @@ export interface TargetApp {
     `,
     styleUrls: ['../explorer-hooks/explorer-hooks.component.scss'],
     providers: [NgbTooltipConfig],
+    standalone: true,
+    imports: [
+        IconComponent,
+        NgbTooltip
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HookStatusComponent implements OnInit {
 
 
     @Input() item:ModelMethod|ModelFunction;
+    @Input() ref:Nullable<INodeRef> = null;
     @Input() hook:AbstractHook;
 
     icon:IconModel = GLOBAL_ICONS.SPINNER;
@@ -75,8 +84,15 @@ export class HookStatusComponent implements OnInit {
     refreshHook(){
         if(this.hook != null){
             this.refreshHookStatus();
-        }else if(this.item != null){
-            this.hookSvc.getHooksFor(this.item).subscribe((vHook)=>{
+        }else if(this.item != null || this.ref != null){
+            let hks:any;
+            if(this.item!=null)
+                hks = this.hookSvc.getHooksFor(this.item);
+            else
+                hks = this.hookSvc.getHooksForRef(this.ref as INodeRef);
+
+
+            hks.subscribe((vHook:any)=>{
 
                 if(vHook.length==0){
                     this.icon = HOOK_ICONS.NOT_HOOKED;

@@ -9,7 +9,7 @@ import {ITerminalContainer} from "../../../base/terminal/ITerminalContainer";
 import {HookController} from "../ctrl/HookController";
 import {HOOK_ICONS} from "../icons";
 import {HookService} from "../ctrl/hook.service";
-import {HookSession} from "../ctrl/HookSession";
+import {HookSession, PollingType} from "../ctrl/HookSession";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
@@ -200,8 +200,10 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
 
   }
 
-  newSession() {
-
+  /**
+   * To start a new hook session
+   */
+  newSession(pPollingType = PollingType.HTTP) {
 
     if(this.controller.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
@@ -214,13 +216,18 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
     }
 
     // TODO replace default Options by Hook settings
-    let session:HookSession = this.hookSvc.startWebsocketHookSession(
-      this.controller.app.ws,
-        proj,
-      {
-       // type: "spawn-self"
-      });
+      if(pPollingType == PollingType.HTTP){
+          this.hookSvc.startPollingHookSession(proj, {}).subscribe(()=>{
 
+          })
+       }else{
+          let session:HookSession = this.hookSvc.startWebsocketHookSession(
+              this.controller.app.ws,
+              proj,
+              {
+                  // type: "spawn-self"
+              });
+      }
   }
 
   hookMsgFocus(index: number) {

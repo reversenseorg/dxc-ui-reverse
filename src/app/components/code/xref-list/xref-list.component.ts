@@ -4,9 +4,9 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    Input,
+    Input, OnChanges,
     OnInit,
-    Output
+    Output, SimpleChanges
 } from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../../../base/Nullable";
@@ -35,7 +35,61 @@ interface Column {
 
 @Component({
     selector: 'dxc-xref-list',
-    templateUrl: './xref-list.component.html',
+    template: `
+        <div>
+            <h5 *ngIf="title">{{ title }}</h5>
+
+            <div *ngIf="description!=null">
+                <p>{{ description }}</p>
+            </div>
+
+
+
+            <app-subnavbar *ngIf="navbar" [type]="'navbar'"  [opts]="true" [parent]="this">
+                <ng-container options>
+                    <!--app-subnavbar-btn  (click)="showModel()">Details</app-subnavbar-btn>-->
+                    <app-subnavbar-btn  [icon]="gIcons['REFRESH']" (click)="refresh()"></app-subnavbar-btn>
+                    <app-subnavbar-btn  [icon]="gIcons['STAR']" (click)="doOnSelection('project','toggleFavorite')"></app-subnavbar-btn>
+                </ng-container>
+            </app-subnavbar>
+
+            <div *ngIf="header" class="row">
+                <ng-container *ngFor="let col of getHeaderColumns()">
+                    <div [ngClass]="col.cls">
+                        {{ col.label }}
+                    </div>
+                </ng-container>
+            </div>
+
+            <div class="dxc-grid-body" [ngStyle]="{'height':height+'px', 'border-bottom':'none'}" style="overflow-y: auto">
+                <div *ngIf="window.length==0">
+                    <div *ngIf="data.length>0" class="row">
+                        <div class="col-lg-12 text-center">
+                            <dxc-icon [model]="gIcons.SPINNER"></dxc-icon><span>Loading xref ...</span>
+                        </div>
+                    </div>
+                    <div *ngIf="data.length==0" class="row">
+                        <div class="col-lg-12 text-center">
+                            <dxc-icon [model]="gIcons.WARNING"></dxc-icon><span>This node has not known cross references ...</span>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngFor="let xref of window; let index = index">
+                    <div class="row g-0" [ngStyle]="{'height':rowHeight+'px'}"  (click)="select(xref, 'click')">
+                        <div class="col-lg-12">
+                            <dxs-xref-item [hookstatus]="true" [type]="xreffrom?'from':'to'" [item]="xref"></dxs-xref-item>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div *ngIf="pagignation" class="dxc-navbar">
+                <div class="col-lg-6 offset-6">
+                    <dxc-paginator [rows]="rows"  [totalRecords]="data.length" (onPageChange)="onPageChange($event)"></dxc-paginator>
+                </div>
+            </div>
+        </div>
+    `,
     styles:[`
       .dxc-grid-body div.row {
         &:hover {
@@ -56,9 +110,10 @@ interface Column {
         
         cursor: pointer;
       }
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class XrefListComponent implements OnInit {
+export class XrefListComponent implements OnInit, OnChanges {
 
     @Input() title?:string;
     @Input() description = null;
@@ -75,7 +130,7 @@ export class XrefListComponent implements OnInit {
     @Input() headerCols:string[] = [];
 
     @Input() node: Nullable<ModelCall|ModelMethod|ModelField|ModelClass|ModelFunction> = null
-    @Input() data: (ModelMethod|ModelFunction)[] = [];
+    @Input() data: ModelCall[] = [];
 
     @Input() xrefto = false;
     @Input() xreffrom = false;
@@ -85,7 +140,7 @@ export class XrefListComponent implements OnInit {
     @Output() dblclickOne:EventEmitter<ModelCall> = new EventEmitter<ModelCall>();
 
 
-    window: (ModelMethod|ModelFunction)[] = [];
+    window: ModelCall[] = [];
     windowStartAt: number = 0;
     rowHeight = 15;
 
@@ -120,6 +175,13 @@ export class XrefListComponent implements OnInit {
         this.refresh();
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if(changes.data!=null && changes.data.currentValue!=null){
+            this.data = changes.data.currentValue;
+            this.node = null;
+            this.refresh(true);
+        }
+    }
 
     /**
      *
@@ -172,7 +234,7 @@ export class XrefListComponent implements OnInit {
     refresh(pResetUI  = false) {
 
         if(this.node != null){
-            this.data = this.getXrefsOf(this.node);
+            //this.data = this.getXrefsOf(this.node);
 
             if(this.pagignation){
                 this.window = this.data.slice(this.windowStartAt, this.windowStartAt+this.rows);
@@ -183,6 +245,16 @@ export class XrefListComponent implements OnInit {
 
             this.changeRef.detectChanges();
         }
+
+        if(this.data.length>0){
+            this.window = this.data;
+            if(this.pagignation){
+                this.windowStartAt = 0;
+                this.window = this.data.slice(this.windowStartAt, this.windowStartAt+this.rows);
+            }
+            this.changeRef.detectChanges();
+        }
+
 
         /*
         this.codeSvc.listTags(true).subscribe((vTags:Tag[])=>{

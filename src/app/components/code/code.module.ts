@@ -27,6 +27,10 @@ import {AppModule} from "../../app.module";
 import {ModalRenameComponent} from "./modal-rename/modal-rename.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 import {ReactiveFormsModule} from "@angular/forms";
+import {SearchModule} from "../search/search.module";
+import {XrefListComponent} from "./xref-list/xref-list.component";
+import {XrefItemComponent} from "./xref-item/xref-item.component";
+import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
 
 
 @NgModule({
@@ -52,11 +56,14 @@ import {ReactiveFormsModule} from "@angular/forms";
         CodeEditorModule,
         ModalBaseComponent,
         ReactiveFormsModule,
+        HookStatusComponent
     ],
     exports: [
         CodeSymbolTableComponent,
         CodeEmuLoggerComponent,
         NodeTokenComponent,
+        XrefListComponent,
+        XrefItemComponent,
 
 
         ExplorerCodeComponent,
@@ -68,7 +75,8 @@ import {ReactiveFormsModule} from "@angular/forms";
         ViewportCodeClassComponent,
         ViewportCodeStringComponent,
 
-        ModalRenameComponent
+        ModalRenameComponent,
+        XrefListComponent
 
     ],
     declarations: [
@@ -76,6 +84,8 @@ import {ReactiveFormsModule} from "@angular/forms";
         CodeEmuLoggerComponent,
         ViewportCodeStringComponent,
         NodeTokenComponent,
+        XrefListComponent,
+        XrefItemComponent,
 
         ExplorerCodeComponent,
         ViewportCodeComponent,

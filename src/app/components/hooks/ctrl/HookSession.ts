@@ -27,6 +27,10 @@ export enum HOOK_SESSION_CMD {
   EXIT='exit'
 }
 
+export enum PollingType {
+    WEBSOCKET = 'ws',
+    HTTP = 'http'
+}
 export interface HookWorkspaceState {
   commit:string
 }
@@ -41,6 +45,8 @@ interface FridaBindings {
 export interface HookSessionOptions {
   rawOutput:boolean
 }
+
+export type HookSessionUUID = string;
 
 /**
  * Options to create a new instance
@@ -68,6 +74,9 @@ export class HookSession {
 
   __ = NodeInternalType.HOOK_SESSION;
 
+    /**
+     * The remote UID of this session
+     */
   _uid:Nullable<string> = null;
 
   /**
@@ -153,6 +162,7 @@ export class HookSession {
   private _restored = false;
 //  oob:Subject<any> = new Subject<any>();
 
+    private _polling:PollingType;
   /**
    *
    * @param {string} pLabel The local name of the session, default is "Session"
@@ -161,7 +171,7 @@ export class HookSession {
    * @param {DexcaliburProject} pProject The active project instrumented
    * @constructor
    */
-  constructor(pLabel:string, pIcon:IconModel, pUid:string, pProject:DexcaliburProject, pInit = true) {
+  constructor(pLabel:string, pIcon:IconModel, pUid:string, pProject:DexcaliburProject, pType = PollingType.WEBSOCKET) {
     this.label = pLabel;
     this.uid = pUid;
     this.icon = pIcon;
@@ -262,7 +272,9 @@ export class HookSession {
 
     this.channel.localid = this.uid;
      */
-    if(pInit){
+      this._polling = pType;
+
+    if(this._polling==PollingType.WEBSOCKET){
       this.initChannel();
     }
 
@@ -386,10 +398,14 @@ export class HookSession {
    */
   getUID():string{
     if(this._restored==false){
-      if(this.channel==null){
-        throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","getUID");
-      }
-      return this.channel.getSessID();
+        if(this._polling==PollingType.WEBSOCKET){
+            if(this.channel==null){
+                throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","getUID");
+            }
+            return this.channel.getSessID();
+        }else{
+            return (this._uid!=null ? this._uid : "");
+        }
     }else{
       return (this._uid!=null ? this._uid : "");
     }
@@ -405,10 +421,12 @@ export class HookSession {
    * @since 1.0.0
    */
   start( pType =''){
-    if(this.channel==null){
-      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","start");
-    }
-    this.channel.sendRaw({ action:HOOK_SESSION_CMD.NEW, svc:'hookm', prj:this.prj, data: {}});
+      if(this._polling==PollingType.WEBSOCKET){
+          if(this.channel==null){
+              throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","start");
+          }
+          this.channel.sendRaw({ action:HOOK_SESSION_CMD.NEW, svc:'hookm', prj:this.prj, data: {}});
+      }
   }
   /**
    * To send the "stop this hook session" signal to the server
@@ -419,10 +437,13 @@ export class HookSession {
    * @since 1.0.0
    */
   exit():void{
-    if(this.channel==null){
-      throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","exit");
+    if(this._polling==PollingType.WEBSOCKET){
+        if(this.channel==null){
+            throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("HookSession","exit");
+        }
+
+        this.channel.send({ action:HOOK_SESSION_CMD.EXIT, svc:'hookm', prj:this.prj, data: { }});
     }
-    this.channel.send({ action:HOOK_SESSION_CMD.EXIT, svc:'hookm', prj:this.prj, data: { }});
   }
 
 
@@ -432,7 +453,7 @@ export class HookSession {
         HOOK_ICONS.BUILTIN_HS,
         pObj._uid!=null ? pObj._uid : "",
         pProject,
-        false);
+        PollingType.HTTP);
 
     for(let i in pObj){
       (sess as any)[i] = (pObj as any)[i];

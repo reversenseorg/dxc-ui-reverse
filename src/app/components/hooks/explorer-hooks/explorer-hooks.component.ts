@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ExplorerTab} from "../../../cmp/ExplorerTab";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {ExplorerView} from "../../../cmp/ExplorerView";
@@ -6,24 +6,22 @@ import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
 import {SubExplorerComponent} from "../../../base/explorer/subexplorer.component";
 import {HookController} from "../ctrl/HookController";
 import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
-import {empty, from, Observable} from "rxjs";
-import {CodeItem} from "../../code/explorer-code/CodeItem";
+import {from, Observable} from "rxjs";
 import {HOOK_ICONS} from "../icons";
-import Hook from "../../../models/Hook";
 import {
-  ContextMenuComponent, ContextMenuEvent,
-  ContextMenuList,
-  ContextMenuState
+    ContextMenuComponent,
+    ContextMenuEvent,
+    ContextMenuList,
+    ContextMenuState
 } from "../../../base/context-menu/context-menu.component";
 import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {ProjectService} from "../../project/ctrl/project.service";
 import DexcaliburProject from "../../../models/DexcaliburProject";
-import {HOOK_TARGET_TYPE, HookFragmentPresetOptions, HookFragmentPresetType, HookService} from "../ctrl/hook.service";
+import {HOOK_TARGET_TYPE, HookFragmentPresetType, HookService} from "../ctrl/hook.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
-import {HOOK_SESSION_CMD, HookSession} from "../ctrl/HookSession";
+import {HOOK_SESSION_CMD, HookSession, PollingType} from "../ctrl/HookSession";
 import HookSet from "../../../models/HookSet";
-import {ModalProjectAnalConfigComponent} from "../../project/modal-project-anal-config/modal-project-anal-config.component";
 import {ModalHookJavaNewComponent} from "../modal-hook-java-new/modal-hook-java-new.component";
 import KeyPoint from "../../../models/KeyPoint";
 import {map} from "rxjs/operators";
@@ -518,13 +516,21 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
       }
 
       // TODO replace default Options by Hook settings
-      this.hookSvc.startWebsocketHookSession(
-        this.controller.app.ws,
-        p,
-        {
-          // use default mode instead of spawn
-          // type: "spawn-self"
-        });
+        if(this.hookSvc.getPollingType() == PollingType.HTTP){
+            this.hookSvc.startPollingHookSession(p, {}).subscribe(()=>{
+                this.outputSvc.print(new OutputMessage({ msg:"Instrumentation has been started.",  src:"Hook Manager" }));
+            });
+        }else{
+            this.hookSvc.startWebsocketHookSession(
+                this.controller.app.ws,
+                p,
+                {
+                    // use default mode instead of spawn
+                    // type: "spawn-self"
+                });
+        }
+        
+
 
     }else{
       this.hookSvc.killApp().subscribe( (pData:any)=>{

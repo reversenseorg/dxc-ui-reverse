@@ -36,6 +36,8 @@ import {DxApiResponse, INodeRef} from "../../../base/common/common";
 import {IController} from "../../../base/controllers/IController.interface";
 import {DxcApiToken} from "../../../base/DxcApiToken";
 import ModelStringValue from "../../../models/ModelStringValue";
+import ModelResource from "../../../models/ModelResource";
+import ModelCall from "../../../models/ModelCall";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -203,6 +205,7 @@ export class CodeControllerService extends DxcApiService{
         type: 'separator'
       }, {
         label: 'Show control-flow graph',
+        enabled: false,
       }, {
         id: 'show-xrefs',
         label: 'Show cross-reference',
@@ -224,7 +227,7 @@ export class CodeControllerService extends DxcApiService{
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.onMenuClick.next({item: 'curr-xto', win: pBrowserWindow});
         }
-      }, {
+      },/* {
         type: 'separator'
       },{
         label: 'Contextual search',
@@ -256,7 +259,7 @@ export class CodeControllerService extends DxcApiService{
         }, {
           label: "by constraints"
         }]
-      }, {
+      }, /*{
         label: 'Transforms',
         submenu: [{
           label: "Rename random symbols",
@@ -658,7 +661,7 @@ export class CodeControllerService extends DxcApiService{
      * @param pMethod
      * @param pType
      */
-    getXref( pType:number, pNodeUid:string, pDirection:string):Observable<any> {
+    getXref( pType:number, pNodeUid:string, pDirection:string):Observable<ModelCall[]> {
 
         return this._process(
             this.endpoints['method']['xrefs'],
@@ -672,7 +675,7 @@ export class CodeControllerService extends DxcApiService{
                 this.outputSvc.print(OutputMessage.newError({ msg:"Class not found", src:"Bytecode Analyzer" }));
                 return [];
             }else{
-                return pRes.data;
+                return pRes.data.map((pCall:any)=>new ModelCall(pCall));
             }
         }));
     }
@@ -1029,7 +1032,7 @@ export class CodeControllerService extends DxcApiService{
           return  {
             success: vRes.success,
             msg: (vRes.msg!=null? vRes.msg:""),
-            data: (vRes.data!=null ? this.createNodeFromRef<T>( pRef, vRes.data) : null)
+            data: (vRes.data!=null ? this.createNodeFromRef<T>( pRef, vRes.data) : vRes.data)
           };
         })
     )
@@ -1074,6 +1077,9 @@ export class CodeControllerService extends DxcApiService{
         break;
       case NodeInternalType.FILE:
         node = new ModelFile(pRaw);
+        break;
+    case NodeInternalType.RESOURCE:
+        node = new ModelResource(pRaw);
         break;
     }
 

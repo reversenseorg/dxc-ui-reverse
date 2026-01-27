@@ -162,7 +162,8 @@
     <ng-container body-bottom>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xt')">
-          <dxc-xref-list *ngIf="!direct" [header]="false" [xrefto]="true" [node]="data"></dxc-xref-list>
+          <dxc-xref-list  [header]="false" [xrefto]="true" [data]="xrefTo"></dxc-xref-list>
+          <!--<dxc-search-result-list [hFull]="true" [results]="data" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>-->
       </div>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='sym')">
@@ -170,7 +171,7 @@
       </div>
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xf')">
-          <dxc-xref-list *ngIf="!direct"  [header]="false" [xreffrom]="true" [node]="data"></dxc-xref-list>
+          <dxc-xref-list [header]="false" [xreffrom]="true" [data]="xrefFrom"></dxc-xref-list>
       </div>
 
       <div *ngIf="!direct"  class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='hk')">

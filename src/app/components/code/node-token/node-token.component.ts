@@ -97,6 +97,15 @@ export interface TargetApp {
                         <dxc-node-alias [item]="item" [text]="item._r"></dxc-node-alias>
                     </span>
                 </ng-container>
+                <ng-container *ngSwitchCase="NODE_TYPE.RESOURCE">
+                    <span (click)="goTo(item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
+                        <dxc-icon [model]="gIcons.RES"></dxc-icon>
+                        <dxc-node-alias [item]="item" [text]="item.name"></dxc-node-alias>
+                        <ng-container *ngIf="item.location">
+                            
+                        </ng-container>
+                    </span>
+                </ng-container>
             </ng-container>
             <ng-container *ngIf="tags">
                 <dxc-tag-badge *ngFor="let t of item.tags" [tagUUID]="t"></dxc-tag-badge>

@@ -30,6 +30,8 @@ import {CodeSymbolTableComponent} from "../emulator/symbol-table.component";
 import {CodeEmulatorComponent} from "../emulator/emulator.component";
 import {CodeEmuLoggerComponent} from "../emulator/emu-logs.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import ModelCall from "../../../models/ModelCall";
+import {SearchController} from "../../search/ctrl/SearchController";
 
 
 
@@ -134,6 +136,11 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
     }]
   }];
 
+  xrefTo:ModelCall[] = [];
+  xrefFrom:ModelCall[] = [];
+
+    searchCtrl:SearchController;
+
   constructor( private codeSvc:CodeControllerService,
                private hookSvc:HookService,
                private tagSvc:TagService,
@@ -142,6 +149,8 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   ngOnInit(): void {
+
+      this.controller.app.getController('ctrl:search');
 
     this.hookSvc.onHookEdit.subscribe((pEvtHook)=>{
       if(pEvtHook.hook != null){
@@ -291,36 +300,23 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   showXrefTo() {
-      console.log('showXrefTo', this.data);
-    if(this.data.__s != null){
-        alert(this.data.__s);
-    }else{
+    this.codeSvc.getXref( NodeInternalType.METHOD, this.data.__signature__, 'to')
+        .subscribe( (pData:ModelCall[])=>{
+            this.xrefTo = pData;
+            this.activeBottom = 'xt';
 
-        this.codeSvc.getXref( NodeInternalType.METHOD, this.data.__signature__, 'to')
-            .subscribe( (pData:any)=>{
-                this.data._callers = pData;
-                this.activeBottom = 'xt';
-            });
-
-        /*
-      this.codeSvc.getMethodXref( this.data.__signature__, 'to').subscribe( (pData:any)=>{
-        this.data._callers = pData;
-        this.activeBottom = 'xt';
-      });*/
-    }
+            console.log('showXrefTo', this.xrefTo);
+        });
   }
 
 
   showXrefFrom() {
-      console.log('showXrefFrom', this.data);
-    if(this.data.__s != null){
-
-    }else{
-      this.codeSvc.getMethodXref( this.data.__signature__, 'from').subscribe( (pData:any)=>{
-        this.data._useMethod = pData;
-        this.activeBottom = 'xf';
-      });
-    }
+      this.codeSvc.getXref( NodeInternalType.METHOD, this.data.__signature__, 'from')
+          .subscribe( (pData:ModelCall[])=>{
+              this.xrefFrom = pData;
+              this.activeBottom = 'xf';
+              console.log('showXrefFrom', this.xrefFrom);
+          });
   }
 
   openMethod(pMeth: string|ModelMethod) {

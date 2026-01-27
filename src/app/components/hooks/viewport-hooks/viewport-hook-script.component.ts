@@ -15,9 +15,11 @@ import JavaMethodHook from "../../../models/JavaMethodHook";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
-import {HookSession} from "../ctrl/HookSession";
+import {HookSession, PollingType} from "../ctrl/HookSession";
 import {ProjectService} from "../../project/ctrl/project.service";
 import {UIException} from "../../../base/error/UIException";
+import {OutputMessage} from "../../../cmp/OutputMessage";
+import {OutputService} from "../../output/ctrl/output.service";
 
 
 const FRAG_TYPE = {
@@ -90,6 +92,7 @@ export class ViewportHookScriptComponent implements OnInit, AfterViewInit, IView
 
   constructor( private prjSvc:ProjectService,
                private hookSvc:HookService,
+               private outputSvc:OutputService,
                private codeSvc:CodeControllerService) {
 
   }
@@ -215,20 +218,23 @@ export class ViewportHookScriptComponent implements OnInit, AfterViewInit, IView
       throw  UIException.APP_NOT_INITIALIZED();
     }
 
-    const proj = this.prjSvc.getSelectedProject();
+    const p = this.prjSvc.getSelectedProject();
 
-    if(proj==null){
+    if(p==null){
       throw UIException.WEBSOCKET_CHANNEL_IS_NOT_READY("startHooking","viewport-hook")
     }
 
 
-    let session:HookSession = this.hookSvc.startWebsocketHookSession(
-      this.controller.app.ws,
-      proj,
-      {
-         type: this.hookSvc.getHookMode(),
-         script: this.codeEditor.value
-      });
-
+      if(this.hookSvc.getPollingType() == PollingType.HTTP){
+          this.hookSvc.startPollingHookSession(p, {}).subscribe(()=>{
+              this.outputSvc.print(new OutputMessage({ msg:"Instrumentation has been started with editor content.",  src:"Hook Manager" }));
+          });
+      }else{
+          this.hookSvc.startWebsocketHookSession(
+              this.controller.app.ws,p,{
+                  type: this.hookSvc.getHookMode(),
+                  script: this.codeEditor.value
+              });
+      }
   }
 }

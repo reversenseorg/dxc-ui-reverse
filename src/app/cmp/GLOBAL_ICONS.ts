@@ -516,4 +516,16 @@ export const GLOBAL_ICONS:IconModelCollection = {
     name: 'ellipsis-vertical',
     color1: 'dxc-text-75', //'dxc-text-75',
   }),
+    RES: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'block',
+        color1: 'dxc-icon-yr', //'dxc-text-75',
+    }),
+    STR: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'font-case',
+        color1: 'dxc-icon-folders-internal'
+    }),
 };

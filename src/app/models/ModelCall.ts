@@ -3,7 +3,7 @@ import {Savable, STUB_TYPE} from "./ModelSavable";
 import ModelInstruction from "./ModelInstruction";
 import ModelMethod from "./ModelMethod";
 import ModelClass from "./ModelClass";
-import {NodeInternalType} from "./NodeInternalType";
+import {INodeRef, NodeInternalType} from "./NodeInternalType";
 import {IStringIndex} from "../base/IStringIndex";
 import {Nullable} from "../base/Nullable";
 
@@ -21,12 +21,15 @@ export default class ModelCall
     caller:Nullable<ModelMethod> = null;
     calleed:Nullable<ModelMethod> = null;
 
+    _caller:Nullable<INodeRef> = null;
+    _called:Nullable<INodeRef> = null;
+
     line:number = -1;
     type:any = null;
     object:any = null;
     subject:any = null;
 
-    tags:string[] = [];
+    tags:number[] = [];
 
     constructor(pConfig:any=null){
         //super(STUB_TYPE.CALL);
@@ -99,15 +102,15 @@ export default class ModelCall
     };
 
 
-    addTag(tag:string){
+    addTag(tag:number){
         this.tags.push(tag);
     }
 
-    hasTag(tagName:string):boolean{
+    hasTag(tagName:number):boolean{
         return this.tags.indexOf(tagName)>-1;
     }
 
-    getTags():string[]{
+    getTags():number[]{
         return this.tags;
     }
 

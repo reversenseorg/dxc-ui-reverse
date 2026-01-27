@@ -9,7 +9,7 @@ import {DxcApiService} from "../../../base/DxcApiService";
 import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import ModelMethod from "../../../models/ModelMethod";
 import {WebsocketClient} from "../../../base/WebsocketClient";
-import {HookErrorMessage, HookSession} from "./HookSession";
+import {HookErrorMessage, HookSession, HookSessionUUID, PollingType} from "./HookSession";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import {OutputMessage} from "../../../cmp/OutputMessage";
@@ -23,14 +23,14 @@ import {AbstractHook} from "../../../models/AbstractHook";
 import {NodeInternalType, NodeTypeHelper} from "../../../models/NodeInternalType";
 import HookTemplateFragment from "../../../models/hook/HookTemplateFragment";
 import HookSet from "../../../models/HookSet";
-import HookMessage from "../../../models/HookMessage";
-import {WebApiWindowing} from "../../../base/WebApiWindowing";
 import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
 import {AppMenu} from "../../../base/menu/AppMenu";
 import {Nullable} from "../../../base/Nullable";
 import {IStringIndex} from "../../../base/IStringIndex";
 import {UIException} from "../../../base/error/UIException";
 import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
+import {DxApiResponse, INodeRef} from "../../../base/common/common";
+import {DeviceUUID} from "../../../models/Device";
 
 export interface HookTree {
   [parent:string] :Hook[]
@@ -167,6 +167,7 @@ export class HookService extends DxcApiService {
 
   mode = "spawn-self";
 
+  private _pollType: PollingType = PollingType.HTTP;
 
   constructor( private appmenuSvc:AppMenuService,
                public outputSvc:OutputService,
@@ -195,7 +196,8 @@ export class HookService extends DxcApiService {
             flushGeneratedCode: { method: 'GET', url:'/hook/flush/:type', format:'json', auth:false /* removed */, puid:true},
           },
           session: {
-            show: { method: 'GET', url:'/hook/session/:id', format:'json', auth:false /* removed */, puid:true}
+            show: { method: 'GET', url:'/hook/session/:id', format:'json', auth:false /* removed */, puid:true},
+            msg: { method: 'GET', url:'/hook/events/:sid/msg', format:'json', auth:false /* removed */, puid:true},
           },
           sessions: {
             list: { method: 'GET', url:'/hook/sessions', format:'json', auth:false /* removed */, puid:true},
@@ -536,6 +538,9 @@ export class HookService extends DxcApiService {
     this.initEventHandler();
   }
 
+  getPollingType():PollingType {
+      return this._pollType;
+  }
 
   initEventHandler():void {
     this.projectSvc.onMenuClick.subscribe( (pEvent: any) => {
@@ -1150,7 +1155,11 @@ export class HookService extends DxcApiService {
   }*/
 
 
-
+    /**
+     *  Deprecated ?
+      * @param pOptions
+     * @param pSocketChannel
+     */
   startHookSession( pOptions:any, pSocketChannel:any = null):Observable<any> {
     if(pSocketChannel!=null){
       // todo
@@ -1301,7 +1310,7 @@ export class HookService extends DxcApiService {
   }
 
 
-  generateSessID(pProject:DexcaliburProject, pOptions:any):string {
+  private _generateSessID(pProject:DexcaliburProject, pOptions:any):string {
     switch(pOptions.type){
       case "spawn-self":
         return "Session_"+this._sessions.length;
@@ -1345,8 +1354,7 @@ export class HookService extends DxcApiService {
       opts.type = this.mode;
 
 
-    const localID=this.generateSessID(pProject,opts);
-
+    const localID=this._generateSessID(pProject,opts);
     const sess: HookSession = new HookSession(localID, GLOBAL_ICONS['HOOKS'], localID, pProject);
 
 
@@ -1364,6 +1372,60 @@ export class HookService extends DxcApiService {
     sess.channel.sendRaw({action: "start", svc: "hookm", prj: pProject.uid, data: opts}); //{type: pOptions.type}});
 
     return sess;
+  }
+
+
+    /**
+     *
+     * @param pSessionUID
+     * @param pOffset
+     * @param pSize
+     */
+  pollRuntimeEvent(pSessionUID:HookSessionUUID, pOffset:number, pSize:number):Observable<DxApiResponse<RuntimeEvent<any>[]>>{
+      return this._processApiRequest<RuntimeEvent<any>[]>(this.endpoints['session']['msg'] ,
+          {
+              o: pOffset, l: pSize, sid: pSessionUID
+          },
+          (pData:any):RuntimeEvent<any>[] =>{
+              return pData.map((v:any) => {
+                  return new RuntimeEvent<any>(v);
+              })
+          }
+      );
+  }
+
+
+    /**
+     * To start a new hook session
+     * @param pProject
+     * @param pOptions
+     */
+  startPollingHookSession(pProject:DexcaliburProject, pOptions:{ app?:string, dev?:DeviceUUID }):Observable<DxApiResponse<HookSession>>{
+
+      const opts:any = {
+          prj: pProject.uid,
+          ...pOptions
+      };
+
+      // generate local session id
+      const localID=this._generateSessID(pProject,opts);
+      const sess: HookSession = new HookSession(
+          localID, GLOBAL_ICONS['HOOKS'],
+          localID, pProject,
+          PollingType.HTTP /* don't init websocket channel */);
+
+      // regisyter handler for errors
+      sess.setHookErrorObservable(this.onHookError);
+      // push to list of sessions
+      this._sessions.push(sess);
+
+      return this._processApiRequest<HookSession>(
+          this.endpoints['hook']['start'],opts,
+          (vData:any)=>{
+              this.onNewSession.emit( sess);
+              sess._uid = vData._uid;
+              return sess;
+          });
   }
 
   /**
@@ -1449,6 +1511,12 @@ export class HookService extends DxcApiService {
     else
       return this.listHooks(null, { t:'func', s:Utils.dxc_encodeURIparam(pMeth.signature()) });
   }
+
+    getHooksForRef(pRef: INodeRef):Observable<any> {
+        return this.listHooks(null, {
+            t: (pRef.__==NodeInternalType.METHOD ? 'meth' : 'func' ) ,
+            s:Utils.dxc_encodeURIparam(pRef._uid) });
+    }
 
   getInspectors():Observable<HookSet[]> {
     return this.listHooks(

@@ -98,10 +98,7 @@ import {ModalTagEditorComponent} from "./components/tag/tag-editor/modal-tag-edi
 import {ModalTagInfoComponent} from "./components/tag/tag-info/modal-tag-info.component";
 import {ProjectModule} from "./components/project/project.module";
 import {TagListComponent} from "./components/tag/tag-list/tag-list.component";
-import {XrefListComponent} from "./components/code/xref-list/xref-list.component";
-import {XrefItemComponent} from "./components/code/xref-item/xref-item.component";
 import {NodeAliasComponent} from "./components/code/node-alias/node-alias.component";
-import {HookStatusComponent} from "./components/hooks/hook-status/hook-status.component";
 import {HookFragItemComponent} from "./components/hooks/frag-item/frag-item.component";
 import {ViewportEventsComponent} from "./components/events/viewport-events/viewport-events.component";
 import {DeviceModule} from "./components/device/device.module";
@@ -238,10 +235,7 @@ import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewpor
     ModalTagInfoComponent,
     TagListComponent,
 
-    XrefListComponent,
-    XrefItemComponent,
 
-    HookStatusComponent,
     HookFragItemComponent,
 
     ViewportEventsComponent,
