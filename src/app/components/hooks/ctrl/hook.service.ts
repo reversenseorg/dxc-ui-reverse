@@ -1400,10 +1400,11 @@ export class HookService extends DxcApiService {
      * @param pProject
      * @param pOptions
      */
-  startPollingHookSession(pProject:DexcaliburProject, pOptions:{ app?:string, dev?:DeviceUUID }):Observable<DxApiResponse<HookSession>>{
+  startPollingHookSession(pProject:DexcaliburProject, pOptions:{ app?:string, dev?:DeviceUUID, mode?:string }):Observable<DxApiResponse<HookSession>>{
 
       const opts:any = {
           prj: pProject.uid,
+          type: (pOptions.mode!=null ? pOptions.mode : this.mode),
           ...pOptions
       };
 

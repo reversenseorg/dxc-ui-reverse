@@ -517,8 +517,12 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
       // TODO replace default Options by Hook settings
         if(this.hookSvc.getPollingType() == PollingType.HTTP){
-            this.hookSvc.startPollingHookSession(p, {}).subscribe(()=>{
-                this.outputSvc.print(new OutputMessage({ msg:"Instrumentation has been started.",  src:"Hook Manager" }));
+            this.hookSvc.startPollingHookSession(p, {}).subscribe( (pRes)=>{
+                if(!pRes.success){
+                    this.outputSvc.print(OutputMessage.newError({ msg:"Instrumentation cannot start: "+pRes.msg,  src:"Hook Manager" }));
+                }else{
+                    this.outputSvc.print(OutputMessage.newSuccess({ msg:"Instrumentation has been started.",  src:"Hook Manager" }));
+                }
             });
         }else{
             this.hookSvc.startWebsocketHookSession(
