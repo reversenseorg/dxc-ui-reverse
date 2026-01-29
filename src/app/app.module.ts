@@ -121,6 +121,7 @@ import {ProjectStatusComponent} from "./components/project/project-loaded.compon
 import {TopologyModule} from "./components/topology/topo.module";
 import {NativeModule} from "./components/native/native.module";
 import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewport-native-func.component";
+import {PreviewerComponent} from "./base/previewer/previewer.component";
 
 
 // AoT requires an exported function for factories
@@ -283,6 +284,7 @@ import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewpor
 
         ExpandableDirective,
         NativeModule,
+        PreviewerComponent,
     ],
   providers: [
     ControllerService,

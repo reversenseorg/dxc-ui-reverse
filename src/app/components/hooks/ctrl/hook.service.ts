@@ -1381,10 +1381,10 @@ export class HookService extends DxcApiService {
      * @param pOffset
      * @param pSize
      */
-  pollRuntimeEvent(pSessionUID:HookSessionUUID, pOffset:number, pSize:number):Observable<DxApiResponse<RuntimeEvent<any>[]>>{
+  pollRuntimeEvent(pSessionUID:HookSessionUUID, pType:any, pOffset:number, pSize:number):Observable<DxApiResponse<RuntimeEvent<any>[]>>{
       return this._processApiRequest<RuntimeEvent<any>[]>(this.endpoints['session']['msg'] ,
           {
-              o: pOffset, l: pSize, sid: pSessionUID
+              startAt: pOffset, size: pSize, sid: pSessionUID
           },
           (pData:any):RuntimeEvent<any>[] =>{
               return pData.map((v:any) => {
@@ -1423,8 +1423,8 @@ export class HookService extends DxcApiService {
       return this._processApiRequest<HookSession>(
           this.endpoints['hook']['start'],opts,
           (vData:any)=>{
+              sess._uid = vData.sessid;
               this.onNewSession.emit( sess);
-              sess._uid = vData._uid;
               return sess;
           });
   }

@@ -6,13 +6,14 @@ import {INFO_TYPE, InfoMessage} from "../../../cmp/InfoMessage";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import DexcaliburProject from "../../../models/DexcaliburProject";
 import HookMessage from "../../../models/HookMessage";
-import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
+import {RuntimeEvent, RuntimeEventType} from "../../../models/hook/RuntimeEvent";
 import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {Tag} from "../../../models/tags/Tag";
 import {UserAccountUUID} from "../../../models/user/UserAccount";
 import {HOOK_ICONS} from "../icons";
 import {NodeInternalType} from "../../../models/NodeInternalType";
+import {HookService} from "./hook.service";
 
 export interface HookErrorMessage {
   msg:any,
@@ -158,6 +159,7 @@ export class HookSession {
 
   hookError$:Subject<any> = new Subject<any>();
 
+  httpPolling:Record<HookSessionUUID, NodeJS.Timeout> = {};
 
   private _restored = false;
 //  oob:Subject<any> = new Subject<any>();
@@ -275,13 +277,62 @@ export class HookSession {
       this._polling = pType;
 
     if(this._polling==PollingType.WEBSOCKET){
-      this.initChannel();
+       this.initChannel();
     }
 
     /*this.stdin.subscribe( (pObs:any) => {
       this.channel.send({ action:'cmd', svc:'xterm', data: { stdin: pObs }});
     });*/
   }
+
+  initHttpPolling(pHookService:HookService):void {
+      if(this._uid==null) throw new Error("HookSession UID is not set");
+
+      const hid = this._uid as HookSessionUUID;
+      let t = (new Date()).getTime();
+      const started = (new Date()).getTime();
+      let o = 0;
+      const sz = 20;
+      let lastSz = 1;
+      let firstEmpty = -1;
+
+      this.httpPolling[hid] = setInterval(()=>{
+          if(lastSz==0 && (new Date()).getTime()-firstEmpty>60000){
+              clearInterval(this.httpPolling[hid]);
+          }
+
+          pHookService
+              .pollRuntimeEvent(hid, RuntimeEventType.HOOK, o, sz)
+              .subscribe((vMsg)=>{
+                  if(!vMsg.success || vMsg.data==null){
+                      clearInterval(this.httpPolling[hid]);
+                      lastSz = 0;
+                      firstEmpty = (new Date()).getTime();
+                      return;
+                  }
+
+                  if(vMsg.data.length==0 && lastSz>0){
+                      firstEmpty = (new Date()).getTime();
+                      lastSz = 0;
+                      return;
+                  }
+
+                  lastSz = vMsg.data.length;
+                  o += vMsg.data.length;
+
+                  vMsg.data.map(e => {
+                      //if(e.data.hasOwnProperty('frag') && e.data.frag != null){
+                      //    e.data.when = this._searchFragLocation( e.data.hook, e.data.frag._uid );
+                      //}
+
+                      this.messages.push(e);
+                  });
+              });
+      }, 500)
+
+
+  }
+
 
   initChannel(){
     const self = this;

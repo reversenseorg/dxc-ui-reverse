@@ -146,6 +146,8 @@ export class NodeTokenComponent implements OnInit {
     @Input() interactive = true;
     @Input() value = false;
 
+    @Input() cache = false;
+
     @Input() style?: { [p:string]:any };
     @Input() styleValue?: { [p:string]:any };
     @Input() css:string = "";
@@ -187,9 +189,24 @@ export class NodeTokenComponent implements OnInit {
         console.log("Retrieved node on init : ",this.ref);
         if(this.ref!=null){
             if(sessionStorage.getItem('puid')!=null){
+
+                if(this.cache){
+                    const n = this.codeSvc.getFromCache(
+                        sessionStorage.getItem('puid') as DexcaliburProjectUUID,
+                        this.ref as INodeRef);
+
+                    if(n!=null){
+                        this.item = n;
+                        this.changeRef.detectChanges();
+                        return;
+                    }
+                }
+
+
                 this.codeSvc.retrieveNode<any>(
                     sessionStorage.getItem('puid') as DexcaliburProjectUUID,
-                    this.ref as INodeRef
+                    this.ref as INodeRef,
+                    this.cache
                 ).subscribe((vNode)=>{
                     console.log("Retrieved node : ",this.ref,vNode);
                     if(vNode.success){

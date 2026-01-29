@@ -1,7 +1,7 @@
 import {INode} from "../INode";
 import {Tag} from "../tags/Tag";
 import BusEvent from "../BusEvent";
-import {NodeInternalType} from "../NodeInternalType";
+import {INodeRef, NodeInternalType} from "../NodeInternalType";
 import {Nullable} from "../../base/Nullable";
 import {IStringIndex} from "../../base/IStringIndex";
 import HookMessageV2 from "./HookMessageV2";
@@ -51,9 +51,11 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
   raw: Nullable<P> = null;
 
-  node:INode[] = [];
+  node:INodeRef[] = [];
 
   tags:number[] = [];
+
+  interceptors:string[] = []
 
   constructor( pConfig:any) {
     super(pConfig);
@@ -75,7 +77,7 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
 
 
   isHookMessage(){
-    return (this.data!=null && this.data.hook!=null); //(this.type==RuntimeEventType.HOOK||this.data);
+    return (this.data!=null && this.rt_type==RuntimeEventType.HOOK); // this.data.hook!=null); //(this.type==RuntimeEventType.HOOK||this.data);
   }
 
   getHookMessage():HookRawMessage {
@@ -106,11 +108,11 @@ export class RuntimeEvent<P> extends BusEvent implements INode{
     return (pData.match(RuntimeEvent.rootPattern)!=null);
   }
 
-  setNodes(pNodes:INode[]){
+  setNodes(pNodes:INodeRef[]){
     this.node = pNodes;
   }
 
-  addNode(pNode:INode){
+  addNode(pNode:INodeRef){
     if(this.node == null){
       this.node = [];
     }

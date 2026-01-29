@@ -92,7 +92,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
               private outputSvc:OutputService) {
 
 
-    this.hookSvc.onNewSession.subscribe( (pSession:any)=>{
+    this.hookSvc.onNewSession.subscribe( (pSession:HookSession)=>{
       this._sessions.push(pSession);
 
       if(this._current != null)
@@ -101,8 +101,9 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
       this._current = pSession;
       (this._current as HookSession).active = true;
 
-      this.navbar.checkForChanges();
+      pSession.initHttpPolling(this.hookSvc);
 
+      this.navbar.checkForChanges();
       this.parent.selectTab(this);
     });
   }

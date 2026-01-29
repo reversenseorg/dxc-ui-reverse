@@ -48,23 +48,23 @@
         </div>
         <div class="col-lg-3 col-msg">
           <ng-container *ngFor="let n of msg.node">
-            <ng-container *ngIf="n.__==NODE_TYPE.METHOD">
+              <dxc-node-token [ref]="n" [cache]="true"></dxc-node-token>
+            <!--<ng-container *ngIf="n.__==NODE_TYPE.METHOD">
 
               <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>&nbsp;<span (click)="open(n, NODE_TYPE.CLASS, 'enclosingClass')" class="actionable">{{ getProperty(n,'enclosingClass') }}</span>
               .
               <dxc-icon [model]="cIcons['METH']"></dxc-icon>&nbsp;<span (click)="open(n,NODE_TYPE.METHOD)" class="actionable">{{ getProperty(n,'name') }}</span>(...)
-            </ng-container>
+            </ng-container>-->
           </ng-container>
         </div>
         <div class="col-lg-1 col-msg">
-          <ng-container *ngIf="msg.__i">
-            <code class="dxc-text-yellow" *ngFor="let t of msg.__i">{{ t }}</code><br>
+          <ng-container *ngIf="msg.interceptors">
+            <code class="dxc-text-yellow" *ngFor="let t of msg.interceptors">{{ t }}</code><br>
           </ng-container>
         </div>
         <div class="col-lg-6 ppt">
           <ng-container *ngIf="msg.isHookMessage()">
             <ng-container *ngFor="let d of msg.getHookMessageData() | keyvalue">
-
 
               <!--<ng-container *ngIf="msg.isRootDetectionData(d.value)">
                 <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>&nbsp;
@@ -98,6 +98,9 @@
                   <div *ngIf="d.key=='__trace__'">
                     <span (click)="openTrace(msg,d.value)" class="actionable"><dxc-icon [model]="cIcons['TRACE']"></dxc-icon>Trace</span>
                   </div>
+                    <div *ngIf="d.key=='str'">
+                        <dxc-preview [length]="120" [data]="d.value"></dxc-preview>
+                    </div>
                 </ng-container>
 
               </ng-container>

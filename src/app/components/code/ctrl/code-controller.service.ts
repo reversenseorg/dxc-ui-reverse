@@ -59,6 +59,8 @@ export class CodeControllerService extends DxcApiService{
   private _icons:any = {};
   private _tags:any = [];
 
+  private _cache:Record<DexcaliburProjectUUID, Record<number, any>> = {};
+
   tags:any = {};
 
   ctrl:Nullable<IController> = null;
@@ -1018,7 +1020,14 @@ export class CodeControllerService extends DxcApiService{
         );
     }
 
-  retrieveNode<T>(pProjectUID: DexcaliburProjectUUID, pRef:INodeRef):Observable<DxApiResponse<Nullable<T>>> {
+    getFromCache(pProjectUID: DexcaliburProjectUUID, pRef:INodeRef):any {
+        if(this._cache[pProjectUID]==null) return null;
+        if(this._cache[pProjectUID][pRef.__]==null) return null;
+
+        return this._cache[pProjectUID][pRef.__][pRef._uid];
+    }
+
+  retrieveNode<T>(pProjectUID: DexcaliburProjectUUID, pRef:INodeRef, pCache = false):Observable<DxApiResponse<Nullable<T>>> {
     return this._process(
         this.endpoints.direct.search,
         { puid:pProjectUID, nodetype:pRef.__, nodeuid:pRef._uid }
@@ -1029,10 +1038,18 @@ export class CodeControllerService extends DxcApiService{
             return  { success: false, msg: (vRes.msg!=null? vRes.msg:""), data: null };
           }
 
+          const node =  (vRes.data!=null ? this.createNodeFromRef<T>( pRef, vRes.data) : vRes.data)
+
+          if(pCache){
+              if(this._cache[pProjectUID]==null) this._cache[pProjectUID] = {};
+              if(this._cache[pProjectUID][pRef.__]==null) this._cache[pProjectUID][pRef.__] = {};
+              this._cache[pProjectUID][pRef.__][pRef._uid] = node;
+          }
+
           return  {
             success: vRes.success,
             msg: (vRes.msg!=null? vRes.msg:""),
-            data: (vRes.data!=null ? this.createNodeFromRef<T>( pRef, vRes.data) : vRes.data)
+            data: node
           };
         })
     )
