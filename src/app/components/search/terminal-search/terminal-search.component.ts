@@ -80,4 +80,8 @@ export class TerminalSearchComponent implements OnInit, ITerminalContainer {
     this.termCtn.nativeElement.style.maxHeight = (this.size.height-navH)+'px';
     this.termCtn.nativeElement.style.height = (this.size.height-navH)+'px';
   }
+
+    onCloseTab(pEvent:any):void{
+      console.log("onCloseTab ",pEvent,this);
+    }
 }

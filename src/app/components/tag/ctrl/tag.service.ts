@@ -55,6 +55,8 @@ export class TagService extends DxcApiService {
   _uuidMap:any = {};
   _nameMap:any = {};
 
+  refreshing:Nullable<Observable<Tag[]>> = null;
+
   onTagMenu$:Subject<TagMenuEvent> = new Subject<TagMenuEvent>();
 
   constructor( private appmenuSvc:AppMenuService,  private outputSvc:OutputService,  protected override _http:HttpClient) {
@@ -110,6 +112,12 @@ export class TagService extends DxcApiService {
    * @return {Observable<Tag[]>} An observable list of Tag
    */
   listTags(pRefresh = false, pFilter:Nullable<FilterOptions> = null):Observable<Tag[]> {
+
+    if(pRefresh && this.refreshing){
+        // waiting
+        return this.refreshing;
+    }
+
     if(!pRefresh && this.cache.tags.length>0 && pFilter==null){
       return from([ this.cache.tags ]);
     }else{
@@ -117,8 +125,8 @@ export class TagService extends DxcApiService {
       if(pFilter!=null){
         opts.filter = btoa(JSON.stringify(pFilter));
       }
-      return this._process( this.endpoints['tag']['list'], opts)
-        .pipe(map( (pRes:any) => {
+
+      this.refreshing = this._process( this.endpoints['tag']['list'], opts).pipe(map( (pRes:any) => {
           if(!pRes.success){
             this.outputSvc.print(OutputMessage.newError({msg:pRes.msg, src:"Tags"}));
             return [];
@@ -131,6 +139,8 @@ export class TagService extends DxcApiService {
                 this.cache.tags.push(c);
               })
               this.onCacheReady.next(this.cache);
+              this.refreshing = null;
+
               return this.cache.tags;
             }else{
               return pRes.data.map((x:any) => new Tag(x));
@@ -138,6 +148,8 @@ export class TagService extends DxcApiService {
 
           }
         }));
+
+      return this.refreshing;
     }
   }
 

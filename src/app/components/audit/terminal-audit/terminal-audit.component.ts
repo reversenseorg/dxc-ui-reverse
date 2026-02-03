@@ -163,9 +163,15 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
    */
   onResultClose(pItem: any /*TabItem<CheckResult*/): boolean {
 
-      delete this._resultsTabs[pItem.uid];
+      Object.keys(this._resultsTabs).indexOf(pItem.uid)
 
-      console.log('close tab > ',pItem);
+      console.log('close tab search > ',pItem,this);
+      console.log('close tab search term > ',
+          this.termCtn,
+          Object.keys(this._resultsTabs).indexOf(pItem.uid));
+
+
+      delete this._resultsTabs[pItem.uid]
 
       const tabOffset = this._tabStack.indexOf(pItem.uid);
       let nextTab:string;

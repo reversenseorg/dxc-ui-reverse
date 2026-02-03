@@ -528,4 +528,16 @@ export const GLOBAL_ICONS:IconModelCollection = {
         name: 'font-case',
         color1: 'dxc-icon-folders-internal'
     }),
+    LED_RED: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'circle',
+        color1: 'dxc-error-icon'
+    }),
+    LED_GREEN: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'circle',
+        color1: 'dxc-success-icon'
+    }),
 };

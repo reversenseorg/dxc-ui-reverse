@@ -100,7 +100,7 @@
           <ng-container main>
             <app-subnavbar-btn [active]="activeTop=='cfg'" [icon]="gIcons['LIST']" (click)="showGraph('disassembly')">&nbsp;CFG</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeTop=='bc'" [icon]="gIcons['LIST']" (click)="showBytecode()">&nbsp;Bytecode</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons['PLAY']" (click)="showDxcVM()">&nbsp;Dexcalibur VM</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons['PLAY']" (click)="showDxcVM()">&nbsp;Simplify</app-subnavbar-btn>
             <app-subnavbar-menu [label]="'Deobfuscation'" [icon]="gIcons['ANALYZE']">
               <ng-container entries>
                 <app-subnavbar-btn [icon]="gIcons['PLUS']" (click)="doDeobfuscationTask('count_nop')">Count NOP</app-subnavbar-btn>

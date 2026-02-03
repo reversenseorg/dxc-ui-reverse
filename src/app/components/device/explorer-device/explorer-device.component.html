@@ -24,9 +24,10 @@
           <ng-template #devEnrolled>
             <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon" [color1]="itemObj.connected==false ? 'text-danger' : 'text-success'"></dxc-icon>
             <span class="dxc-text-clear100">{{ itemObj.model }}</span>&nbsp;{{ itemObj.id }}&nbsp;&nbsp;&nbsp;
-            <span class="text-warning">[ENROLLED]</span>
-            <!--<span class="badge rounded-pill  text-bg-danger ml-1" *ngIf="itemObj.rootMode">ROOT</span>
-            <span class="badge rounded-pill  text-bg-info ml-1" *ngIf="!itemObj.rootMode">USER</span>-->
+              <dxc-icon *ngIf="itemObj._s" [model]="gIcons['STAR']"></dxc-icon>
+
+              <!--<span class="badge rounded-pill  text-bg-danger ml-1" *ngIf="itemObj.rootMode">ROOT</span>
+              <span class="badge rounded-pill  text-bg-info ml-1" *ngIf="!itemObj.rootMode">USER</span>-->
             <span class="badge rounded-pill  text-bg-success ml-1" *ngIf="itemObj.connected">connected</span>
           </ng-template>
           <ng-template #devNotEnrolled>

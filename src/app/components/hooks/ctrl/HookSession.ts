@@ -293,7 +293,7 @@ export class HookSession {
       const started = (new Date()).getTime();
       let o = 0;
       const sz = 20;
-      let lastSz = 1;
+      let lastSz = -1;
       let firstEmpty = -1;
 
       this.httpPolling[hid] = setInterval(()=>{
@@ -311,7 +311,7 @@ export class HookSession {
                       return;
                   }
 
-                  if(vMsg.data.length==0 && lastSz>0){
+                  if(vMsg.data.length==0 && (lastSz>0 || lastSz==-1)){
                       firstEmpty = (new Date()).getTime();
                       lastSz = 0;
                       return;

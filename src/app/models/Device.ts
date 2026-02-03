@@ -164,6 +164,12 @@ export class Device
     rootMode:boolean = false;
 
     /**
+     * Preferred devices
+     * UI ONLY
+     */
+    _s = false;
+
+    /**
      *
      * @param {*} config
      * @constructor

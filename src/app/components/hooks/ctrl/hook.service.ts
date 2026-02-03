@@ -898,7 +898,7 @@ export class HookService extends DxcApiService {
             }
           );
         }else{
-          this.outputSvc.print(OutputMessage.newSuccess({ msg:"Frida server has been successfully launched", src:"Hook Manager" }));
+          this.outputSvc.alert(OutputMessage.newSuccess({ msg:"Frida server has been successfully launched", src:"Hook Manager" }));
         }
 
         this.serverRunning = pRes.success;
@@ -1423,7 +1423,7 @@ export class HookService extends DxcApiService {
       return this._processApiRequest<HookSession>(
           this.endpoints['hook']['start'],opts,
           (vData:any)=>{
-              sess._uid = vData.sessid;
+              sess._uid = vData.sess;
               this.onNewSession.emit( sess);
               return sess;
           });

@@ -122,7 +122,7 @@ interface DDVM_Option {
                         </table>
                     </ng-container>
                     <ng-container *ngIf="optTab=='ctx'">
-                        <h5 class="title m-1">{{ ddvmOpts.context.label }}</h5>
+                        <h5 class="title m-1">Context</h5>
                         <div class="row param m-1" *ngFor="let itemObj of ddvmOpts.context.children">
                             <ng-container *ngIf="itemObj.ft=='c'; else noCheckbox">
                                 <div class="col-2" >
@@ -143,6 +143,27 @@ interface DDVM_Option {
                                 </div>
                             </ng-template>
                             </div>
+                        <h5 class="title m-1">Extra options</h5>
+                        <div class="row param m-1" *ngFor="let itemObj of ddvmOpts.options.children">
+                            <ng-container *ngIf="itemObj.ft=='c'; else noCheckbox">
+                                <div class="col-2" >
+                                    <dxc-icon  *ngIf="itemObj._i" [model]="itemObj._i"></dxc-icon>
+                                    <input *ngIf="itemObj.ft=='c'" [(ngModel)]="itemObj.v" type="checkbox" class="dxc-frm-input mt-1 mr-2"/>
+                                </div>
+                                <div class="col-10">
+                                    {{ itemObj.label }}
+                                </div>
+                            </ng-container>
+                            <ng-template #noCheckbox>
+                                <div class="col-6">
+                                    {{ itemObj.label }}
+                                </div>
+                                <div class="col-6">
+                                    <input *ngIf="itemObj.ft=='n'" [(ngModel)]="itemObj.v" type="number" class="dxc-frm-input"/>
+                                    <input *ngIf="itemObj.ft=='i'" [(ngModel)]="itemObj.v" type="text" class="dxc-frm-input"/>
+                                </div>
+                            </ng-template>
+                        </div>
                     </ng-container>
                 </div>
                 <!--<span *ngIf="itemObj._t=='c'" class="border-bottom-1 border-white">
@@ -210,41 +231,43 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
      */
     ddvmOpts: DDVM_Configuration = {
         args: {
-        _t: 'c',
-        _c: 'p',
-        _i: GLOBAL_ICONS['EDIT'],
-        label: 'Parameters',
-        children: []
-    },context:{
-        _t: 'c',
-        _c: 's',
-        _i: GLOBAL_ICONS['INTERNAL'],
-        label: 'Context',
-        children: [{
-            _t: 'o',
-            label: 'Load parent class',
-            ft: 'c',
-            v: false,
-            inputName: 'clinit'
-        },{
-            _t: 'o',
-            label: 'Load parent class',
-            ft: 'c',
-            v: false,
-            inputName: 'clinit'
-        }]
-    },options:{
-        _t: 'c',
-        _c: 'o',
-        _i: GLOBAL_ICONS['LIST'],
-        label: 'Options',
-        children: [{
-            _t: 'o',
-            label: 'Call stack limit (infinite=-1)',
-            ft: 'n',
-            v: 0,
-            inputName: 'depth'
-        }]
+            _t: 'c',
+            _c: 'p',
+            _i: GLOBAL_ICONS['EDIT'],
+            label: 'Parameters',
+            children: []
+        },
+        context:{
+            _t: 'c',
+            _c: 's',
+            _i: GLOBAL_ICONS['INTERNAL'],
+            label: 'Context',
+            children: [{
+                _t: 'o',
+                label: 'Load parent class',
+                ft: 'c',
+                v: false,
+                inputName: 'clinit'
+            }]
+        },options:{
+
+            _t: 'c',
+            _c: 'o',
+            _i: GLOBAL_ICONS['LIST'],
+            label: 'Options',
+            children: [{
+                _t: 'o',
+                label: 'Call stack limit (infinite=-1)',
+                ft: 'n',
+                v: 0,
+                inputName: 'depth'
+            },{
+                _t: 'o',
+                label: 'Simplify level (0=basic)',
+                ft: 'n',
+                v: 0,
+                inputName: 'level'
+            }]
     }};
 
     private _vmLog:any[] = [];
@@ -314,13 +337,13 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
 
         if(this.ddvmOpts.context.children!=null){
             this.ddvmOpts.context.children.map((vPar:any) => {
-                ops[vPar.name] = vPar.v;
+                ops[vPar.inputName] = vPar.v;
             });
         }
 
         if(this.ddvmOpts.options.children!=null){
             this.ddvmOpts.options.children.map((vPar:any) => {
-                ops[vPar.name] = vPar.v;
+                ops[vPar.inputName] = vPar.v;
             });
         }
 

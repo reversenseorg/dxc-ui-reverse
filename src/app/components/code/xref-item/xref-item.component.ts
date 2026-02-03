@@ -39,8 +39,6 @@ export interface TargetApp {
                 <span *ngSwitchCase="'INVOKE'" class="badge padge-pill text-bg-danger">CALL</span>
                 <span *ngSwitchCase="'CLASS_CHECK'" class="badge padge-pill text-bg-success">TYPE CHECK</span>
                 <span *ngSwitchDefault class="badge padge-pill">{{ item.instr }}</span>
-                
-                
             </ng-container>
         </div>
         <div [ngClass]="'col-lg-'+((item.tags!=null&& item.tags.length>0)?'9':'11')">
@@ -109,6 +107,7 @@ export class XrefItemComponent implements OnInit, AfterViewInit {
     }
 
     getNode():any {
+        console.log("xref getNode > ",this.item, " type : ", (this.type=="to" ? this.item._caller : this.item._called),this);
         return (this.type=="to" ? this.item._caller : this.item._called);
     }
 

@@ -162,8 +162,6 @@ import {PreviewerComponent} from "./base/previewer/previewer.component";
     ModalProjectAnalConfigComponent,
     ModalLogoutComponent,
 
-    CodeEmulatorComponent,
-
 
     ExplorerDirective,
     ViewportDirective,

@@ -1,7 +1,7 @@
 <div [class.dxc-hidden]="!parent.isTabActive(this)" class="term-ws" #termSearch>
   <app-subnavbar [type]="'navtab'" [navtab]="this.view.navtab" [items]="views" [parent]="this" #termSearchNav>
     <ng-container leftTab>
-      <app-subnavbar-tab [active]="true" [label]="'Index'" [icon]="gIcons['LIST']" [closable]="false"></app-subnavbar-tab>
+      <app-subnavbar-tab (closeTab)="onCloseTab($event)" [active]="true" [label]="'Index'" [icon]="gIcons['LIST']" [closable]="false"></app-subnavbar-tab>
     </ng-container>
   </app-subnavbar>
 

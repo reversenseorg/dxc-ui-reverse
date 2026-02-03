@@ -54,7 +54,8 @@ export interface TargetApp {
                 <table class="w-full dxc-table" >
                     <thead>
                     <th style="width:6%"><div class="dxc-text-std">OS</div></th>
-                    <th style="width:55%"><div class="dxc-text-std">Name</div></th>
+                    <th style="width:50%"><div class="dxc-text-std">Name</div></th>
+                    <th style="width:5%"><div class="dxc-text-std">Ready</div></th>
                     <th style="width:15%"><div class="dxc-text-std">Version</div></th>
                     <th style="width:12%"><div class="dxc-text-std">Open</div></th>
                     <th style="width:12%"><div class="dxc-text-std">Created</div></th>
@@ -76,6 +77,7 @@ export interface TargetApp {
                                 </ng-container>
                             </td>
                             <td>{{ project.pkg }}</td>
+                            <td><dxc-icon [model]="project.isReady()? gIcons['LED_GREEN'] : gIcons['LED_RED']"></dxc-icon></td>
                             <td>{{ project.meta.versionName }}</td>
                             <td>{{ project.meta.lastOpenDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
                             <td>{{ project.meta.creationDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
@@ -86,7 +88,7 @@ export interface TargetApp {
                     </ng-container>
                     <ng-template #noProj>
                         <tr>
-                            <td colspan="5" class="dxc-text-std text-center">Loading projects ...</td>
+                            <td colspan="6" class="dxc-text-std text-center">Loading projects ...</td>
                         </tr>
                     </ng-template>
                     </tbody>

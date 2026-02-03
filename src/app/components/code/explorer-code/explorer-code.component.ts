@@ -152,6 +152,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
 
 
+
   tags:any;
 
   packages:CodeItem[][] = [];
@@ -274,8 +275,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
     this.projectService.onProjectReady
       .subscribe((pProject:DexcaliburProject) => {
-
-
         this.tags = {
           INTERNAL: this.tagSvc.getTagByName("discover.internal"),
           STATIC: this.tagSvc.getTagByName("discover.static"),

@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {ExplorerView} from '../../../cmp/ExplorerView';
 import {GLOBAL_ICONS} from '../../../cmp/GLOBAL_ICONS';
 import {NavbarSimpleView} from '../../../cmp/NavbarSimpleView';
@@ -43,6 +53,7 @@ import {Nullable} from "../../../base/Nullable";
 import {UIException} from "../../../base/error/UIException";
 import {DeviceBindedData, EnrollmentOpts} from "../common";
 import ModelFile from "../../../models/ModelFile";
+import {AuthService} from "../../auth/ctrl/auth.service";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -163,7 +174,9 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
                private route: ActivatedRoute,
                private hookSvc: HookService,
                private electronSvc: ClipboardService,
+               private authSvc: AuthService,
                private outputSvc: OutputService,
+               private _chRef:ChangeDetectorRef,
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
     this.id = 'explorerDevice';
@@ -248,6 +261,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       });
       this.dmReady = true;
       this.devices[DEV_SUBVIEW.ALL] = pDevices;
+        this.refreshUserPrefs();
     })
 
     this.hookSvc.onDeviceConfigure.subscribe( (pDev:Device)=>{
@@ -643,6 +657,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   private _prepareDeviceRendering(pDevice:DeviceListItem):DeviceListItem {
+
     pDevice._icon = this.gIcons['DEVICE'];
     pDevice._t = 'dev';
     pDevice.children = [];
@@ -697,6 +712,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
 
     return pDevice;
   }
+
 
   refresh() {
 
@@ -765,6 +781,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
       .subscribe((pDevices: Device[]) => {
         this.dmReady = true;
         this.devices[DEV_SUBVIEW.ALL] = pDevices;
+        this.refreshUserPrefs();
       });
   }
 
@@ -1008,11 +1025,16 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
   }
 
   setAsDefaultDev(pDevice: Device) {
-    console.log(pDevice);
-    this.projectService.setDefaultDevice( pDevice).subscribe((pRes: any) => {
+    this.authSvc.addPreferences(
+        sessionStorage.getItem('puid') as string,
+        "dev", pDevice.getUID())
+        .subscribe((pRes: any) => { });
+
+
+    /*this.projectService.setDefaultDevice( pDevice).subscribe((pRes: any) => {
 
       // nothing to do
-    });
+    });*/
   }
 
   monitorPs(pDevice: any): void {
@@ -1179,4 +1201,20 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     }
     return styles;
   }
+
+    private refreshUserPrefs() {
+        this.authSvc.getPreferences().subscribe((pPrefs:any)=>{
+            if(pPrefs.data==null || pPrefs.data.prefs==null) return;
+            if(sessionStorage.getItem('puid')==null) return;
+
+            const prjPref =  pPrefs.data.prefs[sessionStorage.getItem('puid') as string];
+
+            if(prjPref!=null && prjPref.dev!=null){
+                this.devices[DEV_SUBVIEW.ALL].map((vDev:Device)=>{
+                    vDev._s = (prjPref.dev === vDev.getUID());
+                });
+
+            }
+        })
+    }
 }

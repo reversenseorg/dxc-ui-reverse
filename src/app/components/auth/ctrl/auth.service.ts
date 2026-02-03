@@ -13,6 +13,7 @@ import {UserRole} from "../../../models/user/acl/rbac/UserRole";
 import {DxcApiToken} from "../../../base/DxcApiToken";
 import { DexcaliburConnectionParams } from "../../../models/remote/DexcaliburConnectionParams";
 import {Nullable} from "../../../base/Nullable";
+import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 
 
 @Injectable({
@@ -33,11 +34,11 @@ export class AuthService extends DxcApiService{
    * @field
    */
   onMenuClick:Subject<any> = new Subject<any>();
-
   onLogin$:Subject<any> = new Subject<any>();
 
   onLogout:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
   onAuthentication:Subject<AuthenticationEvent> = new Subject<AuthenticationEvent>();
+
 
   constructor( private appmenuSvc:AppMenuService, private outputSvc:OutputService, protected override _http:HttpClient) {
 
@@ -55,6 +56,8 @@ export class AuthService extends DxcApiService{
         },
         account: {
           info: { method: 'GET', url:'/user/account', format:'json', auth:false /* removed */ },
+            prefs: { method: 'GET', url:'/user/account/prefs', format:'json', auth:false /* removed */ },
+            editprefs: { method: 'PUT', url:'/user/account/prefs', format:'json', auth:false /* removed */ },
           change_pwd: { method: 'POST', url:'/user/account/passwd', format:'json', auth:false /* removed */ }
         }
       }, _http, outputSvc);
@@ -379,4 +382,19 @@ export class AuthService extends DxcApiService{
       )
     );
   }
+
+  getPreferences():Observable<any> {
+    return this._processApiRequest(
+        this.endpoints['account']['prefs'], {}
+    );
+  }
+
+    addPreferences(pProject:DexcaliburProjectUUID, pType:string, pValue:any):Observable<any> {
+        return this._processApiRequest(
+            this.endpoints['account']['editprefs'],
+            {
+                project: pProject, type:pType, value:pValue
+            }
+        );
+    }
 }

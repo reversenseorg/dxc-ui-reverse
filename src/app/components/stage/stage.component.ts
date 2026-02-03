@@ -45,6 +45,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ViewportComponent} from "../../base/viewport/viewport.component";
 import {NodeInternalType} from "../../models/NodeInternalType";
 import ModelMethod from "../../models/ModelMethod";
+import {TagService} from "../tag/ctrl/tag.service";
 
 let iiii=0;
 
@@ -232,6 +233,7 @@ export class StageComponent implements OnInit, AfterViewInit {
     private authSvc:AuthService,
     private kbSvc:KeyboardNavigationService,
     private eSvc: ClipboardService,
+    private tagSvc: TagService,
     private _activatedRoute:ActivatedRoute,
     private componentFactoryResolver: ComponentFactoryResolver,
     private changeDetector:ChangeDetectorRef) {
@@ -276,6 +278,8 @@ export class StageComponent implements OnInit, AfterViewInit {
           this.authSvc.onLogin$.next({});
         }
     });
+
+    this.tagSvc.listTags(true).subscribe((vTags)=>{})
 
 
 

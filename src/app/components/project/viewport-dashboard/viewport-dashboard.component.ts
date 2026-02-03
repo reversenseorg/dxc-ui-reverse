@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {ViewportTab} from "../../../cmp/ViewportTab";
 import {ViewportView} from "../../../cmp/ViewportView";
 import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {ViewportComponent} from "../../../base/viewport/viewport.component";
 import {ProjectController} from "../ctrl/ProjectController";
 import {ProjectService} from "../ctrl/project.service";
@@ -19,6 +19,11 @@ import Application from '../../../models/Application';
 import {Nullable} from "../../../base/Nullable";
 import {TopologyController} from "../../topology/ctrl/TopologyController";
 import {ProjectResolver} from "../ctrl/project-resolver.service";
+import {SearchController} from "../../search/ctrl/SearchController";
+import {CodeControllerService} from "../../code/ctrl/code-controller.service";
+import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
+import {map} from "rxjs/operators";
+import {CODE_ICONS} from "../../code/icons";
 
 enum INFO_TYPE {
   APP,
@@ -98,48 +103,14 @@ enum INFO_TYPE {
             <ng-container nav-bottom>
               <app-subnavbar>
                 <ng-container main>
-                  <app-subnavbar-btn [active]="activeBL==TOPIC.RES"  (click)="showInfo(TOPIC.RES)">Ressources</app-subnavbar-btn>
+                  <app-subnavbar-btn [active]="activeBL==TOPIC.RES"  (click)="showInfo(TOPIC.RES)">Resources</app-subnavbar-btn>
                   <app-subnavbar-btn [active]="activeBL==TOPIC.URL"  (click)="showInfo(TOPIC.URL)">URL</app-subnavbar-btn>
                   <app-subnavbar-btn [active]="activeBL==TOPIC.BIN"  (click)="showInfo(TOPIC.BIN)">Binaries</app-subnavbar-btn>
                 </ng-container>
               </app-subnavbar>
             </ng-container>
             <ng-container body-bottom>
-
-
-              <ng-container *ngIf="activeBL==TOPIC.URL">
-
-                <!--
-                <app-expandable-list>
-    
-                  <ng-template #expCodeItem let-itemObj="item" >
-    
-                    <span *ngIf="NODE_TYPES.INSPECTOR==itemObj.__" (contextmenu)="displayExtMenu($event,'inspector',itemObj)">
-                      <dxc-icon [model]="itemObj.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
-                      <span>{{ itemObj.name }}</span>
-                      <span *ngIf="itemObj.hookset && itemObj.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
-                      <span *ngIf="itemObj.listener.length>0" class="text-info">&nbsp;[rules]</span>
-                    </span>
-    
-    
-                  </ng-template>
-    
-                  <ng-container *ngFor="let insp of inspectors">
-                    <app-expandable-item
-                            [itemTpl]="expCodeItem"
-                            [item]="insp"
-                            [provider]="this"
-                            [itemType]="insp.__"
-                            (itemFocus)="onItemFocus('TL',$event)"
-                            (collapse)="onCollapse($event)"
-                            (expand)="onExpand($event)"
-                    >
-                    </app-expandable-item>
-                  </ng-container>
-                </app-expandable-list>-->
-              </ng-container>
-
-
+                <dxc-search-result-list  [results]="topicRes" [controller]="getSearchCtrl()" [mainController]="controller.app"></dxc-search-result-list>
             </ng-container>
           </app-viewport-splitted>
         </ng-container>
@@ -229,7 +200,7 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
 
 
   gIcons:any = GLOBAL_ICONS;
-  hIcons:any = HOOK_ICONS;
+  cIcons:any = CODE_ICONS;
   ctxMenu: ContextMenuList = {};
   ctxMenuState:ContextMenuState = { subject: null };
   resize$: Subject<any> = new Subject<any>();
@@ -252,9 +223,11 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
     BL:null
   };
 
+  topicRes:any[] = [];
+
   constructor( private projectSvc:ProjectService,
+               private codeSvc:CodeControllerService,
                private eSvc:ClipboardService,
-               private hookSvc:HookService,
                private inspSvc:InspectorService ) {
 
   }
@@ -292,6 +265,7 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
    * @param app
    */
   showInfo(pTopic: number) {
+    this.topicRes = [];
     switch (pTopic) {
       case INFO_TYPE.ANA:
         this.inspSvc.getAll().subscribe((pInspList:Inspector[])=>{
@@ -315,6 +289,34 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
       case INFO_TYPE.URL:
         this.activeBL = pTopic;
         break;
+    case INFO_TYPE.BIN:
+        this.activeBL = pTopic;
+
+        break;
+    case INFO_TYPE.RES:
+        this.activeBL = pTopic;
+        this.codeSvc.merlinSearch(new MerlinSearchRequest(
+            NodeInternalType.RESOURCE,
+            [{
+                type:OperationType.SEARCH,
+                args: {
+                    pattern: [{
+                        field: "_uid",
+                        pattern: "@layout",
+                        regexp: true
+                    }]
+                }
+            }]
+        )).pipe(map((vRes:any)=>{
+            console.log("Execute MERLIN Request (as code search : resources) ",vRes);
+
+            vRes.map((vSelf:any) => {
+                vSelf._icon = this.gIcons['RES'];
+            });
+        })).subscribe((vRes:any)=>{
+            this.topicRes = vRes;
+        });
+        break
     }
   }
 
@@ -367,4 +369,8 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
   getTopoController():TopologyController {
     return this.parent.parent.getController('ctrl:topo');
   }
+
+    getSearchCtrl():SearchController {
+        return this.parent.parent.getController('ctrl:search');
+    }
 }

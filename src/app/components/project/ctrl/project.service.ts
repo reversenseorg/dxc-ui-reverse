@@ -449,21 +449,6 @@ export class ProjectService extends DxcApiService {
 
               this._location.replaceState('/home/'+vProject.uid,'');
           })
-
-          /*
-          DxcApiToken.remove("puid");
-          DxcApiToken.create("puid",vProject.uid);
-
-          this.getProjectInfo(vProject).subscribe((pEvent)=>{
-
-
-              this.outputSvc.print(OutputMessage.newSuccess({ msg:"Displaying project  : "+vProject.uid, src:'' }));
-              this._refreshDefaultDeviceFor(pEvent);
-              this.selected = pEvent;
-              this._beforeProjectReady(pEvent);
-              //this.onProjectReady.next(pEl);
-              // this.appmenuSvc.onProjectOpen();
-          });*/
       });
   }
 
@@ -621,8 +606,9 @@ export class ProjectService extends DxcApiService {
           DxcApiToken.create("puid",pProject.uid);
 
 
-        this.stopOpening(pProject.uid, true, 100);
+          this.stopOpening(pProject.uid, true, 100);
 
+            this.showProject$.next(pProject);
           this._router.navigate(['project','puid',pProject.uid]);
 
 
@@ -909,25 +895,7 @@ export class ProjectService extends DxcApiService {
         console.log('Project service > getActiveProject [from='+pSource+'] > ',pEl);
 
         if(pEl.success){
-          /*if(pEl.data != null && pEl.data.length==1){
 
-            this.activeProject = [];
-            const project = pEl.data[0];
-
-
-
-            DxcApiToken.remove("puid");
-            DxcApiToken.create("puid", project.uid);
-
-            this._refreshDefaultDeviceFor(project);
-
-            this.activeProject.push(project);
-            this.selected = project;
-            //this.onProjectReady.next( project);
-            //this.appmenuSvc.onProjectOpen();
-
-            this._beforeProjectReady(project);
-          }*/
 
           return pEl.data;
         }
@@ -935,26 +903,6 @@ export class ProjectService extends DxcApiService {
     );
   }
 
-    /**
-     * To select another active project
-     * @param pProject
-     */
-  selectActiveProject(pProject:DexcaliburProject): Observable<any> {
-    return this._process(
-      this.endpoints['project']['set_active'],
-      {
-        uid: pProject.uid
-      }
-    ).pipe( map( (pData:any)=>{
-        if(pData.success){
-          this._beforeProjectReady(pProject, false);
-          return pData;
-        }else{
-          this.outputSvc.print( OutputMessage.newError({ msg:pData.msg, src:"Project Manager"}));
-          return null;
-        }
-    }));
-  }
 
 /**
  * To switch
@@ -963,14 +911,6 @@ export class ProjectService extends DxcApiService {
   switchTo(pProject:DexcaliburProject, pSelect = true):Observable<any> {
 
       console.log("Switch to > ",pProject);
-
-        /*this.getProjectInfo(pProject).subscribe((pEvent)=>{
-            this._refreshDefaultDeviceFor(pEvent);
-            this.selected = pEvent;
-            this._beforeProjectReady(pEl);
-            //this.onProjectReady.next(pEl);
-            // this.appmenuSvc.onProjectOpen();
-        });*/
 
         DxcApiToken.remove("puid");
         DxcApiToken.create("puid", pProject.uid);
@@ -983,11 +923,7 @@ export class ProjectService extends DxcApiService {
         this._beforeProjectReady(pProject);
 
         // select remotely for the current user
-        if(pSelect){
-            return from([pProject]); //this.selectActiveProject(pProject);
-        }else{
-            return from([pProject]);
-        }
+         return from([pProject]);
   }
 
   /**
@@ -1091,6 +1027,13 @@ export class ProjectService extends DxcApiService {
     )
   }
 
+    /**
+     * Default device is USER SENSITIVE
+     *
+     * @deprecated
+     * @param pDevice
+     * @param pProject
+     */
   setDefaultDevice(pDevice: Device, pProject:Nullable<DexcaliburProject>=null) {
     return this._process(
       this.endpoints['project']['set_device'],

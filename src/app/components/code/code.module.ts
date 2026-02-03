@@ -26,11 +26,12 @@ import {CodeEditorModule} from "../code-editor/code-editor.module";
 import {AppModule} from "../../app.module";
 import {ModalRenameComponent} from "./modal-rename/modal-rename.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SearchModule} from "../search/search.module";
 import {XrefListComponent} from "./xref-list/xref-list.component";
 import {XrefItemComponent} from "./xref-item/xref-item.component";
 import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
+import {CodeEmulatorComponent} from "./emulator/emulator.component";
 
 
 @NgModule({
@@ -56,11 +57,13 @@ import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
         CodeEditorModule,
         ModalBaseComponent,
         ReactiveFormsModule,
-        HookStatusComponent
+        HookStatusComponent,
+        FormsModule
     ],
     exports: [
         CodeSymbolTableComponent,
         CodeEmuLoggerComponent,
+        CodeEmulatorComponent,
         NodeTokenComponent,
         XrefListComponent,
         XrefItemComponent,
@@ -82,6 +85,7 @@ import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
     declarations: [
         CodeSymbolTableComponent,
         CodeEmuLoggerComponent,
+        CodeEmulatorComponent,
         ViewportCodeStringComponent,
         NodeTokenComponent,
         XrefListComponent,

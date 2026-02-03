@@ -292,7 +292,7 @@
 
                 <div [innerHTML]="selectedData.description"></div>
 
-                <h5 class="m-1">Ressources</h5>
+                <h5 class="m-1">Resources</h5>
                   <ng-container *ngIf="selectedData.links != null && selectedData.links.length>0;else noRes">
                       <ng-container *ngFor="let lk of selectedData.links">
                           <a [href]="lk">{{ lk }}</a>
