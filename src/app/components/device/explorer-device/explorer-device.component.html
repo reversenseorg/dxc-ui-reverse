@@ -30,6 +30,7 @@
               <span class="badge rounded-pill  text-bg-info ml-1" *ngIf="!itemObj.rootMode">USER</span>-->
             <span class="badge rounded-pill  text-bg-success ml-1" *ngIf="itemObj.connected">connected</span>
           </ng-template>
+
           <ng-template #devNotEnrolled>
             <dxc-icon [model]="gIcons['UNKNOWN']"></dxc-icon>
             <span class="dxc-text-clear100">???</span>
@@ -38,12 +39,14 @@
             <span class="dxc-text-blue">[{{ itemObj.type }}]</span>
             <span class="badge rounded-pill  text-bg-success ml-1" *ngIf="itemObj.connected">connected</span>
           </ng-template>
+
+
           <span *ngIf="itemObj._t=='dev'" #devTpl (contextmenu)="displayCtxMenu($event,'dev',itemObj)">
               <ng-container *ngIf="itemObj.enrolled; then devEnrolled else devNotEnrolled"></ng-container>
           </span>
 
 
-          <span *ngIf="itemObj._t=='b'" #bridgeTpl (contextmenu)="displayCtxMenu($event,'bridge',itemObj)">
+           <span *ngIf="itemObj._t=='b'" #bridgeTpl (contextmenu)="displayCtxMenu($event,'bridge',itemObj)">
               <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon" [color1]="'text-warning'"></dxc-icon>
               <span class="text-warning">{{ itemObj.shortname }}</span>&nbsp;&nbsp;
               <span class="dxc-text-clear100">{{ itemObj.uid }}</span>
@@ -182,8 +185,7 @@
 <app-context-menu [name]="'ps'">
   <app-context-item [label]="'Copy PID'"  (click)="copyAttr(ctxMenuState.subject, 'PID')"></app-context-item>
   <app-context-item [label]="'Copy name'"  (click)="copyAttr(ctxMenuState.subject, 'NAME')"></app-context-item>
-  <app-context-item [separator]="true" [disabled]="true" [label]="'Show details'" [icon]="gIcons['REFRESH']" (click)="showMemoryMap(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [disabled]="true" [label]="'Memory map'"  (click)="showMemoryMap(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [disabled]="true" [label]="'Memory map'"  (click)="showMemoryMap(ctxMenuState.subject)"></app-context-item>
   <app-context-item [disabled]="true"  [label]="'File descriptors'"  (click)="showFD(ctxMenuState.subject)"></app-context-item>
   <app-context-item [disabled]="true" [label]="'Attach to project'" [separator]="true"  (click)="monitorPs(ctxMenuState.subject)"></app-context-item>
   <app-context-item [disabled]="true" [label]="'Analyze ...'"  (click)="monitorPs(ctxMenuState.subject)"></app-context-item>

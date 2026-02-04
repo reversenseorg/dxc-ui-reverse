@@ -1028,13 +1028,9 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     this.authSvc.addPreferences(
         sessionStorage.getItem('puid') as string,
         "dev", pDevice.getUID())
-        .subscribe((pRes: any) => { });
-
-
-    /*this.projectService.setDefaultDevice( pDevice).subscribe((pRes: any) => {
-
-      // nothing to do
-    });*/
+        .subscribe((pRes: any) => {
+            this.refresh();
+        });
   }
 
   monitorPs(pDevice: any): void {
@@ -1048,6 +1044,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     // TODO
 
   }
+
   showMemoryMap(pDevice: any): void {
     // TODO
 
@@ -1185,8 +1182,14 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
     }
 
   startServer(pDevice: Device) {
-     this.hookSvc.startServer({dev:pDevice.getUID()}).subscribe(()=>{
 
+      this.progressTitle = 'Starting hook server';
+      this.progress$.next({ value: 100, msg: 'Work in progress ...' });
+      this.modalProgress.show();
+
+     this.hookSvc.startServer({dev:pDevice.getUID()}).subscribe(()=>{
+         this.modalProgress.close();
+         this.outputSvc.alert(OutputMessage.newSuccess({ msg:"Frida server has been successfully launched", src:"Hook Manager" }));
      })
   }
 
