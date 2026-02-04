@@ -1,13 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../../../base/Nullable";
 import {Tag} from "../../../models/tags/Tag";
@@ -19,8 +10,6 @@ import {INode} from "../../../models/INode";
 import {CodeControllerService} from "../ctrl/code-controller.service";
 import {INodeRef} from "../../../base/common/common";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
-import {tags} from "@angular-devkit/core";
-import {FilesystemService} from "../../file/ctrl/FilesystemService";
 
 let ctr = 0;
 
@@ -49,10 +38,9 @@ export interface TargetApp {
                     </span>
                 </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.FIELD">
-                    <span *ngIf="item.enclosingClass !=null"  (click)="goTo(item.enclosingClass)" (contextmenu)="codeSvc.displayContextMenu($event,'clazz',item.enclosingClass)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
-                        <dxc-icon [model]="cIcons.CLASS"></dxc-icon>
-                        <dxc-node-alias [item]="item.enclosingClass" [text]="getSymbol(item.enclosingClass)"></dxc-node-alias>
-                    </span>
+                    
+                    <dxc-node-token [cache]="cache" [ref]="asRef(item.enclosingClass, NODE_TYPE.CLASS)" [hookstatus]="false" [interactive]="true" [value]="true" [full]="false"></dxc-node-token>
+                    
                     <span  [ngClass]="'badge dxc-no-gutters symbol'"  (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event,'field',item)" [ngStyle]="style">
                         <dxc-icon [model]="cIcons.FIELD"></dxc-icon>
                         <dxc-node-alias [item]="item" [text]="item.name"></dxc-node-alias>
@@ -252,4 +240,16 @@ export class NodeTokenComponent implements OnInit {
     }
 
     protected readonly GLOBAL_ICONS = GLOBAL_ICONS;
+
+    asRef(pEnclosingClass: any, pType: NodeInternalType) {
+        let c = null;
+        if(typeof pEnclosingClass == 'string'){
+            c= { __:pType, _uid:pEnclosingClass};
+        }else if(pType==NodeInternalType.CLASS && pEnclosingClass.name!=null){
+            c= { __:pType, _uid:pEnclosingClass.name};
+        }
+
+        console.log("asRef() : ",pEnclosingClass,pType,c);
+        return c;
+    }
 }
