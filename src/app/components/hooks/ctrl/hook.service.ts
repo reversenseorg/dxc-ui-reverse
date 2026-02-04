@@ -449,32 +449,6 @@ export class HookService extends DxcApiService {
         click: (pMenuItem:any, pBrowserWindow:any ) => {
           this.killApp().subscribe( );
         }
-      },{
-        label: 'Start server',
-        id:'hook-server-start',
-        enabled:true,
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.startServer().subscribe( (pRes:any)=>{
-            pMenuItem.enabled = !this.serverRunning;
-            const itm = AppMenu.getInstance().getMenuItemById('hook-server-stop');
-            if(itm!=null){
-              itm.setEnable(this.serverRunning);
-            }
-          });
-        }
-      },{
-        label: 'Stop server',
-        id:'hook-server-stop',
-        enabled:true,
-        click: (pMenuItem:any, pBrowserWindow:any ) => {
-          this.stopServer().subscribe( (pRes:any)=>{
-            pMenuItem.enabled = this.serverRunning;
-            const itm = AppMenu.getInstance().getMenuItemById('hook-server-start');
-            if(itm!=null){
-              itm.setEnable(!this.serverRunning);
-            }
-          });
-        }
       }]
     }, 3);
 
@@ -897,8 +871,6 @@ export class HookService extends DxcApiService {
               }]
             }
           );
-        }else{
-          this.outputSvc.alert(OutputMessage.newSuccess({ msg:"Frida server has been successfully launched", src:"Hook Manager" }));
         }
 
         this.serverRunning = pRes.success;
