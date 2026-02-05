@@ -1307,4 +1307,13 @@ export class MerlinSearchRequest {
     return r;
   }
 
+  static getFirstOperationsDef():OperationDefinition[] {
+    return SupportedOperations.filter(o => {
+        return ([
+            OperationType.SEARCH,
+            OperationType.AGGR,
+            OperationType.TAINT_SRC
+        ].indexOf(o.type)>-1)
+    })
+  }
 }

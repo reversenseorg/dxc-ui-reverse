@@ -66,7 +66,7 @@
           </div>
 
 
-          <div class="col-2" *ngIf="nodePpts.length>0">
+          <div class="col-2" *ngIf="_nodePpts.length>0">
               <ng-container *ngIf="parentNodes.length>0">
                   <div  *ngFor="let part of parentNodes; let i=index">
                       <select (change)="onNodeParentChange($event,part,i)"  class="dxc-input">
@@ -78,9 +78,22 @@
               </ng-container>
 
               <select [(ngModel)]="newNodePpt" (ngModelChange)="onNodePptChange($event)"  class="dxc-input ms-2">
-                  <ng-container *ngFor="let node of nodePpts">
-                      <option [value]="node.name">{{node.name}}</option>
-                  </ng-container>
+                  <optgroup *ngIf="nodePpts.ppts.length>0" label="Properties">
+                      <ng-container *ngFor="let node of nodePpts.ppts">
+                          <option [value]="node.name">{{node.name}}</option>
+                      </ng-container>
+                  </optgroup>
+                  <optgroup *ngIf="nodePpts.ppts.length>0" label="Adjacent nodes">
+                      <ng-container *ngFor="let node of nodePpts.rel">
+                          <option [value]="node.name">{{node.name}}</option>
+                      </ng-container>
+                  </optgroup>
+                  <optgroup *ngIf="nodePpts.ppts.length>0" label="Extra">
+                      <ng-container *ngFor="let node of nodePpts.extra">
+                          <option [value]="node.name">{{node.name}}</option>
+                      </ng-container>
+                  </optgroup>
+
               </select>
           </div>
 

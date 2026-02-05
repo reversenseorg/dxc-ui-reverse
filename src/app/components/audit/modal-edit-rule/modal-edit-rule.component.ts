@@ -139,25 +139,35 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
         {label: 'on', value: 'on'}
     ];
 
+    tpl:Record<string, OperationChoice[]> =  {
+        begin: [
+            {label: 'search', value: 'search all'},
+            {label: 'validate', value: 'validate'},
+            {label: 'aggregate', value: 'aggregate'},
+        ]
+    };
+
     supportedNode: NodeChoice[] = [
-        {value: "classes", label: "classes", type: NodeInternalType.CLASS},
-        {value: "methods", label: "methods", type: NodeInternalType.METHOD},
-        {value: "function", label: "function", type: NodeInternalType.FUNC},
-        {value: "strings", label: "strings", type: NodeInternalType.STRING},
-        {value: "packages", label: "packages", type: NodeInternalType.PACKAGE},
-        {value: "calls", label: "calls", type: NodeInternalType.CALL},
-        {value: "files", label: "files", type: NodeInternalType.FILE},
-        {value: "field", label: "field", type: NodeInternalType.FIELD},
-        {value: "syscalls", label: "syscall", type: NodeInternalType.SYSCALL},
-        {value: "instr", label: "instruction", type: NodeInternalType.INSTRUCTION},
-        {value: "ui", label: "ui", type: NodeInternalType.UI_CMP},
-        {value: "activities", label: "activities", type: NodeInternalType.ANDROID_ACTIVITY},
-        {value: "providers", label: "providers", type: NodeInternalType.ANDROID_PROVIDER},
-        {value: "receivers", label: "receivers", type: NodeInternalType.ANDROID_RECEIVER},
-        {value: "services", label: "services", type: NodeInternalType.ANDROID_SERVICE},
-        {value: "events", label: "events", type: NodeInternalType.RUNTIME_EVENT},
-        {value: "hooks", label: "java hooks", type: NodeInternalType.HOOK_JAVA},
-        {value: "sessions", label: "runtime session", type: NodeInternalType.HOOK_SESSION}
+        {value: "classes", label: "Classes", type: NodeInternalType.CLASS},
+        {value: "methods", label: "Methods", type: NodeInternalType.METHOD},
+        {value: "function", label: "Function", type: NodeInternalType.FUNC},
+        {value: "strings", label: "Strings", type: NodeInternalType.STRING},
+        {value: "packages", label: "Packages", type: NodeInternalType.PACKAGE},
+        {value: "calls", label: "Calls", type: NodeInternalType.CALL},
+        {value: "files", label: "Files", type: NodeInternalType.FILE},
+        {value: "field", label: "Field", type: NodeInternalType.FIELD},
+        {value: "syscalls", label: "Syscall", type: NodeInternalType.SYSCALL},
+        {value: "instr", label: "Instruction", type: NodeInternalType.INSTRUCTION},
+        {value: "ui", label: "UI", type: NodeInternalType.UI_CMP},
+        {value: "activities", label: "Activities", type: NodeInternalType.ANDROID_ACTIVITY},
+        {value: "providers", label: "Providers", type: NodeInternalType.ANDROID_PROVIDER},
+        {value: "receivers", label: "Receivers", type: NodeInternalType.ANDROID_RECEIVER},
+        {value: "services", label: "Services", type: NodeInternalType.ANDROID_SERVICE},
+        {value: "events", label: "Runtime Events", type: NodeInternalType.RUNTIME_EVENT},
+        {value: "hooks", label: "Hooks", type: NodeInternalType.HOOK_JAVA},
+        {value: "resources", label: "Resources", type: NodeInternalType.RESOURCE},
+        {value: "sessions", label: "Hook Session", type: NodeInternalType.HOOK_SESSION},
+        {value: "devices", label: "Devices", type: NodeInternalType.DEVICE}
     ];
 
     steps: Operation[] = [];
@@ -169,7 +179,10 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
 
     newOpeType: any;
     newNodeType: any;
-    nodePpts: NodePropertyInfo[] = [];
+    _nodePpts:NodePropertyInfo[] = [];
+    nodePpts: { ppts:NodePropertyInfo[], rel:NodePropertyInfo[], extra:NodePropertyInfo[] } = {
+        ppts: [], rel: [], extra: []
+    };
     parentNodes: ParentNodeInfo[] = [];
     newNodePpt: Nullable<string> = null;
     /**
@@ -177,7 +190,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
      */
     condInputType: string = "none";
     /**
-     * A flag to indicate if Regular Expression is enabled for the pattern
+     * A flag to indi            this.nodePpts = tree; //pRes;cate if Regular Expression is enabled for the pattern
      */
     reEnabled: boolean = false;
 
@@ -332,12 +345,22 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
         switch ((this.newOpe).type) {
             case OperationType.SEARCH:
                 //req.search(this.pattern, this.options);
-                req.searchObj({
-                    pattern: this.pattern,
-                    field: targetField,
-                    regexp: this.reEnabled,
-                    raw: targetField + ":" + this.pattern
-                }, this.options);
+                if(targetField==="tags"){
+                    req.searchObj({
+                        tagKey: this.pattern,
+                        field: "tags",
+                        regexp: false,
+                        raw: "@" + this.pattern
+                    }, this.options);
+                }else{
+                    req.searchObj({
+                        pattern: this.pattern,
+                        field: targetField,
+                        regexp: this.reEnabled,
+                        raw: targetField + ":" + this.pattern
+                    }, this.options);
+                }
+
                 break;
             case OperationType.FILTER:
                 req.filter(this.pattern);
@@ -364,12 +387,13 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
         this.newOpe = null;
         this.newNode = null;
         this.newNodePpt = null;
-        this.nodePpts = [];
+        this._nodePpts = [];
+        this.nodePpts = { ppts: [], rel: [], extra: []};
         this.parentNodes = [];
     }
 
     getSupportedOperations(): OperationDefinition[] {
-        return SupportedOperations;
+        return MerlinSearchRequest.getFirstOperationsDef(); //SupportedOperations;
     }
 
     getSupportedNodes(): NodeChoice[] {
@@ -467,6 +491,28 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
         this._changeDetector.detectChanges();
     }
 
+
+    setNodePptChoices(pDef:NodePropertyInfo[]){
+        this._nodePpts = pDef;
+        this.nodePpts = {
+            ppts: [],
+            rel: [],
+            extra: []
+        };
+
+        pDef.map((x:any)=>{
+            if(x.node!=null){
+                this.nodePpts.rel.push(x);
+                return;
+            }
+            if(x.name!="tags"){
+                this.nodePpts.ppts.push(x);
+                return;
+            }
+            this.nodePpts.extra.push(x);
+        });
+    }
+
     onNodeTypeChange($event: any) {
 
         const node = this.supportedNode.find(x => {
@@ -476,7 +522,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
         if (node == null) return;
 
         this._codeSvc.getNodeProperties(node.type).subscribe((pRes: any) => {
-            this.nodePpts = pRes;
+            this.setNodePptChoices(pRes);
             this.newNode = node;
             this.newNodePpt = null;
             this.parentNodes = [];
@@ -486,7 +532,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
     }
 
     onNodePptChange(pEvent: any) {
-        const sel = this.nodePpts.find(x => x.name == pEvent);
+        const sel = this._nodePpts.find(x => x.name == pEvent);
 
         if(sel==null) return;
 
@@ -499,7 +545,7 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
             });
 
             this._codeSvc.getNodeProperties(sel.node).subscribe((pRes: any) => {
-                this.nodePpts = pRes;
+                this.setNodePptChoices(pRes);
                 this.newNodePpt = pRes[0].name;
                 this._changeDetector.detectChanges();
             });
@@ -523,14 +569,15 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
 
         if(sel.node!=null){
             this._codeSvc.getNodeProperties(sel.node).subscribe((pRes: any) => {
-                this.nodePpts = pRes;
+                this.setNodePptChoices(pRes);
                 this.newNodePpt = pRes[0].name;
                 this._changeDetector.detectChanges();
             });
         }else{
             const curr = this.parentNodes.pop();
             if(curr!=null){
-                this.nodePpts = curr.alt;
+
+                this.setNodePptChoices(curr.alt);
                 this.newNodePpt = pEvent.target.value;
             }
             this.condInputType = (sel.schema!=null ? sel.schema.type : "string");
