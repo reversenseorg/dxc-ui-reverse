@@ -108,13 +108,6 @@ export class SearchResultListComponent implements OnInit {
     }
   }
 
-  /*ngOnChanges(changes: SimpleChanges) {
-    if(changes.results != null){
-      this.results = changes.results.currentValue;
-      //this.changeDetectorRef.detectChanges();
-    }
-  }*/
-
 
   reset(){
     this.results = [];

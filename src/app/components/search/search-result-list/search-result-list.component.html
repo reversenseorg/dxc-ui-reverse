@@ -124,6 +124,16 @@
         </div>
       </ng-container>
 
+
+        <ng-container *ngIf="e.__==NODE_TYPES.RESOURCE">
+            <div class="col-lg-7" (dblclick)="openView(e)">
+                <dxc-node-token [item]="e"></dxc-node-token>
+            </div>
+            <div class="col-lg-5" style="white-space: nowrap; text-align: right;color:#bbb;">
+                <dxc-tag-badge *ngFor="let t of e.tags" [tagUUID]="t"></dxc-tag-badge>
+            </div>
+        </ng-container>
+
         <ng-container *ngIf="e.__==NODE_TYPES.FILE">
             <div class="col-lg-1">
                 <dxc-icon [model]="gIcons['FILE']"></dxc-icon>&nbsp; {{ e.scope.__i }}
