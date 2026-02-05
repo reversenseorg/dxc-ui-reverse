@@ -63,7 +63,9 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     DATA: 6,
     KS: 7,
     DEX: 8,
-    LIB: 9
+    LIB: 9,
+      API: 10,
+      UI: 11
   };
 
   NODE_TYPES:any = NodeInternalType;
@@ -233,7 +235,19 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
               label:'Libraries',
               color: 'dxc-text-clear75',
               icon: TOPO_ICONS['LIBS']
-            })
+            }),
+              new MenuItem<any>({
+                  id:this.SUBVIEW.API,
+                  label:'APIs',
+                  color: 'dxc-text-clear75',
+                  icon: TOPO_ICONS['LIBS']
+              }),
+              new MenuItem<any>({
+                  id:this.SUBVIEW.UI,
+                  label:'UIs',
+                  color: 'dxc-text-clear75',
+                  icon: TOPO_ICONS['LIBS']
+              })
           ]
         })
       })
@@ -250,6 +264,8 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     this.data[this.SUBVIEW.DEX] = { _t: 'f', _s:0, children: [], name: 'Dex', id:"dex", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['DEX'] };
     this.data[this.SUBVIEW.PERM] = { _t: 'f', _s:0, children: [], name: 'Permissions', _c: NodeInternalType.ANDROID_PERM, _icon: TOPO_ICONS['PERM'] };
     this.data[this.SUBVIEW.LIB] = { _t: 'f', _s:0, children: [], name: 'Libraries', id:"libs", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['LIBS'] };
+      this.data[this.SUBVIEW.API] = { _t: 'f', _s:0, children: [], name: 'API', id:"api", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['LIBS'] };
+      this.data[this.SUBVIEW.UI] = { _t: 'f', _s:0, children: [], name: 'API', id:"api", _c: NodeInternalType.FILE, _icon: TOPO_ICONS['LIBS'] };
     //this.data[this.SUBVIEW.TA] = { _t: 'f', children: [], name: 'Trusted Apps', _icon: GLOBAL_ICONS['FOLDER'] };
     this.filtered = this.data;
   }
@@ -299,7 +315,6 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
             break;
         }
       });
-    //this.refresh();
 
     this.projectService.onProjectClose.subscribe( pStatus => {
       this.projectReady = false;
@@ -331,6 +346,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
   }
 
   expandItem( pType:NodeInternalType){
+      console.log("TOPO : EXPAND ITEM : ",pType);
     this.expandableItems.map((itm:ExpandableItemComponent<any>)=>{
       if(itm.item.__ === pType){
         itm.doExpand(null, itm.item, itm.itemRef);
