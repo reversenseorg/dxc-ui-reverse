@@ -249,7 +249,8 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
                 v: false,
                 inputName: 'clinit'
             }]
-        },options:{
+        },
+        options:{
 
             _t: 'c',
             _c: 'o',
@@ -361,7 +362,7 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
         }
 
 
-        ops.level = 0;
+        console.log("DDVM options : ",ops);
 
         return ops;
     }
@@ -418,12 +419,15 @@ export class CodeEmulatorComponent implements OnInit, AfterViewInit {
                             t:"i", v:"Execution done successfully"
                         });
                     }
+
+                    this.vmEditor.value = (this.node as any).__vm_code;
                 }
 
-                if(vRes.data.events.length>0){
+                if(vRes.data.events.length>0 ){
                     this._vmLog = this._vmLog.concat(vRes.data.events);
-                    this.refreshLogs();
                 }
+
+                if(this._vmLog.length>0){ this.refreshLogs(); }
 
                 //this.showDxcVM();
                 //this.vmLogs.emit(this._vmLog);
