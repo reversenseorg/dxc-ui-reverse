@@ -67,38 +67,6 @@ enum INFO_TYPE {
                 </div>
               </div>
 
-
-              <!--
-              <app-expandable-list>
-  
-                <ng-template #expCodeItem let-itemObj="item" >
-  
-                  <span *ngIf="NODE_TYPES.INSPECTOR==itemObj.__" (contextmenu)="displayExtMenu($event,'inspector',itemObj)">
-                    <dxc-icon [model]="itemObj.running ? hIcons['UP'] : hIcons['DOWN']"></dxc-icon>
-                    <span>{{ itemObj.name }}</span>
-                    <span *ngIf="itemObj.hookset && itemObj.hookset.strats.length>0" class="text-warning">&nbsp;[hook]</span>
-                    <span *ngIf="itemObj.listener.length>0" class="text-info">&nbsp;[rules]</span>
-                  </span>
-  
-  
-                </ng-template>
-  
-                <ng-container *ngFor="let insp of inspectors">
-                  <app-expandable-item
-                    [itemTpl]="expCodeItem"
-                    [item]="insp"
-                    [provider]="this"
-                    [itemType]="insp.__"
-                    (itemFocus)="onItemFocus('TL',$event)"
-                    (collapse)="onCollapse($event)"
-                    (expand)="onExpand($event)"
-                  >
-                  </app-expandable-item>
-                </ng-container>
-              </app-expandable-list>
-              -->
-
-
             </ng-container>
             <ng-container nav-bottom>
               <app-subnavbar>
@@ -110,7 +78,12 @@ enum INFO_TYPE {
               </app-subnavbar>
             </ng-container>
             <ng-container body-bottom>
-                <dxc-search-result-list  [results]="topicRes" [controller]="getSearchCtrl()" [mainController]="controller.app"></dxc-search-result-list>
+                <ng-container *ngIf="blReady; else blnotready">
+                    <dxc-search-result-list  [results]="topicRes" [controller]="getSearchCtrl()" [mainController]="controller.app"></dxc-search-result-list>
+                </ng-container>
+                <ng-template #blnotready>
+                    <div class="w-full text-center"><dxc-icon [model]="gIcons['SPINNER']"></dxc-icon><span>Loading...</span></div> 
+                </ng-template>
             </ng-container>
           </app-viewport-splitted>
         </ng-container>
@@ -223,6 +196,8 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
     BL:null
   };
 
+  blReady = false;
+
   topicRes:any[] = [];
 
   constructor( private projectSvc:ProjectService,
@@ -234,6 +209,12 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
 
   ngOnInit(): void {
     this.project = this.projectSvc.getSelectedProject();
+    this.refresh();
+  }
+
+  refresh():void{
+      this.showInfo(this.activeBL);
+      this.showInfo(this.activeBR);
   }
 
   /**
@@ -313,8 +294,10 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
             vRes.map((vSelf:any) => {
                 vSelf._icon = this.gIcons['RES'];
             });
+            return vRes;
         })).subscribe((vRes:any)=>{
-            this.topicRes = vRes;
+            this.topicRes = (vRes==null ? [] : vRes);
+            this.blReady = true;
         });
         break
     }

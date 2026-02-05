@@ -87,7 +87,6 @@ export class TagService extends DxcApiService {
           this.cache.categories = [];
           pRes.data.map((x:any) => {
             const c = new TagCategory(x);
-            console.log(x,c);
             /*c._tags.map( (v,i)=>{
               const t = new Tag(v);
               c._tags[i] = t;
