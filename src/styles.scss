@@ -1217,3 +1217,11 @@ button:focus {
 .text-alias-hidden {
   text-decoration: line-through;
 }
+
+.dxc-section-header {
+  background-color: var(--nav-btn-bg);
+  color: var(--text-75);
+  font-family: var(--nav-font);
+  border-width: 0;
+  border-radius: 0.5em;
+}

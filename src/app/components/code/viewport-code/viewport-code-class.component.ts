@@ -1,13 +1,13 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy, ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
 import {CodeController} from "../ctrl/CodeController";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
@@ -24,7 +24,10 @@ import {AbstractHook} from "../../../models/AbstractHook";
 import {Nullable} from "../../../base/Nullable";
 import {ModelClassReference} from "../../../models/ModelReference";
 import ModelField from "../../../models/ModelField";
+import ModelCall from "../../../models/ModelCall";
 import {IStringIndex} from "../../../base/IStringIndex";
+import {INodeRef} from "../../../base/common/common"
+import {NodeInternalType} from "../../../models/NodeInternalType";
 
 
 @Component({
@@ -49,6 +52,11 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
 
   activeLeft:string =  "ct";
   activeWidth: number = 70;
+
+
+    protected readonly ModelClassReference = ModelClassReference;
+
+    childCls: ModelClass[] = [];
 
 /*
   topNav: NavbarSimpleView = new NavbarSimpleView({
@@ -109,10 +117,13 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   gIcons:any = GLOBAL_ICONS;
   hIcons:any = HOOK_ICONS;
 
+  loading = false;
+  xref:ModelCall[] = [];
 
   constructor( private codeSvc:CodeControllerService,
                private outputSvc:OutputService,
-               private hookSvc:HookService) {
+               private hookSvc:HookService,
+               private chref:ChangeDetectorRef) {
 
   }
 
@@ -122,17 +133,21 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes.hasOwnProperty('data')){
-      this.codeSvc.getCompleteClass((changes as any).data.currentValue.name).subscribe( (pClass:Nullable<ModelClass>)=>{
-
-        console.log("CLASS: getCompleteClass : ",pClass);
-        if(pClass!=null){
-          this.data = pClass;
-          this.showContents();
-        }else{
-          console.log("CLASS: Cannot restore complete class ",(changes as any).data.currentValue.name,pClass);
-        }
-      })
+      this.refresh((changes as any).data.currentValue.name)
     }
+  }
+
+  refresh(pName:string){
+      this.codeSvc.getCompleteClass(pName).subscribe( (pClass:Nullable<ModelClass>)=>{
+
+          console.log("CLASS: getCompleteClass : ",pClass);
+          if(pClass!=null){
+              this.data = pClass;
+              this.showContents();
+          }else{
+              console.log("CLASS: Cannot restore complete class ",pName,pClass);
+          }
+      });
   }
 
   ngAfterViewInit() {
@@ -164,8 +179,15 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
   }
 
   showModel(pWidth:number=-1):void{
-    this.activeLeft = 'md';
-    //this.activeWidth = pWidth;
+
+      this.activeLeft = 'md';
+      this.loading = true;
+
+      this.codeSvc.getChildClass(this.data).subscribe( (pCls:ModelClass[])=>{
+          this.loading = false;
+          this.childCls = pCls;
+          this.chref.detectChanges();
+      });
   }
 
   showContents(pWidth:number=-1):void{
@@ -176,7 +198,16 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
 
   showInstance(pWidth:number=-1):void{
     this.activeLeft = 'in';
+
+    if(this.data==null || this.data.name==null) return;
+
     //this.activeWidth = pWidth;
+      this.loading = true;
+      this.codeSvc.getXref( NodeInternalType.CLASS, this.data.name, 'to').subscribe( (vX:ModelCall[])=>{
+          this.xref = vX;
+          this.loading = false;
+          this.chref.detectChanges();
+      });
   }
 
   showIO(pWidth:number=-1):void{
@@ -207,13 +238,10 @@ export class ViewportCodeClassComponent implements OnInit, OnChanges, AfterViewI
     // toodo
   }
 
-  showAndroidAPI() {
-    this.codeSvc.xrefAndroidApi(this.data as ModelClass).subscribe( (pXref:any)=>{
-      console.log(pXref);
-    });
+  showOsAPI() {
+    this.activeLeft = 'os';
   }
 
-  protected readonly ModelClassReference = ModelClassReference;
 
   getClassFields(pName:Nullable<string> = null):ModelField[] {
     const fields:ModelField[] = [];

@@ -32,6 +32,7 @@ import {XrefListComponent} from "./xref-list/xref-list.component";
 import {XrefItemComponent} from "./xref-item/xref-item.component";
 import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
 import {CodeEmulatorComponent} from "./emulator/emulator.component";
+import {OsApiXrefComponent} from "./osapi-xref.component";
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import {CodeEmulatorComponent} from "./emulator/emulator.component";
         ModalBaseComponent,
         ReactiveFormsModule,
         HookStatusComponent,
-        FormsModule
+        FormsModule,
+        OsApiXrefComponent
     ],
     exports: [
         CodeSymbolTableComponent,
@@ -80,7 +82,6 @@ import {CodeEmulatorComponent} from "./emulator/emulator.component";
 
         ModalRenameComponent,
         XrefListComponent
-
     ],
     declarations: [
         CodeSymbolTableComponent,

@@ -35,7 +35,7 @@ export class KeyboardNavigationService {
    * @since 1.0.0
    */
   focus( pElement:IKeyboardNavigable):void{
-    console.log("Focusing :",pElement);
+    //console.log("Focusing :",pElement);
     this.stack.push(pElement);
     this.activeEl = pElement;
   }

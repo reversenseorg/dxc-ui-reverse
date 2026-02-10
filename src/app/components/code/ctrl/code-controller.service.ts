@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
+import {from, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CODE_SUBVIEW} from "../explorer-code/explorer-code.const";
 import {CodeItem} from "../explorer-code/CodeItem";
@@ -31,7 +31,7 @@ import {ContextMenuEvent} from "../../../base/context-menu/context-menu.componen
 import {CODE_ICONS} from "../icons";
 import {Tag} from "../../../models/tags/Tag";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
-import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
+import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
 import {DxApiResponse, INodeRef} from "../../../base/common/common";
 import {IController} from "../../../base/controllers/IController.interface";
 import {DxcApiToken} from "../../../base/DxcApiToken";
@@ -423,11 +423,11 @@ export class CodeControllerService extends DxcApiService{
         endpoint = this.endpoints['package']['android_api'];
         break;
       case CODE_SUBVIEW.ANDROID_FWK:
-        endpoint = this.endpoints['package']['android_int'];
-        break;
+        //endpoint = this.endpoints['package']['android_int'];
+        return from([]);
       case CODE_SUBVIEW.VENDOR:
-        endpoint = this.endpoints['package']['vendor'];
-        break;
+        //endpoint = this.endpoints['package']['vendor'];
+        return from([]);
       case CODE_SUBVIEW.ALL:
       default:
         endpoint = this.endpoints['package']['all'];
@@ -1125,5 +1125,29 @@ export class CodeControllerService extends DxcApiService{
                 };
             })
         )
+    }
+
+    getChildClass(pClass: ModelClass):Observable<ModelClass[]> {
+        return this.merlinSearch(new MerlinSearchRequest(
+            NodeInternalType.CLASS,
+            [{
+                type:OperationType.SEARCH,
+                args: {
+                    pattern: [{
+                        field: "extends.name",
+                        pattern: pClass.getUID(),
+                        regexp: false
+                    }]
+                }
+            }]
+        )).pipe(map((vRes:any)=>{
+            console.log("Execute MERLIN Request (as code search : child class) ",vRes);
+
+            if(vRes.length>0){
+                return vRes.map((vCls:any)=>new ModelClass(vCls));
+            }else{
+                return [];
+            }
+        }))
     }
 }

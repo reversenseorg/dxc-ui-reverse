@@ -62,6 +62,7 @@ import {ModelFunction} from "../../../models/ModelFunction";
 }*/
 
 
+const DEFAULT_REASON = "No matches found";
 
 /**
  * This class controls events and content of 'code' tab into explorer area
@@ -151,6 +152,11 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   override offset:number = 0;
 
 
+    /**
+     * No package reason
+     */
+    reason: string =  DEFAULT_REASON;
+
 
 
   tags:any;
@@ -194,28 +200,28 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               label:'Application',
               color: 'dxc-text-clear75',
               icon: GLOBAL_ICONS['WINDOW'],
-              click: ()=>{ this.showApplicationCode(); }
+              //click: ()=>{ this.showApplicationCode(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.APP_LIBS,
               label:'Application Libs',
               color: 'dxc-text-clear75',
               icon: GLOBAL_ICONS['WINDOW'],
-              click: ()=>{ this.showApplicationLibs(); }
+              //click: ()=>{ this.showApplicationLibs(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.ANDROID_API,
               label:'Android API',
               color: 'dxc-text-clear75',
               icon: GLOBAL_ICONS['ANDROID'],
-              click: ()=>{ this.showOsApi(); }
+              //click: ()=>{ this.showOsApi(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.ANDROID_FWK,
               label:'Android Internals',
               color: 'dxc-text-clear75',
               icon: GLOBAL_ICONS['ANDROID'],
-              click: ()=>{ this.showOsApi(); }
+              //click: ()=>{ this.showOsApi(); }
             }),
             new MenuItem<CodeItem>({
               id:CODE_SUBVIEW.VENDOR,
@@ -239,16 +245,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     this.reset();
     this.view.id = this.id;
     ngbTooltipConfig.tooltipClass = "dxc-tooltip";
-    /*
-    this.codeService.mapIcons(NODE_TYPE.CLASS, this.icons['CLASS']);
-    this.codeService.mapIcons(NODE_TYPE.PACKAGE, this.icons['PKG']);
-    this.codeService.mapIcons(NODE_TYPE.METHOD, this.icons['METH']);
-    this.codeService.mapIcons(NODE_TYPE.FIELD, this.icons['FIELD']);
-    this.codeService.mapIcons(NODE_TYPE.FILE, this.gIcons['BIN']);
-    this.codeService.mapIcons('p-di', this.icons['PKG_INT']);
-    this.codeService.mapIcons('p-mx', this.icons['PKG_MIXED']);*/
-
-
 
     this.codeService.mapIcons('c', this.icons['CLASS']);
     this.codeService.mapIcons('p', this.icons['PKG']);
@@ -263,13 +259,6 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   }
 
-  /*r = 0;
-  checkRendering(){
-    this.r++;
-    //console.log(this.r);
-    return ;
-  }*/
-
   ngOnInit(): void {
     this.kbSvc.register(this);
 
@@ -281,49 +270,8 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           DYNAMIC: this.tagSvc.getTagByName("discover.dynamic"),
           VENDOR: this.tagSvc.getTagByName("discover.vendor"),
         }
-
-        console.log("Code Explorer : onProjectReady :",this.tags);
-
-
         this.projectReady = true;
-
-        this.controller.service
-          .listPackages(CODE_SUBVIEW.ALL)
-          .subscribe((packages:any) => {
-            const frames = Math.round(packages.length/1000);
-            this.parent.selectTab( this.offset);
-            this.packages[this.selected] = [];
-
-
-            this.changeDetectorRef.detach();
-
-            let t1 = (new Date()).getTime();
-
-
-            for(let i=0; i<frames; i++){
-
-              console.log('update package');
-              this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(i*1000,(i*1000)+1000));
-
-
-              this.changeDetectorRef.markForCheck();
-              //console.log("mark for changes",i*1000);
-            }
-            if(packages.length%1000>0){
-              console.log('add modulo slide');
-              this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(frames*1000,packages.length));
-              //this.changeDetectorRef.markForCheck();
-              //console.log("mark for changes LAST");
-            }
-            this.changeDetectorRef.detectChanges();
-
-            console.log("ExplorerCode : Rendering : ",((new Date()).getTime()-t1)/1000,"s ");
-            //this.changeDetectorRef.detectChanges();
-
-            this.changeDetectorRef.reattach();
-            // console.log(this.packages[this.selected]);
-
-          });
+        this.switchView( CODE_SUBVIEW.ALL);
       });
 
 
@@ -526,24 +474,52 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
               ]);
               break;
           case "strings":
-              /*return this.nativeSvc.listStrings(pItem._obj._uid).pipe(map((vRes:any)=>{
-                  console.log("Execute MERLIN Request (as code search : imported func) ",vRes);
+              return this.codeService.merlinSearch(new MerlinSearchRequest(
+                  NodeInternalType.STRING,
+                  [{
+                      type:OperationType.SEARCH,
+                      args: {
+                          pattern: [{
+                              field: "src._uid",
+                              pattern: pItem._obj._uid,
+                              regexp: false
+                          },{
+                              field: "src.__",
+                              pattern: NodeInternalType.FILE,
+                              regexp: false
 
-                  vRes.map((vSelf:any) => {
-                      vSelf._icon = this.nIcons['FUNC'];
-                  });
+                          }]
+                      }
+                  }]
+              )).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : strings) ",vRes);
 
                   pItem.children = vRes;
-              })) as  Observable<any>;*/
-              return from([ ]);
+              })) as  Observable<any>;
               break;
           case "syscalls":
-              return this.nativeSvc.listSyscalls(pItem._obj._uid).pipe(map((vRes:any)=>{
-                  console.log("Execute MERLIN Request (as code search : imported func) ",vRes);
-
-                  vRes.map((vSelf:any) => {
-                      vSelf._icon = this.nIcons['FUNC'];
-                  });
+              return this.codeService.merlinSearch(new MerlinSearchRequest(
+                  NodeInternalType.CALL,
+                  [{
+                      type:OperationType.SEARCH,
+                      args: {
+                          pattern: [{
+                              field: "_called.__",
+                              pattern: NodeInternalType.SYSCALL,
+                              regexp: false
+                          },{
+                              field: "_caller.__",
+                              pattern: NodeInternalType.FILE,
+                              regexp: false
+                          },{
+                              field: "_caller._uid",
+                              pattern: pItem._obj._uid,
+                              regexp: false
+                          }]
+                      }
+                  }]
+              )).pipe(map((vRes:any)=>{
+                  console.log("Execute MERLIN Request (as code search : strings) ",vRes);
 
                   pItem.children = vRes;
               })) as  Observable<any>;
@@ -775,47 +751,161 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   onMenuItemClick( pEvent:any, pForce = false):void{
+    // console.log("Code > on menu item click > ",pEvent);
+    if(!pForce) (this.view.nav as NavbarSimpleView).selectItem(pEvent.item);
+    this.switchView( pEvent.item.id, pForce);
+  }
 
-    console.log(pEvent);
 
-    if(!pForce)
-      (this.view.nav as NavbarSimpleView).selectItem(pEvent.item);
+      switchView( pCode:CODE_SUBVIEW, pForce = false):void{
 
-    this.controller.service
-      .listPackages(pEvent.item.id)
-      .subscribe((packages:any) => {
-        let c:any;
-        let p=0;
-        switch(pEvent.item.id){
-          case CODE_SUBVIEW.APP:
-            this.packages[CODE_SUBVIEW.APP] = [];
-            packages.map( (pPkg:any,pIndex:number)=>{
+          switch(pCode){
+              case CODE_SUBVIEW.APP:
+                  this.showApplicationCode();
+                  break;
+              case CODE_SUBVIEW.APP_LIBS:
+                  this.showApplicationLibs();
+                  break;
+              case CODE_SUBVIEW.ANDROID_API:
+              case CODE_SUBVIEW.ANDROID_FWK:
+                  this.showOsApi();
+                  break;
+              case CODE_SUBVIEW.VENDOR:
+                  this.showVendorCode();
+                  break;
+              case CODE_SUBVIEW.ALL:
+                  this.showAll();
+                  break;
+          }
 
-                if(p>0 && (p%200===0)){
-                  console.log("detect changes",p);
-                  //this.changeDetectorRef.detectChanges();
-                  //this.changeDetectorRef.markForCheck();
+          this.selected = pCode;
+      }
+
+    showAll():void{
+        this.controller.service
+            .listPackages(CODE_SUBVIEW.ALL)
+            .subscribe((packages:any) => {
+                const frames = Math.round(packages.length/1000);
+                this.parent.selectTab( this.offset);
+                this.packages[this.selected] = [];
+
+
+                this.changeDetectorRef.detach();
+
+                let t1 = (new Date()).getTime();
+
+
+                for(let i=0; i<frames; i++){
+
+                    //console.log('update package');
+                    this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(i*1000,(i*1000)+1000));
+
+
+                    this.changeDetectorRef.markForCheck();
+                    //console.log("mark for changes",i*1000);
+                }
+                if(packages.length%1000>0){
+                    //console.log('add modulo slide');
+                    this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(frames*1000,packages.length));
+                    //this.changeDetectorRef.markForCheck();
+                    //console.log("mark for changes LAST");
+                }
+                this.changeDetectorRef.detectChanges();
+
+                //console.log("ExplorerCode : Rendering : ",((new Date()).getTime()-t1)/1000,"s ");
+                //this.changeDetectorRef.detectChanges();
+
+                this.changeDetectorRef.reattach();
+                // console.log(this.packages[this.selected]);
+
+            });
+    }
+
+
+    showVendorCode():void{
+        this.controller.service
+            .listPackages(CODE_SUBVIEW.VENDOR)
+            .subscribe((packages:any) => {
+                const frames = Math.round(packages.length/1000);
+                this.parent.selectTab( this.offset);
+                this.packages[this.selected] = [];
+
+
+                this.changeDetectorRef.detach();
+
+                let t1 = (new Date()).getTime();
+
+
+                for(let i=0; i<frames; i++){
+
+                    console.log('update package');
+                    this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(i*1000,(i*1000)+1000));
+
+
+                    this.changeDetectorRef.markForCheck();
+                    //console.log("mark for changes",i*1000);
+                }
+                if(packages.length%1000>0){
+                    console.log('add modulo slide');
+                    this.packages[this.selected] = this.packages[this.selected].concat(packages.slice(frames*1000,packages.length));
+                    //this.changeDetectorRef.markForCheck();
+                    //console.log("mark for changes LAST");
+                }
+                this.changeDetectorRef.detectChanges();
+
+                console.log("ExplorerCode : Rendering : ",((new Date()).getTime()-t1)/1000,"s ");
+                //this.changeDetectorRef.detectChanges();
+
+                this.changeDetectorRef.reattach();
+                // console.log(this.packages[this.selected]);
+
+            });
+    }
+
+
+
+    showOsApi():void{
+
+        this.codeService
+            .merlinSearch(MerlinSearchRequest.fromCondition(
+                NodeInternalType.PACKAGE,{  name: "/^[^.]+$/"  }, { not:false }
+            ).filter("@discover.internal"))
+            .subscribe((packages:any) => {
+              let c: any;
+              let p = 0;
+
+              const pkgList:CodeItem[] = [];
+
+
+              packages.map((pPkg: any) => {
+
+
+
+                if( !this.tags.INTERNAL.match(pPkg) && (pPkg._t!=null) ){
+                  pPkg._icon = this.codeService.getIconOf(pPkg._t);
                 }
 
-                if( this.tags.STATIC.match(pPkg) || this.tags.DYNAMIC.match(pPkg)){
+                ///
 
-                  if(pPkg._t=='c'){
-                    // it happens when a class is not contaiend into a package
-                    pPkg._icon = this.icons['CLASS'];
-                    this.packages[CODE_SUBVIEW.APP].push(pPkg);
-                    p++;
+                if (pPkg.tags.length == 0 || this.tags.INTERNAL.match(pPkg)) {
 
-                    return ;
+                  if(this.tags.STATIC.match(pPkg)){
+                    pPkg._icon = this.codeService.getIconOf('p-mx');
+                  }else{
+                    pPkg._icon = this.codeService.getIconOf('p-di');
                   }
 
                   c = [];
-                  pPkg._icon = this.icons['PKG'];
-
-                  pPkg.children.map( (vChild:any)=>{
-                    if( this.tags.STATIC.match(vChild) || this.tags.DYNAMIC.match(vChild)){
-                      if(vChild._t=='c'){
+                  pPkg.children.map((vChild: any) => {
+                    if (pPkg._t == 'c') {
+                      pPkg._icon = this.icons['CLASS'];
+                    } else {
+                      pPkg._icon = this.icons['PKG_INT'];
+                    }
+                    if (this.tags.INTERNAL.match(vChild)) {
+                      if (vChild._t == 'c') {
                         vChild._icon = this.icons['CLASS'];
-                      }else{
+                      } else {
                         vChild._icon = this.icons['PKG'];
                       }
                       vChild._e = true;
@@ -823,161 +913,18 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                     }
                   });
                   pPkg.children = c;
-                  this.packages[CODE_SUBVIEW.APP].push(pPkg);
-                  p++;
-                }
-            });
-
-            console.log("detect changes",p);
-            //this.changeDetectorRef.detectChanges();
-
-            break;
-          case CODE_SUBVIEW.APP_LIBS:
-            this.packages[CODE_SUBVIEW.APP_LIBS] = [];
-            packages.map( (pPkg:any,pIndex:number)=> {
-
-              if (p > 0 && (p % 200 === 0)) {
-                console.log("detect changes", p);
-                //this.changeDetectorRef.detectChanges();
-                //this.changeDetectorRef.markForCheck();
-              }
-
-
-              this.packages[CODE_SUBVIEW.APP_LIBS].push(pPkg);
-            });
-              /*
-              if( this.tags.STATIC.match(pPkg) || this.tags.DYNAMIC.match(pPkg)){
-
-                if(pPkg._t=='c'){
-                  // it happens when a class is not contaiend into a package
-                  pPkg._icon = this.icons['CLASS'];
-                  this.packages[CODE_SUBVIEW.APP].push(pPkg);
-                  p++;
-
-                  return ;
-                }
-
-                c = [];
-                pPkg._icon = this.icons['PKG'];
-
-                pPkg.children.map( (vChild:any)=>{
-                  if( this.tags.STATIC.match(vChild) || this.tags.DYNAMIC.match(vChild)){
-                    if(vChild._t=='c'){
-                      vChild._icon = this.icons['CLASS'];
-                    }else{
-                      vChild._icon = this.icons['PKG'];
-                    }
-                    vChild._e = true;
-                    c.push(vChild);
-                  }
-                });
-                pPkg.children = c;
-                this.packages[CODE_SUBVIEW.APP].push(pPkg);
-                p++;
-              }
-            });*/
-
-            //this.changeDetectorRef.detectChanges();
-
-            break;
-          case CODE_SUBVIEW.ANDROID_API:
-          case CODE_SUBVIEW.ANDROID_FWK:
-            this.packages[pEvent.item.id] = [];
-            packages.map( (pPkg:any)=>{
-              if(pPkg.tags.length==0 || this.tags.INTERNAL.match(pPkg)){
-                c = [];
-                pPkg.children.map( (vChild:any)=>{
-                  if(pPkg._t=='c'){
-                    pPkg._icon = this.icons['CLASS'];
-                  }else{
-                    pPkg._icon = this.icons['PKG_INT'];
-                  }
-                  if( this.tags.INTERNAL.match(vChild) ){
-                    if(vChild._t=='c'){
-                      vChild._icon = this.icons['CLASS'];
-                    }else{
-                      vChild._icon = this.icons['PKG'];
-                    }
-                    vChild._e = true;
-                    c.push(vChild);
-                  }
-                });
-                pPkg.children = c;
-                this.packages[pEvent.item.id].push(pPkg);
-              }
-            });
-            break;
-          case CODE_SUBVIEW.VENDOR:
-            break;
-          case CODE_SUBVIEW.ALL:
-              this.packages[CODE_SUBVIEW.ALL] = packages;
-            //this.changeDetectorRef.markForCheck();
-            break;
-        }
-      });
-
-      this.selected = pEvent.item.id;
-  }
-
-
-
-  showOsApi():void{
-
-    this.codeService
-        .merlinSearch(MerlinSearchRequest.fromCondition(
-            NodeInternalType.PACKAGE,{  name: "/^[^.]+$/"  }, { not:false }
-        ).filter("@discover.internal"))
-        .subscribe((packages:any) => {
-          let c: any;
-          let p = 0;
-
-          const pkgList:CodeItem[] = [];
-
-
-          packages.map((pPkg: any) => {
-
-
-
-            if( !this.tags.INTERNAL.match(pPkg) && (pPkg._t!=null) ){
-              pPkg._icon = this.codeService.getIconOf(pPkg._t);
-            }
-
-            ///
-
-            if (pPkg.tags.length == 0 || this.tags.INTERNAL.match(pPkg)) {
-
-              if(this.tags.STATIC.match(pPkg)){
-                pPkg._icon = this.codeService.getIconOf('p-mx');
-              }else{
-                pPkg._icon = this.codeService.getIconOf('p-di');
-              }
-
-              c = [];
-              pPkg.children.map((vChild: any) => {
-                if (pPkg._t == 'c') {
-                  pPkg._icon = this.icons['CLASS'];
-                } else {
-                  pPkg._icon = this.icons['PKG_INT'];
-                }
-                if (this.tags.INTERNAL.match(vChild)) {
-                  if (vChild._t == 'c') {
-                    vChild._icon = this.icons['CLASS'];
-                  } else {
-                    vChild._icon = this.icons['PKG'];
-                  }
-                  vChild._e = true;
-                  c.push(vChild);
+                  pkgList.push(pPkg);
                 }
               });
-              pPkg.children = c;
-              pkgList.push(pPkg);
-            }
-          });
 
-          this.packages[CODE_SUBVIEW.ANDROID_API] = pkgList;
-          this.selected = CODE_SUBVIEW.ANDROID_API;
-          this.changeDetectorRef.detectChanges();
-        });
+                if(pkgList.length==0){
+                    this.reason = "No API/OS code available";
+                }
+
+              this.packages[CODE_SUBVIEW.ANDROID_API] = pkgList;
+              this.selected = CODE_SUBVIEW.ANDROID_API;
+              this.changeDetectorRef.detectChanges();
+            });
   }
 
 
@@ -991,6 +938,9 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
           this.packages[CODE_SUBVIEW.APP] = [];
 
+            if(packages.length==0){
+                this.reason = "No app code found";
+            }
 
           packages.map((pPkg: any, pIndex: number) => {
 
@@ -1033,12 +983,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
           });
 
           console.log("detect changes", p);
-          //this.changeDetectorRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
 
         });
   }
-
-
 
   showApplicationLibs():void {
     this.controller.service
@@ -1065,6 +1013,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
           this.packages[CODE_SUBVIEW.APP_LIBS] = vLibs as any[];
           this.selected = CODE_SUBVIEW.APP_LIBS;
+
+          if(vLibs.length==0){
+              this.reason = "No native libraries found";
+          }
           this.changeDetectorRef.detectChanges();
       });
   }
@@ -1075,7 +1027,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
     this.packages[CODE_SUBVIEW.VENDOR] = [];
     this.packages[CODE_SUBVIEW.ANDROID_FWK] = [];
     this.packages[CODE_SUBVIEW.ANDROID_API] = [];
-    this.selected = null;
+    this.selected = null; //CODE_SUBVIEW.APP;
   }
 
   displayCtxMenu(pEvent:any, pType:string, pObject:any):void{
@@ -1157,7 +1109,10 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   refresh(){
-    this.onMenuItemClick({ item:{id:this.selected}}, true);
+    //this.onMenuItemClick({ item:{id:this.selected}}, true);
+    if(this.selected!=null){
+        this.switchView(this.selected);
+    }
   }
 
   search(){

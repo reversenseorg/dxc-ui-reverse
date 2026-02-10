@@ -58,22 +58,22 @@ import {TopologyMapComponent} from "./topo-map.component";
     exports: [
         ExplorerTopoComponent,
         ModalSendIntentComponent,
-        OsApiProjectionListComponent,
         ViewportTopoActivityComponent,
         ViewportTopoProviderComponent,
         ViewportTopoReceiverComponent,
         ViewportTopoServiceComponent,
-        TopologyMapComponent
+        TopologyMapComponent,
+        OsApiProjectionListComponent
     ],
     declarations: [
         ExplorerTopoComponent,
         ModalSendIntentComponent,
-        OsApiProjectionListComponent,
         ViewportTopoActivityComponent,
         ViewportTopoProviderComponent,
         ViewportTopoReceiverComponent,
         ViewportTopoServiceComponent,
-        TopologyMapComponent
+        TopologyMapComponent,
+        OsApiProjectionListComponent
     ]
 })
 export class TopologyModule { }

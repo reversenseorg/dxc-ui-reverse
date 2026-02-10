@@ -540,4 +540,10 @@ export const GLOBAL_ICONS:IconModelCollection = {
         name: 'circle',
         color1: 'dxc-success-icon'
     }),
+    WRENCH: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'screwdriver-wrench',
+        color1: 'dxc-success-icon'
+    })
 };

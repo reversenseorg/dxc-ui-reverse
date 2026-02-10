@@ -104,8 +104,26 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
 
             if(this.label==null && this.tag.label!=null) this.label = this.tag.label;
             this._changeDRef.detectChanges();
+        }else if(this.tag!=null){
+            this._styles = {
+                backgroundColor:  '#aeff86',
+                color: '#2d8f02',
+                border: '1px solid #2d8f02',
+                borderRadius: '0.5em',
+                fontSize: '0.8em'
+            };
+
+            if(this.tag.styles!=null){
+                for(let k in (this.tag.styles as any)){
+                    if(k=="color"){
+                        this._styles.border = '1px solid '+ this.tag.styles[k];
+                    }
+                    this._styles[k] = this.tag.styles[k as any];
+                }
+            }
         }
     }
+
 
     ngOnChanges(changes: SimpleChanges) {
         if(changes.hasOwnProperty('tag') && changes['tag'].currentValue!=null){

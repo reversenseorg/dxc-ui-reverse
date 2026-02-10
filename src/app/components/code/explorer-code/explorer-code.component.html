@@ -13,175 +13,178 @@
       </ng-container>
     </app-explorer-navbar>
 
-    <!--<ul *ngIf="view.subnav != null" class="nav">
-      <li *ngFor="let navBtn in view.subnav.menu.items">
-        <dxc-icon [model]="navBtn.icon"></dxc-icon>
-      </li>
-    </ul>-->
 
     <div class="explorer-list-root" #explCodeCtnRef>
       <app-expandable-list *ngIf="projectReady">
 
-        <ng-container *ngFor="let pkg of packages[selected]; trackBy: itemIdentify">
+        <ng-container *ngIf="selected!=null && packages[selected] && packages[selected].length>0; else noPkg">
+            <ng-container *ngFor="let pkg of packages[selected]; trackBy: itemIdentify">
 
-          <ng-template #expCodeItem let-itemObj="item">
+                <ng-template #expCodeItem let-itemObj="item">
 
-            <!--<div *ngIf="itemObj.type=='c'; then classTpl else pkgTpl"></div>-->
+                    <!--<div *ngIf="itemObj.type=='c'; then classTpl else pkgTpl"></div>-->
 
-            <span *ngIf="NODE_TYPES.PACKAGE==itemObj.__" #pkgTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-              <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'">DYN</dxc-meta>
-              <div *ngIf="itemObj.sname; then pkgSName else pkgName"></div>
-              <ng-template #pkgName>
-                {{ itemObj.name  }}
-              </ng-template>
-              <ng-template #pkgSName>
-                {{ itemObj.sname  }}
-              </ng-template>
-            </span>
+                    <span *ngIf="NODE_TYPES.PACKAGE==itemObj.__" #pkgTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'">DYN</dxc-meta>
+                  <div *ngIf="itemObj.sname; then pkgSName else pkgName"></div>
+                  <ng-template #pkgName>
+                    {{ itemObj.name  }}
+                  </ng-template>
+                  <ng-template #pkgSName>
+                    {{ itemObj.sname  }}
+                  </ng-template>
+                </span>
 
-            <span *ngIf="NODE_TYPES.CLASS==itemObj.__" #classTpl (contextmenu)="displayCtxMenu($event,'clazz',itemObj)">
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-              <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'"></dxc-meta>
-              <div *ngIf="(itemObj.alias && opts.alias); then aliasedClz else stdClz"></div>
-              <ng-template #aliasedClz>
-                <span class="text-warning">@{{ itemObj.alias }}</span>
-              </ng-template>
-              <ng-template #stdClz>
-                <ng-container *ngIf="itemObj.sname; then clzName else clzFQCN"></ng-container>
-                <ng-template #clzFQCN>
-                  {{ itemObj.name  }}
+                    <span *ngIf="NODE_TYPES.CLASS==itemObj.__" #classTpl (contextmenu)="displayCtxMenu($event,'clazz',itemObj)">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'"></dxc-meta>
+                  <div *ngIf="(itemObj.alias && opts.alias); then aliasedClz else stdClz"></div>
+                  <ng-template #aliasedClz>
+                    <span class="text-warning">@{{ itemObj.alias }}</span>
+                  </ng-template>
+                  <ng-template #stdClz>
+                    <ng-container *ngIf="itemObj.sname; then clzName else clzFQCN"></ng-container>
+                    <ng-template #clzFQCN>
+                      {{ itemObj.name  }}
+                    </ng-template>
+                    <ng-template #clzName>
+                      {{ itemObj.sname  }}
+                    </ng-template>
+                  </ng-template>
+                </span>
+
+                    <span *ngIf="NODE_TYPES.FIELD==itemObj.__" #fieldTpl (contextmenu)="displayCtxMenu($event,'fld',itemObj)">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  <div *ngIf="itemObj.alias; then aliasedFld else stdFld"></div>
+                  <ng-template #aliasedFld>
+                    <span class="text-warning">@{{ itemObj.alias }}</span>
+                  </ng-template>
+                  <ng-template #stdFld>
+                      {{ itemObj.name  }}
+                  </ng-template>
+                  <i class="text-warning" *ngIf="itemObj.type">&nbsp;:{{itemObj.type.name}}</i>
+                </span>
+
+                    <span *ngIf="NODE_TYPES.METHOD==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'meth',itemObj)">
+
+
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                        <!--
+                                      <span *ngIf="itemObj.mod._t=='clinit'" class="text-purple" style="width:15px;text-align:right"><b>S:</b></span>
+                                      <span *ngIf="itemObj.mod._t=='new'" class="text-primary" style="width:15px;text-align:right"><b>C:</b></span>
+                                      <span *ngIf="itemObj.mod._t==null" class="text-danger" style="width:15px;text-align:right"><b>M:</b></span>-->
+
+                  <span *ngIf="itemObj.mod.abstract" class="text-warning" style="padding-left:5px;"><i>(a)</i></span>
+                  <fa-icon *ngIf="itemObj.probing" [icon]="['fas','bolt']" class="dxc-text-yellow ml-1"></fa-icon>
+
+
+
+                  <div *ngIf="itemObj.__aliasedCallSignature__!=null; then aliasedCallSign else callSign"></div>
+                  <ng-template #aliasedCallSign>
+                    <i class="text-info"> @{{ itemObj.__aliasedCallSignature__ }}</i>
+                  </ng-template>
+                  <ng-template #callSign>
+                    {{ itemObj.__callSignature__  }}
+                  </ng-template>
+
+
+                </span>
+
+                    <span *ngIf="NODE_TYPES.FILE==itemObj.__" #binTpl (contextmenu)="displayCtxMenu($event,'bin',itemObj)">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  <div *ngIf="itemObj.alias; then aliasedBin else stdBin"></div>
+                  <ng-template #aliasedBin>
+                    <span class="text-warning">@{{ itemObj.alias }}</span>
+                  </ng-template>
+                  <ng-template #stdBin>
+                    <span class="pl-1" [ngClass]="{ 'text-success': itemObj.$r }">{{ itemObj.name  }}</span>
+                  </ng-template>
+                </span>
+
+                    <span *ngIf="NODE_TYPES.FUNC==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'fun',itemObj)">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  <div *ngIf="itemObj.alias!=null; then aliasedSym else stdSym"></div>
+                  <ng-template #aliasedSym>
+                    <i class="text-info"> @{{ itemObj.alias }}</i>
+                  </ng-template>
+                  <ng-template #stdSym>
+                      <span [ngStyle]="{ color:itemObj._style.color  }">{{ itemObj.name  }}</span>
+                  </ng-template>
+                </span>
+
+                    <span *ngIf="NODE_TYPES.EXEC_SECTION==itemObj.__" (contextmenu)="displayCtxMenu($event,'sect',itemObj)">
+                    <div class="row">
+                      <div class="col-3">[0x{{ itemObj.vaddr }}]</div>
+                      <div class="col-2">{{ itemObj.memsz }}</div>
+                      <div class="col-3">{{ itemObj.perm }}</div>
+                      <div class="col-4">{{ itemObj.name }}</div>
+                    </div>
+                </span>
+
+                    <span *ngIf="itemObj._t=='b'" #byteTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
+                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                  <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'">DYN</dxc-meta>
+                  <div *ngIf="itemObj.sname; then pkgSName else pkgName"></div>
+                  <ng-template #pkgName>
+                    {{ itemObj.name  }}
+                  </ng-template>
+                  <ng-template #pkgSName>
+                    {{ itemObj.sname  }}
+                  </ng-template>
+                </span>
+
+
+
+                    <span *ngIf="itemObj.___!=null && itemObj.___==='funcs'">
+                      <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                      Functions
+                 </span>
+                    <span *ngIf="itemObj.___!=null && itemObj.___==='sect'">
+                      <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                      Sections
+                 </span>
+                    <span *ngIf="itemObj.___!=null && itemObj.___==='syscalls'">
+                      <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                      Syscalls
+                 </span>
+                    <span *ngIf="itemObj.___!=null && itemObj.___==='strings'">
+                      <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                      Strings
+                 </span>
+                    <span *ngIf="itemObj.___!=null && itemObj.___==='imp'">
+                      <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                      Imports
+                 </span>
+                    <span *ngIf="itemObj.___!=null && itemObj.___==='exp'">
+                      <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
+                      Exports
+                 </span>
+
+
+
                 </ng-template>
-                <ng-template #clzName>
-                  {{ itemObj.sname  }}
-                </ng-template>
-              </ng-template>
-            </span>
 
-            <span *ngIf="NODE_TYPES.FIELD==itemObj.__" #fieldTpl (contextmenu)="displayCtxMenu($event,'fld',itemObj)">
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-              <div *ngIf="itemObj.alias; then aliasedFld else stdFld"></div>
-              <ng-template #aliasedFld>
-                <span class="text-warning">@{{ itemObj.alias }}</span>
-              </ng-template>
-              <ng-template #stdFld>
-                  {{ itemObj.name  }}
-              </ng-template>
-              <i class="text-warning" *ngIf="itemObj.type">&nbsp;:{{itemObj.type.name}}</i>
-            </span>
+                <app-expandable-item
+                        *ngIf="pkg!=null"
+                        [itemTpl]="expCodeItem"
+                        [item]="pkg"
+                        [provider]="this"
+                        [itemType]="pkg._t"
+                        [expandableFn]="isExpandable"
+                        (itemFocus)="onItemFocus($event)"
+                        (collapse)="onCollapse($event)"
+                        (expand)="onExpand($event)"
+                >
 
-            <span *ngIf="NODE_TYPES.METHOD==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'meth',itemObj)">
-
-
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-<!--
-              <span *ngIf="itemObj.mod._t=='clinit'" class="text-purple" style="width:15px;text-align:right"><b>S:</b></span>
-              <span *ngIf="itemObj.mod._t=='new'" class="text-primary" style="width:15px;text-align:right"><b>C:</b></span>
-              <span *ngIf="itemObj.mod._t==null" class="text-danger" style="width:15px;text-align:right"><b>M:</b></span>-->
-
-              <span *ngIf="itemObj.mod.abstract" class="text-warning" style="padding-left:5px;"><i>(a)</i></span>
-              <fa-icon *ngIf="itemObj.probing" [icon]="['fas','bolt']" class="dxc-text-yellow ml-1"></fa-icon>
-
-
-
-              <div *ngIf="itemObj.__aliasedCallSignature__!=null; then aliasedCallSign else callSign"></div>
-              <ng-template #aliasedCallSign>
-                <i class="text-info"> @{{ itemObj.__aliasedCallSignature__ }}</i>
-              </ng-template>
-              <ng-template #callSign>
-                {{ itemObj.__callSignature__  }}
-              </ng-template>
-
-
-            </span>
-
-            <span *ngIf="NODE_TYPES.FILE==itemObj.__" #binTpl (contextmenu)="displayCtxMenu($event,'bin',itemObj)">
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-              <div *ngIf="itemObj.alias; then aliasedBin else stdBin"></div>
-              <ng-template #aliasedBin>
-                <span class="text-warning">@{{ itemObj.alias }}</span>
-              </ng-template>
-              <ng-template #stdBin>
-                <span class="pl-1" [ngClass]="{ 'text-success': itemObj.$r }">{{ itemObj.name  }}</span>
-              </ng-template>
-            </span>
-
-            <span *ngIf="NODE_TYPES.FUNC==itemObj.__" #methTpl (contextmenu)="displayCtxMenu($event,'fun',itemObj)">
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-              <div *ngIf="itemObj.alias!=null; then aliasedSym else stdSym"></div>
-              <ng-template #aliasedSym>
-                <i class="text-info"> @{{ itemObj.alias }}</i>
-              </ng-template>
-              <ng-template #stdSym>
-                  <span [ngStyle]="{ color:itemObj._style.color  }">{{ itemObj.name  }}</span>
-              </ng-template>
-            </span>
-
-            <span *ngIf="NODE_TYPES.EXEC_SECTION==itemObj.__" (contextmenu)="displayCtxMenu($event,'sect',itemObj)">
-                <div class="row">
-                  <div class="col-3">[0x{{ itemObj.vaddr }}]</div>
-                  <div class="col-2">{{ itemObj.memsz }}</div>
-                  <div class="col-3">{{ itemObj.perm }}</div>
-                  <div class="col-4">{{ itemObj.name }}</div>
-                </div>
-            </span>
-
-            <span *ngIf="itemObj._t=='b'" #byteTpl (contextmenu)="displayCtxMenu($event,'pkg',itemObj)">
-              <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-              <dxc-meta *ngIf="tags.DYNAMIC.match(itemObj)" [css]="'dxc-purple'" [label]="'DYN'">DYN</dxc-meta>
-              <div *ngIf="itemObj.sname; then pkgSName else pkgName"></div>
-              <ng-template #pkgName>
-                {{ itemObj.name  }}
-              </ng-template>
-              <ng-template #pkgSName>
-                {{ itemObj.sname  }}
-              </ng-template>
-            </span>
-
-
-
-              <span *ngIf="itemObj.___!=null && itemObj.___==='funcs'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-                  Functions
-             </span>
-              <span *ngIf="itemObj.___!=null && itemObj.___==='sect'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-                  Sections
-             </span>
-              <span *ngIf="itemObj.___!=null && itemObj.___==='syscalls'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-                  Syscalls
-             </span>
-              <span *ngIf="itemObj.___!=null && itemObj.___==='strings'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-                  Strings
-             </span>
-              <span *ngIf="itemObj.___!=null && itemObj.___==='imp'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-                  Imports
-             </span>
-              <span *ngIf="itemObj.___!=null && itemObj.___==='exp'">
-                  <dxc-icon *ngIf="itemObj._icon" [model]="itemObj._icon"></dxc-icon>
-                  Exports
-             </span>
-
-
-
-          </ng-template>
-
-          <app-expandable-item
-            [itemTpl]="expCodeItem"
-            [item]="pkg"
-            [provider]="this"
-            [itemType]="pkg._t"
-            [expandableFn]="isExpandable"
-            (itemFocus)="onItemFocus($event)"
-            (collapse)="onCollapse($event)"
-            (expand)="onExpand($event)"
-            >
-
-          </app-expandable-item>
+                </app-expandable-item>
+            </ng-container>
         </ng-container>
+        <ng-template #noPkg>
+            <div class="text-center dxc-text-clear100 pt-5 w-full">
+                {{ reason }}
+            </div>
+        </ng-template>
       </app-expandable-list>
       <div *ngIf="!projectReady" class="text-center dxc-text-clear100 pt-4">
         <dxc-icon [model]="gIcons['SPINNER']"></dxc-icon>&nbsp;Loading
@@ -228,7 +231,7 @@
   <app-context-item [label]="'New KeyPoint on first new instance'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_new_1st' })"></app-context-item>
   <app-context-item [label]="'New KeyPoint on any new instance'" (itemclick)="newKP(ctxMenuState.subject, {condition:'clskp_new_any' })"></app-context-item>
   <app-context-item [label]="'New KeyPoint ...'" (itemclick)="newKP(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [separator]="true" [label]="'Smart renaming'" (itemclick)="doSmartRename(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [disabled]="true" [label]="'Smart renaming'" (itemclick)="doSmartRename(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <app-context-menu [name]="'par'"  [width]="300">
@@ -271,7 +274,7 @@
   <app-context-item [label]="'Copy package'" (itemclick)="copyObj(ctxMenuState.subject, 'name')"></app-context-item>
   <app-context-item [separator]="true" [label]="'New KeyPoint on class loaded from'" (itemclick)="newKP(ctxMenuState.subject, {condition:'pkgkp_load'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint ...'" (itemclick)="newKP(ctxMenuState.subject)"></app-context-item>
-  <app-context-item [separator]="true" [label]="'Smart renaming'" (itemclick)="doSmartRename(ctxMenuState.subject)"></app-context-item>
+  <app-context-item [separator]="true" [disabled]="true" [label]="'Smart renaming'" (itemclick)="doSmartRename(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <app-context-menu [name]="'bin'"  [width]="300">

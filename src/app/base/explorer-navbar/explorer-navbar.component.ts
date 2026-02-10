@@ -88,6 +88,7 @@ export class ExplorerNavbarComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   onItemSelect( pItem:any):void{
+      console.log("NAVBAR> onItemSelect: ",pItem.click,pItem);
     if(pItem.click!=null){
       pItem.click.call(null, pItem);
     }else{

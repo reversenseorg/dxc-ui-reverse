@@ -105,7 +105,9 @@ export class SearchResultListComponent implements OnInit {
 
     if((this.mainController==null) && (this.controller.app!=null)){
       this.mainController = this.controller.app;
-    }
+    }else if((this.mainController!=null) && (this.controller==null)){
+          this.controller = this.mainController.getController('ctrl:search');
+      }
   }
 
 

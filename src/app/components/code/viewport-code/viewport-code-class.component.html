@@ -27,23 +27,24 @@
           <app-subnavbar-btn [active]="activeLeft=='md'"  (click)="showModel()">Details</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='ct'"  [icon]="gIcons['LIST']" (click)="showContents()">Contents</app-subnavbar-btn>
           <app-subnavbar-btn [active]="activeLeft=='in'"  [icon]="gIcons['ANALYZE']" (click)="showInstance()">Instances</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="gIcons['LOCK']" (click)="showAndroidAPI()">Android API</app-subnavbar-btn>
+          <app-subnavbar-btn [active]="activeLeft=='pm'"  [icon]="gIcons['WRENCH']" (click)="showOsAPI()">System Xrefs</app-subnavbar-btn>
           <app-subnavbar-btn [disable]="true" [active]="activeLeft=='io'"  [icon]="gIcons['FILE']" (click)="showIO()">I/O</app-subnavbar-btn>
           <app-subnavbar-btn [icon]="gIcons['EDIT']" (click)="controller.renameItem(data)">Rename</app-subnavbar-btn>
         </ng-container>
       </app-subnavbar>
     </ng-container>
     <ng-container body-left>
-        <div class="container-fluid view-outer dxc-list" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='uml')">
+        <div *ngIf="(activeLeft!=null) && (activeLeft=='uml')" class="container-fluid view-outer dxc-list">
             <dxs-diagram-class [classes]="[data]"></dxs-diagram-class>
         </div>
-      <div class="container-fluid view-outer dxc-list" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='md')">
+
+      <div *ngIf="(activeLeft!=null) && (activeLeft=='md')" class="container-fluid view-outer dxc-list">
         <!-- all children classes / all classes with same interface / heritage tree / android API xref / strings / byte arrays -->
         <!-- elements modified by reflection api -->
 
         <!-- Extends -->
-        <div class="row no-gutters">
-          <div class="col-lg-12">
+        <div class="row no-gutters dxc-row-header m-1">
+          <div class="col-lg-12 p-2 ">
             Extended class
           </div>
         </div>
@@ -68,19 +69,17 @@
         </ng-template>
 
         <!-- Interfaces -->
-
-        <div class="row no-gutters">
-          <div class="col-lg-12">
-            Interfaces
+          <div class="row no-gutters dxc-row-header m-1">
+              <div class="col-lg-12 p-2 ">
+                  Interfaces
+              </div>
           </div>
-        </div>
         <ng-container *ngIf="(data.implements!=null && data.implements.length>0); else noInterf">
-          <div *ngFor="let i of data.implements" class="row no-gutters dxc-text-clear75" (dblclick)="controller.showClass(i)" (contextmenu)="controller.displayCtxMenu($event,'cls', i)">
-            <div class="col-lg-12 pl-2 dxc-nowrap">
-              <dxc-icon [model]="icons['CLASS']"></dxc-icon>&nbsp;
-              <!-- <span *ngIf="fd.alias" class="text-warning">@:{{data.extends.alias}}&nbsp;</span> -->
-              {{ i }}
-            </div>
+          <div *ngFor="let i of data.implements;let o=index" class="row no-gutters dxc-text-clear75" (dblclick)="controller.showClass(i)" (contextmenu)="controller.displayCtxMenu($event,'cls', i)">
+              <div class="col-lg-12 pl-2 dxc-nowrap" >
+                  <dxc-icon [model]="icons['CLASS']" ></dxc-icon>&nbsp;
+                  {{ i }}
+              </div>
           </div>
         </ng-container>
         <ng-template #noInterf>
@@ -90,10 +89,36 @@
             </div>
           </div>
         </ng-template>
+
+
+          <div class="row no-gutters dxc-section-header m-1">
+              <div class="col-lg-12 p-2 ">
+                  Child class
+              </div>
+          </div>
+          <ng-container *ngIf="!loading && childCls.length>0">
+              <div *ngFor="let cls of childCls" class="row no-gutters dxc-text-clear75">
+                  <div class="col-lg-12 pl-2 dxc-nowrap">
+                      <dxc-node-token [item]="cls" [interactive]="true" ></dxc-node-token>
+                  </div>
+              </div>
+          </ng-container>
+          <ng-template #noInterf>
+              <div class="row no-gutters text-center p-2 mt-3">
+                  <ng-container *ngIf="loading; else noChild">
+                      <dxc-icon [model]="gIcons['SPINNER']"></dxc-icon>&nbsp;Loading...
+                  </ng-container>
+                  <ng-template #noChild>
+                      <div class="col-lg-12 pl-2 text-danger">
+                          This class no child class.
+                      </div>
+                  </ng-template>
+              </div>
+          </ng-template>
       </div>
 
 
-      <div class="container-fluid view-outer dxc-list"  [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='ct')">
+      <div *ngIf="(activeLeft!=null) && (activeLeft=='ct')" class="container-fluid view-outer dxc-list">
         <ng-container *ngFor="let fd of getClassFields()">
           <div class="row no-gutters" (dblclick)="controller.showItem(fd)" (contextmenu)="controller.displayCtxMenu($event,'fld', fd)">
             <div class="col-lg-1">
@@ -150,9 +175,29 @@
         </ng-container>
       </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
-
+      <div *ngIf="(activeLeft!=null) && (activeLeft=='in')" class="container-fluid">
+          <div class="row no-gutters dxc-row-header m-1">
+              <div class="col-lg-12 p-2 ">
+                  New instance calls &amp; cast
+              </div>
+          </div>
+          <dxc-xref-list  [header]="false" [xrefto]="true" [data]="xref"></dxc-xref-list>
+          <div class="row no-gutters dxc-row-header m-1">
+              <div class="col-lg-12 p-2 ">
+                  Dumped instances
+              </div>
+          </div>
+          <div class="col-lg-12 pl-5 text-danger">
+              Instances are not dumped yet.
+          </div>
       </div>
+
+
+        <div *ngIf="(activeLeft!=null) && (activeLeft=='os')" class="container-fluid">
+            <dxc-osapi-xref [node]="data" [autoload]="true"></dxc-osapi-xref>
+        </div>
+
+
 
     </ng-container>
     <ng-container nav-right>
