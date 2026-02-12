@@ -84,6 +84,9 @@ import {ModalEditRuleComponent} from "./components/audit/modal-edit-rule/modal-e
 import {ViewportComponent} from "./base/viewport/viewport.component";
 import {IViewportContainer} from "./base/viewport/IViewportContainer";
 import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewport-native-func.component";
+import {FuzzerController} from "./components/fuzzer/ctrl/FuzzerController";
+import {ViewportFuzzerComponent} from "./components/fuzzer/viewport-fuzzer/viewport-fuzzer.component";
+import {FuzzerService} from "./components/fuzzer/ctrl/fuzzer.service";
 
 
 interface StageSet {
@@ -125,6 +128,7 @@ export class ControllerService {
     private viewerSvc: ViewerService,
     private nativeSvc: NativeService,
     private tagSvc: TagService,
+    private fuzzSvc: FuzzerService,
     private pltfSvc: PlatformService,
     private deobfSvc: DeobfuscationService,
     private authSvc: AuthService,
@@ -369,6 +373,12 @@ export class ControllerService {
           info: ModalTagInfoComponent
         }
       }),
+        new FuzzerController({
+            service: this.fuzzSvc,
+            viewCmp: {
+                main: ViewportFuzzerComponent
+            }
+        }),
     ];
 
     this.hookAfterControllersInit(ctrls);

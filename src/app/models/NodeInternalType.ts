@@ -1,6 +1,7 @@
 
 
 
+
 export enum NodeInternalType {
     BASIC_BLOCK,
     CLASS,
@@ -105,7 +106,10 @@ export enum NodeInternalType {
     CTRL_ASMT,
     CPE,
     CVE,
-    CWE
+    CWE,
+    USR_PREF,
+    RUNTIME_SESS,
+    FUZZ_SESS
 }
 
 export const NodeInternalTypeName = {
@@ -207,8 +211,15 @@ export const NodeInternalTypeName = {
     [NodeInternalType.CTRL_ASMT]: "CTRL_ASMT",
     [NodeInternalType.CPE]: "CPE",
     [NodeInternalType.CVE]: "CVE",
-    [NodeInternalType.CWE]: "CWE"
+    [NodeInternalType.CWE]: "CWE",
+    [NodeInternalType.USR_PREF]: "USR_PREF",
+    [NodeInternalType.RUNTIME_SESS]: "RUNTIME_SESS",
+    [NodeInternalType.FUZZ_SESS]: "FUZZ_SESS",
+
 }
+
+
+
 
 
 

@@ -122,6 +122,7 @@ import {TopologyModule} from "./components/topology/topo.module";
 import {NativeModule} from "./components/native/native.module";
 import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewport-native-func.component";
 import {PreviewerComponent} from "./base/previewer/previewer.component";
+import {FuzzerModule} from "./components/fuzzer/fuzzer.module";
 
 
 // AoT requires an exported function for factories
@@ -262,6 +263,7 @@ import {PreviewerComponent} from "./base/previewer/previewer.component";
         AuditModule,
         SearchModule,
         TopologyModule,
+        FuzzerModule,
 
         DxcDropdownComponent,
 

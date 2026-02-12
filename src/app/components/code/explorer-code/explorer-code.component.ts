@@ -56,6 +56,8 @@ import ModelFile from "../../../models/ModelFile";
 import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
 import {NATIVE_ICONS} from "../../native/icons";
 import {ModelFunction} from "../../../models/ModelFunction";
+import { INode } from "src/app/models/INode";
+import {FuzzerService} from "../../fuzzer/ctrl/fuzzer.service";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -170,6 +172,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
 
   constructor( private projectService:ProjectService,
                private codeService:CodeControllerService,
+               public fuzzSvc:FuzzerService,
                private electronSvc:ClipboardService,
                private hookSvc:HookService,
                private tagSvc:TagService,

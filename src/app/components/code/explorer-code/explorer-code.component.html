@@ -206,6 +206,8 @@
   <app-context-item [label]="'Show method'" [icon]="gIcons['FIND']" (itemclick)="controller.showItem(ctxMenuState.subject)"></app-context-item>
   <app-context-item [label]="'Xref from'" (itemclick)="controller.showXref(ctxMenuState.subject, {type:'from'})"></app-context-item>
   <app-context-item [label]="'Xref to'" (itemclick)="controller.showXref(ctxMenuState.subject, {type:'to'})"></app-context-item>
+    <app-context-item [separator]="true" [label]="'Fuzz to ...'" [icon]="icons['FUZZ']"  (itemclick)="fuzzSvc.createSess(ctxMenuState.subject, 'fr')"></app-context-item>
+    <app-context-item [label]="'Fuzz from ...'" (itemclick)="fuzzSvc.createSess(ctxMenuState.subject, 'to')"></app-context-item>
   <app-context-item [separator]="true" [label]="'Trace call'" (itemclick)="trackValueOf(ctxMenuState.subject, { type: PRESET_HOOK.TRACK })"></app-context-item>
   <app-context-item [label]="'Tamper return value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_RET  })"></app-context-item>
   <app-context-item [label]="'Tamper param value'" (itemclick)="trackValueOf(ctxMenuState.subject, {type: PRESET_HOOK.TAMPER_PARAM  })"></app-context-item>
@@ -307,6 +309,8 @@
     <app-context-item [separator]="true" [label]="'New KeyPoint before call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_bef'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint after call'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_aft'})"></app-context-item>
   <app-context-item [label]="'New KeyPoint on dlsym'" (itemclick)="newKP(ctxMenuState.subject, {condition:'fnkp_dlsym'})"></app-context-item>
+    <app-context-item [separator]="true" [label]="'Fuzz to ...'" [icon]="icons['FUZZ']"  (itemclick)="fuzzSvc.createSess(ctxMenuState.subject, 'fr')"></app-context-item>
+    <app-context-item [label]="'Fuzz from ...'" (itemclick)="fuzzSvc.createSess(ctxMenuState.subject, 'to')"></app-context-item>
 </app-context-menu>
 
 

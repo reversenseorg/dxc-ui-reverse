@@ -544,6 +544,6 @@ export const GLOBAL_ICONS:IconModelCollection = {
         iconType: ICON_TYPE.ICON,
         type: 'fas',
         name: 'screwdriver-wrench',
-        color1: 'dxc-success-icon'
+        color1: 'dxc-text-75'
     })
 };

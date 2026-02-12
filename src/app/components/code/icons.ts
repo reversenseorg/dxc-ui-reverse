@@ -125,4 +125,10 @@ export const CODE_ICONS = {
         label: '@:',
         color1: 'dxc-text-75 text-alias-hidden'
     }),
+    FUZZ: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'bow-arrow',
+        color1: 'dxc-text-yellow'
+    }),
 };
