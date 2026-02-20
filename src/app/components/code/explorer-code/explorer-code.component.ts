@@ -58,6 +58,9 @@ import {NATIVE_ICONS} from "../../native/icons";
 import {ModelFunction} from "../../../models/ModelFunction";
 import { INode } from "src/app/models/INode";
 import {FuzzerService} from "../../fuzzer/ctrl/fuzzer.service";
+import {INodeRef} from "../../../base/common/common";
+import {OutputService} from "../../output/ctrl/output.service";
+import {OutputMessage} from "../../../cmp/OutputMessage";
 
 /*interface PackageSets {
   [name: nu] :ModelPackage[]
@@ -178,6 +181,7 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
                private tagSvc:TagService,
                private nativeSvc:NativeService,
                public kbSvc:KeyboardNavigationService,
+               private outSvc:OutputService,
                private route: ActivatedRoute,
 
                private changeDetectorRef:ChangeDetectorRef,
@@ -1139,7 +1143,33 @@ export class ExplorerCodeComponent extends SubExplorerComponent<CodeController>
   }
 
   newKP(pSubject: any, pOptions:any = null) {
-    this.hookSvc.createKeyPoint(pSubject, pOptions);
+
+    let ref:Nullable<INodeRef> = null;
+
+    if(pSubject.hasOwnProperty('getUID')){
+        ref = { __: pSubject.__, _uid:(pSubject as ModelFile).getUID() };
+    }else{
+        switch(pSubject.__){
+            case NodeInternalType.FILE:
+                ref = { __: pSubject.__, _uid:(pSubject as ModelFile)._uid };
+                break;
+            case NodeInternalType.METHOD:
+                ref = { __: pSubject.__, _uid:(pSubject as ModelMethod).__signature__ };
+                break;
+            case NodeInternalType.FUNC:
+                ref = { __: pSubject.__, _uid:(pSubject as ModelFunction).__s };
+                break;
+            case NodeInternalType.CLASS:
+                ref = { __: pSubject.__, _uid:(pSubject as ModelClass).name };
+                break;
+        }
+    }
+
+    if(ref!=null){
+        this.hookSvc.createKeyPoint(ref, pOptions);
+    }else{
+        this.outSvc.alert( OutputMessage.newError({ msg: "Cannot create keypoint : invalid subject" }))
+    }
   }
 
   trackValueOf( pItem:any, pOptions: HookFragmentPresetOptions) {

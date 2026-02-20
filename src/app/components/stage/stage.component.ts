@@ -951,6 +951,7 @@ export class StageComponent implements OnInit, AfterViewInit {
       height: newLayout.body_height,
       width: newLayout.left_width
     });
+    console.log("Stage::onWindowResize => ",newLayout.body_height,newLayout);
     this.viewportSize$.next({
       height: newLayout.body_height,
       width: (newLayout.win_width-newLayout.left_width)

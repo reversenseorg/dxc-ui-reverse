@@ -293,7 +293,12 @@ export class TerminalComponent implements OnInit, OnChanges {
       this._c = !this._c;
       if(this._c){
         this.oHeight = this.viewSize.height;
-        this.termCtn.nativeElement.style.display = 'none';
+        if(this.termCtn){
+            this.termCtn.nativeElement.style.display = 'none';
+        }else{
+            console.log("[GLOBAL][TERMINAL] collapse : termCtn is null");
+        }
+
         this.parent.collapseArea(this );
       }else{
         this.expand();
@@ -303,7 +308,11 @@ export class TerminalComponent implements OnInit, OnChanges {
 
   expand():void {
     this.parent.expandArea(this );
-    this.termCtn.nativeElement.style.display = 'block';
+    if(this.termCtn!=null){
+        this.termCtn.nativeElement.style.display = 'block';
+    } else{
+        console.log("[GLOBAL][TERMINAL] expand : termCtn is null");
+    }
   }
 
   getOriginalHeight():number {

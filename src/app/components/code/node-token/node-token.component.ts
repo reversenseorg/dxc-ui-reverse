@@ -173,8 +173,6 @@ export class NodeTokenComponent implements OnInit {
 
 
     ngOnInit() {
-
-        console.log("Retrieved node on init : ",this.ref);
         if(this.ref!=null){
             if(sessionStorage.getItem('puid')!=null){
 

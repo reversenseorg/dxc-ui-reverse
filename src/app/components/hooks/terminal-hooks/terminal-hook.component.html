@@ -8,7 +8,7 @@
     </ng-container>
   </app-subnavbar>-->
 
-  <app-subnavbar [type]="'navtab'" [navtab]="this.view.navtab" [items]="_sessions" [parent]="this"
+  <app-subnavbar [tab]="true" [navtab]="this.view.navtab" [items]="_sessions" [parent]="this"
                  (closeTab)="onClose($event)" (selectTab)="switchSession($event)" #termHookNav>
     <span class="nav-label pt-2" navLabel>Sessions :</span>
     <ng-container rightTab>
@@ -17,9 +17,35 @@
     </ng-container>
   </app-subnavbar>
 
-  <div #termHookCtn style="overflow-y:auto;">
+        <app-subnavbar *ngIf="_current" [bar]="true" [parent]="this">
+            <span class="nav-label pt-2" navLabel>Filter :</span>
+            <ng-container main>
+                <ng-container *ngFor="let f of getFilters(_current) | keyvalue">
+                    <ng-container *ngIf="f.key=='msg'">
+                        <app-subnavbar-btn *ngFor="let o of f.value.opts" [class]="'badge rounded-pill text-bg-danger'"  (click)="dropFilter(_current,o,'msg')">{{ o.name }}</app-subnavbar-btn>
+                    </ng-container>
+                    <ng-container *ngIf="f.key=='hk'">
+                        <app-subnavbar-btn *ngFor="let o of f.value.opts" [class]="'badge rounded-pill text-bg-danger'" (click)="dropFilter(_current,o,'hk')">{{ o.name }}</app-subnavbar-btn>
+                    </ng-container>
+                    <ng-container *ngIf="f.key=='ev'">
+                        <app-subnavbar-btn *ngFor="let o of f.value.opts" [class]="'badge rounded-pill text-bg-danger'" (click)="dropFilter(_current,o,'ev')">{{ o.name }}</app-subnavbar-btn>
+                    </ng-container>
+                </ng-container>
+                <app-subnavbar-menu [icon]="gIcons['PLUS']" [label]="'add filter'">
+                    <ng-container entries>
+                        <app-subnavbar-btn (click)="filter(_current,'hk')">Hook</app-subnavbar-btn>
+                        <app-subnavbar-btn (click)="filter(_current,'ev')">Event</app-subnavbar-btn>
+                        <app-subnavbar-btn (click)="filter(_current,'msg')">Message</app-subnavbar-btn>
+                    </ng-container>
+                </app-subnavbar-menu>
+                <app-subnavbar-input [placeholder]="'Pattern...'" [width]="'400px'" (enter)="addFilter(_current,$event)"></app-subnavbar-input>
+            </ng-container>
+        </app-subnavbar>
+
+
     <ng-container *ngIf="_current">
-      <div *ngFor="let msg of _current.messages; let index = index;" class="row no-gutters hmsg" (click)="hookMsgFocus(index)" [ngClass]="(_current_selected==index ? 'selected' : '')">
+  <div #termHookCtn style="overflow-y:auto;">
+      <div *ngFor="let msg of getMessages(); let index = index;" class="row no-gutters hmsg" (click)="hookMsgFocus(index)" [ngClass]="(_current_selected==index ? 'selected' : '')">
         <div class="col-lg-1 col-msg">
           <ng-container *ngIf="msg.rt_type" [ngSwitch]="msg.rt_type" >
             <ng-container *ngSwitchCase="'h'">
@@ -110,8 +136,8 @@
 
         </div>
       </div>
-    </ng-container>
   </div>
+    </ng-container>
 </div>
 
 

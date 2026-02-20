@@ -1634,7 +1634,7 @@ export class HookService extends DxcApiService {
    * @param {any} pSubject The target of the key point
    * @param {any} pOptions The options of key point
    */
-  createKeyPoint(pSubject: any, pOptions: any) {
+  createKeyPoint(pSubject: INodeRef, pOptions: any) {
     console.log(pSubject,pOptions==null);
     if(pOptions==null){
       this.onCreateKeyPoint.next( { subject:pSubject, opts:pOptions});
@@ -1707,10 +1707,11 @@ export class HookService extends DxcApiService {
    * @param pSubject
    * @param pCreate
    */
-  updateKeyPointsOn( pSubject:any, pOptions:any, pCreate = false) {
+  updateKeyPointsOn( pSubject:INodeRef, pOptions:any, pCreate = false) {
+
     return this._process(
       this.endpoints['kp'][ pCreate? 'new' : 'save'],
-      { target: { __:pSubject.__, uid:NodeTypeHelper.getUIDof(pSubject) }, opts:pOptions }
+      { target: pSubject, opts:pOptions }
     ).pipe(
       map((pRes:any) => {
 

@@ -201,8 +201,13 @@ export class TerminalAuditComponent implements OnInit, AfterViewInit, ITerminalC
   resize(pSize: any) {
 
     this.size = pSize;
-    this.termCtn.nativeElement.style.height = (pSize.height - (this.navbar!=null ? this.navbar.getHeight() : 0)) + 'px';
-    this.termCtn.nativeElement.style.width = pSize.width + 'px';
+      if(this.termCtn!=null){
+          this.termCtn.nativeElement.style.height = (pSize.height - (this.navbar!=null ? this.navbar.getHeight() : 0)) + 'px';
+          this.termCtn.nativeElement.style.width = pSize.width + 'px';
+      }else{
+          console.log("[AUDIT][TERMINAL] resize : termCtn is null");
+      }
+
   }
 
   /**

@@ -28,8 +28,8 @@
                 <ng-container main>
                     <app-subnavbar-btn [active]="activeLeft=='ep'"  [icon]="icons['ENTRY']" (click)="showDetail('ep')">Entrypoint</app-subnavbar-btn>
                     <app-subnavbar-btn [active]="activeLeft=='fs'"  [icon]="icons['POLICY']" (click)="showDetail('fs')">Strategies</app-subnavbar-btn>
-                    <app-subnavbar-btn [active]="activeLeft=='sc'"  [icon]="icons['SUCCESS']" (click)="showDetail('sc')">Success Resolver</app-subnavbar-btn>
-                    <app-subnavbar-btn [active]="activeLeft=='fc'"  [icon]="icons['FAILURE']" (click)="showDetail('fc')">Failure Resolver</app-subnavbar-btn>
+                    <app-subnavbar-btn [active]="activeLeft=='sc'"  [icon]="icons['SUCCESS']" (click)="showDetail('sc')">Success Resolvers</app-subnavbar-btn>
+                    <app-subnavbar-btn [active]="activeLeft=='fc'"  [icon]="icons['FAILURE']" (click)="showDetail('fc')">Side Channel Resolvers</app-subnavbar-btn>
                     <app-subnavbar-btn [disable]="!isDone()" [active]="activeLeft=='rs'"  [icon]="gIcons['LIST']" (click)="showDetail('rs')">Results</app-subnavbar-btn>
                 </ng-container>
             </app-subnavbar>
@@ -57,6 +57,27 @@
                         Select the input you want to fuzz.
                     </div>
                 </div>
+
+            </div>
+            <div *ngIf="activeLeft==='sc'" class="container-fluid" style="overflow:auto;position:relative;height:100%">
+
+                <div class="row dxc-section-header m-1">
+                    <div class="col-lg-12 text-center dxc-text-75 p-4">
+                        <p><i>Success Resolver</i> are mandatory strategies used to detect if the injected input reached dsired state</p>
+                    </div>
+                </div>
+
+
+            </div>
+            <div *ngIf="activeLeft==='fc'" class="container-fluid" style="overflow:auto;position:relative;height:100%">
+
+                <div class="row dxc-section-header m-1">
+                    <div class="col-lg-12 text-center dxc-text-75 p-4">
+                        <p><i>Side Channel Resolver</i> are optional strategies used to detect failure from early stages or side events, and abort the fuzzing case or coninue</p>
+                        <p>If the generated input reach the final point, the Success Resolvers are used to check if the </p>
+                    </div>
+                </div>
+
 
             </div>
         </ng-container>

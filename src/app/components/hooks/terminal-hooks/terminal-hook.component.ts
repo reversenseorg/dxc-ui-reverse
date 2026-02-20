@@ -23,6 +23,17 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import {RuntimeEvent} from "../../../models/hook/RuntimeEvent";
 
 
+export interface EventFilter<T> {
+    type: string;
+    opts: T[];
+}
+
+
+export interface SessionFilters<T> {
+    sess: T;
+    filters: Record<string, EventFilter<any>>
+}
+
 interface SelectedMessage {
   [sessionID:string] :number
 }
@@ -67,6 +78,8 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
     })
   });
 
+  ft:Record<string, SessionFilters<HookSession>> = { };
+  ftMode:string = '';
   //NODE_TYPE:any = NODE_TYPE;
 
   _selected:SelectedMessage = {};
@@ -175,8 +188,14 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   resize(pSize: any) {
 
     this.size = pSize;
-    this.termCtn.nativeElement.style.height = (pSize.height - (this.navbar!=null ? this.navbar.getHeight() : 0)) + 'px';
-    this.termCtn.nativeElement.style.width = pSize.width + 'px';
+    if(this.termCtn!=null){
+        this.termCtn.nativeElement.style.height = (pSize.height - (this.navbar!=null ? this.navbar.getHeight() : 0)) + 'px';
+        this.termCtn.nativeElement.style.width = pSize.width + 'px';
+    }else{
+        console.log("[HOOK][TERMINAL] resize : termCtn is null");
+    }
+
+
   }
 
   /**
@@ -285,4 +304,61 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
   openTrace(pMsg: RuntimeEvent<any>, pTrace: IStringIndex<any>[]) {
 
   }
+
+    filter(pSession:HookSession, pType: string) {
+
+        let ft = this.ft[pSession.getUID()];
+        if(ft==null){
+            ft = this.ft[pSession.getUID()] = {
+                sess: pSession,
+                filters: {}
+            };
+        }
+
+        this.ftMode = pType;
+        //ft.filters[pType] = { type: pType, opts: {} };
+    }
+
+    getFilterSuggest(pCurr:HookSession, pType: string):void {
+
+    }
+
+    addFilter(pCurr:HookSession, pEvent:any) {
+        const ft =this.ft[pCurr.getUID()];
+
+        if(ft.filters[this.ftMode]==null)
+            ft.filters[this.ftMode] = { type: this.ftMode, opts: pEvent };
+
+        switch(this.ftMode){
+            case 'hk':
+                ft.filters.hk.opts.push(pEvent);
+                break;
+            case 'ev':
+                ft.filters.ev.opts.push(pEvent);
+                break;
+            case 'msg':
+                ft.filters.msg.opts.push(pEvent);
+                break;
+        }
+    }
+
+    getFilters(pCurr: HookSession) {
+        let ft = this.ft[pCurr.getUID()];
+        if(ft!=null){
+            return ft.filters;
+        }else{
+            return {};
+        }
+    }
+
+    dropFilter(pCurr: HookSession, pType: string, pEvent:any) {
+        /*const ft =this.ft[pCurr.getUID()];
+        if(ft!=null){
+            delete ft.filters[pType];
+        }*/
+    }
+
+    getMessages() {
+        return this._current?.messages ?? [];
+    }
 }

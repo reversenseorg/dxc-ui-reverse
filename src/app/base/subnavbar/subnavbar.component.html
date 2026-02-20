@@ -1,5 +1,5 @@
 <div class="container-fluid dxc-subnavbar" [ngClass]="navbarStyle" #mainNav>
-    <ng-container *ngIf="type=='navbar'">
+    <ng-container *ngIf="(bar || (type=='navbar')) && (navtab==null)">
       <!-- dxc-explorer-vpnav -->
       <div *ngIf="direction=='row'" class="row dxc-navbar" [ngClass]="style" #snavRef>
         <div class="text-left nav" [ngClass]="{ 'col-lg-8': hasOptions(), 'col-lg-12': !hasOptions() }">
@@ -15,7 +15,7 @@
           <ng-content select="[vextra]"></ng-content>
       </div>
     </ng-container>
-    <ng-container *ngIf="type=='navtab' && navtab!=null">
+    <ng-container *ngIf="(!bar && navtab!=null)">
       <ul ngbNav class="nav-tabs flex-nowrap" #subTabnav>
         <li ngbNavItem="" *ngIf="label != null" class="nav-label">
           <ng-content select="[navLabel]"></ng-content>

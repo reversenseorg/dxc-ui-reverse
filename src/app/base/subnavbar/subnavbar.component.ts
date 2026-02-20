@@ -314,7 +314,14 @@ export class SubnavbarComponent implements OnInit, AfterContentInit {
 
   //id:Nullable<string> = null;
 
+    /**
+     * @deprecated
+      */
   @Input() type: string = 'navbar';
+
+  @Input() bar = false;
+  @Input() tab = false;
+
   @Input() direction: string = 'row';
   @Input() style: string = '';
   @Input() inlineStyle: IStringIndex<string> = {};

@@ -79,7 +79,7 @@ enum INFO_TYPE {
             </ng-container>
             <ng-container body-bottom>
                 <ng-container *ngIf="blReady; else blnotready">
-                    <dxc-search-result-list  [results]="topicRes" [controller]="getSearchCtrl()" [mainController]="controller.app"></dxc-search-result-list>
+                    <dxc-search-result-list  [hFull]="true" [size]="20" [results]="topicRes" [controller]="getSearchCtrl()" [mainController]="controller.app"></dxc-search-result-list>
                 </ng-container>
                 <ng-template #blnotready>
                     <div class="w-full text-center"><dxc-icon [model]="gIcons['SPINNER']"></dxc-icon><span>Loading...</span></div> 
@@ -269,12 +269,46 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
         break;
       case INFO_TYPE.URL:
         this.activeBL = pTopic;
+          this.codeSvc.merlinSearch(new MerlinSearchRequest(
+              NodeInternalType.STRING,
+              [{
+                  type:OperationType.SEARCH,
+                  args: {
+                      pattern: [{
+                          field: "tags",
+                          tagKey: "network.uri.any"
+                      }]
+                  }
+              }]
+          )).pipe(map((vRes:any)=>{
+              return vRes.map((vSelf:any) => {  vSelf._icon = this.gIcons['WIRED'];  });
+          })).subscribe((vRes:any)=>{
+              this.topicRes = (vRes==null ? [] : vRes);
+              this.blReady = true;
+          });
         break;
     case INFO_TYPE.BIN:
         this.activeBL = pTopic;
-
+        this.codeSvc.merlinSearch(new MerlinSearchRequest(
+            NodeInternalType.FILE,
+            [{
+                type:OperationType.SEARCH,
+                args: {
+                    pattern: [{
+                        field: "_uid",
+                        pattern: "@data.type.executable",
+                        regexp: false
+                    }]
+                }
+            }]
+        )).pipe(map((vRes:any)=>{
+            return vRes.map((vSelf:any) => {  vSelf._icon = this.gIcons['BIN'];  });
+        })).subscribe((vRes:any)=>{
+            this.topicRes = (vRes==null ? [] : vRes);
+            this.blReady = true;
+        });
         break;
-    case INFO_TYPE.RES:
+    case INFO_TYPE.RES: // 3c3c30
         this.activeBL = pTopic;
         this.codeSvc.merlinSearch(new MerlinSearchRequest(
             NodeInternalType.RESOURCE,
@@ -290,7 +324,6 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
             }]
         )).pipe(map((vRes:any)=>{
             console.log("Execute MERLIN Request (as code search : resources) ",vRes);
-
             vRes.map((vSelf:any) => {
                 vSelf._icon = this.gIcons['RES'];
             });

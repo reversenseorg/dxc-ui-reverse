@@ -51,6 +51,7 @@ export class SearchResultListComponent implements OnInit {
   @Input() mainController:Nullable<StageComponent>;
   @Input() controller:SearchController;
   @Input() results:any[] = [];
+  @Input() size:number = -1;
   @Input() hFull = false;
 
   error:Nullable<Message> = null;

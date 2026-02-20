@@ -56,7 +56,6 @@ export class NodeAliasComponent {
 
 
     getText():string {
-        console.log("getText() of ",this.item);
         if (this.text==null){
             switch (this.item.__){
                 case NodeInternalType.METHOD:

@@ -77,8 +77,13 @@ export class TerminalSearchComponent implements OnInit, ITerminalContainer {
 
     this.termEl.nativeElement.style.maxHeight = (this.size.height)+'px';
     this.termEl.nativeElement.style.height = (this.size.height)+'px';
-    this.termCtn.nativeElement.style.maxHeight = (this.size.height-navH)+'px';
-    this.termCtn.nativeElement.style.height = (this.size.height-navH)+'px';
+      if(this.termCtn!=null){
+          this.termCtn.nativeElement.style.maxHeight = (this.size.height-navH)+'px';
+          this.termCtn.nativeElement.style.height = (this.size.height-navH)+'px';
+      }else{
+          console.log("[SEARCH][TERMINAL] resize : termCtn is null");
+      }
+
   }
 
     onCloseTab(pEvent:any):void{
