@@ -42,9 +42,9 @@
             </ng-container>
         </app-subnavbar>
 
-
-    <ng-container *ngIf="_current">
   <div #termHookCtn style="overflow-y:auto;">
+
+      <ng-container *ngIf="_current">
       <div *ngFor="let msg of getMessages(); let index = index;" class="row no-gutters hmsg" (click)="hookMsgFocus(index)" [ngClass]="(_current_selected==index ? 'selected' : '')">
         <div class="col-lg-1 col-msg">
           <ng-container *ngIf="msg.rt_type" [ngSwitch]="msg.rt_type" >
@@ -136,8 +136,8 @@
 
         </div>
       </div>
+      </ng-container>
   </div>
-    </ng-container>
 </div>
 
 
