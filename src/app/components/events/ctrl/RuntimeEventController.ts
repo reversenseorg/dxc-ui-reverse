@@ -76,7 +76,7 @@ export class RuntimeEventController extends UiController implements IController 
    */
   open(pItem: any = null, pSrc:any = null): any{
     console.log("[RUNT. EVT. CONTROLLER][open]",pItem,pSrc);
-    this._show( pItem, 'hook');
+    //this._show( pItem, 'hook');
   }
 
   isAlreadyRendered(pItem:any):any {
@@ -141,12 +141,15 @@ export class RuntimeEventController extends UiController implements IController 
       return;
     }else{
       console.log("[RUNT. EVT. CONTROLLER] Opening ",pType);
+        //this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
+        //this.rendered.push({ item:pHook, uid:vid });
     }
 
-    this.service.listEvents(pType).subscribe(()=>{
+
+    //this.service.listEvents(pType).subscribe(()=>{
       // this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pItem, uid:vid });
       // this.rendered.push({ item:pHook, uid:vid });
-    })
+    //})
 
   }
 

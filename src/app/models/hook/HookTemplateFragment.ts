@@ -2,6 +2,7 @@ import { NodeInternalType } from "../NodeInternalType";
 import HookStrategy from "./HookStrategy";
 import {Nullable} from "../../base/Nullable";
 import {IStringIndex} from "../../base/IStringIndex";
+import {Metadata} from "../audit/common/Metadata";
 
 
 export default class HookTemplateFragment {
@@ -27,6 +28,23 @@ export default class HookTemplateFragment {
      _preproc = true;
 
      _keypoint:Nullable<string> = null;
+
+
+
+
+
+    public autoEmit = false;
+
+    public emitEvent:Nullable<string> = null;
+
+    public removed = false;
+
+    public deprecated = false;
+
+    metadata:Metadata[] = [];
+
+    tags:number[] = [];
+
     /**
      * Group of hook
      *

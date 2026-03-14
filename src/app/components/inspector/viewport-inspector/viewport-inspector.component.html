@@ -1,5 +1,5 @@
-<div [class.dxc-hidden]="hiddenForce" class="container-fluid viewport-inspector" [ngStyle]="{ 'padding':'0px'}"
-     xmlns="http://www.w3.org/1999/html">
+<div [class.dxc-hidden]="hiddenForce" class="container-fluid viewport-inspector" [ngStyle]="{ 'padding':'0px'}">
+
 
  <!-- <dxc-breadcrumb>
     <dxc-breadcrumb-item [fixed]="true">Inspector :</dxc-breadcrumb-item>
@@ -12,42 +12,59 @@
 
   <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="activeWidth" [type]="'1:2'">
     <ng-container nav-left>
-      <app-subnavbar [type]="'navbar'"  [parent]="this">
+      <app-subnavbar [bar]="true"  [parent]="this" [opts]="true">
         <ng-container main>
-            <app-subnavbar-btn [active]="activeLeft=='in'"  (click)="showInfo(100)">Details</app-subnavbar-btn>
-            <ng-container *ngIf="data.hookset!=null && data.hookset.strats!=null && data.hookset.strats.length>0">
-                <app-subnavbar-btn [active]="activeLeft=='st'"  (click)="showStrategy(40)">Strategies</app-subnavbar-btn>
-                <app-subnavbar-btn  [active]="activeLeft=='hk'"  (click)="showHooks(100)">Hooks</app-subnavbar-btn>
-            </ng-container>
-          <app-subnavbar-btn *ngIf="data.listener?.length>0" [active]="activeLeft=='er'"  (click)="showEventsRegistered(30)">Event Processing</app-subnavbar-btn>
-            <app-subnavbar-btn *ngIf="false" [active]="activeLeft=='ac'"  (click)="showActions(30)">Actions</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='in'"  (click)="showInfo(45)">Details</app-subnavbar-btn>
+            <app-subnavbar-btn [active]="activeLeft=='st'"  (click)="showStrategy(45)">Strategies</app-subnavbar-btn>
+            <app-subnavbar-btn  [active]="activeLeft=='hk'"  (click)="showHooks(100)">Hooks</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="data.state.listener?.length>0" [active]="activeLeft=='er'"  (click)="showEventsRegistered(30)">Filters</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="false" [active]="activeLeft=='ac'"  (click)="showActions(45)">Actions</app-subnavbar-btn>
             <!--<app-subnavbar-btn [active]="activeLeft=='tg'"  (click)="showTags(30)">Tags</app-subnavbar-btn>-->
-          <app-subnavbar-btn *ngIf="data.db" [active]="activeLeft=='db'"  (click)="showDatabase(50)">Database</app-subnavbar-btn>
+            <app-subnavbar-btn *ngIf="data.state.db" [active]="activeLeft=='db'"  (click)="showDatabase(45)">Database</app-subnavbar-btn>
         </ng-container>
+          <ng-container options>
+              <app-subnavbar-btn [disable]="['in','hk'].indexOf(activeLeft)>-1" [icon]="gIcons['PLUS']" (click)="addEl()"></app-subnavbar-btn>
+          </ng-container>
       </app-subnavbar>
     </ng-container>
     <ng-container body-left>
       <!--<app-expandable-list [class.dxc-hidden]="(activeLeft==null) || (activeLeft.id!='hooks')">
 
       </app-expandable-list>-->
-        <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='in')">
-            <div class="row">
-                <div class="col-8">
-                    <h5>{{ data.name }}</h5>
-                    <p class="dxc-text-75">{{ data.description }}</p>
-                </div>
-                <div class="col-4">
-
-                </div>
-            </div>
+        <div *ngIf="activeLeft=='in'" class="container-fluid">
             <div class="container-fluid dxc-text-100" style="margin: 10px 0px;padding:10px;">
-                <dxc-icon [model]="gIcons['HELPER']" style="font-size:14px;color:#fff;margin:0px 5px;"></dxc-icon>
-                <h5>{{ data.name }}</h5>
-                <p class="dxc-text-75">{{ data.description }}</p>
+                <h5>{{ data.state.name }}</h5>
+                <p class="dxc-text-75">{{ data.state.description }}</p>
             </div>
+
+            <div class="container-fluid dxc-text-100" style="margin: 10px 0px;padding:10px;">
+                <h6>Emitted Events</h6>
+            </div>
+
+            <table class="w-full dxc-table" >
+                <thead>
+                    <th style="width:5%"><div class="dxc-text-100">#</div></th>
+                    <th style="width:45%"><div class="dxc-text-100">Name</div></th>
+                    <th style="width:30%"><div class="dxc-text-100">Strategy</div></th>
+                    <th style="width:20%"><div class="dxc-text-100">Options</div></th>
+                </thead>
+                <tbody style="background: #333" class="dxc-text-100">
+                    <tr *ngFor="let e of this.evt" (click)="showEvent(e)">
+                        <td><dxc-icon [model]="gIcons['LED_GREEN']"></dxc-icon></td>
+                        <td>{{ e.e }}</td>
+                        <td>{{ e.s }}</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
         </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='hk')">
+      <div *ngIf="activeLeft=='hk'" class="container-fluid">
+        <div class="dxc-section-header p-3 mt-2">
+            Hooks below contains have been populated by fragments generated by strategies defined into this inspector.
+        </div>
         <ng-container *ngFor="let h of hooks">
           <div class="row hook-row" (click)="openNode(h, h.__)">
             <div class="col-lg-1">
@@ -86,52 +103,24 @@
             </ng-container>
         </div>
 
-      <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='er')">
-        <div class="row category">
-          <div class="col-lg-12">
-            <b>Filtered events</b>
+      <div *ngIf="activeLeft=='er'" class="container-fluid" >
+          <div class="dxc-section-header p-3 mt-2 mb-2">
+              Filters are listeners that are attached to the inspector. They are used to filter the events that are published into main bus
+              by any hook, inspector, analyzer or script.
           </div>
-        </div>
-        <ng-container *ngFor="let l of data.listener | keyvalue">
-          <div class="row hook-row">
-            <div class="col-lg-10" *ngIf="l.value != null">
-              {{ l.value.n }}
-            </div>
-            <div class="col-lg-2">
-              <!--<dxc-icon [model]="gIcons['HELPER']" [color1]="'dxc-text-darker'"></dxc-icon>-->
+        <ng-container *ngFor="let l of data.plugin.eventListenerSources | keyvalue">
+          <div class="row hook-row" (click)="showFilter(l.value)">
+            <div class="col-lg-12" *ngIf="l.value != null">
+              {{ l.key }}
             </div>
           </div>
         </ng-container>
-        <div class="row category">
-          <div class="col-lg-12">
-            <b>Emitted events</b>
-          </div>
-        </div>
-          <ng-container *ngIf="data.hookset!=null">
-              <ng-container *ngFor="let e of data.hookset.strats" >
-                  <div class="row hook-row">
-                      <div class="col-lg-10">
-                          {{ e.emitEvent }}
-                      </div>
-                      <div class="col-lg-2">
-                          <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
-                      </div>
-                  </div>
-              </ng-container>
-          </ng-container>
-
       </div>
 
       <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='st')">
-        <!--
-        <div class="row category">
-          <div class="col-lg-12">
-            <b>Output pipes</b>
-          </div>
-        </div>
-        -->
-        <ng-container *ngIf="data.hookset && data.hookset.strats.length>0; else noStrategy">
-          <ng-container *ngFor="let e of data.hookset.strats" >
+
+        <ng-container *ngIf="data.state.hookset && data.state.hookset.strats.length>0">
+          <ng-container *ngFor="let e of data.state.hookset.strats" >
             <div class="row hook-row" (click)="showDetail(NODE_TYPES.HOOK_STRATEGY, e)">
               <div class="col-lg-6">
                 {{ e.name }}
@@ -142,17 +131,12 @@
             </div>
           </ng-container>
         </ng-container>
-          <ng-template #noStrategy>
-              <div class="row g-0 mt-2">
-                  <div class="col-lg-2 offset-2">
-                      <dxc-icon [model]="gIcons['HELPER']"></dxc-icon>
-                  </div>
-                  <div class="col-lg-6 text-center">
-                      This Inspector doesn't have hooking strategy. See
-                      documentation or add a new one.
-                  </div>
+
+          <div class="row hook-row" (click)="newDetail('strat')">
+              <div class="col-lg-12 text-center">
+                  <dxc-icon [model]="gIcons['PLUS']"></dxc-icon>&nbsp;Add a strategy
               </div>
-          </ng-template>
+          </div>
 
       </div>
 
@@ -172,74 +156,247 @@
 
 
 
-    <!--<ng-container nav-right>
-      <app-subnavbar [type]="'navbar'"  [parent]="this"></app-subnavbar>
-    </ng-container>-->
+    <ng-container nav-right>
+      <app-subnavbar [bar]="true"  [parent]="this" [opts]="true">
+          <ng-container main> </ng-container>
+          <ng-container options>
+              <app-subnavbar-btn *ngIf="editMode" [icon]="gIcons['SAVE']" (click)="save()">Save</app-subnavbar-btn>
+              <app-subnavbar-btn *ngIf="deletable" [icon]="gIcons['TRASH']" (click)="dropEl()">Delete</app-subnavbar-btn>
+              <app-subnavbar-btn *ngIf="cancelable" [icon]="gIcons['CROSS']" (click)="cancel()">Cancel</app-subnavbar-btn>
+          </ng-container>
+      </app-subnavbar>
+    </ng-container>
 
 
     <ng-container body-right>
-      <div class="container-fluid" #hookStrategyEl *ngIf="activeItem && activeItem.search" [class.dxc-hidden]="(activeRight!=NODE_TYPES.HOOK_STRATEGY)">
-        <h4 class="m-1 dxc-text-yellow">{{ activeItem.name }}</h4>
-        <p class="m-1 mt-2 dxc-text-clear75">
-          {{ activeItem.descr }}
-        </p>
-        <div class="row m-1">
-          <div class="col-6 ml-1 dxc-row-header">Event</div>
-          <div class="col-3 ml-1 dxc-row-header">When</div>
-        </div>
-        <div class="row m-1 mt-0">
-          <div class="col-6 ml-1 dxc-row-body">
-            {{ activeItem.emitEvent!=null ? activeItem.emitEvent : 'No event emit' }}
-          </div>
-          <div class="col-3 ml-1 dxc-row-body dxc-green-pale">
-            <span *ngIf="activeItem.emitEvent!=null" [ngClass]="{ 'text-danger':(activeItem.emitEvent==null) }">{{ activeItem.autoEmit ? 'auto' : 'processed' }}</span>
-          </div>
-        </div>
-        <h6 class="m-1 mt-3 dxc-text-100">Rules</h6><br>
-        <div *ngIf="activeItem.search.req"  class="box m-1 mt-1 p-2">
-            <div class="row dxc-text-yellow">
-              <div class="col-12">
-                <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
-                <!--<dxc-meta ><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;request</dxc-meta>-->
+
+      <div class="container-fluid" #hookStrategyEl *ngIf="activeStrat" [class.dxc-hidden]="(activeRight!=NODE_TYPES.HOOK_STRATEGY)">
+        <ng-container *ngIf="!editMode; else editName">
+            <h4 class="m-1 dxc-text-yellow">{{ activeStrat.name }}</h4>
+        </ng-container><ng-template #editName>
+          <label class="dxc-text-yellow" for="name">Name</label>
+          <input type="text" id="name" class="dxc-frm-input ms-1" [ngStyle]="{'width':'95%'}"  [(ngModel)]="activeStrat.name" />
+      </ng-template>
+
+          <ng-container *ngIf="!editMode; else editDescr">
+              <p class="m-1 mt-2 dxc-text-clear75">
+                  {{ activeStrat.descr }}
+              </p>
+          </ng-container><ng-template #editDescr>
+              <div class="row no-gutters mt-1">
+                  <div class="col-12">
+                      <span class="dxc-text-yellow">Description</span><br>
+                      <textarea rows="3" [(ngModel)]="activeStrat.descr"  name="descr" id="descr"  class="dxc-frm-input p-2" style="width:100%"></textarea>
+                  </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div *ngFor="let r of activeItem.search.req">
-                  {{ r }}
-                </div>
+          </ng-template>
+
+          <ng-container *ngIf="!editMode; else editEvt">
+              <div class="row m-1">
+                  <div class="col-6 ml-1 dxc-row-header">Event</div>
+                  <div class="col-3 ml-1 dxc-row-header">When</div>
               </div>
-            </div>
-        </div>
-        <div *ngIf="activeItem.search.uid"  class="box m-1 mt-3 p-2">
-          <div class="row dxc-text-yellow">
-            <div class="col-12">
-              <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['TARGET']" [color1]="'yellow'"></dxc-icon>&nbsp;static signature</span>
-            </div>
-          </div>
-          <div class="row mt-1">
-            <div class="col-12 ">
-              <div class="actionable" *ngFor="let r of activeItem.search.uid" (click)="openNode(r, NODE_TYPES.METHOD)" [ngbTooltip]="'Show details'" >
-                {{ r }}
+              <div class="row m-1 mt-0">
+                  <div class="col-6 ml-1 dxc-row-body">
+                      {{ activeStrat.emitEvent!=null ? activeStrat.emitEvent : 'No event emit' }}
+                  </div>
+                  <div class="col-3 ml-1 dxc-row-body dxc-green-pale">
+                      <span *ngIf="activeStrat.emitEvent!=null" [ngClass]="{ 'text-danger':(activeStrat.emitEvent==null) }">{{ activeStrat.autoEmit ? 'auto' : 'processed' }}</span>
+                  </div>
               </div>
-            </div>
-          </div>
-        </div>
+          </ng-container><ng-template #editEvt>
+                <span class="dxc-text-yellow mt-1">Event</span>
+              <ng-container *ngIf="!activeStrat.autoEmit; else createEvt">
+                  <div class="row m-1 dxc-section-header" style="border: 1px solid #98ea98">
+                      <div class="col-12 ps-3" style="cursor: pointer" (click)="activeStrat.autoEmit=true">
+                          Click to emit an event when a message from a hook is receipt. Required to implement DAST or IAST flows.
+                      </div>
+                  </div>
+              </ng-container><ng-template #createEvt>
+                  <div class="row m-1">
+                      <div class="col-6 ml-1 dxc-row-header">Event</div>
+                      <div class="col-3 dxc-row-header">When</div>
+                      <div class="col-1 dxc-row-header">Options</div>
+                  </div>
+                  <div class="row m-1 mt-0">
+                      <div class="col-6 ml-1 dxc-row-body">
+                          <input type="text" class="dxc-frm-input" [ngStyle]="{'width':'95%'}"  [(ngModel)]="activeStrat.emitEvent" />
+                      </div>
+                      <div class="col-3 dxc-row-body dxc-green-pale">Auto</div>
+                      <div class="col-1 dxc-row-body">
+                          <dxc-icon [model]="gIcons['CROSS']" (click)="dropEvent(activeStrat)"></dxc-icon>
+                      </div>
+                  </div>
+              </ng-template>
+        </ng-template>
+
+
+        <h6 class="m-1 mt-3 dxc-text-yellow">Rules</h6><br>
+
+
+          <ng-container *ngIf="!editMode; else editRule">
+              <ng-container [ngSwitch]="getSearchType(activeStrat)">
+                  <div *ngSwitchCase="'req'"  class="box m-1 mt-1 p-2">
+                      <div class="row dxc-text-yellow">
+                          <div class="col-12">
+                              <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-12">
+                              <span *ngIf="activeStrat.search"> {{ activeStrat.search.req }}</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div *ngSwitchCase="'merlin'"  class="box m-1 mt-1 p-2">
+                      <div class="row dxc-text-yellow">
+                          <div class="col-12">
+                              <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;merlin</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-12" *ngIf="activeStrat.search">
+                              {{ stringifyReq(activeStrat.search.req) }}
+                          </div>
+                      </div>
+                  </div>
+                  <div *ngSwitchCase="'uid'"  class="box m-1 mt-1 p-2">
+                      <div class="row dxc-text-yellow">
+                          <div class="col-12">
+                              <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['TARGET']" [color1]="'yellow'"></dxc-icon>&nbsp;signature</span>
+                              <!--<dxc-meta ><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;request</dxc-meta>-->
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-12" *ngIf="activeStrat.search">
+                              <div class="actionable" *ngFor="let r of activeStrat.search.uid" (click)="openNode(r, NODE_TYPES.METHOD)" [ngbTooltip]="'Show details'" >
+                                  {{ r }}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div *ngSwitchCase="'none'"  class="box m-1 mt-1 p-2">
+                      <div class="row dxc-text-yellow">
+                          <div class="col-12">
+                              There is no search or signature rule for this strategy.
+                          </div>
+                      </div>
+                  </div>
+              </ng-container>
+          </ng-container>
+          <ng-template #editRule>
+              <ng-container *ngIf="!activeStrat.search; else createRule">
+                  <div class="row m-1 dxc-section-header" style="border: 1px solid #98ea98">
+                      <div class="col-12 ps-3" style="cursor: pointer" (click)="newRule(activeStrat)">
+                          Click to add a rule to search and generate hook automatically.
+                      </div>
+                  </div>
+              </ng-container>
+              <ng-template #createRule>
+                  <div class="row m-1">
+                      <div class="col-3 dxc-row-header">Type</div>
+                      <div class="col-8 dxc-row-header">Condition</div>
+                      <div class="col-1 dxc-row-header">Opts</div>
+                  </div>
+                  <div class="row m-1" *ngIf="activeStrat.search">
+                      <div class="col-3 dxc-row-body" >
+                          <select class="dxc-frm-input" [(ngModel)]="activeStrat.search.type">
+                              <option value="merlin">Merlin request</option>
+                              <option value="uid">Signature</option>
+                          </select>
+                      </div>
+                      <div class="col-8 dxc-row-body">
+                          <input *ngIf="activeStrat.search.type=='uid'" type="text" class="dxc-frm-input" [ngStyle]="{'width':'95%'}"  [(ngModel)]="activeStrat.search.uid" />
+                          <input *ngIf="activeStrat.search.type=='req'" type="text" class="dxc-frm-input" [ngStyle]="{'width':'95%'}"  [(ngModel)]="activeStrat.search.req" />
+                          <ng-container *ngIf="activeStrat.search.type=='merlin'">
+                              <span *ngIf="activeStrat.search.req">{{ stringifyReq(activeStrat.search.req) }}</span>
+                              <dxc-btn (click)="createRequest(activeStrat)" [label]="'Edit request'"></dxc-btn>
+                          </ng-container>
+                      </div>
+                      <div class="col-1 dxc-row-body">
+                          <dxc-icon [model]="gIcons['CROSS']" (click)="dropRequest(activeStrat)"></dxc-icon>
+                      </div>
+                  </div>
+              </ng-template>
+          </ng-template>
+
+
 
         <div class="ml-1">
-          <app-subnavbar [type]="'navbar'"  [parent]="this">
+          <app-subnavbar [bar]="true"  [parent]="this">
             <ng-container main>
-              <app-subnavbar-btn *ngIf="activeItem.before!=null" [active]="activeFrag==FRAG.BEFORE"  (click)="showFrag(FRAG.BEFORE, activeItem.before)">Before</app-subnavbar-btn>
-              <app-subnavbar-btn *ngIf="activeItem.after!=null" [active]="activeFrag==FRAG.AFTER"  (click)="showFrag(FRAG.AFTER, activeItem.after)">After</app-subnavbar-btn>
-              <app-subnavbar-btn *ngIf="activeItem.replace!=null" [active]="activeFrag==FRAG.REPLACE"  (click)="showFrag(FRAG.REPLACE, activeItem.replace)">Replace</app-subnavbar-btn>
-              <dxc-helper-btn [fmt]="helpSvc.BTN_NAV" [docid]="'insp.frag.tpl'">Help</dxc-helper-btn>
+              <app-subnavbar-btn *ngIf="activeStrat.before!=null" [active]="activeFrag==FRAG.BEFORE"  (click)="showFrag(FRAG.BEFORE, activeStrat.before)">Before</app-subnavbar-btn>
+              <app-subnavbar-btn *ngIf="activeStrat.after!=null" [active]="activeFrag==FRAG.AFTER"  (click)="showFrag(FRAG.AFTER, activeStrat.after)">After</app-subnavbar-btn>
+              <app-subnavbar-btn *ngIf="activeStrat.replace!=null" [active]="activeFrag==FRAG.REPLACE"  (click)="showFrag(FRAG.REPLACE, activeStrat.replace)">Replace</app-subnavbar-btn>
+                <app-subnavbar-btn [icon]="gIcons['PLUS']" (click)="addFrag(activeStrat)">Add fragment</app-subnavbar-btn>
+              <!-- <dxc-helper-btn [fmt]="helpSvc.BTN_NAV" [docid]="'insp.frag.tpl'">Help</dxc-helper-btn> -->
             </ng-container>
           </app-subnavbar>
           <ace-editor #frTplEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
         </div>
 
       </div>
-    </ng-container>
+
+
+      <div class="container-fluid" *ngIf="activeFilter && activeFilter.n!=null && activeRight==NODE_TYPES.RUNTIME_EVENT">
+          <h4 class="m-1 dxc-text-yellow">{{ activeFilter.name }}</h4>
+          <p class="m-1 mt-2 dxc-text-clear75">
+              {{ activeFilter.description }}
+          </p>
+
+          <div class="row m-1 mt-0">
+              <div class="col-6 ml-1 dxc-row-body">
+                  {{ activeItem.emitEvent!=null ? activeItem.emitEvent : 'No event emit' }}
+              </div>
+              <div class="col-3 ml-1 dxc-row-body dxc-green-pale">
+                  <span *ngIf="activeItem.emitEvent!=null" [ngClass]="{ 'text-danger':(activeItem.emitEvent==null) }">{{ activeItem.autoEmit ? 'auto' : 'processed' }}</span>
+              </div>
+          </div>
+          <h6 class="m-1 mt-3 dxc-text-100">Rules</h6><br>
+          <div *ngIf="activeItem.search.req"  class="box m-1 mt-1 p-2">
+              <div class="row dxc-text-yellow">
+                  <div class="col-12">
+                      <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
+                      <!--<dxc-meta ><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;request</dxc-meta>-->
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-12">
+                      <div *ngFor="let r of activeItem.search.req">
+                          {{ r }}
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div *ngIf="activeItem.search.uid"  class="box m-1 mt-3 p-2">
+              <div class="row dxc-text-yellow">
+                  <div class="col-12">
+                      <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['TARGET']" [color1]="'yellow'"></dxc-icon>&nbsp;static signature</span>
+                  </div>
+              </div>
+              <div class="row mt-1">
+                  <div class="col-12 ">
+                      <div class="actionable" *ngFor="let r of activeItem.search.uid" (click)="openNode(r, NODE_TYPES.METHOD)" [ngbTooltip]="'Show details'" >
+                          {{ r }}
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="ml-1">
+              <app-subnavbar [type]="'navbar'"  [parent]="this">
+                  <ng-container main>
+                      <app-subnavbar-btn *ngIf="activeItem.before!=null" [active]="activeFrag==FRAG.BEFORE"  (click)="showFrag(FRAG.BEFORE, activeItem.before)">Before</app-subnavbar-btn>
+                      <app-subnavbar-btn *ngIf="activeItem.after!=null" [active]="activeFrag==FRAG.AFTER"  (click)="showFrag(FRAG.AFTER, activeItem.after)">After</app-subnavbar-btn>
+                      <app-subnavbar-btn *ngIf="activeItem.replace!=null" [active]="activeFrag==FRAG.REPLACE"  (click)="showFrag(FRAG.REPLACE, activeItem.replace)">Replace</app-subnavbar-btn>
+                      <dxc-helper-btn [fmt]="helpSvc.BTN_NAV" [docid]="'insp.frag.tpl'">Help</dxc-helper-btn>
+                  </ng-container>
+              </app-subnavbar>
+              <ace-editor #frTplEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+          </div>
+
+      </div>
+      </ng-container>
 
   </app-viewport-splitted>
 </div>

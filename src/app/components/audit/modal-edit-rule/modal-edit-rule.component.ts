@@ -194,6 +194,9 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
      */
     reEnabled: boolean = false;
 
+    saveBtn = false;
+    onSave: Nullable<(vReq:MerlinSearchRequest)=>boolean> = null;
+
     constructor(
         public auditSvc: AuditService,
         private _projectSvc: ProjectService,
@@ -232,6 +235,10 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
                     this.targetOs = prj.os as OperatingSystem;
                 }
 
+                if(x.opts!=null){
+                    this.saveBtn = x.opts.save;
+                    this.onSave = x.opts.onSave;
+                }
                 this.modal.show();
             }
         });
@@ -260,6 +267,24 @@ export class ModalEditRuleComponent extends AbstractKeyboardNavigable implements
 
     close() {
         this.modal.hide('close');
+    }
+
+    save(){
+        if(this.onSave){
+            const req = new MerlinSearchRequest(
+                (this.newNode as NodeChoice).type,
+                this._getCurrentOperations()
+            );
+
+            console.log("Rule editor : on Save", req, this);
+            if(req!=null){
+                if(this.onSave.apply(null, [req])){
+                    this.saveBtn = false;
+                    this.onSave = null;
+                    this.modal.hide('close');
+                }
+            }
+        }
     }
 
     onTargetOsChange(pOS: OperatingSystem) {

@@ -5,6 +5,7 @@ import HookStrategySelector from "./HookStrategySelector";
 import HookTemplateFragment from "./HookTemplateFragment";
 import {Nullable} from "../../base/Nullable";
 import {IStringIndex} from "../../base/IStringIndex";
+import {Operation} from "../search/MerlinSearchRequest";
 
 export const DEFAULT_PRIORITY = -1;
 
@@ -183,7 +184,7 @@ export default class HookStrategy {
 
     }
 
-    getSearchEngineRequest():Nullable<string>  {
+    getSearchEngineRequest():Nullable<string|Operation[]>  {
         if(this.search != null){
             return this.search.getRequest();
         }else{

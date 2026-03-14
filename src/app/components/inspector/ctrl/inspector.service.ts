@@ -12,7 +12,13 @@ import {OutputMessage} from "../../../cmp/OutputMessage";
 import {OutputService} from "../../output/ctrl/output.service";
 import {Nullable} from "../../../base/Nullable";
 import {ContextMenuEvent} from "../../../base/context-menu/context-menu.component";
+import InspectorFactory from "../../../models/InspectorFactory";
 
+
+export interface InspectorInfo {
+    state: Inspector,
+    plugin: InspectorFactory
+}
 
 // @ts-ignore
 /**
@@ -115,6 +121,28 @@ export class InspectorService extends DxcApiService {
                     if(vRes.success){
                         let insp = new Inspector(vRes.data.state);
                         return insp;
+                    }else{
+                        return null;
+                    }
+                })
+            );
+    }
+
+
+
+    getInspectorPlugin( pId:string):Observable<Nullable<InspectorInfo>>{
+
+        return this._process(
+            this.endpoints['inspector']['state'],
+            { insp: pId }
+        )
+            .pipe(
+                map( (vRes:any) => {
+                    if(vRes.success){
+                        return {
+                            plugin: new InspectorFactory(vRes.data.plugin),
+                            state: new Inspector(vRes.data.state)
+                        };
                     }else{
                         return null;
                     }

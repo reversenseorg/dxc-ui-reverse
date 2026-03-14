@@ -1,21 +1,19 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef, EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
-import {ViewportComponent} from "../viewport/viewport.component";
-import {NavbarSimpleView} from "../../cmp/NavbarSimpleView";
-import {MenuItem, MenuView} from "../../cmp/MenuView";
 import ModelClass from "../../models/ModelClass";
 import {IController} from "../controllers/IController.interface";
 import {NgClass, NgIf, NgStyle} from "@angular/common";
-import {DxcBaseModule} from "../dxc-base.module";
 
 
 @Component({
@@ -61,7 +59,8 @@ import {DxcBaseModule} from "../dxc-base.module";
     NgIf,
     NgClass,
     NgStyle
-  ]
+  ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportSplittedComponent implements OnInit, OnChanges, AfterViewInit {
 

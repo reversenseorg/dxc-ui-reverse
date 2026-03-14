@@ -359,6 +359,7 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
     }
 
     getMessages() {
+        console.log("[HOOK][TERMINAL] getMessages ",this._current);
         return this._current?.messages ?? [];
     }
 }

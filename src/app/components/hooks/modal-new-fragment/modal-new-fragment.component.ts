@@ -25,6 +25,7 @@ import JavaMethodHook from "../../../models/JavaMethodHook";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {Nullable} from "../../../base/Nullable";
 import {IconModelCollection} from "../../../base/icon/IconModel";
+import {MerlinSearchRequest} from "../../../models/search/MerlinSearchRequest";
 
 
 interface EventSources {
@@ -74,7 +75,8 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
   weight = -1;
 
   _update = false;
-
+    _strat = false;
+    onSave: Nullable<(vReq:any)=>boolean> = null;
 
 
   constructor( private changeDetectorRef: ChangeDetectorRef,
@@ -120,6 +122,21 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
 
     console.log("SHOW ADD FRAG", pOptions)
     this.init();
+
+    if(pOptions.strat!=null){
+        // strategy frag
+        this.mode = pOptions.edit ? "Edit" : "Add";
+        this.pos = pOptions.pos;
+        this._update = pOptions.edit;
+        this._strat = true;
+        this.name = pOptions.name;
+        this.descr = pOptions.descr;
+        this.uid = pOptions._uid;
+        this.weight = pOptions.weight;
+        this.onSave = pOptions.onSave;
+        this.modal.show();
+        return;
+    }
 
     if(pOptions.hook != null){
       this._update = true;
@@ -182,6 +199,11 @@ export class ModalNewFragmentComponent extends AbstractKeyboardNavigable impleme
         console.log("[HOOK FRAGMENT] edit : ", gTargetHook, this.uid, opts);
         this.close();
       });
+    }else if(this._strat){
+        if(this.onSave != null && this.onSave.apply(null, [opts])){
+            console.log("[HOOK FRAGMENT] create/edit strategy fragment : ", gTargetHook, this.uid, opts);
+            this.close();
+        }
     }else{
       this.hookSvc.addHookFragment( gTargetHook, opts).subscribe( data => {
         console.log("[HOOK FRAGMENT] new : ", gTargetHook, opts);

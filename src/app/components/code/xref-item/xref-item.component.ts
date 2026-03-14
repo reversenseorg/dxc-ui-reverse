@@ -44,7 +44,7 @@ export interface TargetApp {
         <div [ngClass]="'col-lg-'+((item.tags!=null&& item.tags.length>0)?'9':'11')">
             <dxc-hook-status *ngIf="hookstatus" [ref]="getNode()"></dxc-hook-status>
             <dxc-icon [model]="xrefIcon"></dxc-icon>
-            <dxc-node-token [interactive]="true" [ref]="getNode()"></dxc-node-token>
+            <dxc-node-token [interactive]="true" [cache]="true" [ref]="getNode()"></dxc-node-token>
         </div>
         <div  *ngIf="item.tags!=null && item.tags.length>0" class="col-lg-2">
             <ng-container *ngFor="let t of item.tags">

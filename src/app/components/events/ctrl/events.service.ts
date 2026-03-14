@@ -13,6 +13,8 @@ import {ContextMenuEvent} from "../../../base/context-menu/context-menu.componen
 import {RuntimeEvent, RuntimeEventType} from "../../../models/hook/RuntimeEvent";
 import {map} from "rxjs/operators";
 import {OutputMessage} from "../../../cmp/OutputMessage";
+import {RuntimeSessionUUID} from "../../../models/RuntimeSession";
+import {DxApiResponse} from "../../../base/common/common";
 
 export interface HookTree {
   [parent:string] :Hook[]
@@ -139,23 +141,25 @@ export class RuntimeEventsService extends DxcApiService {
 
   // services
 
-  listEvents(pType: RuntimeEventType):Observable<RuntimeEvent<any>> {
-    return this._process(
+  listEvents(pSess:RuntimeSessionUUID, pType: RuntimeEventType, pOffset:number, pSize:number)
+      :Observable<DxApiResponse<RuntimeEvent<any>[]>> {
+    return this._processApiRequest(
         this.endpoints['events']['list'],{
-          type:pType
+            type:pType,
+            sess:pSess,
+            offset: pOffset,
+            size: pSize
+        },(pEl:any)=>{
+            if(pEl.success){
+                return pEl.data.map((e:any) => new RuntimeEvent(e)); //DeviceProfile.fromJsonObject(pEl.data);
+            }else{
+                this.outputSvc.print( OutputMessage.newError({
+                    src: "Runtime Events",
+                    msg: pEl.msg
+                }));
+                return [];
+            }
         }
-    ).pipe(
-        map((pEl:any)=>{
-          console.log(pEl);
-          if(pEl.success){
-            return pEl.data; //DeviceProfile.fromJsonObject(pEl.data);
-          }else{
-            this.outputSvc.print( OutputMessage.newError({
-              src: "Runtime Events",
-              msg: pEl.msg
-            }));
-          }
-        })
     );
   }
 }

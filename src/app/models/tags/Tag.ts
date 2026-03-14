@@ -4,9 +4,38 @@ import {INode} from "../INode";
 import {IStringIndex} from "../../base/IStringIndex";
 import {Nullable} from "../../base/Nullable";
 
+export interface TagOptions {
+    _?:number;
+    _uid?:string;
+    descr?:string;
+    label?:string;
+    styles?:any;
+    tags?:number[];
+    name?:string;
+    extra?:Record<string, any>;
+    category?:TagCategory;
+}
 
 export interface TagMap {
     [hashCode:number] :Tag
+}
+
+export interface TagCategoryOptions {
+    name?:string;
+    descr?:string;
+    tags?:number[];
+    _tags?:Tag[];
+    _tagsMap?:IStringIndex<Tag>;
+}
+
+/**
+ * Represent options to create a TagCategory with every children Tag
+ * as a single object, to create tag category in a one shot
+ *
+ * @interface
+ */
+export interface FlattenTagCategoryOptions extends TagCategoryOptions {
+    _tagsOptions:TagOptions[]
 }
 
 /**

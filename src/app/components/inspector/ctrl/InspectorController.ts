@@ -117,11 +117,13 @@ export class InspectorController implements IController {
     }
 
 
-    this.service.getInspectorState(pItem.id as string).subscribe( (pInspector:any)=>{
+    this.service.getInspectorPlugin(pItem.id as string).subscribe( (pInspector)=>{
       console.log(pInspector);
       if(pInspector==null) return;
-      pInspector._icon = GLOBAL_ICONS['FIND'];
-      pInspector = (this.app as any).getController('ctrl:hook-main').bindInspector(pInspector);
+
+
+      (pInspector.state as any)._icon = GLOBAL_ICONS['FIND'];
+      //pInspector = (this.app as any).getController('ctrl:hook-main').bindInspector(pInspector);
       this.rendered.push({ item:pItem, uid:vid });
       this.openView.next( { cmp: this.viewCmp.main,  ctrl:this, data:pInspector, uid:vid });
     });

@@ -8,7 +8,8 @@ import {IconModel} from "../icon/IconModel";
 
 
 export interface MenuEvent {
-  item:string
+  item:string,
+    opts?:any
 }
 
 interface MenuStatus {

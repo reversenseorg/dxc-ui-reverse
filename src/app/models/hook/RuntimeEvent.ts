@@ -10,7 +10,8 @@ export enum RuntimeEventType {
   HOOK= 'h',
   MEMORY='m',
   NETWORK='n',
-  FILESYSTEM='f'
+  FILESYSTEM='f',
+    ANY='*'
 }
 
 export interface HookRawMessage {

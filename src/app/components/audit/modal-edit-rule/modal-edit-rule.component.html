@@ -120,5 +120,7 @@
   </div>
   <div footer>
     <button class="dxc-frm-btn" (click)="close()">Close</button>
+      <button *ngIf="saveBtn" class="dxc-frm-btn" (click)="save()">
+          <dxc-icon [model]="gIcons['SAVE']"></dxc-icon>&nbsp;Save request</button>
   </div>
 </app-modal-base>

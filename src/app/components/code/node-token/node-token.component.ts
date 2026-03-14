@@ -224,7 +224,7 @@ export class NodeTokenComponent implements OnInit {
     getSymbol(pItem:Nullable<INode> = null):string {
 
         const itm = (pItem!=null ? pItem : this.item);
-        console.log("getSymbol() of ",itm,typeof pItem==='string');
+        console.log(`getSymbol() [cache=${this.cache?"Y":"N"}] of `,itm,typeof pItem==='string');
         if(typeof pItem==='string'){
             return pItem;
         }else {

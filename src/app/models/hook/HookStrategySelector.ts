@@ -2,7 +2,15 @@ import {NodeType} from "../NodeType";
 import {NodeInternalType} from "../NodeInternalType";
 import {Nullable} from "../../base/Nullable";
 import {IStringIndex} from "../../base/IStringIndex";
+import {Operation} from "../search/MerlinSearchRequest";
 
+
+export interface HookStrategySelectorOptions extends Record<string, any>{
+    type: string;
+    uid?:Nullable<any>;
+    req?:Nullable<string|Operation[]>;
+    opts?:any;
+}
 
 export default class HookStrategySelector {
 
@@ -14,7 +22,9 @@ export default class HookStrategySelector {
 
     uid?:any = null;
 
-    req?:Nullable<string> = null;
+    req?:Nullable<string|Operation[]> = null;
+
+    opts?:any;
 
 
     /**
@@ -22,7 +32,7 @@ export default class HookStrategySelector {
      *
      * @param {*} config
      */
-    constructor(pConfig:any=null){
+    constructor(pConfig:Nullable<HookStrategySelectorOptions>=null){
 
         // this.requiresNode = [];
         if(pConfig!=null)
@@ -31,7 +41,7 @@ export default class HookStrategySelector {
 
     }
 
-    static from(pData:any):HookStrategySelector {
+    static from(pData:HookStrategySelectorOptions):HookStrategySelector {
         return new HookStrategySelector(pData);
     }
 
@@ -59,7 +69,7 @@ export default class HookStrategySelector {
         this.req = pReq;
     }
 
-    getRequest():Nullable<string>{
+    getRequest():Nullable<string|Operation[]>{
         return this.req;
     }
 
@@ -79,7 +89,7 @@ export default class HookStrategySelector {
         return (this.type.getType() === null);
     }
 
-    static fromJsonObject(pObj:any):HookStrategySelector {
+    static fromJsonObject(pObj:HookStrategySelectorOptions):HookStrategySelector {
         const o = new HookStrategySelector();
         if(pObj.req != null) o.req = pObj.req;
         if(pObj.uid != null) o.uid = pObj.uid;
