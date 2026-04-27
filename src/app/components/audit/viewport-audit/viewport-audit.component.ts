@@ -416,7 +416,7 @@ export class ViewportAuditComponent implements AfterViewInit, IViewportContainer
   }
 
   newControl(pParent: any = null) {
-
+      this.auditService.openAssessEditor(new ControlAssessment({}));
   }
 
   newRule(pParent: any = null) {

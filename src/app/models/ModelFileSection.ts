@@ -1,4 +1,5 @@
 import {NodeInternalType} from "./NodeInternalType";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 /**
  * Represents a section into a file
@@ -6,7 +7,8 @@ import {NodeInternalType} from "./NodeInternalType";
  * @class
  * @since 1.0.0
  */
-export default class ModelFileSection {
+export default class ModelFileSection  extends RenderedModelNode
+{
 
 
     __:NodeInternalType = NodeInternalType.FILE_SECTION;
@@ -14,6 +16,7 @@ export default class ModelFileSection {
     t:string = "";
 
     constructor(pOffset:number, pType:string) {
+        super();
         this.o = pOffset;
         this.t = pType;
     }

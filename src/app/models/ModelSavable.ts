@@ -7,6 +7,7 @@ import {NodeInternalType} from "./NodeInternalType";
 import {Tag} from "./tags/Tag";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode, RenderingOptions} from "../base/RenderedModelNode";
 
 export enum STUB_TYPE {
     METHOD= 0x1,
@@ -49,15 +50,16 @@ export class Stub
 /**
  *
  */
-export class Savable implements INode, IStringIndex<any>
+export class Savable  extends RenderedModelNode implements INode, IStringIndex<any>
 {
   _uid:Nullable<any>;
   __:NodeInternalType;
   $:STUB_TYPE;
   tags:number[] = []
 
-  constructor(pType:STUB_TYPE) {
-    this.$ = pType;
+  constructor(pType:STUB_TYPE, pUi?:RenderingOptions) {
+      super(pUi);
+      this.$ = pType;
   }
 
   export( pStubType:Nullable<STUB_TYPE>=null, pExclude:string[]= []):Stub{

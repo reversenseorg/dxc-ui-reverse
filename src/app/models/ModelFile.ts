@@ -6,6 +6,9 @@ import DataScope from "./DataScope";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode, RenderingOptions} from "../base/RenderedModelNode";
+
+const def:RenderingOptions = { view:"txt" };
 
 export type FunctionSymbol = string;
 export interface AdressableMapping<T>  extends IStringIndex<T>{
@@ -27,7 +30,7 @@ export interface ExtraAnalyzedPpt extends IStringIndex<any>{
  *
  * @class
  */
-export default class ModelFile
+export default class ModelFile extends RenderedModelNode
 {
   __:NodeInternalType = NodeInternalType.FILE;
   _uid:Nullable<string> = null;
@@ -61,7 +64,7 @@ export default class ModelFile
    * @constructor
    */
   constructor(pConfig:any=null){
-
+      super(def);
     //this.trueFile = false;
 
     if(pConfig != null){

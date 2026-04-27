@@ -22,7 +22,21 @@
     </app-subnavbar>
   </div>
 
-  <div #editorViewer>
-    <ace-editor #codeEditorViewer theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+  <div #editorViewer >
+    <ace-editor #codeEditorViewer *ngIf="viewType!=='hex'" theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
   </div>
+    <dxc-hex-viewer *ngIf="viewType=='hex'"
+            [data]="data.ctn"
+            [baseAddress]="16384"
+            [bytesPerRow]="16"
+            [offsetFormat]="'hex'"
+            [selectable]="true"
+            [showHeader]="true"
+            [showFooter]="true"
+            [highlights]="[]"
+            (selectionChange)="onSelectionChange($event)"
+            (byteContextMenu)="onByteContextMenu($event)"
+            (asciiContextMenu)="onAsciiContextMenu($event)"
+            (offsetContextMenu)="onOffsetContextMenu($event)">
+    </dxc-hex-viewer>
 </div>

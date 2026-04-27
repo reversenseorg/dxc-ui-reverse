@@ -16,7 +16,7 @@ import {
 } from "../../../base/context-menu/context-menu.component";
 import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import {ProjectService} from "../../project/ctrl/project.service";
-import DexcaliburProject from "../../../models/DexcaliburProject";
+import DexcaliburProject, {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 import {HOOK_TARGET_TYPE, HookFragmentPresetType, HookService} from "../ctrl/hook.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
@@ -35,6 +35,9 @@ import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
 import NativeFunctionHook from "../../../models/NativeFunctionHook";
 import JavaMethodHook from "../../../models/JavaMethodHook";
+import {RuntimeEventsService} from "../../events/ctrl/events.service";
+import {RuntimeSession} from "../../../models/RuntimeSession";
+import {DxApiResponse} from "../../../base/common/common";
 
 
 interface HookPoolFacets {
@@ -51,7 +54,8 @@ export interface HookPoolMap {
   hook: { app: (NativeFunctionHook | JavaMethodHook | AbstractHook)[] },
   keyp: { app: KeyPoint[] },
   inspector: { app: Inspector[] },
-  sessions: { app: HookSession[] },
+  sessions: { app: RuntimeSession[] },
+  hksessions?: { app: HookSession[] },
   thema: { app:any[] },
   process: { app:any[] },
   thread: { app:any[] }
@@ -150,6 +154,7 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
   constructor( private projectSvc:ProjectService,
                private hookSvc:HookService,
+               private evtSvc:RuntimeEventsService,
                private inspSvc:InspectorService,
                private outputSvc:OutputService,
 
@@ -380,6 +385,11 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
         return pItem.children;
       }));
+    }else if(pItem.__===NodeInternalType.RUNTIME_SESS){
+        return from(((pItem as RuntimeSession).hksess as any).map((x:any) => {
+            x.__ = NodeInternalType.HOOK_SESSION;
+            return x;
+        }));
     }else{
       return from([]);
     }
@@ -392,11 +402,13 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
 
 
   isExpendable( pItem:any):boolean {
-    return (pItem.children !=null || pItem._t=='kp'); // && pItem.children.length>0);
+    return (pItem.children !=null || pItem._t=='kp')
+        ||(pItem.__==NodeInternalType.RUNTIME_SESS); // && pItem.children.length>0);
   }
 
   itemHasChildren( pItem:any, pType='p'): boolean {
-    return ['c','p','kp'].indexOf(pItem._t)>-1; //(pType=='c'||pType=='p'||pType=='kp');
+    return (['c','p','kp'].indexOf(pItem._t)>-1)
+        ||(pItem.__==NodeInternalType.RUNTIME_SESS); //(pType=='c'||pType=='p'||pType=='kp');
   }
 
   itemHasLazyChildren( pItem:any, pType ='p'): boolean {
@@ -404,7 +416,11 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
   }
 
   itemGetChildren( pItem:any):any{
-    return pItem.children;
+      if(pItem.__===NodeInternalType.RUNTIME_SESS){
+          return (pItem as RuntimeSession).hksess as any;
+      }else{
+          return pItem.children;
+      }
   }
 
   onExpand( pItem:any):void {
@@ -659,11 +675,17 @@ export class ExplorerHooksComponent extends SubExplorerComponent<HookController>
         });
         break;
       case HOOK_VIEW.SESSIONS:
-        this.hookSvc.getSessions().subscribe( (pSess:HookSession[])=>{
-          this.hookPools[HOOK_VIEW.SESSIONS].app = pSess;
-          this.activePool = this.hookPools[HOOK_VIEW.SESSIONS];
-          console.log(this.activePool);
-        });
+        this.evtSvc.listSessions()
+            .subscribe( (pSess:DxApiResponse<RuntimeSession[]>)=>{
+              if(pSess.success){
+                  this.hookPools[HOOK_VIEW.SESSIONS].app = pSess.data ?? [];
+              }else{
+                  this.hookPools[HOOK_VIEW.SESSIONS].app = [];
+              }
+
+              this.activePool = this.hookPools[HOOK_VIEW.SESSIONS];
+              console.log("runtime sessions : ",pSess,this.activePool);
+            });
         break;
       default:
       case HOOK_VIEW.KP:

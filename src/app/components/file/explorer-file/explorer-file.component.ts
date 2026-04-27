@@ -27,6 +27,7 @@ import {ClipboardService} from "../../../core/services/clipboard.service";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {UIException} from "../../../base/error/UIException";
 import {Nullable} from "../../../base/Nullable";
+import {ViewerType} from "../../../base/RenderedModelNode";
 
 export enum FS_SUBVIEW {
   PKG,
@@ -146,13 +147,15 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
 
   ngOnInit(): void {
     this.projectSvc.onProjectReady.subscribe( (pProject:DexcaliburProject)=>{
-      this.projectReady = true;
-      this.fsSvc.listPackageContent().subscribe( (pFiles:any)=>{
-        console.log("listPackageContent > ",pFiles);
-        if(pFiles!=null){
-          this.activePool = this.fsPools[FS_SUBVIEW.PKG] = this.sortFiles(pFiles);
-        }
-      });
+        if(this.projectReady) return;
+
+          this.projectReady = true;
+          this.fsSvc.listPackageContent().subscribe( (pFiles:any)=>{
+            console.log("listPackageContent > ",pFiles);
+            if(pFiles!=null){
+              this.activePool = this.fsPools[FS_SUBVIEW.PKG] = this.sortFiles(pFiles);
+            }
+          });
     });
 
     this.projectSvc.onProjectClose.subscribe( (pProject:DexcaliburProject)=>{
@@ -252,8 +255,9 @@ export class ExplorerFileComponent extends SubExplorerComponent<FileController> 
     return data;
   }
 
-  open( pItem:any): any {
-    this.controller.open( { file:pItem, pool:this.activePoolID }, 'expl');
+  open( pItem:any, pType:ViewerType = 'txt'): any {
+      (pItem as ModelFile).setUiType(pType);
+    this.controller.open( { file:pItem, type:pType, pool:this.activePoolID }, 'expl');
     return null;
   }
 

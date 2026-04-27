@@ -88,5 +88,6 @@
   <app-context-item [label]="'Copy name'" (click)="copyAttr(ctxMenuState.subject, 'n')"></app-context-item>
   <app-context-item [label]="'Copy path'" (click)="copyAttr(ctxMenuState.subject, '_r')"></app-context-item>
   <app-context-item [label]="'Open'" (click)="open(ctxMenuState.subject)"></app-context-item>
+    <app-context-item [label]="'Hex viewer'" (click)="open(ctxMenuState.subject,'hex')"></app-context-item>
 </app-context-menu>
 

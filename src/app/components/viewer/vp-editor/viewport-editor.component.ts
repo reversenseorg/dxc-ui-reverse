@@ -17,6 +17,8 @@ import {Subject} from "rxjs";
 import {ViewerController} from "../ctrl/ViewerController";
 import {SubnavbarComponent} from "../../../base/subnavbar/subnavbar.component";
 import {ClipboardService} from "../../../core/services/clipboard.service";
+import {HexViewerSelection} from "../../../base/viewer/hex-viewer.component";
+import {ViewerType} from "../../../base/RenderedModelNode";
 
 
 // @ts-ignore
@@ -62,6 +64,7 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
   resize$: Subject<any> = new Subject<any>();
   activeWidth: number = 60;
   searchBar: boolean = false;
+    viewType: ViewerType = 'txt';
 
   constructor( private eSvc:ClipboardService) { }
 
@@ -71,7 +74,11 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
 
   configure( pData:any):void {
     this.data = pData;
-    this.view.tab.icon = GLOBAL_ICONS['FILE'];
+
+
+
+
+      this.view.tab.icon = GLOBAL_ICONS['FILE'];
 
     this.view.tab.label = (pData.n!=null ? pData.n : pData.name);
     this.view.tab.color = 'dxc-text-clear100';
@@ -84,28 +91,36 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
 
   ngAfterViewInit() {
 
-    // init editor
-    //console.log(this.subnav);
-    this.editorHeight = this.size.height  - this.subnav.getHeight(); ;
+
+      if(this.data!=null) {
+          console.log("configure : ", this.data,this.data.getUiType());
+          this.viewType = this.data.getUiType() ?? "txt";
+      }
+
+      let editor:any = null;
+
+      if(this.viewType=='txt') {
+          // init editor
+          //console.log(this.subnav);
+          this.editorHeight = this.size.height  - this.subnav.getHeight(); ;
 
 
-    let editor:any = this.codeEditor.getEditor();
+          editor = this.codeEditor.getEditor();
+          editor.setOptions({
+              showLineNumbers: true,
+              tabSize: 2
+          });
+          editor.container.style.height = this.editorHeight+'px';
+          editor.container.style.minHeight = this.editorHeight+'px';
+          editor.container.style.maxHeight = this.editorHeight+'px';
 
+          this.codeEditor.mode = 'javascript';
+          this.codeEditor.theme = 'monokai';
+          this.codeEditor.value = this.data.ctn;
 
-    editor.setOptions({
-      showLineNumbers: true,
-      tabSize: 2
-    });
+          editor.resize();
+      }
 
-    editor.container.style.height = this.editorHeight+'px';
-    editor.container.style.minHeight = this.editorHeight+'px';
-    editor.container.style.maxHeight = this.editorHeight+'px';
-
-    this.codeEditor.mode = 'javascript';
-    this.codeEditor.theme = 'monokai';
-    this.codeEditor.value = this.data.ctn;
-
-    editor.resize();
 
     // init resize handler
 
@@ -113,11 +128,14 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
 
       this.editorHeight = pSize.height - this.subnav.getHeight();
 
-      editor.container.style.height = this.editorHeight+'px';
-      editor.container.style.minHeight = this.editorHeight+'px';
-      editor.container.style.maxHeight = this.editorHeight+'px';
+      if(this.viewType=='txt' && editor != null) {
+          editor.container.style.height = this.editorHeight+'px';
+          editor.container.style.minHeight = this.editorHeight+'px';
+          editor.container.style.maxHeight = this.editorHeight+'px';
 
-      editor.resize();
+          editor.resize();
+      }
+
     });
   }
 
@@ -143,4 +161,20 @@ export class ViewportEditorComponent implements OnInit, AfterViewInit, IViewport
     // basic copy : copy only selection
     this.eSvc.writeToClipboard( this.codeEditor.getEditor().getSelectedText());
   }
+
+    onSelectionChange($event: HexViewerSelection) {
+        
+    }
+
+    onByteContextMenu($event: { offset: number; value: number; event: MouseEvent }) {
+        
+    }
+
+    onAsciiContextMenu($event: { offset: number; char: string; event: MouseEvent }) {
+        
+    }
+
+    onOffsetContextMenu($event: { offset: number; event: MouseEvent }) {
+        
+    }
 }

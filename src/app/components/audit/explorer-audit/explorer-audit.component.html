@@ -4,7 +4,6 @@
     <ng-container opts>
       <!--<button class="btn-option" (click)="refresh()"><fa-icon [icon]="['fas','cog']"></fa-icon></button>-->
       <button class="ml-2 btn-option" [ngbTooltip]="'Refresh'" (click)="refresh()"><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
-      <button class="ml-2 btn-option" [ngbTooltip]="'Scan'"><dxc-icon [model]="gIcons['PLAY']"></dxc-icon> </button>
     </ng-container>
   </app-explorer-navbar>
 
@@ -90,5 +89,5 @@
   <app-context-item [label]="'Scan'" [icon]="gIcons['PLAY']" (click)="scanModel(ctxMenuState.subject)" ></app-context-item>
 </app-context-menu>
 
-
+<dxc-modal-add-assessment [controller]="controller"></dxc-modal-add-assessment>
 <!--<dxc-modal-edit-rule [controller]="controller"></dxc-modal-edit-rule>-->

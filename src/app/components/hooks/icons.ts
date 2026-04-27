@@ -106,6 +106,17 @@ export const HOOK_ICONS = {
     type: 'fas',
     name: 'scroll',
     color1: 'dxc-text-50'
-  })
-
+  }),
+    RTSESS:new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'clock-rotate-left',
+        color1: 'dxc-text-75', //'dxc-text-75',
+    }),
+    HKSESS: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'bolt',
+        color1: 'dxc-text-yellow'
+    }),
 };

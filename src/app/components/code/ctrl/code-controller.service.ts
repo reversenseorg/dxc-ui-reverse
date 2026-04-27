@@ -38,6 +38,8 @@ import {DxcApiToken} from "../../../base/DxcApiToken";
 import ModelStringValue from "../../../models/ModelStringValue";
 import ModelResource from "../../../models/ModelResource";
 import ModelCall from "../../../models/ModelCall";
+import ModelBasicBlock from "../../../models/ModelBasicBlock";
+import ModelInstruction from "../../../models/ModelInstruction";
 
 export interface CodeMenuEvent extends MenuEvent {
   win?:any
@@ -136,6 +138,7 @@ export class CodeControllerService extends DxcApiService{
       },
       method: {
         disass: {method: 'GET', url: '/code/method/disass/:id', format: 'json', auth:false /* removed */, puid: true},
+        body: {method: 'GET', url: '/code/method/body/:id', format: 'json', auth:false /* removed */, puid: true},
         edit: {method: 'PUT', url: '/code/method/:id', format: 'json', auth:false /* removed */, puid: true},
         info: {method: 'GET', url: '/code/method/:id', format: 'json', auth:false /* removed */, puid: true},
         xref: {method: 'GET', url: '/code/method/xref/:id', format: 'json', auth:false /* removed */, puid: true},
@@ -729,6 +732,30 @@ export class CodeControllerService extends DxcApiService{
         ':query': encodeURIComponent(btoa(`get.package("${pQuery}")`))
       }
     );
+  }
+
+  instr(pRef:INodeRef, pProject:Nullable<DexcaliburProjectUUID> = null):Observable<ModelBasicBlock[]> {
+      let opts:any =   { id:pRef._uid };
+      if(pProject!=null) opts.puid = pProject;
+
+      return this._process(this.endpoints.method.body,opts).pipe(map( pRes => {
+          if(!pRes.success){
+              this.outputSvc.print(OutputMessage.newError({ msg:pRes.msg, src:"Bytecode Analyzer" }));
+              return null;
+          }else{
+              this.outputSvc.print(OutputMessage.newSuccess({ msg:"BB from Method ["+pRef._uid+"] has been successfully read", src:"Bytecode Analyzer" }));
+              return pRes.data.map((vBb:any) => {
+
+                  const bb = new ModelBasicBlock(vBb);
+                  vBb.stack.map( (i:any) => {
+                    bb.stack.push(new ModelInstruction(i));
+                  });
+
+                  return bb;
+              });
+          }
+
+      }));
   }
 
   disassMethod( pRef:INodeRef, pDirect = false,

@@ -24,6 +24,7 @@ import {ExpandableListComponent} from "../../base/expandable-list/expandable-lis
 import {MetaComponent} from "../../base/meta/meta.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
+import {ModalAddAssessmentComponent} from "./misc/modal-add-assessment";
 
 @NgModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -36,7 +37,8 @@ import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
         ControlRowComponent,
         RuleRowComponent,
         ModalEditRuleComponent,
-        TerminalAuditComponent
+        TerminalAuditComponent,
+        ModalAddAssessmentComponent
     ],
     exports: [
         RuleRowComponent,
@@ -48,7 +50,8 @@ import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
         RuleRowComponent,
         TerminalAuditComponent,
 
-        ModalEditRuleComponent
+        ModalEditRuleComponent,
+        ModalAddAssessmentComponent
     ],
     imports: [
         CommonModule,

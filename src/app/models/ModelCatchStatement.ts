@@ -2,6 +2,7 @@ import ModelClass from "./ModelClass";
 import ModelBasicBlock from "./ModelBasicBlock";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 interface ITryCatchBoundary
 {
@@ -12,12 +13,13 @@ interface ITryCatchBoundary
 };
 
 
-export default class ModelCatchStatement
+export default class ModelCatchStatement  extends RenderedModelNode
 {
     __:NodeInternalType = NodeInternalType.CATCH_STMT;
     d:ITryCatchBoundary = { 0:null, 1:null, 2:null, 3:null };
 
     constructor(){
+        super();
         this.d = {} as ITryCatchBoundary;
     }
 

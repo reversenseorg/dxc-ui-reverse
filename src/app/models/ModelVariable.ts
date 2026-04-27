@@ -1,6 +1,7 @@
 import {NodeType} from "./NodeType";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 
 export enum ModelVariableType {
@@ -19,7 +20,7 @@ interface ModelVariableReference {
  *
  * @class
  */
-export class ModelVariable {
+export class ModelVariable  extends RenderedModelNode {
 
   __:NodeInternalType = NodeInternalType.VAR;
   _t:NodeType = NodeType.VAR;
@@ -28,6 +29,9 @@ export class ModelVariable {
   type:string = "";
   refs:Nullable<ModelVariableReference> = null;
 
+  constructor() {
+      super();
+  }
   getName():string{
     return this.n;
   }

@@ -15,7 +15,11 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import {UIException} from "../../../base/error/UIException";
 import ModelFile from "../../../models/ModelFile";
 
-
+export interface FileNode {
+    file: ModelFile,
+    type: string,
+    pool: number
+}
 export class FileController implements IController {
 
   /**
@@ -77,7 +81,7 @@ export class FileController implements IController {
     fileViewer.open(pFile, 'file');
   }
 
-  open(pItem: any, pSrc:any): any{
+  open(pItem: FileNode, pSrc:any): any{
 
     if(this.app==null){
       throw  UIException.APP_NOT_INITIALIZED();
@@ -90,30 +94,12 @@ export class FileController implements IController {
 
     switch(pItem.pool){
       case FS_SUBVIEW.DEV:
-        this.service.listWorkspace(pItem.file.p).subscribe( pFile => {
-          console.log(pFile);
-          if(pFile!=null && pFile.length==1){
-            pFile[0].local = true;
-            fileViewer.open(pFile[0], 'file');
-          }else{
-            // add output svc
-          }
-        });
-        break;
       case FS_SUBVIEW.APP:
-        this.service.listWorkspace(pItem.file.p).subscribe( pFile => {
-          if(pFile!=null && pFile.length==1){
-            pFile[0].local = true;
-            fileViewer.open(pFile[0], 'file');
-          }else{
-            // add output svc
-          }
-        });
-        break;
       case FS_SUBVIEW.WS:
-        this.service.listWorkspace(pItem.file.p).subscribe( pFile => {
+        this.service.listWorkspace((pItem.file as any).p).subscribe( pFile => {
           if(pFile!=null && pFile.length==1){
             pFile[0].local = true;
+              pFile[0]._ui = (pItem.file as any)._ui;
             fileViewer.open(pFile[0], 'file');
           }else{
             // add output svc
@@ -122,9 +108,9 @@ export class FileController implements IController {
         break;
       case FS_SUBVIEW.PKG:
               console.log(pItem.file._uid);
-              switch (pItem.file.t) {
+              switch ((pItem.file as any).t) {
                 case 'ELF':
-                  fn = this.service.getNativeFileContent(pItem.file._r, 'PKG').subscribe( pFile => {
+                  fn = this.service.getNativeFileContent((pItem.file as any)._r, 'PKG').subscribe( pFile => {
                     console.log(pFile);
                     if(pFile!=null) {
                       //console.log(pFile);
@@ -137,7 +123,7 @@ export class FileController implements IController {
                   break;
                 default:
 
-                  fn = this.service.viewFileContent(pItem.file._uid).subscribe( pFile => {
+                  fn = this.service.viewFileContent((pItem.file as any)._uid).subscribe( pFile => {
                     console.log(pFile);
                     if(pFile!=null) {
                       //console.log(pFile);

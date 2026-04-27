@@ -3,13 +3,14 @@ import ModelMetadata from "./ModelMetadata";
 import ModelClass from './ModelClass';
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 /**
  * The class represents a Java|* Package
  *
  * @class
  */
-export default class ModelPackage
+export default class ModelPackage  extends RenderedModelNode
 {
     __:NodeInternalType = NodeInternalType.PACKAGE;
     /**
@@ -58,6 +59,7 @@ export default class ModelPackage
      * @constructor
      */
     constructor(pName:string){
+        super();
         this.name = pName;
         this.sname = pName.split('.').pop() as string;
         this.children = [];

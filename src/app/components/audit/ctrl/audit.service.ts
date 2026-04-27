@@ -101,7 +101,7 @@ export class AuditService extends DxcApiService{
           controls: { method: 'POST', url:'/audit/controls/:model', format:'json', auth:false /* removed */, puid:true},
         },
         scan: {
-          start: { method: 'POST', url:'/audit/project/:uid/scan/start', format:'json', auth:false, puid:false},
+         // start: { method: 'POST', url:'/audit/project/:uid/scan/start', format:'json', auth:false, puid:false},
           listProject: { method: 'POST', url:'/audit/project/:uid/scan/list', format:'json', auth:false, puid:false},
           list: { method: 'GET', url:'/audit/order/list', format:'json', auth:false, puid:false},
           scheduler_info: { method: 'GET', url:'/node/scheduler/info', format:'json', auth:false, puid:false},

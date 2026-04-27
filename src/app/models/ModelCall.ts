@@ -6,14 +6,17 @@ import ModelClass from "./ModelClass";
 import {INodeRef, NodeInternalType} from "./NodeInternalType";
 import {IStringIndex} from "../base/IStringIndex";
 import {Nullable} from "../base/Nullable";
+import {RenderedModelNode, RenderingOptions} from "../base/RenderedModelNode";
 
 const EOL = '\n';
+
+
 /**
  * Represents a call to a method, a field or a class
  * @param {Object} cfg Optional, an object wich can be used in order to initialize the instance
  * @constructor
  */
-export default class ModelCall
+export default class ModelCall extends RenderedModelNode
 {
     __ = NodeInternalType.CALL;
 
@@ -32,7 +35,7 @@ export default class ModelCall
     tags:number[] = [];
 
     constructor(pConfig:any=null){
-        //super(STUB_TYPE.CALL);
+        super();
 
         if(pConfig !== undefined)
             for(let i in pConfig)

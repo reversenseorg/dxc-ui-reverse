@@ -1,9 +1,10 @@
 import ModelMethod from "./ModelMethod";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 
-export default class ModelDataBlock
+export default class ModelDataBlock  extends RenderedModelNode
 {
     __:NodeInternalType = NodeInternalType.DATA_BLOCK;
     line:number = -1;
@@ -20,7 +21,7 @@ export default class ModelDataBlock
     parent:Nullable<ModelMethod> = null;
 
     constructor(dataWidth:number=1){
-
+        super();
         this.width = dataWidth;
         this.virtual64 = false;
 

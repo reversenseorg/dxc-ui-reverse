@@ -33,6 +33,7 @@ import {XrefItemComponent} from "./xref-item/xref-item.component";
 import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
 import {CodeEmulatorComponent} from "./emulator/emulator.component";
 import {OsApiXrefComponent} from "./osapi-xref.component";
+import {ModelGraphViewerComponent} from "../../base/viewer/graph-viewer.component";
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import {OsApiXrefComponent} from "./osapi-xref.component";
         ReactiveFormsModule,
         HookStatusComponent,
         FormsModule,
-        OsApiXrefComponent
+        OsApiXrefComponent,
+        ModelGraphViewerComponent
     ],
     exports: [
         CodeSymbolTableComponent,

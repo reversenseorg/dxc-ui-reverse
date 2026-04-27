@@ -93,14 +93,16 @@
 
 
 
-  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [topHeight]="50" [type]="'2:1'">
-    <ng-container nav-top>
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="100-rightWidth" [topHeight]="topHeight" [type]="'1:2'">
+    <ng-container nav-left>
       <app-subnavbar [type]="'navbar'"  [parent]="this" #topNav>
 
           <ng-container main>
             <app-subnavbar-btn [active]="activeTop=='cfg'" [icon]="gIcons['LIST']" (click)="showGraph('disassembly')">&nbsp;CFG</app-subnavbar-btn>
             <app-subnavbar-btn [active]="activeTop=='bc'" [icon]="gIcons['LIST']" (click)="showBytecode()">&nbsp;Bytecode</app-subnavbar-btn>
-            <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons['PLAY']" (click)="showDxcVM()">&nbsp;Simplify</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeTop=='xt'" [icon]="icons['XREF']"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeTop=='xf'" [icon]="icons['XREF']"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
+              <app-subnavbar-btn [active]="activeTop=='vm'" [icon]="gIcons['PLAY']" (click)="showDxcVM()">&nbsp;Simplify</app-subnavbar-btn>
             <app-subnavbar-menu [label]="'Deobfuscation'" [icon]="gIcons['ANALYZE']">
               <ng-container entries>
                 <app-subnavbar-btn [icon]="gIcons['PLUS']" (click)="doDeobfuscationTask('count_nop')">Count NOP</app-subnavbar-btn>
@@ -110,8 +112,8 @@
               </ng-container>
             </app-subnavbar-menu>
 
-            <app-subnavbar-btn [disable]="true" [active]="activeTop=='ed'" [icon]="gIcons['EDIT']">&nbsp;Patch</app-subnavbar-btn>
-            <app-subnavbar-btn [disable]="true" [active]="activeTop=='pv'" [icon]="icons['LIST']">&nbsp;Param values</app-subnavbar-btn>
+            <!--<app-subnavbar-btn [disable]="true" [active]="activeTop=='ed'" [icon]="gIcons['EDIT']">&nbsp;Patch</app-subnavbar-btn>-->
+            <app-subnavbar-btn [disable]="true" [active]="activeTop=='pv'" [icon]="icons['LIST']">&nbsp;Params</app-subnavbar-btn>
             <app-subnavbar-btn *ngIf="!data.probing" [active]="activeTop=='hk'" [icon]="gIcons['GEN_HOOK']" (click)="addProbe()">&nbsp;Generate hook</app-subnavbar-btn>
             <app-subnavbar-btn *ngIf="data.probing && data.hooked" [active]="activeTop=='hk'" [icon]="gIcons['STOP']" (click)="stopHooking()">&nbsp;Stop hooking</app-subnavbar-btn>
             <app-subnavbar-btn *ngIf="data.probing && (!data.hooked)" [active]="activeTop=='hk'" [icon]="gIcons['STOP']" (click)="stopHooking()">&nbsp;Start hooking</app-subnavbar-btn>
@@ -122,57 +124,94 @@
           </ng-container>-->
       </app-subnavbar>
     </ng-container>
-    <ng-container body-top>
+      <ng-container body-left>
 
-      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='bc')">
-        <div #editor (contextmenu)="openEditorMenu($event)">
-          <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
-        </div>
-      </div>
+          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='bc')">
+              <div #editor (contextmenu)="openEditorMenu($event)">
+                  <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+              </div>
+          </div>
 
-    <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')">
-        <app-graph-explorer [from]="data" [viewType]="'disassembly'"></app-graph-explorer>
-    </div>
+          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')"
+               *ngIf="activeBottom=='ast'">
+              <app-graph-explorer [from]="data" [viewType]="'disassembly'"></app-graph-explorer>
+          </div>
+
+          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')"
+               *ngIf="activeBottom=='cfg'" style="height:100%">
+              <dxc-model-graph-viewer
+                      [data]="cfgData"
+                      [showToolbar]="true"
+                      [showLegend]="true"
+                      [maxDepth]="2"
+                      [autoFit]="true"
+                      (nodeClick)="onNodeClick($event)"
+                      (selectionChange)="onNodeSelectionChange($event)">
+              </dxc-model-graph-viewer>
+          </div>
+
+          <div class="container-fluid view-outer"
+               [class.dxc-hidden]="(activeTop==null) || (['xt','xf'].indexOf(activeTop)==-1)"
+               *ngIf="activeTop=='xt'||activeTop=='xf'" style="height:100%">
+              <dxc-model-graph-viewer
+                      [data]="xrefD"
+                      [showToolbar]="true"
+                      [showLegend]="true"
+                      [maxDepth]="2"
+                      [hidden]="getHiddenXref()"
+                      [only]="['_caller','_called']"
+                      [autoFit]="true"
+                      (nodeClick)="onNodeClick($event)"
+                      (selectionChange)="onNodeSelectionChange($event)">
+              </dxc-model-graph-viewer>
+          </div>
+
+          <div class="container-fluid view-outer" [ngStyle]="{'height':'100%'}"
+               [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
+              <dxc-code-emulator [parentLayout]="layout" [node]="data"
+                                 (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
+          </div>
+
+          <app-subnavbar [type]="'navbar'" [parent]="this">
+              <ng-container main>
+                  <app-subnavbar-btn *ngIf="!direct && hooks!=null && hooks.length>0" [active]="activeBottom=='hk'"
+                                     [icon]="gIcons['HOOKS']" (click)="showHooks()">Hooks
+                  </app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="!direct && hooksMsg!=null && hooksMsg.length>0"
+                                     [active]="activeBottom=='hm'" [icon]="gIcons['LIST']" (click)="showHooksLogs()">
+                      Hooks logs
+                  </app-subnavbar-btn>
+
+                  <app-subnavbar-btn *ngIf="!direct && activeTop=='vm'" [active]="activeBottom=='vml'"
+                                     (click)="showVmLogs()">DDVM Logs
+                  </app-subnavbar-btn>
+                  <app-subnavbar-btn *ngIf="!direct && activeTop=='vm'" [active]="activeBottom=='sym'"
+                                     (click)="showVmSym()">DDVM Local Symbols
+                  </app-subnavbar-btn>
+              </ng-container>
+              <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
+                  <ng-container *ngFor="let act of data.frontController.actions">
+                      <app-subnavbar-btn [icon]="act.nav.icon" (click)="performExtra(act.name)">{{ act.nav.label }}
+                      </app-subnavbar-btn>
+                  </ng-container>
+              </ng-container>
+          </app-subnavbar>
+      </ng-container>
 
 
-      <div class="container-fluid view-outer" [ngStyle]="{'height':'100%'}" [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
-          <dxc-code-emulator [parentLayout]="layout" [node]="data" (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
-      </div>
-    </ng-container>
+      <ng-container body-right>
 
-
-
-    <ng-container nav-bottom>
-      <app-subnavbar [type]="'navbar'"  [parent]="this">
-        <ng-container main>
-          <app-subnavbar-btn *ngIf="!direct && hooks!=null && hooks.length>0" [active]="activeBottom=='hk'" [icon]="gIcons['HOOKS']" (click)="showHooks()">Hooks</app-subnavbar-btn>
-          <app-subnavbar-btn *ngIf="!direct && hooksMsg!=null && hooksMsg.length>0" [active]="activeBottom=='hm'" [icon]="gIcons['LIST']" (click)="showHooksLogs()">Hooks logs</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeBottom=='xt'" [icon]="icons['XREF']"  (click)="showXrefTo()">&nbsp;XRef To</app-subnavbar-btn>
-          <app-subnavbar-btn [active]="activeBottom=='xf'" [icon]="icons['XREF']"  (click)="showXrefFrom()">&nbsp;XRef From</app-subnavbar-btn>
-          <app-subnavbar-btn *ngIf="!direct && activeTop=='vm'" [active]="activeBottom=='vml'" (click)="showVmLogs()">DDVM Logs</app-subnavbar-btn>
-            <app-subnavbar-btn *ngIf="!direct && activeTop=='vm'" [active]="activeBottom=='sym'" (click)="showVmSym()">DDVM Local Symbols</app-subnavbar-btn>
-        </ng-container>
-        <ng-container *ngIf="data.gui_available==true && data.frontController!=null" extra>
-          <ng-container *ngFor="let act of data.frontController.actions">
-            <app-subnavbar-btn [icon]="act.nav.icon" (click)="performExtra(act.name)">{{ act.nav.label }}</app-subnavbar-btn>
-          </ng-container>
-        </ng-container>
-      </app-subnavbar>
-    </ng-container>
-    <ng-container body-bottom>
-
-      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xt')">
+      <!--<div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xt')">
           <dxc-xref-list  [header]="false" [xrefto]="true" [data]="xrefTo"></dxc-xref-list>
-          <!--<dxc-search-result-list [hFull]="true" [results]="data" [controller]="searchCtrl" [mainController]="searchCtrl.app"></dxc-search-result-list>-->
-      </div>
+      </div>-->
 
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='sym')">
           <dxc-code-symbol-table></dxc-code-symbol-table>
       </div>
 
-      <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xf')">
+      <!--<div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='xf')">
           <dxc-xref-list [header]="false" [xreffrom]="true" [data]="xrefFrom"></dxc-xref-list>
-      </div>
+      </div>-->
 
       <div *ngIf="!direct"  class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='hk')">
 

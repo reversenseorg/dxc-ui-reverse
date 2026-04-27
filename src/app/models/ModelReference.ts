@@ -6,12 +6,13 @@ import {Savable, STUB_TYPE} from "./ModelSavable";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 /**
  * Represents a reference to a field in the Application bytecode
  * @class
  */
-export class ModelFieldReference
+export class ModelFieldReference  extends RenderedModelNode
 {
 
     fullname:Nullable<string>=null;
@@ -30,6 +31,7 @@ export class ModelFieldReference
      * @constructor
      */
     constructor(pConfig:any=null) {
+        super();
         if(pConfig!==undefined)
             for(let i in pConfig)
                 (this as IStringIndex<any>)[i]=pConfig[i];

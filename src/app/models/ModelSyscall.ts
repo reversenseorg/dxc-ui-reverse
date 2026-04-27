@@ -4,6 +4,7 @@ import {OperatingSystem} from "./OperatingSystem";
 import {Architecture} from "./Architecture";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 
 /**
@@ -11,7 +12,7 @@ import {IStringIndex} from "../base/IStringIndex";
  * @param {Object} config Optional, an object wich can be used in order to initialize the instance
  * @constructor
  */
-export default class ModelSyscall implements INode
+export default class ModelSyscall  extends RenderedModelNode implements INode
 {
   __:NodeInternalType = NodeInternalType.SYSCALL;
 
@@ -39,6 +40,7 @@ export default class ModelSyscall implements INode
   hooks:any[] = [];
 
   constructor(pConfig:any=null){
+      super();
     if(pConfig!=null){
       for(const i in pConfig)
         (this as IStringIndex<any>)[i]=pConfig[i];

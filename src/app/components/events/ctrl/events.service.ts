@@ -13,8 +13,9 @@ import {ContextMenuEvent} from "../../../base/context-menu/context-menu.componen
 import {RuntimeEvent, RuntimeEventType} from "../../../models/hook/RuntimeEvent";
 import {map} from "rxjs/operators";
 import {OutputMessage} from "../../../cmp/OutputMessage";
-import {RuntimeSessionUUID} from "../../../models/RuntimeSession";
+import {RuntimeSession, RuntimeSessionUUID} from "../../../models/RuntimeSession";
 import {DxApiResponse} from "../../../base/common/common";
+import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 
 export interface HookTree {
   [parent:string] :Hook[]
@@ -103,7 +104,10 @@ export class RuntimeEventsService extends DxcApiService {
     super(
       {
           events: {
-            list: { method: 'GET', url:'/hook/list', format:'json', auth:false /* removed */, puid:true},
+            list: { method: 'GET', url:'/runtime/events/list', format:'json', auth:false /* removed */, puid:true},
+          },
+          sessions: {
+              list: { method: 'GET', url:'/runtime/sessions/list', format:'json', auth:false /* removed */, puid:true},
           },
         },_http, outputSvc
       );
@@ -162,4 +166,15 @@ export class RuntimeEventsService extends DxcApiService {
         }
     );
   }
+
+    listSessions(pPrj:Nullable<DexcaliburProjectUUID> = null)
+        :Observable<DxApiResponse<RuntimeSession[]>> {
+
+        const opts:any = {};
+        if(pPrj != null) opts.prj = pPrj;
+
+        return this._processApiRequest(this.endpoints['sessions']['list'],opts,(pData:any)=>{
+            return pData.map((e:any) => new RuntimeSession(e));
+        });
+    }
 }

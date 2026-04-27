@@ -31,6 +31,7 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import {IconModelCollection} from "../../../base/icon/IconModel";
 import {UIException} from "../../../base/error/UIException";
 import {HookSession} from "./HookSession";
+import {RuntimeSession} from "../../../models/RuntimeSession";
 
 
 export class HookController extends UiController implements IController {
@@ -431,6 +432,10 @@ export class HookController extends UiController implements IController {
   }
 
   showSess(subject: any) {
+
+  }
+
+  dropRtSess(pSess:RuntimeSession):void {
 
   }
 }

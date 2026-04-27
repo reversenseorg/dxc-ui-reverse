@@ -2,12 +2,14 @@ import {NodeType} from "./NodeType";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 /**
  * Represents a section into an executable file
  * @class
  */
-export default class ModelExecutableSection {
+export default class ModelExecutableSection extends RenderedModelNode
+{
 
     __:NodeInternalType = NodeInternalType.EXEC_SECTION;
     __p?:any = null;
@@ -23,7 +25,7 @@ export default class ModelExecutableSection {
     data:any= null;
 
     constructor(pConfig:any = null){
-
+        super();
         if(pConfig!==undefined)
             for(let i in pConfig)
                 (this as IStringIndex<any>)[i]=pConfig[i];

@@ -1,26 +1,16 @@
 import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {CodeItem} from "../explorer-code/CodeItem";
 import {CodeController} from "../ctrl/CodeController";
-import {ViewportTab} from "../../../cmp/ViewportTab";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
-import {ViewportView} from "../../../cmp/ViewportView";
-import {IViewportContainer} from "../../../base/viewport/IViewportContainer";
 import {ViewportComponent} from "../../../base/viewport/viewport.component";
 import {CodeControllerService} from "../ctrl/code-controller.service";
-import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
-import {MenuItem, MenuView} from "../../../cmp/MenuView";
 import ModelMethod from "../../../models/ModelMethod";
 import {CODE_ICONS} from "../icons";
-import {FlexViewport} from "../../../base/viewport/FlexViewport";
 import * as ace from "ace-builds";
 import {ViewportSplittedComponent} from "../../../base/viewport-splitted/viewport-splitted.component";
 import {HookService} from "../../hooks/ctrl/hook.service";
-import Hook from "../../../models/Hook";
-import {StageComponent} from "../../stage/stage.component";
 import {DeobfuscationService} from "../../deobfuscation/ctrl/deobfuscation.service";
 import {OutputService} from "../../output/ctrl/output.service";
 import {OutputMessage} from "../../../cmp/OutputMessage";
-import {ExpandableProvider} from "../../../base/expandable-list/expandable-provider";
 import {from, Observable} from "rxjs";
 import {AbstractHook} from "../../../models/AbstractHook";
 import {Tag} from "../../../models/tags/Tag";
@@ -32,9 +22,7 @@ import {CodeEmuLoggerComponent} from "../emulator/emu-logs.component";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import ModelCall from "../../../models/ModelCall";
 import {SearchController} from "../../search/ctrl/SearchController";
-
-
-
+import {GraphSelection} from "../../../base/viewer/graph-viewer.component";
 
 
 @Component({
@@ -43,6 +31,7 @@ import {SearchController} from "../../search/ctrl/SearchController";
   styleUrls: ['./viewport-code.component.scss','../../../forms.scss']
 })
 export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewInit {
+
 
   @Input() item: any;
   @Input() data: any; // ModelMethod
@@ -139,7 +128,12 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   xrefTo:ModelCall[] = [];
   xrefFrom:ModelCall[] = [];
 
+
     searchCtrl:SearchController;
+    cfgData: any[] = [];
+    topHeight = 100;
+    rightWidth = 30;
+    xrefD: ModelCall[] = [];
 
   constructor( private codeSvc:CodeControllerService,
                private hookSvc:HookService,
@@ -207,7 +201,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       ace.config.set('basePath','assets/ace');
 
       console.log(vSizes,this.topNavEl.nativeElement.offsetHeight, this);
-      this.editorHeight = vSizes.top.height-this.topNavEl.nativeElement.offsetHeight;
+      //this.editorHeight = vSizes.top.height-this.topNavEl.nativeElement.offsetHeight;
 
       // code editor
       editor.setOptions({
@@ -231,17 +225,8 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       });*/
 
 
-      this.vmedHeight = vSizes.bottom.height-this.topNavEl.nativeElement.offsetHeight;
-/*
-      vmEditor.container.style.height = this.vmedHeight+'px';
-      vmEditor.container.style.minHeight = this.vmedHeight+'px';
-      vmEditor.container.style.maxHeight = this.vmedHeight+'px';
-
-      this.vmEditor.mode = 'javascript';
-      this.vmEditor.value = "Ready for emulation";
-
-      vmEditor.resize();*/
-    })
+      //this.vmedHeight =  vSizes.bottom.height-this.topNavEl.nativeElement.offsetHeight;
+    });
 
     // init layout
     this.layout.resize({
@@ -302,9 +287,10 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   showXrefTo() {
     this.codeSvc.getXref( NodeInternalType.METHOD, this.data.__signature__, 'to')
         .subscribe( (pData:ModelCall[])=>{
-            this.xrefTo = pData;
-            this.activeBottom = 'xt';
-
+            let el:any[] =  pData.map( (pCall:ModelCall) => { pCall.calleed = this.data; return pCall; });
+            this.xrefTo = el;
+            this.xrefD = el;
+            this.activeTop = 'xt';
             console.log('showXrefTo', this.xrefTo);
         });
   }
@@ -313,8 +299,10 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   showXrefFrom() {
       this.codeSvc.getXref( NodeInternalType.METHOD, this.data.__signature__, 'from')
           .subscribe( (pData:ModelCall[])=>{
-              this.xrefFrom = pData;
-              this.activeBottom = 'xf';
+              let el:any[] =  pData.map( (pCall:ModelCall) => { pCall.caller = this.data; return pCall;});
+              this.xrefFrom = el;
+              this.xrefD = el;
+              this.activeTop = 'xf';
               console.log('showXrefFrom', this.xrefFrom);
           });
   }
@@ -595,10 +583,35 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   showGraph(pType:string) {
-        switch (pType){
-          case 'disassembly':
-            this.activeBottom = 'cfg';
-            break;
-        }
+
+      this.rightWidth = 0;
+      console.log("Show graph : ",this);
+      this.codeSvc.instr({ __:NodeInternalType.METHOD, _uid:this.data.__signature__ }).subscribe( (pRes:any)=>{
+
+          this.cfgData = pRes;
+          this.activeBottom = 'cfg';
+          this.activeTop = 'cfg';
+      })
+
+    }
+
+    onNodeClick(pNode:any) {
+        console.log("Node click", pNode);
+        this.codeSvc.displayNode$.next({
+          node: pNode
+        });
+    }
+
+
+    onNodeSelectionChange($event: GraphSelection) {
+
+    }
+
+    showXrefs() {
+        this.activeTop = "xr";
+    }
+
+    getHiddenXref() {
+        return [NodeInternalType.INSTRUCTION];
     }
 }

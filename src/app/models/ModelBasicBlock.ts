@@ -5,11 +5,12 @@ import ModelInstruction from "./ModelInstruction";
 import ModelMethod from "./ModelMethod";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 /**
  * Represents a basic block of dalvik instruction
  */
-export default class ModelBasicBlock
+export default class ModelBasicBlock extends RenderedModelNode
 {
 
     // $ = STUB_TYPE.BASIC_BLOCK;
@@ -55,7 +56,7 @@ export default class ModelBasicBlock
      * @constructor
      */
     constructor(pConfig:any=null){
-        //this.$ = STUB_TYPE.BASIC_BLOCK;
+        super();
 
         this.line = -1;
         this.prologue = false;

@@ -123,6 +123,8 @@ import {NativeModule} from "./components/native/native.module";
 import {ViewportNativeFuncComponent} from "./components/native/vp-viewer/viewport-native-func.component";
 import {PreviewerComponent} from "./base/previewer/previewer.component";
 import {FuzzerModule} from "./components/fuzzer/fuzzer.module";
+import {DeviceBadgeComponent} from "./components/device/device-badge.component";
+import {HexViewerComponent} from "./base/viewer/hex-viewer.component";
 
 
 // AoT requires an exported function for factories
@@ -285,6 +287,8 @@ import {FuzzerModule} from "./components/fuzzer/fuzzer.module";
         ExpandableDirective,
         NativeModule,
         PreviewerComponent,
+        DeviceBadgeComponent,
+        HexViewerComponent,
     ],
   providers: [
     ControllerService,

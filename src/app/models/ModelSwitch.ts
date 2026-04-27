@@ -1,6 +1,7 @@
 import { CONST } from "./CoreConst";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 interface PackedCaseList {
     [p: number]: ModelSwitchCase
@@ -14,7 +15,7 @@ interface AssociativeCaseList {
 /**
  * To represent a specific case into a switch statement
  */
-export class ModelSwitchCase
+export class ModelSwitchCase  extends RenderedModelNode
 {
   __:NodeInternalType = NodeInternalType.SWITCH_CASE;
     value:Nullable<number|string> = null;
@@ -22,6 +23,7 @@ export class ModelSwitchCase
     type:any = null;
 
     constructor(value:number|string, target:any, type:any){
+        super();
         this.value = value;
         this.target = target;
         this.type = type;

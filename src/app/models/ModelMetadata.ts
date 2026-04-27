@@ -1,11 +1,12 @@
 import {NodeInternalType} from "./NodeInternalType";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 
 /**
  * Encapsulate metadata
  * @param {Object} cfg
  */
-export default class ModelMetadata
+export default class ModelMetadata  extends RenderedModelNode
 {
 
     __:NodeInternalType = NodeInternalType.METADATA;
@@ -14,6 +15,7 @@ export default class ModelMetadata
     tags:any;
 
     constructor(pConfig:any) {
+        super();
         this.alias = (pConfig.alias!=null? pConfig.alias : null);
         this.comment = (pConfig.comment!=null? pConfig.comment : null);
         this.tags = [];

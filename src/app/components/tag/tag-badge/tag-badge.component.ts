@@ -78,7 +78,6 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
     ngAfterViewInit() {
         if(this.tagUUID>-1){
             this.tag = this.tagSvc.getTagByUUID(this.tagUUID);
-            console.log("getTagByUUID > ",this.tag);
 
             if(this.tag ==null){
                 console.log("[TAG BADGE] Tag not found for UUID : "+this.tagUUID);

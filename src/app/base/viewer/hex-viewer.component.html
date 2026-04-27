@@ -1,0 +1,62 @@
+<div class="hex-viewer" [class.selectable]="selectable" style="height:100%">
+    <div class="hex-viewer-header" *ngIf="showHeader">
+        <div class="hex-offset-header">Offset</div>
+        <div class="hex-data-header">
+            <span *ngFor="let i of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"
+                  class="hex-col-label">{{ i.toString(16).toUpperCase() }}</span>
+        </div>
+        <div class="hex-ascii-header">ASCII</div>
+    </div>
+
+    <div class="hex-viewer-body" #viewerBody>
+        <div class="hex-row" *ngFor="let row of rows; let rowIndex = index">
+            <!-- Offset column -->
+            <div class="hex-offset"
+                 [class.selected]="isOffsetSelected(row.offset)"
+                 (click)="onOffsetClick(row.offset, $event)"
+                 (contextmenu)="onOffsetContextMenu(row.offset, $event)">
+                {{ formatOffset(row.offset) }}
+            </div>
+
+            <!-- Hex data column -->
+            <div class="hex-data">
+                <span *ngFor="let byte of row.bytes; let byteIndex = index"
+                      class="hex-byte"
+                      [class.selected]="isByteSelected(row.offset + byteIndex)"
+                      [class.highlighted]="isByteHighlighted(row.offset + byteIndex)"
+                      [style.color]="getByteColor(row.offset + byteIndex)"
+                      [style.backgroundColor]="getByteBackgroundColor(row.offset + byteIndex)"
+                      [attr.data-offset]="row.offset + byteIndex"
+                      (click)="onByteClick(row.offset + byteIndex, $event)"
+                      (contextmenu)="onByteContextMenu(row.offset + byteIndex, byte, $event)">
+                    {{ byte !== null ? formatByte(byte) : '  ' }}
+                </span>
+            </div>
+
+            <!-- ASCII column -->
+            <div class="hex-ascii">
+                <span *ngFor="let char of row.ascii; let charIndex = index"
+                      class="hex-ascii-char"
+                      [class.selected]="isByteSelected(row.offset + charIndex)"
+                      [class.highlighted]="isByteHighlighted(row.offset + charIndex)"
+                      [style.color]="getByteColor(row.offset + charIndex)"
+                      [style.backgroundColor]="getByteBackgroundColor(row.offset + charIndex)"
+                      [attr.data-offset]="row.offset + charIndex"
+                      (click)="onAsciiClick(row.offset + charIndex, $event)"
+                      (contextmenu)="onAsciiContextMenu(row.offset + charIndex, char, $event)">
+                    {{ char }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hex-viewer-footer" *ngIf="showFooter">
+        <span class="footer-info" *ngIf="selection">
+            Selection: {{ selection.type }} | Offset: 0x{{ selection.offset.toString(16).toUpperCase() }} |
+            Length: {{ selection.length }} bytes
+        </span>
+        <span class="footer-info" *ngIf="!selection && data">
+            Total: {{ data.length }} bytes
+        </span>
+    </div>
+</div>

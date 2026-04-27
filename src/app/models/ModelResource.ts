@@ -4,6 +4,7 @@ import ModelStringValue from "./ModelStringValue.js";
 import {INodeRef, NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {DataLocation, DataLocationFileSource, DataLocationType} from "./DataLocation";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 export interface ResourceOpts {
     _uid?:string;
@@ -22,7 +23,7 @@ export interface ResourceOpts {
  *
  * @class
  */
-export default class ModelResource<T>
+export default class ModelResource<T>  extends RenderedModelNode
 {
     __:NodeInternalType = NodeInternalType.RESOURCE;
     _uid:string = "";
@@ -35,7 +36,7 @@ export default class ModelResource<T>
     stringNodes:ModelStringValue[] = [];
 
     constructor(pConfig:Nullable<ResourceOpts> = null) {
-
+        super();
         if(pConfig != null){
             for(const i in pConfig)
                 (this as any)[i] = (pConfig as any)[i] ;

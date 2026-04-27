@@ -8,6 +8,7 @@ import {ModelFunction} from "./ModelFunction";
 import {NodeInternalType} from "./NodeInternalType";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
+import {RenderedModelNode} from "../base/RenderedModelNode";
 
 
 export enum ModelInstructionType {
@@ -32,7 +33,7 @@ export enum ModelInstructionType {
  * @param {Object} config Optional, an object wich can be used in order to initialize the instance
  * @constructor
  */
-export default class ModelCpuInstruction
+export default class ModelCpuInstruction  extends RenderedModelNode
 {
 
     __:NodeInternalType = NodeInternalType.INSTR_CPU;
@@ -56,7 +57,7 @@ export default class ModelCpuInstruction
     flags?:any[];
 
     constructor(pConfig:any=null) {
-
+        super();
         if(pConfig!==undefined)
             for(let i in pConfig)
                 (this as IStringIndex<any>)[i]=pConfig[i];

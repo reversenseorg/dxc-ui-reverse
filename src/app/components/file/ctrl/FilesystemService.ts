@@ -117,7 +117,7 @@ export class FilesystemService extends DxcApiService {
         ).pipe(
             map((pObs) => {
                 if (pObs.success) {
-                    return pObs.data;
+                    return pObs.data.map((vData: any) => new ModelFile(vData));
                 } else {
                     this.outputSvc.print(OutputMessage.newError({msg: pObs.msg}))
                     return null;

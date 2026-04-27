@@ -77,9 +77,18 @@
 
             <span *ngIf="NODE_TYPES.HOOK_SESSION==itemObj.__" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'hksess',itemObj)">
               <!--<dxc-meta [css]="'dxc-green-fluo dxc-sz-6 mr-1'" *ngIf="itemObj.active" [label]="'LATEST'"></dxc-meta>&nbsp;-->
+                <dxc-icon [model]="icons['HKSESS']"></dxc-icon>
+                {{ itemObj.date | date: 'dd/MM/yyyy HH:mm:ss' }}
+                <span class="badge rounded-pill  text-bg-danger ml-1">{{ itemObj.len }}</span>
+            </span>
 
-              {{ itemObj.date.toISOString() }}
-              <span class="badge rounded-pill  text-bg-danger ml-1">{{ itemObj.offset }}</span>
+
+              <span *ngIf="NODE_TYPES.RUNTIME_SESS==itemObj.__" class="dxc-text-100" (contextmenu)="displayCtxMenu($event,'hksess',itemObj)">
+                  <dxc-icon [model]="icons['RTSESS']"></dxc-icon>
+                  <i *ngIf="itemObj.date">{{ itemObj.date | date: 'dd/MM/yyyy HH:mm:ss' }}</i>
+                  <dxc-device-badge [devUID]="itemObj.device"></dxc-device-badge>
+                  <span *ngIf="itemObj.pid" class="badge rounded-pill  text-bg-danger ml-1">PID:{{ itemObj.pid }}</span>
+                  <span class="badge rounded-pill  text-bg-danger ml-1">{{ itemObj.offset }}</span>
             </span>
 
             <span *ngIf="NODE_TYPES.HOOK_JAVA==itemObj.__" (contextmenu)="displayCtxMenu($event,'hook',itemObj)">
@@ -143,6 +152,10 @@
 
 <app-context-menu [name]="'hksess'" [width]="250">
     <app-context-item [label]="'Show'" (itemclick)="controller.showSess(ctxMenuState.subject)"></app-context-item>
+</app-context-menu>
+
+<app-context-menu [name]="'rtsess'" [width]="250">
+    <app-context-item [label]="'Drop'" (itemclick)="controller.dropRtSess(ctxMenuState.subject)"></app-context-item>
 </app-context-menu>
 
 <app-context-menu [name]="'hkfrag'" [width]="250">
