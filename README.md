@@ -1,6 +1,6 @@
 # Pro GUI for Dexcalibur 
 
-This UI is desiogned for security professionals / reverser.
+This UI is designed for security professional / reverser.
 
 
 ## 1. Development server
