@@ -101,10 +101,8 @@ export class ContextMenuComponent implements OnInit, AfterContentInit {
       console.error("Event path cannot be retrieved : ",this.event);
     }
 
-
-
     this.menuEl.nativeElement.style.display = 'block';
-    this.menuEl.nativeElement.style.top = ((pEvent.clientY - pEvent.target.offsetHeight - 5))+'px';
+    this.menuEl.nativeElement.style.top = pEvent.pageY+'px'; //((pEvent.clientY - pEvent.target.offsetHeight - 5))+'px';
     this.menuEl.nativeElement.style.left = pEvent.pageX+'px';
     this.menuEl.nativeElement.style.width = this.width+'px';
   }
