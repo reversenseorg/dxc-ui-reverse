@@ -231,33 +231,27 @@ export class ProjectService extends DxcApiService {
         id: 'dxc',
         label: 'Dexcalibur',
         submenu: [{
-          label: 'Check for updates',
-          click: (pMenuItem:any, pBrowserWindow:any ) => {
-            this.onMenuClick.next({ item: 'update', win: pBrowserWindow });
-          }
+              label: 'Marketplace',
+              click: (  ) => {
+                this.onMenuClick.next({ item: 'mkp' });
+              }
         },{
-          role: 'about'
+            label: 'Preferences',
+            click: (  ) => {
+                this.onMenuClick.next({ item: 'prefs' });
+            }
         },{
-          type: 'separator'
+            label: 'About',
+            click: (  ) => {
+                this.onMenuClick.next({ item: 'about' });
+            }
         },{
-          label: 'Preferences',
-          click: (pMenuItem:any, pBrowserWindow:any ) => {
-            this.onMenuClick.next({ item: 'gsettings', win: pBrowserWindow });
-          }
-        },{
-          type: 'separator'
-        },{
-          role: 'services'
-        },{
-          type: 'separator'
-        },{
-          role: 'hide'
-        },{
-          role: 'unhide'
-        },{
-          type: 'separator'
-        },{
-          role: 'quit'
+            label: 'Logout',
+            click: (  ) => {
+                this.authSvc.logout().subscribe(()=>{
+                    console.log("logged out successfully");
+                });
+            }
         }]
       }
       , 0);
@@ -280,32 +274,6 @@ export class ProjectService extends DxcApiService {
           click: (pMenuItem:any, pBrowserWindow:any ) => {
             this.onMenuClick.next({ item:'new-project', win:pBrowserWindow });
           }
-          /*
-          submenu: [
-            {
-              label: 'Project',
-              accelerator: 'CommandOrControl+Shift+N',
-              click: (pMenuItem:any, pBrowserWindow:any ) => {
-                this.onMenuClick.next({ item:'new-project', win:pBrowserWindow });
-              }
-            },{
-              type: 'separator'
-            },{
-              label: 'Custom hook',
-              click: (pMenuItem:any, pBrowserWindow:any ) => {
-                this.onMenuClick.next({ item:'new-custom-hook', win:pBrowserWindow });
-              }
-            },{
-              label: 'Hook scratchpad',
-              click: (pMenuItem:any, pBrowserWindow:any ) => {
-                this.onMenuClick.next({ item:'new-scratch-hook', win:pBrowserWindow });
-              }
-            },{
-              label: 'Script',
-              click: (pMenuItem:any, pBrowserWindow:any ) => {
-                this.onMenuClick.next({ item:'new-script', win:pBrowserWindow });
-              }
-            }]*/
         },{
           label: 'Show active projects',
           enabled:true, //(this.hasMultipleActiveProject()),
@@ -437,6 +405,17 @@ export class ProjectService extends DxcApiService {
               this.selected = null;
             }
           })
+        }
+
+        switch(pEvent.item){
+            case 'logout':
+                break;
+            case 'prefs':
+                break;
+            case 'mkp':
+                break;
+            case 'about':
+                break;
         }
       });
 

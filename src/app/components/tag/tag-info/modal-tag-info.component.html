@@ -5,10 +5,13 @@
   <div body class="dxc-modal-body">
     <div class="row g-0">
       <div class="col-2 text-center" style="vertical-align: middle">
-        <dxc-icon [model]="gIcons['HELPER']" [color1]="'text-warning'"></dxc-icon>
+        <dxc-icon [ngStyle]="{ fontSize: '1.5em' }" [model]="gIcons['HELPER']" [color1]="'text-warning'"></dxc-icon>
       </div>
       <div class="col-10 p-2 dxc-text-std">
-        {{ description }}
+          <h4 class="dxc-sub" *ngIf="tag">{{ tag.category }}</h4>
+          <p class="dxc-text-100">
+              {{ description }}
+          </p>
       </div>
     </div>
   </div>

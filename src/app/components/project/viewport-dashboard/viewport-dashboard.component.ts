@@ -24,6 +24,7 @@ import {CodeControllerService} from "../../code/ctrl/code-controller.service";
 import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
 import {map} from "rxjs/operators";
 import {CODE_ICONS} from "../../code/icons";
+import ModelStringValue from "../../../models/ModelStringValue";
 
 enum INFO_TYPE {
   APP,
@@ -281,8 +282,13 @@ export class ViewportProjectDashboardComponent implements OnInit, IViewportConta
                   }
               }]
           )).pipe(map((vRes:any)=>{
-              return vRes.map((vSelf:any) => {  vSelf._icon = this.gIcons['WIRED'];  });
+              return vRes.map((vSelf:any) => {
+                  const s = new ModelStringValue(vSelf);
+                  (s as any)._icon = this.gIcons['WIRED'];
+                  return s;
+              });
           })).subscribe((vRes:any)=>{
+              console.log("Execute URL Request (as code search : network.uri.any) ",vRes);
               this.topicRes = (vRes==null ? [] : vRes);
               this.blReady = true;
           });
