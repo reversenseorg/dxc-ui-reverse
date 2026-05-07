@@ -14,65 +14,118 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Network, DataSet, Node, Edge, Options } from 'vis-network/standalone';
-import {FormsModule} from "@angular/forms";
-import {NodeInternalType} from "../../models/NodeInternalType";
-import {IStringIndex} from "../IStringIndex";
-import {Nullable} from "../Nullable";
-import {CodeModule} from "../../components/code/code.module";
-import {DexcaliburProjectUUID} from "../../models/DexcaliburProject";
-import {INodeRef} from "../common/common";
-import {CodeControllerService} from "../../components/code/ctrl/code-controller.service";
-import {IconComponent} from "../icon/icon.component";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {IconComponent} from "../../../base/icon/icon.component";
+import {Nullable} from "../../../base/Nullable";
+import {
+    GraphEdge,
+    GraphMode,
+    GraphNode,
+    GraphNodeClickEvent,
+    GraphSelection
+} from "../../../base/viewer/graph-viewer.component";
+import {IStringIndex} from "../../../base/IStringIndex";
+import {NodeInternalType} from "../../../models/NodeInternalType";
+import {CodeControllerService} from "../ctrl/code-controller.service";
 
-export enum GraphMode {
-    CFG="cfg",
-    ANY="any",
-    XREF="xref"
-}
+const ctxNodeMapping:Record<string, Record<number, string>> = {
+    code: {
+        [NodeInternalType.PACKAGE]: 'pkg',
+        [NodeInternalType.CLASS]: 'clazz',
+        [NodeInternalType.METHOD]: 'meth',
+        [NodeInternalType.FIELD]: 'fld',
+        [NodeInternalType.FUNC]: 'fn',
+        [NodeInternalType.HOOK_JAVA]: 'hk',
+        [NodeInternalType.HOOK_NATIVE]: 'hk',
+        [NodeInternalType.RUNTIME_EVENT]: 'msg'
+    },
+    device:{
 
-export interface GraphNode extends Node {
-    id: string;
-    label: string;
-    title?: string;
-    group?: string;
-    nodeType: NodeInternalType;
-    data: any;
-}
-
-export interface GraphEdge extends Edge {
-    id: string;
-    from: string;
-    to: string;
-    label?: string;
-    arrows?: string;
-    propertyName?: string;
-    extra?:any;
-}
-
-export interface GraphSelection {
-    nodes: string[];
-    edges: string[];
-}
-
-export interface GraphNodeClickEvent {
-    node: GraphNode;
-    event: any;
-}
+    }
+};
 
 @Component({
-    selector: 'dxc-model-graph-viewer',
-    standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        IconComponent,
-        FontAwesomeModule],
-    templateUrl: "./graph-viewer.component.html",
+    selector: 'dxc-code-graph-viewer',
+    template: `
+        <div class="model-graph-viewer">
+            <div class="graph-toolbar" *ngIf="showToolbar">
+                <div class="toolbar-group">
+                    <button class="btn btn-sm btn-primary" (click)="fitToView()">
+                        <i class="fas fa-compress"></i> Fit
+                    </button>
+                    <button class="btn btn-sm btn-secondary" (click)="resetZoom()">
+                        <i class="fas fa-search-minus"></i> Reset Zoom
+                    </button>
+                    <button class="btn btn-sm btn-secondary" (click)="togglePhysics()">
+                        <i class="fas" [ngClass]="physicsEnabled ? 'fa-pause' : 'fa-play'"></i>
+                        {{ physicsEnabled ? 'Stop' : 'Start' }} Physics
+                    </button>
+                </div>
+                <div class="toolbar-group">
+                    <label class="toolbar-label">
+                        <input type="checkbox" [(ngModel)]="showLabels" (change)="updateLabelsVisibility()">
+                        Show Labels
+                    </label>
+                </div>
+                <div class="toolbar-info">
+                    <span *ngIf="nodes">Nodes: {{ nodes.length || 0 }}</span>
+                    <span *ngIf="edges">Edges: {{ edges.length || 0 }}</span>
+                    <span *ngIf="selection && selection.nodes.length > 0">
+                        Selected: {{ selection.nodes.length }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="graph-legend" *ngIf="showLegend">
+                <div class="legend-title">Legend</div>
+                <div class="legend-item" *ngFor="let item of legendItems">
+                    <div class="legend-color" [style.backgroundColor]="item.color"></div>
+                    <span>{{ item.label }}</span>
+                </div>
+            </div>
+
+            <div class="graph-container" #graphContainer></div>
+
+            <div class="graph-details" *ngIf="selectedNodeData">
+                <div class="details-header">
+                    <dxc-node-token *ngIf="!isNodeRef(selectedNodeData); else noderef" [item]="selectedNodeData.data"></dxc-node-token>
+                    <ng-template #noderef>
+                        <dxc-node-token [ref]="selectedNodeData.data"></dxc-node-token>
+                    </ng-template>
+                    <button class="btn-close" (click)="clearSelection()">×</button>
+                </div>
+                <div class="details-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">{{ getNodeTypeName(selectedNodeData.nodeType) }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="selectedNodeData.data">
+                        <span class="detail-label">Details:</span>
+                        <pre class="detail-value">{{ formatNodeData(selectedNodeData.data) }}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="graph-details" *ngIf="selectedEdgeData">
+                <div class="details-header">
+                    <fa-icon *ngIf="selectedEdgeData.extra?.__===51" [icon]="['fas','arrow-right-from-bracket']" [ngStyle]="{'color':'yellow'}"></fa-icon>&nbsp;
+                    <h4>{{ prepareEdgeLabel(selectedEdgeData) }}</h4>
+                    <button class="btn-close" (click)="clearSelection()">×</button>
+                </div>
+                <div class="details-body">
+                    <div class="detail-row" *ngIf="selectedEdgeData.extra">
+                        <span class="detail-label">Details:</span>
+                        <pre class="detail-value">{{ formatEdgeData(selectedEdgeData) }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
     styleUrls: ["./graph-viewer.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModelGraphViewerComponent implements OnInit, OnChanges, AfterViewInit {
+export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewInit {
+
 
     /**
      * Array of Model* instances to visualize
@@ -157,7 +210,8 @@ export class ModelGraphViewerComponent implements OnInit, OnChanges, AfterViewIn
     private processedNodes: Set<string> = new Set();
     private nodeIdMap: Map<any, string> = new Map();
 
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(private codeSvc:CodeControllerService,
+                private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         // Initialization logic
@@ -305,7 +359,57 @@ export class ModelGraphViewerComponent implements OnInit, OnChanges, AfterViewIn
         });
 
         this.network.on('doubleClick', (params:any) => {
-            this.doubleClick.emit(params);
+            //this.doubleClick.emit(params);
+
+            console.log("Networks doubleClick : ",params);
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const node = this.nodesDataSet?.get(nodeId);
+                if(node==null || node?.length==0 || node[0].data==null) return;
+
+                switch (node[0].data.__){
+                    case NodeInternalType.CLASS:
+                    case NodeInternalType.METHOD:
+                    case NodeInternalType.PACKAGE:
+                    case NodeInternalType.FIELD:
+                    case NodeInternalType.FUNC:
+                        this.codeSvc.displayContextMenu(
+                            {},
+                            ctxNodeMapping.code[node[0].data.__],
+                            (node as any).data
+                        );
+                        break;
+                }
+            }
+        });
+
+        this.network.on('oncontext', (params:any) => {
+            if(this.network==null) return;
+
+            console.log("Networks oncontext : ",params,this);
+
+            const nodeId = this.network.getNodeAt(params.pointer.DOM);
+
+            if (nodeId!=null) {
+                const node:any = this.nodesDataSet?.get(nodeId);
+                console.log("Networks oncontext node : ",nodeId,node);
+                if(node==null) return;
+
+                switch (node.data.__){
+                    case NodeInternalType.CLASS:
+                    case NodeInternalType.METHOD:
+                    case NodeInternalType.PACKAGE:
+                    case NodeInternalType.FIELD:
+                    case NodeInternalType.FUNC:
+                        console.log("Networks oncontext node : ",ctxNodeMapping.code[node.data.__],node);
+                        this.codeSvc.displayContextMenu(
+                            params.event,
+                            ctxNodeMapping.code[node.data.__],
+                            (node as any).data
+                        );
+                        break;
+                }
+            }
         });
 
         this.network.on('selectNode', (params:any) => {
@@ -746,5 +850,12 @@ export class ModelGraphViewerComponent implements OnInit, OnChanges, AfterViewIn
 
     formatEdgeData(pData: any) {
         return pData.extra;
+    }
+
+    isNodeRef(pNode: GraphNode) {
+        return (pNode!=null)
+            && (pNode.data!=null)
+            && (pNode.data.__!=null)
+            && (pNode.data._uid!=null);
     }
 }

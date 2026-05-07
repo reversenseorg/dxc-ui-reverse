@@ -53,4 +53,18 @@
             </div>
         </div>
     </div>
+
+    <div class="graph-details" *ngIf="selectedEdgeData">
+        <div class="details-header">
+            <fa-icon *ngIf="selectedEdgeData.extra?.__===51" [icon]="['fas','arrow-right-from-bracket']" [ngStyle]="{'color':'yellow'}"></fa-icon>&nbsp;
+            <h4>{{ prepareEdgeLabel(selectedEdgeData) }}</h4>
+            <button class="btn-close" (click)="clearSelection()">×</button>
+        </div>
+        <div class="details-body">
+            <div class="detail-row" *ngIf="selectedEdgeData.extra">
+                <span class="detail-label">Details:</span>
+                <pre class="detail-value">{{ formatEdgeData(selectedEdgeData) }}</pre>
+            </div>
+        </div>
+    </div>
 </div>
