@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {Nullable} from "../../../base/Nullable";
-import {OutputService} from "../../output/ctrl/output.service";
 import {Tag} from "../../../models/tags/Tag";
 import {IconModel, IconModelCollection} from "../../../base/icon/IconModel";
 import {CODE_ICONS} from "../icons";

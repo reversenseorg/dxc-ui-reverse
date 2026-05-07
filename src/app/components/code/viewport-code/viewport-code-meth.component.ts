@@ -64,7 +64,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
 
   vmedHeight: number = 0;
 
-  editorHeight: number = 0;
+  editorHeight: number = 300;
 
   id: number = -1;
 
@@ -134,8 +134,9 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
     topHeight = 100;
     rightWidth = 30;
     xrefD: ModelCall[] = [];
+    GraphMode: any;
 
-  constructor( private codeSvc:CodeControllerService,
+  constructor( public codeSvc:CodeControllerService,
                private hookSvc:HookService,
                private tagSvc:TagService,
                private deobfSvc:DeobfuscationService,
@@ -210,8 +211,8 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       });
 
       editor.container.style.height = this.editorHeight+'px';
-      editor.container.style.minHeight = this.editorHeight+'px';
-      editor.container.style.maxHeight = this.editorHeight+'px';
+      //editor.container.style.minHeight = this.editorHeight+'px';
+      //editor.container.style.maxHeight = this.editorHeight+'px';
 
       this.codeEditor.mode = 'smali';
       this.codeEditor.value = this.data.__view_code;
@@ -246,6 +247,8 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
         width: pSize.width,
         height: pSize.height-this.metadataEl.nativeElement.offsetHeight
       });
+
+      console.log("Resizing editor layout : ",pSize.height,this.metadataEl.nativeElement.offsetHeight);
 
       this.editorHeight = pSize.height - this.metadataEl.nativeElement.offsetHeight;
 
@@ -291,6 +294,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
             this.xrefTo = el;
             this.xrefD = el;
             this.activeTop = 'xt';
+            this.rightWidth = 0;
             console.log('showXrefTo', this.xrefTo);
         });
   }
@@ -303,6 +307,7 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
               this.xrefFrom = el;
               this.xrefD = el;
               this.activeTop = 'xf';
+              this.rightWidth = 0;
               console.log('showXrefFrom', this.xrefFrom);
           });
   }
@@ -427,11 +432,12 @@ export class ViewportCodeMethComponent implements OnInit, OnChanges, AfterViewIn
       __: NodeInternalType.METHOD,
       _uid: this.data.__signature__
     }).subscribe((pRes:any)=> {
-      console.log(pRes);
+      console.log(pRes,this);
       this.codeEditor.mode = 'smali';
       this.codeEditor.value = pRes.smali; //this.data.__view_code;
       this.codeEditor.getEditor().resize();
       this.activeTop = 'bc';
+      this.rightWidth = 0;
     });
   }
 

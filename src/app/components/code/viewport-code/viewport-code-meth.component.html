@@ -124,54 +124,7 @@
           </ng-container>-->
       </app-subnavbar>
     </ng-container>
-      <ng-container body-left>
-
-          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='bc')">
-              <div #editor (contextmenu)="openEditorMenu($event)">
-                  <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
-              </div>
-          </div>
-
-          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')"
-               *ngIf="activeBottom=='ast'">
-              <app-graph-explorer [from]="data" [viewType]="'disassembly'"></app-graph-explorer>
-          </div>
-
-          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')"
-               *ngIf="activeBottom=='cfg'" style="height:100%">
-              <dxc-model-graph-viewer
-                      [data]="cfgData"
-                      [showToolbar]="true"
-                      [showLegend]="true"
-                      [maxDepth]="2"
-                      [autoFit]="true"
-                      (nodeClick)="onNodeClick($event)"
-                      (selectionChange)="onNodeSelectionChange($event)">
-              </dxc-model-graph-viewer>
-          </div>
-
-          <div class="container-fluid view-outer"
-               [class.dxc-hidden]="(activeTop==null) || (['xt','xf'].indexOf(activeTop)==-1)"
-               *ngIf="activeTop=='xt'||activeTop=='xf'" style="height:100%">
-              <dxc-model-graph-viewer
-                      [data]="xrefD"
-                      [showToolbar]="true"
-                      [showLegend]="true"
-                      [maxDepth]="2"
-                      [hidden]="getHiddenXref()"
-                      [only]="['_caller','_called']"
-                      [autoFit]="true"
-                      (nodeClick)="onNodeClick($event)"
-                      (selectionChange)="onNodeSelectionChange($event)">
-              </dxc-model-graph-viewer>
-          </div>
-
-          <div class="container-fluid view-outer" [ngStyle]="{'height':'100%'}"
-               [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
-              <dxc-code-emulator [parentLayout]="layout" [node]="data"
-                                 (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
-          </div>
-
+      <ng-container nav-right>
           <app-subnavbar [type]="'navbar'" [parent]="this">
               <ng-container main>
                   <app-subnavbar-btn *ngIf="!direct && hooks!=null && hooks.length>0" [active]="activeBottom=='hk'"
@@ -196,6 +149,57 @@
                   </ng-container>
               </ng-container>
           </app-subnavbar>
+      </ng-container>
+      <ng-container body-left>
+
+          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='bc')">
+              <div #editor (contextmenu)="openEditorMenu($event)">
+                  <ace-editor #codeEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+              </div>
+          </div>
+
+          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')"
+               *ngIf="activeBottom=='ast'">
+              <app-graph-explorer [from]="data" [viewType]="'disassembly'"></app-graph-explorer>
+          </div>
+
+          <div class="container-fluid view-outer" [class.dxc-hidden]="(activeTop==null) || (activeTop!='cfg')"
+               *ngIf="activeBottom=='cfg'" style="height:100%">
+              <dxc-code-graph-viewer
+                      [data]="cfgData"
+                      [showToolbar]="true"
+                      [showLegend]="true"
+                      [maxDepth]="2"
+                      [svc]="codeSvc"
+                      [autoFit]="true"
+                      (nodeClick)="onNodeClick($event)"
+                      (selectionChange)="onNodeSelectionChange($event)">
+              </dxc-code-graph-viewer>
+          </div>
+
+          <div class="container-fluid view-outer"
+               [class.dxc-hidden]="(activeTop==null) || (['xt','xf'].indexOf(activeTop)==-1)"
+               *ngIf="activeTop=='xt'||activeTop=='xf'" style="height:100%">
+              <dxc-code-graph-viewer
+                      [data]="xrefD"
+                      [showToolbar]="true"
+                      [showLegend]="true"
+                      [maxDepth]="1"
+                      [svc]="codeSvc"
+                      [mode]="'xref'"
+                      [autoFit]="true"
+                      (nodeClick)="onNodeClick($event)"
+                      (selectionChange)="onNodeSelectionChange($event)">
+              </dxc-code-graph-viewer>
+          </div>
+
+          <div class="container-fluid view-outer" [ngStyle]="{'height':'100%'}"
+               [class.dxc-hidden]="(activeTop==null) || (activeTop!='vm')">
+              <dxc-code-emulator [parentLayout]="layout" [node]="data"
+                                 (vmLogs)="showVmLogs($event)"></dxc-code-emulator>
+          </div>
+
+
       </ng-container>
 
 
@@ -297,6 +301,7 @@
       <div class="container-fluid view-outer" [class.dxc-hidden]="(activeBottom==null) || (activeBottom!='vml')">
         <dxc-code-emu-log></dxc-code-emu-log>
       </div>
+
 
 
 
