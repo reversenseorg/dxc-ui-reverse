@@ -6,12 +6,14 @@ import ModelMethod from "./ModelMethod";
 import {Nullable} from "../base/Nullable";
 import {IStringIndex} from "../base/IStringIndex";
 import {RenderedModelNode} from "../base/RenderedModelNode";
+import {NodeInternalType} from "./NodeInternalType";
 
 /**
  * Represents a basic block of dalvik instruction
  */
 export default class ModelBasicBlock extends RenderedModelNode
 {
+    __ = NodeInternalType.BASIC_BLOCK;
 
     // $ = STUB_TYPE.BASIC_BLOCK;
 
