@@ -362,4 +362,22 @@ export class TerminalHookComponent implements OnInit, ITerminalContainer {
         console.log("[HOOK][TERMINAL] getMessages ",this._current);
         return this._current?.messages ?? [];
     }
+
+    getPosition(msg: RuntimeEvent<any>):string {
+        switch (msg.data.when) {
+            case 1: return 'after';
+            case 0: return 'replace';
+            case -1: return 'before';
+        }
+        return '-';
+    }
+
+    getPositionStyle(msg: RuntimeEvent<any>):string {
+        switch (msg.data.when) {
+            case 1: return 'dxc-pink';
+            case 0: return 'dxc-azur  dxc-text-black';
+            case -1: return 'text-info';
+        }
+        return '';
+    }
 }

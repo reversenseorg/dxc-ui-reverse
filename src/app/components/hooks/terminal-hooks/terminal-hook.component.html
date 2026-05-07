@@ -64,9 +64,7 @@
 
         </div>
         <div class="col-lg-1 col-msg">
-          <dxc-meta *ngIf="msg.data.when==-1" [label]="'before'" [ngClass]="'text-info'"></dxc-meta>
-          <dxc-meta *ngIf="msg.data.when==1" [label]="'after'" [ngClass]="'dxc-azur  dxc-text-black'"></dxc-meta>
-          <dxc-meta *ngIf="msg.data.when==0" [label]="'replace'" [ngClass]="'dxc-pink'"></dxc-meta>
+            <dxc-meta *ngIf="msg.data.when==-1" [label]="getPosition(msg)" [ngClass]="getPositionStyle(msg)"></dxc-meta>
           <!--<ng-container *ngFor="let t of msg.tags">
             <dxc-meta [label]="t.text" [style]="{'backgroundColor':t.style,'font-size':'12px'}"></dxc-meta>
           </ng-container>-->

@@ -243,7 +243,6 @@ export class HookController extends UiController implements IController {
         (this.app.getController('ctrl:inspector') as InspectorController)._show(pItem);
         break;
       case NodeInternalType.HOOK_SESSION:
-
         if((pItem as HookSession).getUID()!="" && (pItem as HookSession).getUID()!=null ){
           this.service.getMessageFromSession((pItem as HookSession).getUID() as string).subscribe(( pMessages:RuntimeEvent<any>[] )=>{
             console.log(pMessages);
@@ -251,7 +250,6 @@ export class HookController extends UiController implements IController {
         }else{
           this.service.outputSvc.print(OutputMessage.newError({msg:"HookSession cannot be retrieved : invalid session ID", src:"HookController"}));
         }
-
         break;
       default:
         if(pItem._t == 's'){
