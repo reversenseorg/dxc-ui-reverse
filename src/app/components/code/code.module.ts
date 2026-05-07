@@ -34,6 +34,8 @@ import {HookStatusComponent} from "../hooks/hook-status/hook-status.component";
 import {CodeEmulatorComponent} from "./emulator/emulator.component";
 import {OsApiXrefComponent} from "./osapi-xref.component";
 import {ModelGraphViewerComponent} from "../../base/viewer/graph-viewer.component";
+import {CodeGraphViewerComponent} from "./graph/graph-viewer.component";
+import {CodeAstViewerComponent} from "./graph/ast-viewer.component";
 
 
 @NgModule({
@@ -102,7 +104,9 @@ import {ModelGraphViewerComponent} from "../../base/viewer/graph-viewer.componen
         ViewportCodeFieldComponent,
         ViewportCodeClassComponent,
 
-        ModalRenameComponent
+        ModalRenameComponent,
+        CodeGraphViewerComponent,
+        CodeAstViewerComponent
 
     ]
 })

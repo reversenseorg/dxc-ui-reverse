@@ -85,6 +85,13 @@ export interface TargetApp {
                         <dxc-node-alias [item]="item" [text]="item._r"></dxc-node-alias>
                     </span>
                 </ng-container>
+                <ng-container *ngSwitchCase="NODE_TYPE.RUNTIME_EVENT">
+                    <span (click)="goTo(item)" (contextmenu)="codeSvc.displayContextMenu($event,'bin',item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
+                        <dxc-icon [model]="gIcons.EVT"></dxc-icon>
+                        
+                        <dxc-node-alias [item]="item" [text]="item._r"></dxc-node-alias>
+                    </span>
+                </ng-container>
                 <ng-container *ngSwitchCase="NODE_TYPE.RESOURCE">
                     <span (click)="goTo(item)" [ngClass]="'badge dxc-no-gutters dxc-meta symbol'" [ngStyle]="style">
                         <dxc-icon [model]="gIcons.RES"></dxc-icon>

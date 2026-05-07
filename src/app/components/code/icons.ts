@@ -131,4 +131,10 @@ export const CODE_ICONS = {
         name: 'bow-arrow',
         color1: 'dxc-text-yellow'
     }),
+    FILE: new IconModel({
+        iconType: ICON_TYPE.ICON,
+        type: 'fas',
+        name: 'file-lines',
+        color1: 'dxc-text-clear75',
+    })
 };
