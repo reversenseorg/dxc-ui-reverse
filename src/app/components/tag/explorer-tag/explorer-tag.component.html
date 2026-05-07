@@ -8,7 +8,8 @@
       <ng-container opts>
         <button class="btn-option" [ngbTooltip]="'Create a new tag category'" (click)="filter()"><fa-icon [icon]="['fas','plus']"></fa-icon></button>
         <button class="btn-option" [ngbTooltip]="'Refresh list'" (click)="refresh()" ><fa-icon [icon]="['fas','rotate']"></fa-icon></button>
-        <button class="btn-option" [ngbTooltip]="'Filter tags'" (click)="filter()"><fa-icon [icon]="['fas','filter']"></fa-icon></button>
+        <!--<button class="btn-option" [ngbTooltip]="'Filter tags'" (click)="filter()"><fa-icon [icon]="['fas','filter']"></fa-icon></button>-->
+          <button class="btn-option" [ngbTooltip]="'Sort tags'" (click)="sort()"><fa-icon [icon]="['fas','arrow-down-a-z']"></fa-icon></button>
       </ng-container>
     </app-explorer-navbar>
 
@@ -17,7 +18,7 @@
 
       <ng-container *ngIf="projectReady">
         <app-expandable-list>
-          <ng-container *ngFor="let cat of data.children">
+          <ng-container *ngFor="let cat of filtered">
             <ng-template #expItem let-itemObj="item" >
               <span *ngIf="itemObj.__==NODE_TYPES.TAG_CATEGORY" (contextmenu)="displayCtxMenu($event,itemObj.__,itemObj)">
                 <dxc-icon [model]="itemObj._icon"></dxc-icon>

@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {ExplorerView} from "../../../cmp/ExplorerView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
 import {NavbarSimpleView} from "../../../cmp/NavbarSimpleView";
@@ -26,7 +36,12 @@ import {TagMenuEvent, TagService} from "../ctrl/tag.service";
 import TagCategory from "../../../models/tags/TagCategory";
 
 
-
+const ascSort = (a:any,b:any)=>{
+  return a.name.localeCompare(b.name);
+};
+const descSort = (a:any,b:any)=>{
+    return -(a.name.localeCompare(b.name));
+};
 
 /**
  * This class controls events and content of 'Tag' tab into explorer area
@@ -128,8 +143,11 @@ import TagCategory from "../../../models/tags/TagCategory";
 
   filtered: any = null;
 
+  _sortDir = true;
+
   constructor( private projectService:ProjectService,
                private tagSvc: TagService,
+               private _chref:ChangeDetectorRef,
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
 
@@ -221,6 +239,7 @@ import TagCategory from "../../../models/tags/TagCategory";
           }
 
           this.data.children = pActs;
+          this.sort(false);
           this.data._s = pActs.length;
           this.filter();
         });
@@ -373,4 +392,13 @@ import TagCategory from "../../../models/tags/TagCategory";
   editTag(pState:any, $event: any) {
 
   }
+
+
+    sort(pDetect = true) {
+        this._sortDir = !this._sortDir;
+        this.data.children = this.data.children.sort(
+            this._sortDir ? ascSort : descSort
+        );
+        if(pDetect) this._chref.detectChanges();
+    }
 }

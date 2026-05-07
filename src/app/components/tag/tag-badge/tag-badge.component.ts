@@ -64,7 +64,7 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
 
     gIcons:any = GLOBAL_ICONS;
     _styles:any = {
-        backgroundColor: (this.tag?.styles!=null ? (this.tag.styles as any).bgColor : '#aeff86'),
+        backgroundColor: (this.tag?.styles!=null ? (this.tag.styles as any).bgColor || (this.tag.styles as any).backgroundColor : '#aeff86'),
         color: (this.tag?.styles!=null ? (this.tag.styles as any).color : '#2d8f02'),
         border: '1px solid '+ (this.tag?.styles!=null ? (this.tag.styles as any).color : '#2d8f02'),
         borderRadius: '0.5em',
@@ -131,7 +131,7 @@ export class TagBadgeComponent implements AfterViewInit,OnChanges {
             if(this.label==null && ntag.label!=null) this.label = ntag.label;
             if(ntag.styles!=null){
                 this._styles = {
-                    backgroundColor: ntag.styles?.bgColor,
+                    backgroundColor: ntag.styles?.bgColor || ntag.styles?.backgroundColor || '#aeff86',
                     color: ntag.styles?.color,
                     border: `1px solid ${ntag.styles?.color}`,
                     borderRadius: '0.5em',
