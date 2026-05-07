@@ -1,5 +1,5 @@
 import {HttpClient} from "@angular/common/http";
-import {Observable, Subject} from "rxjs";
+import {from, Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AppMenuService} from "../../../base/appmenu/app-menu.service";
 import {DxcApiService} from "../../../base/DxcApiService";
@@ -46,7 +46,7 @@ export class AuthService extends DxcApiService{
         auth: {
           passwd: { method: 'POST', url:'/remote/auth', format:'json'},
           check: { method: 'GET', url:'/remote/check', format:'json'},
-          logout: { method: 'GET', url:'/remote/logout', format:'json', auth:false /* removed */},
+          logout: { method: 'GET', url:'/auth/logout/:oid', format:'json', auth:false /* removed */},
         },
         ws: {
           ticket: { method: 'POST', url:'/user/account/wsticket', format:'json'},
@@ -181,8 +181,15 @@ export class AuthService extends DxcApiService{
   }
 
   logout(pConnName:Nullable<string> = null):Observable<boolean> {
+
+      if(localStorage.getItem('org.current')==null){
+          return from([false]);
+      }
+
     return this._process(
-      this.endpoints['auth']['logout']
+      this.endpoints['auth']['logout'], {
+          oid: localStorage.getItem('org.current')
+        }
     ).pipe(map( (pEl:any) => {
 
       if(pEl.success){
