@@ -1,4 +1,25 @@
-<div [class.dxc-hidden]="hiddenForce" class="container-fluid viewport-inspector" [ngStyle]="{ 'padding':'0px'}">
+<!--
+  ~ /*
+  ~     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+  ~     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+  ~     Copyright (C) 2026  Reversense SAS
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as published
+  ~     by the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
+<div [class.dxc-hidden]="isHidden()" class="container-fluid viewport-inspector" [ngStyle]="{ 'padding':'0px'}">
 
 
  <!-- <dxc-breadcrumb>
@@ -33,7 +54,7 @@
       </app-expandable-list>-->
         <div *ngIf="activeLeft=='in'" class="container-fluid">
             <div class="container-fluid dxc-text-100" style="margin: 10px 0px;padding:10px;">
-                <h5>{{ data.state.name }}</h5>
+                <h5>{{ data.state.name }} <dxc-meta [label]="getVersion()" [css]="'dxc-herb'"></dxc-meta> </h5>
                 <p class="dxc-text-75">{{ data.state.description }}</p>
             </div>
 
@@ -115,6 +136,12 @@
             </div>
           </div>
         </ng-container>
+
+          <div class="row hook-row" (click)="newDetail('filter')">
+              <div class="col-lg-12 text-center">
+                  <dxc-icon [model]="gIcons['PLUS']"></dxc-icon>&nbsp;Add a filter
+              </div>
+          </div>
       </div>
 
       <div class="container-fluid" [class.dxc-hidden]="(activeLeft==null) || (activeLeft!='st')">
@@ -338,61 +365,18 @@
       </div>
 
 
-      <div class="container-fluid" *ngIf="activeFilter && activeFilter.n!=null && activeRight==NODE_TYPES.RUNTIME_EVENT">
-          <h4 class="m-1 dxc-text-yellow">{{ activeFilter.name }}</h4>
-          <p class="m-1 mt-2 dxc-text-clear75">
-              {{ activeFilter.description }}
-          </p>
-
-          <div class="row m-1 mt-0">
-              <div class="col-6 ml-1 dxc-row-body">
-                  {{ activeItem.emitEvent!=null ? activeItem.emitEvent : 'No event emit' }}
-              </div>
-              <div class="col-3 ml-1 dxc-row-body dxc-green-pale">
-                  <span *ngIf="activeItem.emitEvent!=null" [ngClass]="{ 'text-danger':(activeItem.emitEvent==null) }">{{ activeItem.autoEmit ? 'auto' : 'processed' }}</span>
-              </div>
-          </div>
-          <h6 class="m-1 mt-3 dxc-text-100">Rules</h6><br>
-          <div *ngIf="activeItem.search.req"  class="box m-1 mt-1 p-2">
-              <div class="row dxc-text-yellow">
-                  <div class="col-12">
-                      <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;search</span>
-                      <!--<dxc-meta ><dxc-icon [model]="gIcons['FIND']" [color1]="'yellow'"></dxc-icon>&nbsp;request</dxc-meta>-->
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-12">
-                      <div *ngFor="let r of activeItem.search.req">
-                          {{ r }}
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div *ngIf="activeItem.search.uid"  class="box m-1 mt-3 p-2">
-              <div class="row dxc-text-yellow">
-                  <div class="col-12">
-                      <span class="badge text-bg-warning dxc-meta"><dxc-icon [model]="gIcons['TARGET']" [color1]="'yellow'"></dxc-icon>&nbsp;static signature</span>
-                  </div>
-              </div>
-              <div class="row mt-1">
-                  <div class="col-12 ">
-                      <div class="actionable" *ngFor="let r of activeItem.search.uid" (click)="openNode(r, NODE_TYPES.METHOD)" [ngbTooltip]="'Show details'" >
-                          {{ r }}
-                      </div>
-                  </div>
-              </div>
-          </div>
-
+      <div class="container-fluid" *ngIf="activeFilter" [class.dxc-hidden]="(activeRight!=NODE_TYPES.RUNTIME_EVENT)">
+          <p class="m-1 mt-2 dxc-text-clear75"><i>{{ activeFilter.description=="" ? "This filter has not description" : activeFilter.description   }}</i></p>
+          <dxc-meta [label]="activeFilter.lang" [ngClass]="'dxc-yellow dxc-text-black'"></dxc-meta>
           <div class="ml-1">
-              <app-subnavbar [type]="'navbar'"  [parent]="this">
+              <app-subnavbar [bar]="true"  [parent]="this">
                   <ng-container main>
-                      <app-subnavbar-btn *ngIf="activeItem.before!=null" [active]="activeFrag==FRAG.BEFORE"  (click)="showFrag(FRAG.BEFORE, activeItem.before)">Before</app-subnavbar-btn>
-                      <app-subnavbar-btn *ngIf="activeItem.after!=null" [active]="activeFrag==FRAG.AFTER"  (click)="showFrag(FRAG.AFTER, activeItem.after)">After</app-subnavbar-btn>
-                      <app-subnavbar-btn *ngIf="activeItem.replace!=null" [active]="activeFrag==FRAG.REPLACE"  (click)="showFrag(FRAG.REPLACE, activeItem.replace)">Replace</app-subnavbar-btn>
-                      <dxc-helper-btn [fmt]="helpSvc.BTN_NAV" [docid]="'insp.frag.tpl'">Help</dxc-helper-btn>
+                      <app-subnavbar-btn  [active]="activeFlt==1"  (click)="showFilterSrc(1)">Compiled</app-subnavbar-btn>
+                      <app-subnavbar-btn [active]="activeFlt==0"  (click)="showFilterSrc(0)">Source</app-subnavbar-btn>
+                      <dxc-helper-btn [fmt]="helpSvc.BTN_NAV" [docid]="'insp.flt.tpl'">Help</dxc-helper-btn>
                   </ng-container>
               </app-subnavbar>
-              <ace-editor #frTplEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
+              <ace-editor #fltTplEditor theme="monokai" style="overflow: auto;z-index:0;"></ace-editor>
           </div>
 
       </div>

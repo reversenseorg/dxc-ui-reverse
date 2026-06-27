@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {
     Component,
     Input,
@@ -27,6 +48,49 @@ import {
 import {IStringIndex} from "../../../base/IStringIndex";
 import {NodeInternalType} from "../../../models/NodeInternalType";
 import {CodeControllerService} from "../ctrl/code-controller.service";
+import {Observable, Subject} from "rxjs";
+
+
+/**
+ * Node palette configuration for vis-network
+ */
+interface NodePaletteConfig {
+    color: string | {
+        background?: string;
+        border?: string;
+        highlight?: {
+            background?: string;
+            border?: string;
+        };
+        hover?: {
+            background?: string;
+            border?: string;
+        };
+    };
+    label: string;
+    shape?: 'ellipse' | 'circle' | 'database' | 'box' | 'text' | 'diamond' | 'dot' | 'star' | 'triangle' | 'triangleDown' | 'hexagon' | 'square';
+    size?: number;
+    borderWidth?: number;
+    borderWidthSelected?: number;
+    font?: {
+        color?: string;
+        size?: number;
+        face?: string;
+        background?: string;
+        strokeWidth?: number;
+        strokeColor?: string;
+        align?: 'left' | 'center' | 'right';
+    };
+    shadow?: boolean | {
+        enabled?: boolean;
+        color?: string;
+        size?: number;
+        x?: number;
+        y?: number;
+    };
+    opacity?: number;
+    mass?: number;
+}
 
 const ctxNodeMapping:Record<string, Record<number, string>> = {
     code: {
@@ -80,7 +144,7 @@ const ctxNodeMapping:Record<string, Record<number, string>> = {
                 <div class="legend-title">Legend</div>
                 <div class="legend-item" *ngFor="let item of legendItems">
                     <div class="legend-color" [style.backgroundColor]="item.color"></div>
-                    <span>{{ item.label }}</span>
+                    <span>{{ item.label }}&nbsp;({{ item.ctr }})</span>
                 </div>
             </div>
 
@@ -185,16 +249,8 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
     selectedNodeData: Nullable<GraphNode> = null;
     selectedEdgeData: Nullable<GraphEdge> = null;
 
-    legendItems = [
-        { color: '#4A90E2', label: 'Package' },
-        { color: '#E24A4A', label: 'Class' },
-        { color: '#4AE290', label: 'Method' },
-        { color: '#E2904A', label: 'Field' },
-        { color: '#904AE2', label: 'Function' },
-        { color: '#E2E24A', label: 'Hook' },
-        { color: '#3670ff', label: 'Call' },
-        { color: '#4AE2E2', label: 'Runtime Message' }
-    ];
+    legendItems:any[] = [];
+    legendItemsProto:Record<number,any> = {};
 
     private nodeColors: IStringIndex<string> = {
         [NodeInternalType.PACKAGE]: '#4A90E2',
@@ -202,13 +258,271 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
         [NodeInternalType.METHOD]: '#4AE290',
         [NodeInternalType.FIELD]: '#E2904A',
         [NodeInternalType.FUNC]: '#904AE2',
+        [NodeInternalType.SYSCALL]: '#87e24a',
+        [NodeInternalType.FILE]: '#b9ca60',
+        [NodeInternalType.ANDROID_ACTIVITY]: '#70e24a',
+        [NodeInternalType.ANDROID_SERVICE]: '#70e24a',
+        [NodeInternalType.ANDROID_PROVIDER]: '#70e24a',
+        [NodeInternalType.ANDROID_RECEIVER]: '#70e24a',
+        [NodeInternalType.STRING]: '#eec5ff',
         [NodeInternalType.HOOK_JAVA]: '#E2E24A',
         [NodeInternalType.HOOK_NATIVE]: '#E2E24A',
         [NodeInternalType.RUNTIME_EVENT]: '#4AE2E2'
     };
 
+    /**
+     * Node palette mapping for vis-network styling
+     * Maps each NodeInternalType to its visual configuration
+     */
+    private palette: Map<NodeInternalType, NodePaletteConfig> = new Map([
+        [NodeInternalType.PACKAGE, {
+            color: {
+                background: '#4A90E2',
+                border: '#3670c0',
+                highlight: { background: '#5AA0F2', border: '#4680d0' },
+                hover: { background: '#5AA0F2', border: '#4680d0' }
+            },
+            label: 'Package',
+            shape: 'box',
+            size: 20,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 14, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(74, 144, 226, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.CLASS, {
+            color: {
+                background: '#E24A4A',
+                border: '#c03030',
+                highlight: { background: '#F25A5A', border: '#d04040' },
+                hover: { background: '#F25A5A', border: '#d04040' }
+            },
+            label: 'Class',
+            shape: 'ellipse',
+            size: 18,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 14, face: 'arial', strokeWidth: 2, strokeColor: '#000000' },
+            shadow: { enabled: true, color: 'rgba(226, 74, 74, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.METHOD, {
+            color: {
+                background: '#4AE290',
+                border: '#30c070',
+                highlight: { background: '#5AF2A0', border: '#40d080' },
+                hover: { background: '#5AF2A0', border: '#40d080' }
+            },
+            label: 'Method',
+            shape: 'dot',
+            size: 16,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(74, 226, 144, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.FIELD, {
+            color: {
+                background: '#E2904A',
+                border: '#c07030',
+                highlight: { background: '#F2A05A', border: '#d08040' },
+                hover: { background: '#F2A05A', border: '#d08040' }
+            },
+            label: 'Field',
+            shape: 'diamond',
+            size: 14,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 12, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(226, 144, 74, 0.3)', size: 6, x: 2, y: 2 }
+        }],
+        [NodeInternalType.FUNC, {
+            color: {
+                background: '#904AE2',
+                border: '#7030c0',
+                highlight: { background: '#A05AF2', border: '#8040d0' },
+                hover: { background: '#A05AF2', border: '#8040d0' }
+            },
+            label: 'Function',
+            shape: 'dot',
+            size: 16,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(144, 74, 226, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.SYSCALL, {
+            color: {
+                background: '#87e24a',
+                border: '#67c030',
+                highlight: { background: '#97f25a', border: '#77d040' },
+                hover: { background: '#97f25a', border: '#77d040' }
+            },
+            label: 'Syscall',
+            shape: 'hexagon',
+            size: 16,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(135, 226, 74, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.FILE, {
+            color: {
+                background: '#b9ca60',
+                border: '#99aa40',
+                highlight: { background: '#c9da70', border: '#a9ba50' },
+                hover: { background: '#c9da70', border: '#a9ba50' }
+            },
+            label: 'File',
+            shape: 'box',
+            size: 18,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(185, 202, 96, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.ANDROID_ACTIVITY, {
+            color: {
+                background: '#70e24a',
+                border: '#50c030',
+                highlight: { background: '#80f25a', border: '#60d040' },
+                hover: { background: '#80f25a', border: '#60d040' }
+            },
+            label: 'Activity',
+            shape: 'star',
+            size: 18,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial', strokeWidth: 2, strokeColor: '#000000' },
+            shadow: { enabled: true, color: 'rgba(112, 226, 74, 0.4)', size: 10, x: 2, y: 2 }
+        }],
+        [NodeInternalType.ANDROID_SERVICE, {
+            color: {
+                background: '#70e24a',
+                border: '#50c030',
+                highlight: { background: '#80f25a', border: '#60d040' },
+                hover: { background: '#80f25a', border: '#60d040' }
+            },
+            label: 'Service',
+            shape: 'triangle',
+            size: 18,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(112, 226, 74, 0.4)', size: 10, x: 2, y: 2 }
+        }],
+        [NodeInternalType.ANDROID_PROVIDER, {
+            color: {
+                background: '#70e24a',
+                border: '#50c030',
+                highlight: { background: '#80f25a', border: '#60d040' },
+                hover: { background: '#80f25a', border: '#60d040' }
+            },
+            label: 'Provider',
+            shape: 'database',
+            size: 18,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(112, 226, 74, 0.4)', size: 10, x: 2, y: 2 }
+        }],
+        [NodeInternalType.ANDROID_RECEIVER, {
+            color: {
+                background: '#70e24a',
+                border: '#50c030',
+                highlight: { background: '#80f25a', border: '#60d040' },
+                hover: { background: '#80f25a', border: '#60d040' }
+            },
+            label: 'Receiver',
+            shape: 'triangleDown',
+            size: 18,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 13, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(112, 226, 74, 0.4)', size: 10, x: 2, y: 2 }
+        }],
+        [NodeInternalType.STRING, {
+            color: {
+                background: '#eec5ff',
+                border: '#cea5df',
+                highlight: { background: '#fed5ff', border: '#deb5ef' },
+                hover: { background: '#fed5ff', border: '#deb5ef' }
+            },
+            label: 'String',
+            shape: 'box',
+            size: 14,
+            borderWidth: 1,
+            borderWidthSelected: 2,
+            font: { color: '#333333', size: 12, face: 'monospace' },
+            shadow: { enabled: true, color: 'rgba(238, 197, 255, 0.3)', size: 6, x: 2, y: 2 },
+            opacity: 0.9
+        }],
+        [NodeInternalType.HOOK_JAVA, {
+            color: {
+                background: '#E2E24A',
+                border: '#c0c030',
+                highlight: { background: '#F2F25A', border: '#d0d040' },
+                hover: { background: '#F2F25A', border: '#d0d040' }
+            },
+            label: 'Hook (Java)',
+            shape: 'square',
+            size: 16,
+            borderWidth: 3,
+            borderWidthSelected: 4,
+            font: { color: '#333333', size: 13, face: 'arial', strokeWidth: 1, strokeColor: '#ffffff' },
+            shadow: { enabled: true, color: 'rgba(226, 226, 74, 0.4)', size: 10, x: 2, y: 2 }
+        }],
+        [NodeInternalType.HOOK_NATIVE, {
+            color: {
+                background: '#E2E24A',
+                border: '#c0c030',
+                highlight: { background: '#F2F25A', border: '#d0d040' },
+                hover: { background: '#F2F25A', border: '#d0d040' }
+            },
+            label: 'Hook (Native)',
+            shape: 'square',
+            size: 16,
+            borderWidth: 3,
+            borderWidthSelected: 4,
+            font: { color: '#333333', size: 13, face: 'arial', strokeWidth: 1, strokeColor: '#ffffff' },
+            shadow: { enabled: true, color: 'rgba(226, 226, 74, 0.4)', size: 10, x: 2, y: 2 }
+        }],
+        [NodeInternalType.RUNTIME_EVENT, {
+            color: {
+                background: '#4AE2E2',
+                border: '#30c0c0',
+                highlight: { background: '#5AF2F2', border: '#40d0d0' },
+                hover: { background: '#5AF2F2', border: '#40d0d0' }
+            },
+            label: 'Runtime Message',
+            shape: 'dot',
+            size: 14,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 12, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(74, 226, 226, 0.3)', size: 8, x: 2, y: 2 }
+        }],
+        [NodeInternalType.CALL, {
+            color: {
+                background: '#3670ff',
+                border: '#1650df',
+                highlight: { background: '#4680ff', border: '#2660ef' },
+                hover: { background: '#4680ff', border: '#2660ef' }
+            },
+            label: 'Call',
+            shape: 'dot',
+            size: 12,
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            font: { color: '#ffffff', size: 11, face: 'arial' },
+            shadow: { enabled: true, color: 'rgba(54, 112, 255, 0.3)', size: 6, x: 2, y: 2 }
+        }]
+    ]);
+
+
     private processedNodes: Set<string> = new Set();
     private nodeIdMap: Map<any, string> = new Map();
+
+    action$:Subject<any> = new Subject();
 
     constructor(private codeSvc:CodeControllerService,
                 private changeDetector: ChangeDetectorRef) {}
@@ -216,6 +530,15 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
     ngOnInit(): void {
         // Initialization logic
         console.log("CFG viewer init : ",this);
+
+        this.action$.subscribe(e=>{
+            if(e.type=="rebuild"){
+                if(e.nodes!=null && e.nodes.length>0){
+                    this.data = e.nodes;
+                    this.buildGraph();
+                }
+            }
+        })
     }
 
     ngAfterViewInit(): void {
@@ -232,9 +555,13 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
         if (changes['data'] && !changes['data'].firstChange) {
             this.buildGraph();
 
-            console.log("CFG viewer after data changes : ",this);
+            console.log("CFG viewer after data changes: ",this);
         }
+
+        console.log("CFG viewer after changes : ",this,changes);
     }
+
+
 
     /**
      * Initialize vis-network
@@ -442,6 +769,8 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
         console.log("Building graph...",this.data);
         if (!this.data || this.data.length === 0) return;
 
+        this.legendItemsProto = {};
+        this.legendItems = [];
         this.nodes = [];
         this.edges = [];
         this.processedNodes.clear();
@@ -451,16 +780,6 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
         this.data.forEach(obj => {
             if(this.mode===GraphMode.XREF){
                 if (obj.__ === NodeInternalType.CALL && this.svc!=null) {
-                    /*[
-                        this.svc.retrieveNode<any>(
-                            sessionStorage.getItem('puid') as DexcaliburProjectUUID,
-                            obj._caller
-                        ),
-                        this.svc.retrieveNode<any>(
-                            sessionStorage.getItem('puid') as DexcaliburProjectUUID,
-                            obj._called
-                        )
-                    ]*/
                     const s = this.processNode(obj._caller, 0, true);
                     const t = this.processNode(obj._called, 0, true);
 
@@ -485,7 +804,9 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
             this.edgesDataSet.add(this.edges);
         }
 
-        this.changeDetector.markForCheck();
+        this.legendItems = Object.values(this.legendItemsProto);
+        console.log("Legend items : ",this.legendItems);
+        this.changeDetector.detectChanges();
     }
 
 
@@ -539,16 +860,47 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
         this.processedNodes.add(nodeId);
         this.nodeIdMap.set(obj, nodeId);
 
+        const color = this.getNodeColor(obj.__);
+        const palette = this.palette.get(obj.__);
+        console.log("Processing node color...",obj,color);
+
+
+        if(!this.legendItemsProto[obj.__]){
+            this.legendItemsProto[obj.__] = {
+                label: (palette!=null? ( palette.label || '?') : '?'),
+                color: (typeof color==='string' ? color : ((color as any).background || "#999999")),
+                ctr: 1
+            };
+        }else{
+            this.legendItemsProto[obj.__].ctr++;
+        }
+
         // Create graph node
-        const graphNode: GraphNode = {
-            id: nodeId,
-            label: this.getNodeLabel(obj),
-            title: this.getNodeTooltip(obj),
-            group: this.getNodeGroup(obj.__),
-            color: this.getNodeColor(obj.__),
-            nodeType: obj.__,
-            data: obj
-        };
+        let graphNode: GraphNode;
+
+        if(palette){
+            graphNode = {
+                id: nodeId,
+                title: this.getNodeTooltip(obj),
+                group: this.getNodeGroup(obj.__),
+                nodeType: obj.__,
+                data: obj,
+                ...palette,
+                label: this.getNodeLabel(obj),
+            };
+        }else{
+            graphNode = {
+                id: nodeId,
+                label: this.getNodeLabel(obj),
+                title: this.getNodeTooltip(obj),
+                group: this.getNodeGroup(obj.__),
+                color: color,
+                nodeType: obj.__,
+                data: obj
+            };
+        }
+
+
 
         this.nodes.push(graphNode);
 
@@ -659,8 +1011,18 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
      * Get display label for a node
      */
     private getNodeLabel(obj: any): string {
+
+
+        if (obj.alias) return "@"+obj.alias;
+
+        switch(obj.__){
+            case NodeInternalType.CLASS:
+                return obj.simpleName;
+            case NodeInternalType.PACKAGE:
+                return obj.sname;
+
+        }
         if (obj.name) return obj.name;
-        if (obj.alias) return obj.alias;
         if (obj.label) return obj.label;
         if (obj.simpleName) return obj.simpleName;
         if (obj._uid) return obj._uid;
@@ -694,7 +1056,12 @@ export class CodeGraphViewerComponent implements OnInit, OnChanges, AfterViewIni
      * Get color for a node type
      */
     private getNodeColor(nodeType: NodeInternalType): string {
-        return this.nodeColors[nodeType] || '#999999';
+        const p =this.palette.get(nodeType);
+        console.log("Getting node color for ",this.palette,nodeType, p);
+        if(p==null || p.color==null) return '#999999';
+
+
+        return p.color || (p.color as any).background || '#999999';
     }
 
     /**

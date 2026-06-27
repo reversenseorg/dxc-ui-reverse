@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {merge, Observable, Subject} from 'rxjs';
@@ -24,6 +45,7 @@ import {FilesystemService} from "../../file/ctrl/FilesystemService";
 import {DexcaliburProjectUUID} from "../../../models/DexcaliburProject";
 import {DxApiResponse} from "../../../base/common/common";
 import {CodeControllerService} from "../../code/ctrl/code-controller.service";
+import {INode} from "../../../models/INode";
 
 export type ComponentTypeUID = string;
 
@@ -87,6 +109,7 @@ export class TopologyService extends DxcApiService {
           recv: { method:'GET', url:'/android/receivers', format: 'json', auth:false /* removed */, puid:true },
           perm: { method:'GET', url:'/android/permissions', format: 'json', auth:false /* removed */, puid:true },
           manifest: { method:'GET', url:'/android/manifest', format: 'json', auth:false /* removed */, puid:true },
+            trigger: { method:'POST', url:'/application/scan', format: 'json', auth:false /* removed */, puid:true },
         },
         anal: {
           cmp: { method:'POST', url:'/android/component/scan', format: 'json', auth:false /* removed */, puid:true },
@@ -274,7 +297,7 @@ export class TopologyService extends DxcApiService {
       this.endpoints['app']['act']
     ).pipe(map((pObs)=>{
       if(pObs.success){
-        return pObs.data;
+        return pObs.data.map((x:any)=>new AndroidActivity(x));
       }else{
         this.outputSvc.print(OutputMessage.newError({
           src: "Topology",
@@ -307,7 +330,7 @@ export class TopologyService extends DxcApiService {
       this.endpoints['app']['serv']
     ).pipe(map((pObs)=>{
       if(pObs.success){
-        return pObs.data;
+          return pObs.data.map((x:any)=>new AndroidService(x));
       }else{
         this.outputSvc.print(OutputMessage.newError({
           src: "Topology",
@@ -323,7 +346,7 @@ export class TopologyService extends DxcApiService {
       this.endpoints['app']['recv']
     ).pipe(map((pObs)=>{
       if(pObs.success){
-        return pObs.data;
+       return pObs.data.map((x:any)=>new AndroidReceiver(x));
       }else{
         this.outputSvc.print(OutputMessage.newError({
           src: "Topology",
@@ -504,5 +527,12 @@ export class TopologyService extends DxcApiService {
         { prj: pProject }
     )
   }
+
+    trigger(pType:NodeInternalType, pUID: string, pEvt: string):Observable<DxApiResponse<any>>  {
+        return this._processApiRequest(
+            this.endpoints.app.trigger,
+            { obj: { __:pType, _uid:pUID }, evt: pEvt }
+        );
+    }
 }
 

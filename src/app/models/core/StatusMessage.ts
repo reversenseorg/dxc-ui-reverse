@@ -1,0 +1,141 @@
+
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+export interface StatusSet {
+    [name:string] :StatusMessage[]
+}
+
+/**
+ * This class represents a status when
+ * monitor a progressing task is required
+ *
+ * @class
+ * @author Georges-B MICHEL
+ */
+export default class StatusMessage
+{
+    progress:number;
+    msg:string;
+    extra:any = null;
+
+    /**
+     *
+     * @param {Integer} pProgress
+     * @param {String} pMessage
+     * @constructor
+     */
+    constructor( pProgress:number, pMessage:string=""){
+        this.progress = pProgress;
+        this.msg = pMessage;
+        this.extra = null;
+
+
+    }
+
+    /**
+     * To create a messsage with "error" flag
+     * @param {Integer} pProgress
+     * @param {String} pMessage
+     * @returns {StatusMessage}
+     * @static
+     */
+    static newError( pMessage:string):StatusMessage{
+        let m:StatusMessage  = new StatusMessage(100, pMessage);
+        m.extra = "error";
+
+
+        return m;
+    }
+
+    /**
+     * To create a message with "success" flag
+     *
+     * @param {String} pMessage
+     * @returns {StatusMessage}
+     * @static
+     */
+    static newSuccess( pMessage:string):StatusMessage{
+        let m:StatusMessage  = new StatusMessage(100, pMessage);
+        m.extra = "success";
+
+
+        return m;
+    }
+
+    /**
+     * To create a direct message
+     *
+     * It is a non cached msg + lambda progress bar
+     *
+     * @param {String} pMessage
+     * @returns {StatusMessage}
+     * @static
+     */
+    static newDirect( pMessage:string):StatusMessage{
+        return  new StatusMessage(-1, pMessage);
+    }
+
+    /**
+     *
+     * @param {*} pMsg
+     * @method
+     */
+    append( pMsg:string):string{
+        return this.msg+"\n"+pMsg;
+    }
+
+    addProgress( pRelativeProgress:number):StatusMessage {
+        this.progress += pRelativeProgress;
+        return this;
+    }
+
+    update(pProgress:number, pMessage:string, pStep:boolean = false):StatusMessage{
+        if(pStep == true){
+            this.progress += pProgress;
+        }else{
+            this.progress = pProgress;
+        }
+        this.msg = pMessage;
+        return this;
+    }
+
+    /**
+     * @method
+     */
+    getProgress():number{
+        return this.progress;
+    }
+
+    /**
+     * @method
+     */
+    getMessage():string{
+        return this.msg;
+    }
+
+    /**
+     * @method
+     */
+    getExtra():any{
+        return this.extra;
+    }
+}

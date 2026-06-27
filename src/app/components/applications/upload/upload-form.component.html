@@ -1,0 +1,284 @@
+
+<!--
+  ~ /*
+  ~     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+  ~     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+  ~     Copyright (C) 2026  Reversense SAS
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as published
+  ~     by the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
+<p-stepper [linear]="true" >
+
+   <p-stepperPanel header="Platform">
+      <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+         <div class="mb-4 mt-2 dxp-stepper-info">Get started by selecting the platform of your application. If your application exists for iOS and Android, you must add it separately. </div>
+         <div class="grid">
+            <div class="col-6 text-center" (click)="pickOs('android',nextCallback)">
+               <p-card [styleClass]="'android-card'">
+                  <fa-icon [icon]="['fab', 'android']" [ngStyle]="{'font-size':'2em', 'color':'#56ae00'}" size="lg"></fa-icon>
+                  <h2>Android</h2>
+                  <p class="m-0">
+                     For mobile application running on top of Android.
+                  </p>
+               </p-card>
+            </div>
+            <div class="col-6 text-center" (click)="pickOs('ios',nextCallback)">
+               <p-card [styleClass]="'ios-card'">
+                  <fa-icon [icon]="['fab', 'apple']" [ngStyle]="{'font-size':'2em', 'color':'#34AADC'}" size="lg"></fa-icon>
+                  <h2>Apple iOS</h2>
+                  <p class="m-0">
+                     For iOS app running on iPhone device. (*.ipa files) 
+                  </p>
+               </p-card>
+            </div>
+         </div>
+      </ng-template>
+   </p-stepperPanel>
+   
+   <p-stepperPanel header="Start">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+         <p class="p-2 mt-2 text-xl">Let&quot;s us known how to get the files. <br> If the application is already monitored, then the binary file will be automatically added to application. Else, a new application will be automatically declared and the binary file linked.</p>
+         
+         <div class="grid">
+            <div class="col-6 text-center" >
+               <p-card *ngIf="os=='android'; else nostore" [styleClass]="'app-dld-card'" (click)="start('dl',nextCallback)">
+                  <fa-icon [icon]="['fas', 'shop']" [ngStyle]="{'font-size':'2em', 'color':'#000'}" size="lg"></fa-icon>
+                  <h2>Store</h2>
+                  <p class="m-0">
+                     Download application from store.
+                  </p>
+               </p-card>
+               <ng-template #nostore>
+                  <p-card  [styleClass]="'app-dld-card disabled'">
+                     <fa-icon [icon]="['fas', 'shop-slash']" [ngStyle]="{'font-size':'2em', 'color':'#000'}" size="lg"></fa-icon>
+                     <h2>Store</h2>
+                     <p class="m-0">
+                        Download application from store.
+                     </p>
+                  </p-card>
+               </ng-template>
+            </div>
+            <div class="col-6 text-center" >
+               <p-card [styleClass]="'app-upl-card'" (click)="start('ul',nextCallback)">
+                  <fa-icon [icon]="['fas', 'upload']" [ngStyle]="{'font-size':'2em', 'color':'#000'}" size="lg"></fa-icon>
+                  <h2>File upload</h2>
+                  <p class="m-0">
+                     Upload application package or binary files
+                  </p>
+               </p-card>
+            </div>
+         </div>
+         <div class="flex pt-4 justify-content-between">
+            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+            <p-button label="Launch" icon="pi pi-arrow-right" iconPos="right" (onClick)="nextCallback.emit()" />
+         </div>
+      </ng-template>
+   </p-stepperPanel>
+   <p-stepperPanel header="Inputs">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+
+         <ng-container *ngIf="(dlMode===true); else uplMode">
+            <p class="p-2 mt-2">Select a remote location or an application store from where the binary file will be downloaded</p>
+
+
+            <div class="grid formgrid ml-2">
+               <div class="field col-12">
+                  <label htmlFor="pkgid" class="font-bold">Package Identifier (in store)</label>
+                  <input type="text" id="pkgid" class="w-full" required pInputText [(ngModel)]="pkgid"/>
+               </div>
+            </div>
+            
+            <div class="grid ml-2 mr-2">
+               <div class="col-10">
+                  <p-dropdown
+                      [options]="conns"
+                      [(ngModel)]="sConn"
+                      optionLabel="name"
+                      optionValue="uuid"
+                      [styleClass]="'w-full'"
+                      [placeholder]="'Select a remote location'"
+                      (ngModelChange)="pickConn($event)"
+                  >
+                     <ng-template let-conn pTemplate="selectedItems">
+                        <div class="flex align-items-center gap-2">
+                           <b>{{ conn.name }}</b>
+                           <p class="italic">{{ conn.description }}</p>
+                        </div>
+                     </ng-template>
+                     <ng-template let-conn pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                           <b>{{ conn.name }}</b>
+                           <p class="italic">{{ conn.description }}</p>
+                        </div>
+                     </ng-template>
+                  </p-dropdown>
+               </div>
+               <div class="col-2">
+                  <p-button label="Download" icon="pi pi-download" [disabled]="conn==null" (onClick)="startDl(nextCallback)" />
+               </div>
+            </div>
+
+
+            <div class="grid ml-2 mr-2">
+               <div class="col-12">
+                  <dxp-app-bin-preview   [step]="pvwStrStep" [uploadUID]="getMainUpld()" [org]="orgUnit.getUID()" [os]="os" [styleClass]="'mt-3'">
+                     <div none class="w-full text-center align-content-center">
+                        Pick a file to get a preview
+                     </div>
+                  </dxp-app-bin-preview>
+               </div>
+            </div>
+
+            <div class="flex pt-4 justify-content-end">
+               <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+               <p-button label="Next" [styleClass]="'ml-3'" [disabled]="!ready" icon="pi pi-arrow-right" iconPos="right" (onClick)="checkApp(nextCallback)" />
+            </div>
+         </ng-container>
+         <ng-template #uplMode>
+            <p class="p-2 mt-2">Select packages, inputs or split APKs to use as input for a <b>single</b> release. See documentation to get more details.</p>
+
+            <p-fileUpload [multiple]="true" name="targetBinary[]" [auto]="true"  [maxFileSize]="500000000" [customUpload]="true" (onUpload)="onTemplatedUpload($event)" (onProgress)="uploadProgress($event)" (uploadHandler)="onUpload($event,'uploadHandler')">
+               <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                  <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
+                     <div class="flex gap-2">
+                        <p-button (onClick)="choose($event, chooseCallback)" label="Add inputs" icon="pi pi-upload" iconPos="left" [rounded]="true" [outlined]="true" />
+                        <p-button (onClick)="clearUpl($event,clearCallback)" icon="pi pi-times" label="Clear" [rounded]="true" [outlined]="true" severity="danger" [disabled]="!files || files.length === 0" />
+                     </div>
+                     <p-progressBar [mode]="mode" [value]="totalSizePercent" [showValue]="false" styleClass="md:w-20rem h-1rem w-full md:ml-auto" [ngClass]="{ 'exceeded-progress-bar': totalSizePercent > 100 }">
+                        <span class="white-space-nowrap">{{ totalSize }}B / 1Mb</span>
+                     </p-progressBar>
+                  </div>
+               </ng-template>
+
+               <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
+                  <div *ngIf="files.length > 0">
+                    
+                     <ng-container *ngFor="let file of files; let i = index">
+                        <div class="grid m-1 border-bottom-1 border-300">
+                           <div class="col-4 font-semibold align-content-center">{{ file.name }}</div>
+                           <div class="col-2 align-content-center">{{ formatSize(file.size) }}</div>
+                           <div class="col-3 align-content-center">
+                              <dxp-proj-input-type-sel (change)="setPurpose(file,$event)" [purpose]="getDefaultPurpose(file)"></dxp-proj-input-type-sel>
+                           </div>
+                           <div class="col-2 align-content-center">
+                              <p-badge value="Complete" severity="success" />
+                           </div>
+                           <div class="col-1 align-content-center">
+                              <p-button icon="pi pi-trash" (onClick)="onRemoveTemplatingFile($event, file, removeFileCallback, index)" [outlined]="true" [text]="true" severity="danger" />
+                              <p-button icon="pi pi-eye" (onClick)="previewUpl($event, file, index)" [outlined]="true" [text]="true" />
+                           </div>
+                        </div>
+                     </ng-container>
+                  </div>
+               </ng-template>
+               <ng-template pTemplate="file"> </ng-template>
+               <ng-template pTemplate="empty">
+                  <div class="flex align-items-center justify-content-center flex-column">
+                     <p class="mt-4 mb-0">Drag and drop files here to upload.</p>
+                  </div>
+               </ng-template>
+            </p-fileUpload>
+
+            <dxp-app-bin-preview #pvwUpl [step]="pvwUplStep" [os]="os" [org]="orgUnit.getUID()" [uploadUID]="selFile" [styleClass]="'mt-3'">
+               <div none class="w-full text-center align-content-center">
+                  Pick a file to get a preview
+               </div>
+            </dxp-app-bin-preview>
+
+            
+            
+            <div class="flex pt-4 justify-content-end">
+               <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+               <p-button label="Next" [styleClass]="'ml-3'" [disabled]="!ready" icon="pi pi-arrow-right" iconPos="right" (onClick)="checkApp(nextCallback)" />
+            </div>
+         </ng-template>
+      </ng-template>
+   </p-stepperPanel>
+   <p-stepperPanel header="Options">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+
+
+          <p-messages class="ml-2 mr-2 w-full" [(value)]="chkMsg" [closable]="true" [enableService]="false" />
+
+          <ng-container *ngIf="(appChecked!=null); else subsWaiting">
+              <ng-container *ngIf="appChecked.new; else existing">
+                  <p><b>Amazing ! You have not yet scanned binaries for this application.</b></p>
+                  <p>A new application unit has been registered to manage this package. This package will be add as a new project.</p>
+              </ng-container>
+              <ng-template #existing>
+                  <p><b>Happy to see you ! An existing application unit has been detected for this project.</b></p>
+                  <p>The new application version (project) will be add to the existing application unit as a new project.</p>
+              </ng-template>
+
+              <p>You can finish now to add the binary to your application unit and wait for pre-scan, or you can order some scans to perform automatically after the pre-scan.</p>
+              <p>Depending on the complexity and size of the application, the pre-scan can take 10-15 minutes. So, we encourage you to order scans now and save time later !</p>
+
+              <p>Your application unit has following subscriptions. Use the form in right column to subscribe to another set of assessment referential.</p>
+              <div  class="grid w-full mt-2">
+                  <div class="col-5 text-center app-preview dl-running">
+                      <dxp-license-status [appUnit]="appUnit" [refresher]="licEvt"></dxp-license-status>
+                  </div>
+                  <div class="col-2">&nbsp;</div>
+                  <div class="col-5 text-center app-preview dl-running">
+                      <dxp-license-form [orgUnit]="orgUnit" [appUnit]="appUnit" [onActivate]="licEvt"></dxp-license-form>
+                  </div>
+              </div>
+
+
+          </ng-container>
+          <ng-template #subsWaiting>
+              <div class="w-full text-center">
+                  <p-progressSpinner></p-progressSpinner><br>
+                  Checking for licences and existing apps.
+              </div>
+          </ng-template>
+
+
+           <div class="grid formgrid p-fluid">
+              <div class="field col-12">
+                 <label htmlFor="relname"><b>Optional. Release version or tag name</b></label>
+                 <input id="relname" [(ngModel)]="relname" required type="text" minlength="2" placeholder="Version or tag name" aria-describedby="name-help" pInputText>
+              </div>
+           </div>
+           <!--<div *ngIf="appUnit!=null" class="grid formgrid p-fluid">
+              <div class="field col-12">
+                 <label htmlFor="relname"><b>Optional. Select a target or lets empty</b></label>
+                 <dxp-dev-select [orgUnit]="orgUnit" [appUnit]="appUnit"></dxp-dev-select>
+                </div>
+           </div>-->
+         <div class="flex pt-4 justify-content-between">
+            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+             <div>
+                 <p-button label="Finish" [disabled]="(appChecked==null)" icon="pi pi-arrow-right" iconPos="right" (onClick)="createRelease(null)" />
+                 <p-button label="Continue to scan" [disabled]="(appChecked==null)" icon="pi pi-arrow-right" [styleClass]="'ml-3'" iconPos="right" (onClick)="createRelease(nextCallback)" />
+             </div>
+
+         </div>
+      </ng-template>
+   </p-stepperPanel>
+   <p-stepperPanel header="Scan">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+
+          <dxp-scan-order-form *ngIf="prj!=null" [hidePrj]="true" [cancelLabel]="'Back'" (cancel)="prevCallback.emit()" [cb]="true" [appUnit]="appUnit" [orgUnit]="orgUnit" [project]="prj" (startCallback)="orderScans($event)"></dxp-scan-order-form>
+
+          <!--
+         <div class="flex pt-4 justify-content-between">
+            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+            <p-button label="Start !" [disabled]="prj==null"  icon="pi pi-arrow-right" iconPos="right" (onClick)="prepareScan(nextCallback)" />
+         </div>-->
+      </ng-template>
+   </p-stepperPanel>
+</p-stepper>

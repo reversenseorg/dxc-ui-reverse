@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {ViewportTab} from "../../../cmp/ViewportTab";
 import {ViewportView} from "../../../cmp/ViewportView";
@@ -105,23 +126,6 @@ enum INFO_TYPE {
                 <ng-container *ngIf="activeTR==TOPIC.TOP">
                     <dxc-topo-map [project]="project"></dxc-topo-map>
                 </ng-container>
-
-                
-              <!--<ng-container *ngIf="data._t=='taa'">
-                <app-viewport-topo-activity [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-activity>
-              </ng-container>
-
-              <ng-container *ngIf="data._t=='tas'">
-                <app-viewport-topo-service [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-service>
-              </ng-container>
-
-              <ng-container *ngIf="data._t=='tap'">
-                <app-viewport-topo-provider [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-provider>
-              </ng-container>
-
-              <ng-container *ngIf="data._t=='tar'">
-                <app-viewport-topo-receiver [data]="data" [width]="size.width" [height]="size.height" [parent]="this.parent" [controller]="this.getTopoController()"></app-viewport-topo-receiver>
-              </ng-container>-->
 
             </ng-container>
 

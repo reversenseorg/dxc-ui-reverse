@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -834,6 +855,7 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
           console.log('status : ', pObs2);
 
           this.progress$.next({ value: 100 });
+          this.enrolling = false;
           this.modalProgress.close();
           // refresh device list
           this.refresh();
@@ -986,6 +1008,17 @@ export class ExplorerDeviceComponent extends SubExplorerComponent<DeviceControll
    */
   analyzeApp(pApp: DeviceBindedData<AppPackage>) {
     console.log("analyzeApp > ",pApp);
+
+    this.progressTitle = 'Pull application from device ...';
+    this.progress$.next({ value: 20, msg: 'Pulling...' });
+    this.modalProgress.show();
+
+    /*
+      this.projectService.uploadApp(pApp., pApp.dev.getUID()).subscribe(()=>{
+          this.modalProgress.close();
+          this.outputSvc.alert(OutputMessage.newSuccess({ msg:"Frida server has been successfully launched", src:"Hook Manager" }));
+      })*/
+
     this.projectService.onAnalysisConfig.next( {
       force_native: false,
       origin: 'device:app',

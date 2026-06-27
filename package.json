@@ -1,6 +1,6 @@
 {
   "name": "@reversense/dxc-ui-reverse",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,6 +11,8 @@
     "test": "ng test",
     "skip": ""
   },
+  "author": "Reversense - georges@reversense.com",
+  "license": "AGPL-3.0-only",
   "private": true,
   "dependencies": {
     "@angular/animations": "^16.2.0",

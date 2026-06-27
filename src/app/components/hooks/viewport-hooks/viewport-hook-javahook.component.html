@@ -1,3 +1,24 @@
+<!--
+  ~ /*
+  ~     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+  ~     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+  ~     Copyright (C) 2026  Reversense SAS
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as published
+  ~     by the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
 <div class="container-fluid viewport-hook">
   <!--<app-subnavbar [type]="'navbar'" [parent]="this">
     <ng-container main>
@@ -15,14 +36,15 @@
   <div #metadata>
     <div class="title pl-1">
       <ng-container *ngIf="data.__==HOOK_JAVA; else nuid">
-
           <dxc-node-token [full]="true" [interactive]="true" [item]="data.method"></dxc-node-token>
         <!--<span class="dxc-ilink pl-1" (contextmenu)="displayExtMenu($event, 'meth', data.method)">{{ data.method.__signature__ }}</span>-->
       </ng-container>
       <ng-template #nuid>
         <dxc-meta [css]="'dxc-salmon dxc-code dxc-sz-6 mr-2'" (click)="controller.openLib(data.func.src)"  [label]="data.file">{{ data.file }}</dxc-meta>
         <span class="dxc-code mr-3">{{ addr }}</span>
-        <span class="dxc-ilink dxc-code mr-1">{{ data.func.ret.type }}</span>
+        <span class="dxc-ilink dxc-code mr-1">
+            {{ data.func.ret? data.func.ret.type : 'void'  }}
+        </span>
         <span class="dxc-ilink dxc-text-blue dxc-code pl-1" (contextmenu)="displayExtMenu($event, 'fun', data.func)">{{ data.func.name }}</span>
         (
         <ng-container *ngFor="let a of data.func.args">

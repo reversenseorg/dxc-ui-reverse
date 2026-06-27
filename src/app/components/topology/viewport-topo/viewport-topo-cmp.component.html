@@ -1,0 +1,199 @@
+<!--
+  ~ /*
+  ~     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+  ~     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+  ~     Copyright (C) 2026  Reversense SAS
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as published
+  ~     by the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
+<div  [class.dxc-hidden]="hidden"   class="container-fluid fill-height p-0" [ngStyle]="{ 'minHeight': height+'px' }">
+  <div #metadata style="border-bottom:1px solid #777;line-height: 1">
+      <dxc-tag-badge *ngFor="let t of data.tags" [tagUUID]="t"></dxc-tag-badge>
+  </div>
+
+  <app-viewport-splitted [controller]="controller" [parent]="this" [flex]="true" [leftWidth]="50" [type]="'1:2'">
+    <ng-container nav-left>
+      <app-subnavbar [type]="'navbar'" [parent]="this">
+        <ng-container main>
+
+          <!--<app-subnavbar-btn [disable]="true" [icon]="gIcons['LIST']">&nbsp;Behavior analysis</app-subnavbar-btn>-->
+          <!--<app-subnavbar-btn [disable]="true" [icon]="gIcons['LIST']">&nbsp;Security analysis</app-subnavbar-btn>-->
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-left>
+
+        <dxc-code-graph-viewer
+                [data]="graphData"
+                [showToolbar]="true"
+                [showLegend]="true"
+                [maxDepth]="3"
+                [svc]="codeService"
+                [autoFit]="true"
+                (nodeClick)="onNodeClick($event)"
+                (selectionChange)="onNodeSelectionChange($event)">
+        </dxc-code-graph-viewer>
+
+    </ng-container>
+
+
+
+    <ng-container nav-right>
+      <app-subnavbar [type]="'navbar'"  [parent]="this">
+        <ng-container main>
+          <app-subnavbar-btn [icon]="cIcons['CLASS']" [active]="activeTopRight == 'cmp'" (click)="showImplementation('cmp')">Implementation</app-subnavbar-btn>
+          <app-subnavbar-btn [icon]="gIcons['ANDROID']" [active]="activeTopRight == 'xr'" (click)="activeTopRight = 'xr'">Android API xref</app-subnavbar-btn>
+            <app-subnavbar-btn [icon]="gIcons['LIST']" [active]="activeTopRight == 'int'" (click)="showIntents()">&nbsp;Intent filters</app-subnavbar-btn>
+        </ng-container>
+      </app-subnavbar>
+    </ng-container>
+    <ng-container body-right>
+
+
+      <div class="container-fluid fill-height p-0"  [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='xr')">
+          <dxc-osapi-projection-list [controller]="controller" [autoload]="true" [node]="data" [projectionAreaName]="'Android API'">
+          </dxc-osapi-projection-list>
+      </div>
+
+
+        <div class="container-fluid" [class.dxc-hidden]="(activeTopLeft==null) || (activeTopLeft!='if')">
+
+            <app-expandable-list style="overflow: auto;">
+                <ng-container *ngFor="let filt of getIntentFilters(); let offset=index">
+
+
+              <span (contextmenu)="displayExtMenu($event,'if',filt)">
+                <dxc-icon [model]="icons['INTENT_FILTER']"></dxc-icon>
+                intent-filter&nbsp;#{{ offset }}
+
+                  <ng-container  *ngIf="filt.data!=null && filt.data.length>0">
+
+                  <!--<span class="badge text-bg-danger dxc-meta ml-1">waiting data</span>-->
+                  <br>
+
+                      <ng-container *ngFor="let dat of filt.data">
+
+                       <div *ngIf="dat.host!=null" class="row g-0 ml-5">
+                          <div class="col-lg-10 text-left">
+                            <dxc-intent-criteria-data [_f]="dat" [inputMode]="true" (enter)="sendIntent(data, filt, dat, $event)"></dxc-intent-criteria-data>
+                          </div>
+
+                          <div class="col-lg-2 text-right">
+                            <span class="badge rounded-pill  text-bg-success" (click)="sendIntent(data, filt, dat)"><dxc-icon [model]="gIcons['PLAY']" [color1]="'dxc-text-clear100'"></dxc-icon>&nbsp;Send</span>
+                          </div>
+                        </div>
+                      </ng-container>
+                </ng-container>
+
+
+                <div class="row g-0 ml-5 border-1 border-white">
+                  <div class="col-lg-6 text-left">
+                   <b>Actions</b><br>
+                    <ng-container *ngFor="let act of filt.action">
+                      <span class="badge dxc-meta">{{ act.name }}</span><br/>
+                    </ng-container>
+                  </div>
+                  <div class="col-lg-6 text-left">
+                    <b>Categories</b><br>
+                    <ng-container *ngFor="let cat of filt.category">
+                      <span class="badge dxc-meta">{{ cat.name }}</span><br>
+                    </ng-container>
+                  </div>
+                </div>
+                <br>
+              </span>
+                </ng-container>
+            </app-expandable-list>
+
+        </div>
+
+      <div class="container-fluid fill-height p-0" [class.dxc-hidden]="(activeTopRight==null) || (activeTopRight!='cmp')">
+        <ng-container *ngIf="cmp_impl!=null; else noImpl">
+          <span *ngIf="cmp_impl" (contextmenu)="displayExtMenu($event,'clazz',cmp_impl)">
+            <dxc-icon [model]="cIcons['CLASS']"></dxc-icon>
+            {{ cmp_impl.name  }}
+          </span>
+          <app-expandable-list  style="overflow: auto;">
+
+            <ng-container *ngFor="let cat of cmp_impl.fields">
+
+              <ng-template #impFieldItem let-itemObj="item" >
+              <span (contextmenu)="displayExtMenu($event,'field',itemObj)">
+                <dxc-icon [model]="cIcons['FIELD']"></dxc-icon>
+                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                {{ itemObj.name  }}
+                <span *ngIf="itemObj.type" class="text-warning">
+                  <i *ngIf="!itemObj.type.primitive" >:&nbsp;{{ itemObj.type.name }}</i>
+                  <i *ngIf="itemObj.type.arr">[]</i>
+                </span>
+              </span>
+              </ng-template>
+
+              <app-expandable-item
+                [itemTpl]="impFieldItem"
+                [item]="cat"
+                [provider]="this"
+                [itemType]="cat._t"
+                [expandableFn]="isExpandable"
+                (itemFocus)="onItemFocus($event)"
+              >
+
+              </app-expandable-item>
+            </ng-container>
+
+            <ng-container *ngFor="let cat of cmp_impl.methods">
+
+              <ng-template #impMethItem let-itemObj="item" >
+              <span (contextmenu)="displayExtMenu($event,'meth',itemObj)">
+                <dxc-icon [model]="cIcons['METH']"></dxc-icon>
+                <!--<dxc-icon [model]="itemObj._icon"></dxc-icon>-->
+                {{ itemObj.__callSignature__  }}
+              </span>
+              </ng-template>
+
+              <app-expandable-item
+                [itemTpl]="impMethItem"
+                [item]="cat"
+                [provider]="this"
+                [itemType]="cat.__"
+                [expandableFn]="isExpandable"
+                (itemFocus)="onItemFocus($event)"
+              >
+
+              </app-expandable-item>
+            </ng-container>
+          </app-expandable-list>
+        </ng-container>
+        <ng-template #noImpl>
+          <div class="dxc-text-clear100 pt-4 row">
+            <div class="text-right col-2">
+              <dxc-icon [model]="gIcons['WARNING']"></dxc-icon>
+            </div>
+            <div class="col-8 text-left">
+              The class implementing this component is probably missing
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+
+
+    </ng-container>
+
+  </app-viewport-splitted>
+</div>
+
+

@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ExplorerView} from "../../../cmp/ExplorerView";
 import {GLOBAL_ICONS} from "../../../cmp/GLOBAL_ICONS";
@@ -32,6 +53,10 @@ import {IStringIndex} from "../../../base/IStringIndex";
 import {UIException} from "../../../base/error/UIException";
 import {ModalSendIntentComponent} from "../modal-intent/modal-send-intent.component";
 import {ModalSearchComponent} from "../../search/modal-search/modal-search.component";
+import {CodeControllerService} from "../../code/ctrl/code-controller.service";
+import {MerlinSearchRequest, OperationType} from "../../../models/search/MerlinSearchRequest";
+import {map} from "rxjs/operators";
+import ModelStringValue from "../../../models/ModelStringValue";
 
 
 
@@ -154,6 +179,7 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
   constructor( private projectService:ProjectService,
                private topoSvc: TopologyService,
+               private codeSvc: CodeControllerService,
                ngbTooltipConfig:NgbTooltipConfig) {
     super();
 
@@ -413,6 +439,29 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
     });*/
 
+      this.codeSvc.merlinSearch(new MerlinSearchRequest(
+          NodeInternalType.ANDROID_ACTIVITY,
+          [{
+              type:OperationType.SEARCH,
+              args: {
+                  pattern: [{
+                      field: "name",
+                      value: "/.*/",
+                  }]
+              }
+          }]
+      )).pipe(map((vRes:any)=>{
+          return vRes.map((vSelf:any) => {
+              console.log("List all activities : ",vSelf);
+              const s = new AndroidActivity(vSelf);
+              (s as any)._icon = this.gIcons['WIRED'];
+              return s;
+          });
+      })).subscribe((vRes:any)=>{
+          //console.log("Execute URL Request (as code search : network.uri.any) ",vRes);
+          //this.topicRes = (vRes==null ? [] : vRes);
+      });
+
     this.topoSvc
       .getActivities()
       .subscribe((pActs:AndroidActivity[]) => {
@@ -578,8 +627,9 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
 
     // init contextual menus
     this.ctxMenu = {};
-    this.ctxMenuChildren.toArray().map((vMenu:any) => {     this.ctxMenu[vMenu.name] = vMenu;
-      this.controller.registerCtxMenu(vMenu.name, this);
+    this.ctxMenuChildren.toArray().map((vMenu:any) => {
+        this.ctxMenu[vMenu.name] = vMenu;
+         this.controller.registerCtxMenu(vMenu.name, this);
     });
   }
 
@@ -743,10 +793,10 @@ export class ExplorerTopoComponent extends SubExplorerComponent<TopologyControll
     pEvent.preventDefault();
 
     this.ctxMenuState = {
-      menu: this.ctxMenu[pType],
+      menu: this.ctxMenu["app_cmp"],
       subject: pObject
     };
-    this.ctxMenu[pType].show(pEvent, pObject);
+    this.ctxMenu["app_cmp"].show(pEvent, pObject);
   }
 
   hideCtxMenu():void{

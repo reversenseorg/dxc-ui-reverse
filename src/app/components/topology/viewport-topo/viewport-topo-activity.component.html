@@ -1,3 +1,24 @@
+<!--
+  ~ /*
+  ~     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+  ~     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+  ~     Copyright (C) 2026  Reversense SAS
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as published
+  ~     by the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
 <div  [class.dxc-hidden]="(parent.activeCtn==null) || (id!=parent.activeCtn.id)"   class="container-fluid fill-height p-0" [ngStyle]="{ 'minHeight': height+'px' }">
   <div #metadata style="border-bottom:1px solid #777;line-height: 1">
 
@@ -11,8 +32,7 @@
       <span *ngIf="data.attr.process[0]!='.' && data.attr.process[0]<97" class="badge text-bg-danger dxc-meta">external process : {{ data.attr.process }}</span>
     </ng-container>
 
-    <span *ngIf="data" class="badge text-bg-success dxc-meta">exported</span>
-    <span *ngIf="data" class="badge text-bg-warning dxc-meta">intentable</span>
+      <dxc-tag-badge *ngFor="let t of data.tags" [tagUUID]="t"></dxc-tag-badge>
     <!--
     <span *ngIf="data.modifiers.private" class="meta-access text-danger">private</span>
     <span *ngIf="data.modifiers.protected" class="meta-access text-primary">protected</span>

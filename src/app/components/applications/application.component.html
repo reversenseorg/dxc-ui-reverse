@@ -1,0 +1,145 @@
+
+
+<!--
+  ~ /*
+  ~     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+  ~     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+  ~     Copyright (C) 2026  Reversense SAS
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as published
+  ~     by the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
+<div class="grid" *ngIf="appUnit!=null && isPrinted==false">
+    <div class="col-6 pl-4 pr-2 pt-2">
+        <h3 class="pageSubtitle">Application</h3>
+        <div class="flex w-full">
+            <div class="flex-none p-2">
+                <ng-container  *ngIf="appUnit.icon!=null && appUnit.icon">
+                    <img [src]="getIconData(appUnit.icon)" style="height:10em;width:10em;border-radius:1em;"/>
+                </ng-container>
+            </div>
+            <div class="flex-growth<">
+                <h3 class="pageTitle">{{ appUnit.name  }}</h3>
+                <p class="packageId">
+                    <dxp-text-cp [text]="appUnit.packageID"></dxp-text-cp>
+                </p>
+                <p-button label="Copy ID" [outlined]="true" [styleClass]="'dxp-white-btn'" icon="pi pi-copy" class="p-button-rounded p-button-text ml-2" (click)="navigator.clipboard.writeText(appUnit.uuid)"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 text-right">
+        <!--<dxp-app-audit-cov [product]="'privacy.scanner'"></dxp-app-audit-cov>-->
+    </div>
+    <div class="col-2 text-right">
+        <p-button label="Scan now" icon="pi pi-play" outlined="true" [styleClass]="'dxp-white-btn'" class="p-button-rounded p-button-text mb-2 block" (click)="scanNow()"></p-button>
+    </div>
+</div>
+
+
+<p-tabView orientation="left" class="transparent-panel">
+
+
+    <p-tabPanel header="Dashboard" class="line-height-3 m-0 transparent-panel">
+        <!--<dxp-project-dashboard *ngIf="appUnit" [project]="latestProject" ></dxp-project-dashboard>-->
+        <dxp-dashboard-app-summary *ngIf="appUnit" [title]="'Summary'" [appUnit]="appUnit" [orgUnit]="orgUnit"  [project]="latestProject" [rid]="sReport"></dxp-dashboard-app-summary>
+    </p-tabPanel>
+
+    <p-tabPanel header="GDPR / PII" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <dxp-report *ngIf="appUnit" [appUnit]="appUnit.getUID()" [directModel]="'privacy.pii3'" [header]="false" [direct]="true" [showLatest]="true"></dxp-report>
+        </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel header="SBOM" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <dxp-report *ngIf="appUnit" [appUnit]="appUnit.getUID()" [directModel]="'privacy.trackers.shared'" [header]="false" [direct]="true" [showLatest]="true"></dxp-report>
+        </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel header="Permissions" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <dxp-report *ngIf="appUnit" [appUnit]="appUnit.getUID()" [directModel]="'permission.android'" [header]="false" [direct]="true" [showLatest]="true"></dxp-report>
+        </ng-template>
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Versions" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <div class="grid">
+                <div class="col-8">
+                    An application unit contains all packages related to the same application from platform point of view. The list below contains every packages uploaded / downloaded and scanned for this application.
+                </div>
+                <div class="col-4 text-right">
+                    <p-button label="Import package" icon="pi pi-plus" severity="contrast" class="p-button-rounded p-button-text" (click)="loadPkg()"></p-button>
+                </div>
+            </div>
+
+            <dxp-project-orders-list [title]="'Packages in the import queue'" [toggeable]="true" [appUnit]="appUnit"></dxp-project-orders-list>
+
+            <ng-container *ngIf="appUnit!=null && orgUnit!=null && hasPackages(); else notYetAppUnit">
+                <dxp-project-list [orgUnit]="orgUnit" [appUnit]="appUnit"></dxp-project-list>
+            </ng-container>
+            <ng-template #notYetAppUnit>
+                <div class="grid">
+                    <div class="col-12 text-center" style="backgroundColor:#DDD">
+                        There is not applications unit configured.
+                    </div>
+                </div>
+            </ng-template>
+        </ng-template>
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Devices" class="line-height-3 m-0 transparent-panel">
+        <p-messages *ngIf="hasDeviceAttached()" severity="warn" [closable]="false">
+            <ng-template pTemplate>
+                <div class="ml-2">There is not device attached to this application. Please configure one, to scan it.</div>
+            </ng-template>
+        </p-messages>
+        <ng-container *ngIf="appUnit!=null && orgUnit!=null">
+            <ng-template pTemplate="content">
+                <dxp-dev-list [appUnit]="appUnit" [orgUnit]="orgUnit"></dxp-dev-list>
+            </ng-template>
+        </ng-container>
+    </p-tabPanel>
+
+    <!--<p-tabPanel header="Sources" class="line-height-3 m-0 transparent-panel">
+
+    </p-tabPanel>-->
+
+    <p-tabPanel header="Scans" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <dxp-scan-order-table [appUnit]="appUnit"></dxp-scan-order-table>
+        </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel header="Reports" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <dxp-report-list [appUnit]="appUnit"></dxp-report-list>
+        </ng-template>
+    </p-tabPanel>
+
+    <!--
+    <p-tabPanel *ngIf="appUnit!=null && orgUnit!=null" header="Policy" class="line-height-3 m-0 transparent-panel">
+        <dxp-policy-list [org]="orgUnit" [app]="appUnit" ></dxp-policy-list>
+    </p-tabPanel>-->
+
+    <p-tabPanel header="Logs" class="line-height-3 m-0 transparent-panel">
+        <ng-template pTemplate="content">
+            <dxp-logs-list [appUnit]="appUnit" [orgUnit]="orgUnit" [title]="null"></dxp-logs-list>
+        </ng-template>
+    </p-tabPanel>
+</p-tabView>
+

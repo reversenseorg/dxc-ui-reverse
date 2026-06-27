@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule, ViewContainerRef} from "@angular/core";
 import {DxcBaseModule} from "../../base/dxc-base.module";
 import {CommonModule, DatePipe, NgClass, NgIf, NgSwitch} from "@angular/common";
@@ -25,6 +46,10 @@ import {ViewportSplittedComponent} from "../../base/viewport-splitted/viewport-s
 import {TagBadgeComponent} from "../tag/tag-badge/tag-badge.component";
 import {ModalBaseComponent} from "../../base/modal-base/modal-base.component";
 import {TopologyMapComponent} from "./topo-map.component";
+import {ViewportTopoCmpComponent} from "./viewport-topo/viewport-topo-cmp.component";
+import {AppModule} from "../../app.module";
+import {IntentPatternComponent} from "./ctrl/IntentPattern.component";
+import {CodeModule} from "../code/code.module";
 
 @NgModule({
     schemas: [
@@ -53,7 +78,8 @@ import {TopologyMapComponent} from "./topo-map.component";
         MetaComponent,
         ViewportSplittedComponent,
         TagBadgeComponent,
-        ModalBaseComponent
+        ModalBaseComponent,
+        CodeModule
     ],
     exports: [
         ExplorerTopoComponent,
@@ -63,7 +89,9 @@ import {TopologyMapComponent} from "./topo-map.component";
         ViewportTopoReceiverComponent,
         ViewportTopoServiceComponent,
         TopologyMapComponent,
-        OsApiProjectionListComponent
+        OsApiProjectionListComponent,
+        ViewportTopoCmpComponent,
+        IntentPatternComponent
     ],
     declarations: [
         ExplorerTopoComponent,
@@ -73,7 +101,9 @@ import {TopologyMapComponent} from "./topo-map.component";
         ViewportTopoReceiverComponent,
         ViewportTopoServiceComponent,
         TopologyMapComponent,
-        OsApiProjectionListComponent
+        OsApiProjectionListComponent,
+        ViewportTopoCmpComponent,
+        IntentPatternComponent
     ]
 })
 export class TopologyModule { }

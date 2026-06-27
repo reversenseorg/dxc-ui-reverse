@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "removeComments": true,
     "outDir": "../out-tsc/spec",
     "types": [
       "jasmine",

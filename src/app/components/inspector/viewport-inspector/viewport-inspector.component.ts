@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -32,6 +53,7 @@ import HookStrategySelector from "../../../models/hook/HookStrategySelector";
 import {MerlinSearchRequest, Operation} from "../../../models/search/MerlinSearchRequest";
 import {HookService} from "../../hooks/ctrl/hook.service";
 import HookTemplateFragment from "../../../models/hook/HookTemplateFragment";
+import {getVersion} from "mermaid/dist/diagrams/info/infoDb";
 
 
 enum FRAG_LOCATION {
@@ -44,9 +66,9 @@ enum FRAG_LOCATION {
   selector: 'app-viewport-inspector',
   templateUrl: './viewport-inspector.component.html',
   styleUrls: ['./viewport-inspector.component.scss','../../../forms.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IViewportContainer {
+export class ViewportInspectorComponent implements  DoCheck, AfterViewInit, IViewportContainer {
 
   NODE_TYPES:any = NodeInternalType;
   FRAG = FRAG_LOCATION;
@@ -57,6 +79,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
 
   @ViewChild(ViewportSplittedComponent) layout:ViewportSplittedComponent;
   @ViewChild('frTplEditor') fragEditor:any;
+    @ViewChild('fltTplEditor') fltEditor:any;
   @ViewChild('hookStrategyEl') hookStrategyEl:any;
 
 
@@ -80,7 +103,8 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
 
   editorHeight = 400;
   editorReady = {
-    frag: false
+    frag: false,
+      flt: false
   };
 
   view: ViewportView ;
@@ -129,6 +153,8 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     ace.config.set('basePath','assets/ace');
     const editor:any = this.fragEditor.getEditor();
 
+
+
     editor.setOptions({
       showLineNumbers: true,
       tabSize: 2
@@ -163,11 +189,16 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
   deletable = false;
     cancelable = false;
     emitOn: string = "auto";
+    activeFlt = 0;
 
   ngDoCheck() {
     // to hide currently displayed view,
+    const c = this.hiddenForce;
     this.hiddenForce = (this.parent.activeCtn!=null) && !(this.parent.activeCtn.id == this.id);
-    this._viewRef.detectChanges();
+    if(c!=this.hiddenForce){
+        this.chref.detectChanges();
+    }
+    //this._viewRef.detectChanges();
   }
 
   ngAfterViewInit() {
@@ -183,7 +214,7 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
       this.view.tab.label = pData.state.name as string;
     }
 
-    console.log("View Inspector > ",this.data);
+    console.log("Configure Inspector view > ",this.data);
   }
 
   onClose(): boolean {
@@ -305,6 +336,8 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
 
 
         break;
+      case NodeInternalType.HOOK_STRATEGY:
+          break;
     }
   }
 
@@ -321,8 +354,8 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
               this.editMode = true;
               break;
           case 'filter':
-              this.activeRight = NodeInternalType.HOOK_STRATEGY;
-              this.activeFilter = new HookStrategy({});
+              this.activeRight = NodeInternalType.RUNTIME_EVENT;
+              this.activeFilter = {};
               this.deletable = false;
               this.cancelable = true;
               this.editMode = true;
@@ -423,9 +456,18 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
     }
 
     showFilter(pFilter: any) {
-      this.activeItem = pFilter;
+      this.activeFilter = pFilter;
       this.activeRight = NodeInternalType.RUNTIME_EVENT;
 
+        if(!this.editorReady.flt){
+            this._initFltEditor();
+            this.editorReady.flt = true;
+            //this.fragEditor.value = this.states.sc = this.data.script;
+        }
+
+        console.log("Show filter :",pFilter);
+        this.fltEditor.value = pFilter.source;
+        this.fltEditor.getEditor().resize();
     }
 
     dropEvent(pStrat: HookStrategy) {
@@ -502,5 +544,48 @@ export class ViewportInspectorComponent implements DoCheck, AfterViewInit, IView
                 return true;
             }
         })
+    }
+
+    getVersion():string {
+      return this.data.plugin.version;
+    }
+
+    isHidden() {
+      console.log("isHidden ",this.parent.activeCtn, this.id);
+      return (this.parent.activeCtn==null) || (this.id!=this.parent.activeCtn.id)
+    }
+
+    showFilterSrc(pCompiled: number) {
+        this.activeFlt = pCompiled;
+        this.fltEditor.value = this.activeFilter[pCompiled?"compiled":"source"];
+        this.fltEditor.getEditor().resize();
+    }
+
+
+    private _initFltEditor(){
+        console.log("[VP SCRIPT] ngAfterViewInit ",this.data);
+
+        //ace.config.set('basePath','//localhost:4200/assets/ace');
+        ace.config.set('basePath','assets/ace');
+        const editor:any = this.fltEditor.getEditor();
+
+        editor.setOptions({
+            showLineNumbers: true,
+            tabSize: 2
+        });
+
+        editor.container.style.height = '400px';
+        editor.container.style.minHeight = '400px';
+        editor.container.style.maxHeight = '400px';
+
+        this.fltEditor.mode = 'javascript';
+        editor.resize();
+
+        // init resize handler
+
+        this.parent.resize$.subscribe( (pSize:any)=>{
+            editor.resize();
+        });
+
     }
 }

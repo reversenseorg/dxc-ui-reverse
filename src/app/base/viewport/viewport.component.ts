@@ -1,3 +1,24 @@
+/*
+ *
+ *     Reversense platform / dxc-ui-reverse :  Reversense is an automated reverse engineering and analysis platform
+ *     focused on security, privacy, quality, accessibility and safety assessment of software, including mobile app and firmware.
+ *     Copyright (C) 2026  Reversense SAS
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published
+ *     by the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 import {
   AfterContentInit,
   AfterViewInit,
@@ -22,6 +43,7 @@ import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 import {Nullable} from "../Nullable";
 import {UIException} from "../error/UIException";
 import {ControllerService} from "../../controller.service";
+import {NodeInternalType} from "../../models/NodeInternalType";
 
 
 @Component({
@@ -331,12 +353,6 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
 
     const oldCmp = this.activeCmp;
 
-      /*this.cmps.map( (x:ComponentRef<any>)=>{
-        (x as any).setInput('activeViewID',pCmp.instance.id);
-      });*/
-
-
-
     /*if(this.activeCmp != null){
       console.log("[old]",this.activeCmp.instance.id);
       this.activeCmp.hostView.markForCheck();
@@ -382,7 +398,42 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     cmpRef.instance.controller = pView.ctrl;
     cmpRef.instance.configure(pView.data, pView.focus);
     this.idCTR++;
-    cmpRef.instance.id = this.idCTR; // todo replace by noderef
+    pView.uid = this.idCTR;
+
+    if(pView.data.__!=null){
+        if(pView.data._uid!=null){
+            cmpRef.instance.id = pView.data.__+":"+pView.data._uid;
+        }else if(pView.data.getUID!=null){
+            const uuid = pView.data.getUID();
+            if(uuid!=null){
+                cmpRef.instance.id = pView.data.__+":"+uuid;
+            }else if(pView.data.__===NodeInternalType.FILE){
+                // workspace file
+                cmpRef.instance.id = pView.data.__+":"+pView.data.p;
+            }else{
+                console.log("VP > addTab > node getUID() is null but exists  : ", pView.data);
+            }
+
+        }else{
+            cmpRef.instance.id = pView.data.__+":"+this.idCTR;
+            console.log("VP > addTab > node uid not found : ", pView.data);
+        }
+        // cmpRef.instance.uid = cmpRef.instance.id;
+    }else if(pView.ctrl.name=="inspector"){
+        if(pView.data.plugin!=null){
+            cmpRef.instance.id = NodeInternalType.INSPECTOR+":"+pView.data.plugin.name;
+        }else{
+            cmpRef.instance.id = this.idCTR;
+            console.log("VP > addTab > node type not found but inspector : ", pView);
+        }
+        // cmpRef.instance.uid = cmpRef.instance.id;
+    }else{
+        cmpRef.instance.id = this.idCTR;
+        // cmpRef.instance.uid = pView.uid;
+        console.log("VP > addTab > node type not found : ", pView);
+    }
+
+    //cmpRef.instance.id = this.idCTR; // todo replace by noderef
     cmpRef.instance.uid = pView.uid;
     if(pView.opts!=null){
       cmpRef.instance.opts = pView.opts;
@@ -393,7 +444,7 @@ export class ViewportComponent implements OnInit, OnChanges, AfterContentInit, A
     this.cmps.push(cmpRef);
     //this.views.push(cmpRef.instance);
 
-    console.log("VP > addTab > ",cmpRef.instance.uid);
+    console.log("VP > addTab > ",cmpRef.instance.id,cmpRef.instance.uid);
 
     //this.selectTab( cmpRef.instance, null);
     this.selectTab2( cmpRef, null);
