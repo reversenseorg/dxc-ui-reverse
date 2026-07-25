@@ -1,7 +1,6 @@
-# Équivalent GitHub Actions de Dexcalibur_BuildDxcPro_Web (TeamCity Kotlin DSL)
+# Equivalent to GitHub Actions de Dexcalibur_BuildDxcPro_Web (TeamCity Kotlin DSL)
 name: Build UI
 
-# triggers { vcs { triggerRules = "+:**"; branchFilter = "" } }
 on:
   push:
     branches: ['main']
@@ -15,16 +14,9 @@ permissions:
   contents: write   # requis pour l'upload d'asset sur une release
 
 env:
-  # id (ou tag) de release ciblée par l'étape "Github Release upload"
   DXC_RELEASE_ID: "1.8.0"
 
 jobs:
-  # ---------------------------------------------------------------------------
-  # script { name = "Detect node version" }
-  # Job séparé : la valeur alimente `container.image` du job suivant, or les
-  # expressions dans `container:` ne peuvent référencer que des outputs de jobs
-  # (`needs.*`), jamais des outputs de steps du même job.
-  # ---------------------------------------------------------------------------
   detect-node-version:
     name: Detect node version
     runs-on: ubuntu-latest
@@ -36,9 +28,6 @@ jobs:
       - id: nvmrc
         run: echo "version=$(cat .nvmrc | cut -b2-)" >> "$GITHUB_OUTPUT"
 
-  # ---------------------------------------------------------------------------
-  # steps { Install dependencies / Build code }  -> dockerImage node:<ver>-slim
-  # ---------------------------------------------------------------------------
   build:
     name: Build dxc-pro
     needs: detect-node-version
