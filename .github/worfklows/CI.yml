@@ -1,0 +1,156 @@
+# Équivalent GitHub Actions de Dexcalibur_BuildDxcPro_Web (TeamCity Kotlin DSL)
+name: Build UI
+
+# triggers { vcs { triggerRules = "+:**"; branchFilter = "" } }
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+concurrency:
+  group: build-dxc-pro-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # requis pour l'upload d'asset sur une release
+
+env:
+  # id (ou tag) de release ciblée par l'étape "Github Release upload"
+  DXC_RELEASE_ID: "1.8.0"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # script { name = "Detect node version" }
+  # Job séparé : la valeur alimente `container.image` du job suivant, or les
+  # expressions dans `container:` ne peuvent référencer que des outputs de jobs
+  # (`needs.*`), jamais des outputs de steps du même job.
+  # ---------------------------------------------------------------------------
+  detect-node-version:
+    name: Detect node version
+    runs-on: ubuntu-latest
+    outputs:
+      node_version: ${{ steps.nvmrc.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: nvmrc
+        run: echo "version=$(cat .nvmrc | cut -b2-)" >> "$GITHUB_OUTPUT"
+
+  # ---------------------------------------------------------------------------
+  # steps { Install dependencies / Build code }  -> dockerImage node:<ver>-slim
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build dxc-pro
+    needs: detect-node-version
+    runs-on: ubuntu-latest
+    container:
+      image: node:${{ needs.detect-node-version.outputs.node_version }}-slim
+    steps:
+      - name: Install git (checkout prerequisite)
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates
+          rm -rf /var/lib/apt/lists/*
+
+      - uses: actions/checkout@v4
+
+      - name: Install NVM and NPM
+        if: false
+        shell: bash
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          nvm install
+          nvm use
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build code
+        run: |
+          npm run build:prod
+          tar czvf dxc-pro-dist.tar.gz ./dist
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dxc-pro-dist
+          path: dxc-pro-dist.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+
+  static-analysis:
+    name: Static Analysis
+    needs: build
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: JetBrains/qodana-action@v2025.1
+        with:
+          args: "--linter,jetbrains/qodana-js:latest,--profile-name,qodana.recommended"
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+  notify-discord:
+    name: Discord notification
+    needs: [build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          RELEASE_RESULT: ${{ needs.release-upload.result }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          
+          if [[ "$BUILD_RESULT" == "success" && "$RELEASE_RESULT" == "success" ]]; then
+            STATUS="SUCCESS"; COLOR=$(( 16#2EA043 ))
+          elif [[ "$BUILD_RESULT" == "cancelled" || "$RELEASE_RESULT" == "cancelled" ]]; then
+            STATUS="CANCELLED"; COLOR=$(( 16#6E7681 ))
+          else
+            STATUS="FAILED"; COLOR=$(( 16#D73A49 ))
+          fi
+          
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          
+          jq -n \
+            --arg title   "${GITHUB_WORKFLOW} — ${STATUS}" \
+            --arg url     "$RUN_URL" \
+            --arg branch  "$GITHUB_REF_NAME" \
+            --arg sha     "${GITHUB_SHA:0:8}" \
+            --arg actor   "$GITHUB_ACTOR" \
+            --arg msg     "$(printf '%.200s' "$COMMIT_MSG")" \
+            --argjson color "$COLOR" \
+            '{
+              username: "GitHub Actions",
+              embeds: [{
+                title: $title,
+                url: $url,
+                color: $color,
+                description: $msg,
+                fields: [
+                  {name: "Branche", value: $branch, inline: true},
+                  {name: "Commit",  value: $sha,    inline: true},
+                  {name: "Auteur",  value: $actor,  inline: true}
+                ],
+                timestamp: (now | todate)
+              }],
+              allowed_mentions: {parse: []}
+            }' > payload.json
+          
+          curl -sS --fail-with-body \
+               --retry 5 --retry-delay 2 --retry-all-errors \
+               -X POST \
+               -H "Content-Type: application/json" \
+               -d @payload.json \
+               "$DISCORD_WEBHOOK_URL"
