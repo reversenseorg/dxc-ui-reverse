@@ -44,7 +44,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install NVM and NPM
-        if: false
         shell: bash
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
