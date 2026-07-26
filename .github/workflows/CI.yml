@@ -54,6 +54,8 @@ jobs:
 
           nvm install
           nvm use
+          npm install -g npmrc
+          npmrc
 
       - name: Install dependencies
         run: npm install
