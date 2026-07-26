@@ -15,6 +15,11 @@ on:
         required: false
         type: boolean
 
+
+permissions:
+  contents: write   # Required to upload assets
+  packages: write   # Required to publish packages
+
 env:
   TAG: ${{ inputs.tag || github.event.release.tag_name }}
 
@@ -34,6 +39,9 @@ jobs:
     name: Build dxc-pro
     needs: detect-node-version
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     container:
       image: node:${{ needs.detect-node-version.outputs.node_version }}-slim
     steps:
