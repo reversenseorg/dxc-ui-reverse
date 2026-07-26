@@ -1,0 +1,160 @@
+# Equivalent to GitHub Actions de Dexcalibur_BuildDxcPro_Web (TeamCity Kotlin DSL)
+name: Publish
+
+on:
+  release:
+    types: ['published','released','preleased']
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag to build'
+        required: true
+        type: string
+      skip_upload:
+        description: 'Skip upload'
+        required: false
+        type: boolean
+
+env:
+  TAG: ${{ inputs.tag || github.event.release.tag_name }}
+
+jobs:
+  detect-node-version:
+    name: Detect node version
+    runs-on: ubuntu-latest
+    outputs:
+      node_version: ${{ steps.nvmrc.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: nvmrc
+        run: echo "version=$(cat .nvmrc | cut -b2-)" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build dxc-pro
+    needs: detect-node-version
+    runs-on: ubuntu-latest
+    container:
+      image: node:${{ needs.detect-node-version.outputs.node_version }}-slim
+    steps:
+      - name: Install git (checkout prerequisite)
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends curl git ca-certificates
+          rm -rf /var/lib/apt/lists/*
+
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        env:
+          FONTAWESOME_TOKEN:    ${{ secrets.FONTAWESOME_TOKEN }}
+        run: npm install
+
+      - name: Dump npm debug log
+        if: failure()
+        run: |
+          grep -iE 'http fetch .*(401|GET)' /github/home/.npm/_logs/*-debug-0.log | tail -40
+          npm config ls -l | grep -iE 'registry|authToken|_auth|always-auth'
+
+      - name: Build code
+        run: |
+          npm run build:pro
+          tar czvf dxc-pro-dist-$TAG.tar.gz ./dist
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dxc-pro-dist
+          path: dxc-pro-dist-$TAG.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+
+  release-upload:
+    needs: build
+    if: ${{ !inputs.skip_upload }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dxc-pro-dist
+
+      - name: Upload release asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO:  ${{ github.repository }}
+          RELEASE_ID: ${{ github.event.release.id }}
+        run: gh release upload "$TAG" dxc-pro-dist-$TAG.tar.gz --clobber
+
+  static-analysis:
+    name: Static Analysis
+    needs: release-upload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: JetBrains/qodana-action@v2025.1
+        with:
+          args: "--linter,jetbrains/qodana-js:latest,--profile-name,qodana.recommended"
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+  notify-discord:
+    name: Discord notification
+    needs: release-upload
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          RELEASE_RESULT: ${{ needs.release-upload.result }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          
+          if [[ "$BUILD_RESULT" == "success" && "$RELEASE_RESULT" == "success" ]]; then
+            STATUS="SUCCESS"; COLOR=$(( 16#2EA043 ))
+          elif [[ "$BUILD_RESULT" == "cancelled" || "$RELEASE_RESULT" == "cancelled" ]]; then
+            STATUS="CANCELLED"; COLOR=$(( 16#6E7681 ))
+          else
+            STATUS="FAILED"; COLOR=$(( 16#D73A49 ))
+          fi
+          
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          
+          jq -n \
+            --arg title   "${GITHUB_WORKFLOW} — ${STATUS}" \
+            --arg url     "$RUN_URL" \
+            --arg branch  "$GITHUB_REF_NAME" \
+            --arg sha     "${GITHUB_SHA:0:8}" \
+            --arg actor   "$GITHUB_ACTOR" \
+            --arg msg     "$(printf '%.200s' "$COMMIT_MSG")" \
+            --argjson color "$COLOR" \
+            '{
+              username: "GitHub Actions",
+              embeds: [{
+                title: $title,
+                url: $url,
+                color: $color,
+                description: $msg,
+                fields: [
+                  {name: "Branche", value: $branch, inline: true},
+                  {name: "Commit",  value: $sha,    inline: true},
+                  {name: "Auteur",  value: $actor,  inline: true}
+                ],
+                timestamp: (now | todate)
+              }],
+              allowed_mentions: {parse: []}
+            }' > payload.json
+          
+          curl -sS --fail-with-body \
+               --retry 5 --retry-delay 2 --retry-all-errors \
+               -X POST \
+               -H "Content-Type: application/json" \
+               -d @payload.json \
+               "$DISCORD_WEBHOOK_URL"
