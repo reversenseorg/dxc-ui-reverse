@@ -43,21 +43,16 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Install NVM and NPM
-        shell: bash
-        run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-          nvm install
-          nvm use
-          npm install -g npmrc
-          npmrc
-
       - name: Install dependencies
+        env:
+          FONTAWESOME_TOKEN:    ${{ secrets.FONTAWESOME_TOKEN }}
         run: npm install
+
+      - name: Dump npm debug log
+        if: failure()
+        run: |
+          grep -iE 'http fetch .*(401|GET)' /github/home/.npm/_logs/*-debug-0.log | tail -40
+          npm config ls -l | grep -iE 'registry|authToken|_auth|always-auth'
 
       - name: Build code
         run: |
