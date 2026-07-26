@@ -38,7 +38,7 @@ jobs:
       - name: Install git (checkout prerequisite)
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends git ca-certificates
+          apt-get install -y --no-install-recommends curl git ca-certificates
           rm -rf /var/lib/apt/lists/*
 
       - uses: actions/checkout@v4
