@@ -56,7 +56,7 @@ jobs:
 
       - name: Build code
         run: |
-          npm run build:prod
+          npm run build:pro
           tar czvf dxc-pro-dist.tar.gz ./dist
 
       - name: Publish artifact
