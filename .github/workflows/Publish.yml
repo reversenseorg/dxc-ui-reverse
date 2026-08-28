@@ -21,7 +21,7 @@ permissions:
   packages: write   # Required to publish packages
 
 env:
-  TAG: ${{ inputs.tag || github.event.release.tag_name }}
+  TAG: ${{ inputs.tag_name || github.event.release.tag_name }}
 
 jobs:
   detect-node-version:
@@ -67,6 +67,8 @@ jobs:
       - name: Build code
         run: |
           npm run build:pro
+          ls -al dist
+          ls -al .
           tar czvf dxc-pro-dist-$TAG.tar.gz ./dist
 
       - name: Publish artifact
