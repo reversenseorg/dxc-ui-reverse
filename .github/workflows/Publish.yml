@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dxc-pro-dist
-          path: dxc-pro-dist-$TAG.tar.gz
+          path: ./dxc-pro-dist-${{env.TAG}}.tar.gz
           if-no-files-found: error
           retention-days: 30
 
