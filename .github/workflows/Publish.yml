@@ -67,9 +67,9 @@ jobs:
       - name: Build code
         run: |
           npm run build:pro
-          ls -al dist
-          ls -al .
           tar czvf dxc-pro-dist-$TAG.tar.gz ./dist
+          ls -la .
+          
 
       - name: Publish artifact
         uses: actions/upload-artifact@v4
